@@ -1,6 +1,8 @@
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.material.materialInit;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.MultiBlockMachineLoader;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.tileEntityInit;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.tileEntityPreInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cpw.mods.fml.common.event.*;
 import cn.kuzuanpa.ktfruaddon.item.itemLoader;
@@ -13,12 +15,15 @@ public class commonProxy extends Abstract_Proxy {
 
     public void preInit(FMLPreInitializationEvent aEvent) {
         new materialPreInit(aEvent);
+        new tileEntityPreInit(aEvent);
         new blockLoader(aEvent);
         new itemLoader(aEvent);
+        new MultiBlockMachineLoader();
     }
 
     public void init(FMLInitializationEvent aEvent) {
-        new materialInit(aEvent);
+
+        new tileEntityInit(aEvent);
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
