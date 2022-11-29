@@ -1,16 +1,18 @@
 package cn.kuzuanpa.ktfruaddon.material;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.api.Abstract_Proxy;
+import gregapi.oredict.OreDictMaterial;
+import gregapi.oredict.OreDictPrefix;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class materialPreInit extends Abstract_Proxy {
+public class materialPreInit {
     public materialPreInit(FMLPreInitializationEvent aEvent) {
         // If you want to make yourself a new OreDict Prefix for your Component Items or similar.
-        final gregapi.oredict.OreDictPrefix tExamplePrefix = gregapi.oredict.OreDictPrefix.createPrefix("exampleprefix"); // This newly created OreDict Prefix is named "exampleprefix", so an Aluminium Item with this Prefix would be named "exampleprefixAluminium" in the OreDict.
-        tExamplePrefix.setCategoryName("Examples"); // That is what the Creative Tab of it would be named.
-        tExamplePrefix.setLocalItemName("Small ", " Example"); // Generic Items will follow this naming Guideline, so for example "Small Aluminium Example" for an Aluminium Item with that Prefix.
+        final OreDictPrefix tExamplePrefix = OreDictPrefix.createPrefix("kpeefix"); // This newly created OreDict Prefix is named "exampleprefix", so an Aluminium Item with this Prefix would be named "exampleprefixAluminium" in the OreDict.
+        tExamplePrefix.setCategoryName("kTFRUAddon"); // That is what the Creative Tab of it would be named.
+        tExamplePrefix.setLocalItemName("kAdd ", " kItem"); // Generic Items will follow this naming Guideline, so for example "Small Aluminium Example" for an Aluminium Item with that Prefix.
         tExamplePrefix.setCondition(gregapi.code.ICondition.TRUE); // The Condition under which Items of this Prefix should generate in general. In this case TRUE to have ALL the Items.
         tExamplePrefix.add(gregapi.data.TD.Prefix.UNIFICATABLE); // OreDict Unification can apply to this Prefix.
         tExamplePrefix.add(gregapi.data.TD.Prefix.RECYCLABLE); // Items of this can be recycled for Resources.
@@ -19,7 +21,7 @@ public class materialPreInit extends Abstract_Proxy {
         tExamplePrefix.setStacksize(16, 8); // Sets the Maximum ItemStack Size of this Prefix to 16, and allows the Config to go as far down as 8 when people manually select a StackSize using it.
 
         // If you want to make yourself a new OreDict Material. Please look up proper IDs. So replace 32766 with a Number inside YOUR own ID Range. (you can look that up in gregapi.oredict.OreDictMaterial.java)
-        final gregapi.oredict.OreDictMaterial tExamplium = gregapi.oredict.OreDictMaterial.createMaterial(32766, "Examplium", "Examplium"); // Creates a Material called "Examplium".
+        final OreDictMaterial tExamplium = OreDictMaterial.createMaterial(32766, "Examplium", "Examplium"); // Creates a Material called "Examplium".
         tExamplium.setTextures(gregapi.render.TextureSet.SET_METALLIC); // gives this Material the Metallic Texture Set.
         tExamplium.setRGBa(100, 100, 200, 0); // Sets the RGBa Color of the Material. In this case some random blue Color.
         tExamplium.put(gregapi.data.TD.Processing.SMITHABLE); // This Material is smithable like regular Metal things.
@@ -77,12 +79,5 @@ public class materialPreInit extends Abstract_Proxy {
             }
         };
 
-        // This gives you your very own 32767 Machine IDs.
-        new gregapi.block.multitileentity.MultiTileEntityRegistry("example.multitileentity");
-
-        // Every Machine can have another Block, vanilla-material, vanilla-step-sound or Harvest Tool
-        gregapi.block.multitileentity.MultiTileEntityBlock.getOrCreate(MOD_ID, "iron", net.minecraft.block.material.Material.iron, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_pickaxe, 0, 0, 15, false, false);
-        gregapi.block.multitileentity.MultiTileEntityBlock.getOrCreate(MOD_ID, "machine", gregapi.block.MaterialMachines.instance, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_cutter, 0, 0, 15, false, false);
-        gregapi.block.multitileentity.MultiTileEntityBlock.getOrCreate(MOD_ID, "machine", gregapi.block.MaterialMachines.instance, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_wrench, 0, 0, 15, false, false);
     }
 }
