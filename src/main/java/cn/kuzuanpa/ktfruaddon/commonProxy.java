@@ -18,12 +18,13 @@ public class commonProxy extends Abstract_Proxy {
         new tileEntityPreInit(aEvent);
         new blockLoader(aEvent);
         new itemLoader(aEvent);
-        new MultiBlockMachineLoader();
+
     }
 
     public void init(FMLInitializationEvent aEvent) {
 
         new tileEntityInit(aEvent);
+        new MultiBlockMachineLoader();
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {

@@ -1,8 +1,10 @@
 package cn.kuzuanpa.ktfruaddon.material;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.api.Abstract_Proxy;
+import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.oredict.OreDictPrefix;
+import gregapi.render.TextureSet;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
@@ -10,15 +12,23 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class materialPreInit {
     public materialPreInit(FMLPreInitializationEvent aEvent) {
         // If you want to make yourself a new OreDict Prefix for your Component Items or similar.
-        final OreDictPrefix tExamplePrefix = OreDictPrefix.createPrefix("kpeefix"); // This newly created OreDict Prefix is named "exampleprefix", so an Aluminium Item with this Prefix would be named "exampleprefixAluminium" in the OreDict.
-        tExamplePrefix.setCategoryName("kTFRUAddon"); // That is what the Creative Tab of it would be named.
-        tExamplePrefix.setLocalItemName("kAdd ", " kItem"); // Generic Items will follow this naming Guideline, so for example "Small Aluminium Example" for an Aluminium Item with that Prefix.
-        tExamplePrefix.setCondition(gregapi.code.ICondition.TRUE); // The Condition under which Items of this Prefix should generate in general. In this case TRUE to have ALL the Items.
-        tExamplePrefix.add(gregapi.data.TD.Prefix.UNIFICATABLE); // OreDict Unification can apply to this Prefix.
-        tExamplePrefix.add(gregapi.data.TD.Prefix.RECYCLABLE); // Items of this can be recycled for Resources.
-        tExamplePrefix.setMaterialStats(gregapi.data.CS.U); // Any Item of this example Prefix has the value of 1 Material Unit (U), this is exactly equal to one Ingot/Dust/Gem.
-        tExamplePrefix.aspects(gregapi.data.TC.FABRICO, 1); // Thaumcraft Aspects related to this Prefix.
-        tExamplePrefix.setStacksize(16, 8); // Sets the Maximum ItemStack Size of this Prefix to 16, and allows the Config to go as far down as 8 when people manually select a StackSize using it.
+        //final OreDictPrefix tExamplePrefix = OreDictPrefix.createPrefix("kpeefix"); // This newly created OreDict Prefix is named "exampleprefix", so an Aluminium Item with this Prefix would be named "exampleprefixAluminium" in the OreDict.
+        //tExamplePrefix.setCategoryName("kTFRUAddon"); // That is what the Creative Tab of it would be named.
+        //tExamplePrefix.setLocalItemName("kAdd ", " kItem"); // Generic Items will follow this naming Guideline, so for example "Small Aluminium Example" for an Aluminium Item with that Prefix.
+        //tExamplePrefix.setCondition(gregapi.code.ICondition.TRUE); // The Condition under which Items of this Prefix should generate in general. In this case TRUE to have ALL the Items.
+        //tExamplePrefix.add(gregapi.data.TD.Prefix.UNIFICATABLE); // OreDict Unification can apply to this Prefix.
+        //tExamplePrefix.add(gregapi.data.TD.Prefix.RECYCLABLE); // Items of this can be recycled for Resources.
+        //tExamplePrefix.setMaterialStats(gregapi.data.CS.U); // Any Item of this example Prefix has the value of 1 Material Unit (U), this is exactly equal to one Ingot/Dust/Gem.
+        //tExamplePrefix.aspects(gregapi.data.TC.FABRICO, 1); // Thaumcraft Aspects related to this Prefix.
+        //tExamplePrefix.setStacksize(16, 8); // Sets the Maximum ItemStack Size of this Prefix to 16, and allows the Config to go as far down as 8 when people manually select a StackSize using it.
+
+        // If you want to make your Prefix an Item
+        // Creates the generic Item for the new Prefix. Assets go into "/assets/insert_your_MOD_ID_here/textures/items/materialicons". And yes, every TextureSet for every Material Type has its own Folder.
+        //new gregapi.item.prefixitem.PrefixItem(MOD_ID, MOD_ID, "example.meta.item.exampleprefix", tExamplePrefix, gregapi.oredict.OreDictMaterial.MATERIAL_ARRAY);
+
+        // If you want to make your Prefix a Block
+        // Creates the generic Block for the new Prefix. Assets go into "/assets/insert_your_MOD_ID_here/textures/blocks/materialicons". And yes, every TextureSet for every Material Type has its own Folder.
+        //new gregapi.block.prefixblock.PrefixBlock_(MOD_ID, MOD_ID, "example.meta.block.exampleprefix", tExamplePrefix, null, null, null, null, net.minecraft.block.material.Material.rock, net.minecraft.block.Block.soundTypeStone, gregapi.data.CS.TOOL_pickaxe, 1.5F, 4.5F, 0, 0, 999, 0, 0, 0, 1, 1, 1, false, false, false, false, true, true, true, true, true, true, false, true, true, true, gregapi.oredict.OreDictMaterial.MATERIAL_ARRAY);
 
         // If you want to make yourself a new OreDict Material. Please look up proper IDs. So replace 32766 with a Number inside YOUR own ID Range. (you can look that up in gregapi.oredict.OreDictMaterial.java)
         final OreDictMaterial tExamplium = OreDictMaterial.createMaterial(32766, "Examplium", "Examplium"); // Creates a Material called "Examplium".
@@ -38,14 +48,6 @@ public class materialPreInit {
         tExamplium.setMcfg(0, gregapi.data.MT.Steel, 1 * gregapi.data.CS.U); // This Material consists out of one Unit of Steel.
         tExamplium.setOriginalMod(MOD_DATA); // Gives your Mod the credit for creating this Material.
         tExamplium.aspects(gregapi.data.TC.METALLUM, 3); // Thaumcraft Aspects related to this Material.
-
-        // If you want to make your Prefix an Item
-        // Creates the generic Item for the new Prefix. Assets go into "/assets/insert_your_MOD_ID_here/textures/items/materialicons". And yes, every TextureSet for every Material Type has its own Folder.
-        new gregapi.item.prefixitem.PrefixItem(MOD_ID, MOD_ID, "example.meta.item.exampleprefix", tExamplePrefix, gregapi.oredict.OreDictMaterial.MATERIAL_ARRAY);
-
-        // If you want to make your Prefix a Block
-        // Creates the generic Block for the new Prefix. Assets go into "/assets/insert_your_MOD_ID_here/textures/blocks/materialicons". And yes, every TextureSet for every Material Type has its own Folder.
-        new gregapi.block.prefixblock.PrefixBlock_(MOD_ID, MOD_ID, "example.meta.block.exampleprefix", tExamplePrefix, null, null, null, null, net.minecraft.block.material.Material.rock, net.minecraft.block.Block.soundTypeStone, gregapi.data.CS.TOOL_pickaxe, 1.5F, 4.5F, 0, 0, 999, 0, 0, 0, 1, 1, 1, false, false, false, false, true, true, true, true, true, true, false, true, true, true, gregapi.oredict.OreDictMaterial.MATERIAL_ARRAY);
 
         // You may think that you don't want to add all the PrefixItems for all the Materials, since you only need certain ones yourself and don't want a clutter like the one GregTech itself causes.
         // No Problem, you can add single Items too, if you just need those.
@@ -78,6 +80,42 @@ public class materialPreInit {
                 gregapi.data.RM.add_smelting(gregapi.util.ST.make(this, 1, 2), gregapi.util.ST.make(this, 1, 5));
             }
         };
+
+
+
+
+        //Cr Producing ID=10010-10019
+        //Cr2O7(NH3)2
+
+        final OreDictMaterial ammoniumDichromate = OreDictMaterial.createMaterial(10011, "AmmoniumDichromate", "Ammonium Dichromate");
+        ammoniumDichromate.setTextures(TextureSet.SET_POWDER);
+        ammoniumDichromate.setRGBa(255, 160, 51, 0);
+        ammoniumDichromate.put(gregapi.data.TD.Compounds.DECOMPOSABLE);
+        ammoniumDichromate.heat(456, 460);
+        ammoniumDichromate.setOriginalMod(MOD_DATA);
+
+        final OreDictMaterial ammoniumChromicSulfate = OreDictMaterial.createMaterial(10012, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate");
+        ammoniumChromicSulfate.setTextures(TextureSet.SET_POWDER);
+        ammoniumChromicSulfate.setRGBa(72, 0, 161, 0);
+        ammoniumChromicSulfate.put(gregapi.data.TD.Compounds.DECOMPOSABLE);
+        ammoniumChromicSulfate.heat(456, 460);
+        ammoniumChromicSulfate.setOriginalMod(MOD_DATA);
+
+        final OreDictMaterial ammoniumIronIIISulfate = OreDictMaterial.createMaterial(10013, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate");
+        ammoniumIronIIISulfate.setTextures(TextureSet.SET_POWDER);
+        ammoniumIronIIISulfate.setRGBa(230, 220, 242, 0);
+        ammoniumIronIIISulfate.put(TD.Processing.MELTING);
+        ammoniumIronIIISulfate.put(TD.Compounds.DECOMPOSABLE);
+        ammoniumIronIIISulfate.heat(368, 524);
+        ammoniumIronIIISulfate.setOriginalMod(MOD_DATA);
+
+        final OreDictMaterial Sulfanilamide = OreDictMaterial.createMaterial(10014, "Sulfanilamide", "Sulfanilamide");
+        Sulfanilamide.setTextures(TextureSet.SET_POWDER);
+        Sulfanilamide.setRGBa(251, 251, 216, 2);
+        Sulfanilamide.put(TD.Compounds.DECOMPOSABLE);
+        Sulfanilamide.heat(509, 510);
+        Sulfanilamide.setOriginalMod(MOD_DATA);
+
 
     }
 }
