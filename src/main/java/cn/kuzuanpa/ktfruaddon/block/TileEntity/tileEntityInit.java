@@ -1,13 +1,21 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.testMultiBlockMachine;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.api.Abstract_Proxy;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import gregapi.data.*;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.recipes.Recipe;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import gregapi.util.ST;
+import gregapi.util.UT;
+import gregtech.tileentity.sensors.MultiTileEntityStackometer;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
+import static gregapi.data.CS.*;
+import static gregapi.data.CS.OD_CIRCUITS;
 
 public class tileEntityInit {
     public tileEntityInit(FMLInitializationEvent aEvent) {
@@ -20,8 +28,8 @@ public class tileEntityInit {
         );
         MultiTileEntityRegistry tExampleRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
         OreDictMaterial tExamplium = OreDictMaterial.get("Examplium");
-        MultiTileEntityBlock tWireBlock = MultiTileEntityBlock.getOrCreate(MOD_ID, "machine", gregapi.block.MaterialMachines.instance, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_cutter, 0, 0, 15, false, false);
-        MultiTileEntityBlock tMetalBlock = MultiTileEntityBlock.getOrCreate(MOD_ID, "iron", net.minecraft.block.material.Material.iron, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_pickaxe, 0, 0, 15, false, false);
+        MultiTileEntityBlock tWireBlock = MultiTileEntityBlock.getOrCreate(MOD_ID, "machine", gregapi.block.MaterialMachines.instance, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_cutter, 0, 0, 15, F, F);
+        MultiTileEntityBlock tMetalBlock = MultiTileEntityBlock.getOrCreate(MOD_ID, "iron", net.minecraft.block.material.Material.iron, net.minecraft.block.Block.soundTypeMetal, gregapi.data.CS.TOOL_pickaxe, 0, 0, 15, F, F);
 
 
 
@@ -67,6 +75,9 @@ public class tileEntityInit {
 
         // Makes Examplium Wires, which can carry twice the Voltage of Steel and have a lower loss.
         gregapi.tileentity.connectors.MultiTileEntityWireElectric.addElectricWires(50, 0, gregapi.data.CS.VMAX[4], 1, 2, 1, true, false, true, tExampleRegistry, tWireBlock, gregapi.tileentity.connectors.MultiTileEntityWireElectric.class, tExamplium);
+
+        tExampleRegistry.add("ktest Steel Wall"     , "Example Mod", 12000, 0, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 64, tMachineBlock   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "kmetalwall"               , NBT_DESIGNS, 7), "wPP", "hPP"       , 'P', OP.plate.dat(MT.StainlessSteel)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(MT.StainlessSteel, 4), ST.tag(10), tExampleRegistry.getItem());
+     tExampleRegistry.add("ktest Large Bathing Vat" , "Example Mod", 12001, 0, testMultiBlockMachine.class , MT.StainlessSteel.mToolQuality, 16, tMachineBlock   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "klargebath"               , NBT_INPUT,    1                      , NBT_ENERGY_ACCEPTED, TD.Energy.TU, NBT_RECIPEMAP, RM.Bath     , NBT_INV_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM                           , NBT_PARALLEL,  64                          , NBT_NO_CONSTANT_POWER, T), "CRC", "PMP", "APA", 'M', tExampleRegistry.getItem(12000), 'R', IL.Processor_Crystal_Ruby, 'C', OD_CIRCUITS[6], 'P', OP.plateDense.dat(MT.StainlessSteel), 'A', IL.ROBOT_ARMS[2]);
 
     }
 }
