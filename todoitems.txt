@@ -1,4 +1,4 @@
-Cr2O7(NH3)2 ktfruaddon:ammonium_dichromate 重铬酸铵
-NH4Cr(SO4)2 ktfruaddon:ammonium_chromic_sulfate 硫酸铬铵 +Liquid
-NH4Fe(SO4)2 ktfruaddon:ammonium_ironiii_sulfate 硫酸铁铵 +Liquid
-(NH4)2SO4 ktfruaddon:sulfanilamide 硫酸胺
+Cr2O7(NH3);2 ktfruaddon:ammonium_dichromate 重铬酸铵
+NH4Cr(SO4);2 ktfruaddon:ammonium_chromic_sulfate 硫酸铬铵 +Liquid
+NH4Fe(SO4);2 ktfruaddon:ammonium_ironiii_sulfate 硫酸铁铵 +Liquid
+(NH4);2SO4 ktfruaddon:sulfanilamide 硫酸胺
