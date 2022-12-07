@@ -1,7 +1,7 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.particleCollider;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.testMultiBlockMachine;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.exampleMachineComplex;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
@@ -108,8 +108,8 @@ public class tileEntityInit {
 
     //Multiblock
         //testMachine
-        aRegistry.add("ktest Steel Wall"     , "Example Mod", 12000, 0, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "kmetalwall"               , NBT_DESIGNS, 7), "wPP", "hPP"       , 'P', OP.plate.dat(MT.StainlessSteel)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(MT.StainlessSteel, 4), ST.tag(10), aRegistry.getItem());
-        aRegistry.add("ktest Large Bathing Vat" , "Example Mod", 12001, 0, testMultiBlockMachine.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "klargebath"               , NBT_INPUT,    1                      , NBT_ENERGY_ACCEPTED, TD.Energy.TU, NBT_RECIPEMAP, RM.Bath     , NBT_INV_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM                           , NBT_PARALLEL,  64                          , NBT_NO_CONSTANT_POWER, T), "CRC", "PMP", "APA", 'M', aRegistry.getItem(12000), 'R', IL.Processor_Crystal_Ruby, 'C', OD_CIRCUITS[6], 'P', OP.plateDense.dat(MT.StainlessSteel), 'A', IL.ROBOT_ARMS[2]);
+        //aRegistry.add("ktest Steel Wall"     , "Example Mod", 12000, 0, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "kmetalwall"               , NBT_DESIGNS, 7), "wPP", "hPP"       , 'P', OP.plate.dat(MT.StainlessSteel)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(MT.StainlessSteel, 4), ST.tag(10), aRegistry.getItem());
+        //aRegistry.add("ktest Large Bathing Vat" , "Example Mod", 12001, 0, exampleMachineComplex.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "klargebath"               , NBT_INPUT,    1                      , NBT_ENERGY_ACCEPTED, TD.Energy.TU, NBT_RECIPEMAP, RM.Bath     , NBT_INV_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM                           , NBT_PARALLEL,  64                          , NBT_NO_CONSTANT_POWER, T), "CRC", "PMP", "APA", 'M', aRegistry.getItem(12000), 'R', IL.Processor_Crystal_Ruby, 'C', OD_CIRCUITS[6], 'P', OP.plateDense.dat(MT.StainlessSteel), 'A', IL.ROBOT_ARMS[2]);
 
         aMat = MT.Osmiridium;           aRegistry.add("Particle Collider"                                   , "kTFRUAddon: MultiBlock", 17200, 20002, particleCollider.class    , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "particlecollider"        , NBT_INPUT, 8192, NBT_INPUT_MIN,    1, NBT_INPUT_MAX,   524288                       , NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.ParticleCollider     , NBT_ENERGY_ACCEPTED_2, TD.Energy.EU, NBT_SPECIAL_IS_START_ENERGY, T), "FFF", "FMF", "FFF", 'M', aRegistry.getItem(18014), 'F', IL.FIELD_GENERATORS[5]);
     }

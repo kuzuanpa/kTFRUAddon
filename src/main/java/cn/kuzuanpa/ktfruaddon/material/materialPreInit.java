@@ -1,9 +1,12 @@
 package cn.kuzuanpa.ktfruaddon.material;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import gregapi.data.FL;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.render.TextureSet;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 
@@ -60,6 +63,7 @@ public class materialPreInit {
         ammoniumDichromate.heat(456, 460);
         ammoniumDichromate.setOriginalMod(MOD_DATA);
 
+
         //NH4Cr(SO4)2
         final OreDictMaterial ammoniumChromicSulfate = OreDictMaterial.createMaterial(30012, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate");
         ammoniumChromicSulfate.setTextures(TextureSet.SET_POWDER);
@@ -86,6 +90,20 @@ public class materialPreInit {
         Sulfanilamide.heat(509, 510);
         Sulfanilamide.setOriginalMod(MOD_DATA);
 
+        final OreDictMaterial CookedBauxide = OreDictMaterial.createMaterial(30020, "CookedBauxide", "Cooked Bauxide");
+        CookedBauxide.setTextures(TextureSet.SET_METALLIC);
+        CookedBauxide.setRGBa(229, 141, 0, 4);
+        CookedBauxide.put(TD.ItemGenerator.DUSTS);
+        CookedBauxide.put(TD.Compounds.DECOMPOSABLE);
+        CookedBauxide.heat(2370, 3234);
+        CookedBauxide.setOriginalMod(MOD_DATA);
 
+        final OreDictMaterial AcidPickledBauxide = OreDictMaterial.createMaterial(30020, "CookedBauxide", "Cooked Bauxide");
+        AcidPickledBauxide.setTextures(TextureSet.SET_METALLIC);
+        AcidPickledBauxide.setRGBa(200, 168, 0, 4);
+        AcidPickledBauxide.put(TD.Compounds.DECOMPOSABLE);
+        AcidPickledBauxide.heat(2370, 3234);
+        AcidPickledBauxide.setOriginalMod(MOD_DATA);
+        FL.create("acidpickledbauxide"         , "Acid Pickled Bauxide"    , null                  , 1);
     }
 }
