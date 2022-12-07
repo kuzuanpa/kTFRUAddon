@@ -6,8 +6,7 @@ import gregapi.data.MT;
 import gregapi.util.ST;
 
 import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.*;
-import static gregapi.data.CS.T;
-import static gregapi.data.CS.U;
+import static gregapi.data.CS.*;
 
 public class ParticleCollinder {
     public ParticleCollinder() {
