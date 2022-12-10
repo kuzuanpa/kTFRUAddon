@@ -20,9 +20,25 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
-    public final short machineX = 5, machineY = 1, machineZ = 5;
-   //This controls where is the start point to check structure,Default is the position of controller block
+
+    //决定机器大小
+    //this controls the size of machine.
+    public final short machineX = 5, machineY = 1, machineZ = 4;
+    //决定结构检测的起始位置，默认情况下是从主方块起始
+    //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
+    //映射表方向:
+    //                 |
+    //                 |
+    //            ( tX ,tZ-1)
+    //(tX-1, tZ );( tX , tZ );(tX+1, tZ )---->
+    //            ( tX ,tZ+1)             x轴
+    //                 | z轴
+    //                 v
+    //y轴为一张新的表格，代码中位于最上的表是最底下一层
+    //默认情况(不改动偏移量)下主方块位于tX,tZ,如下所示
+    //{main,part},
+    //{part,part}
     //Map direction:
     //                 |
     //                 |
@@ -34,13 +50,14 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
     //In default (didn't modify offset),main block is on tX,tZ.For example:
     //{main,part},
     //{part,part}
+    //这里是决定每个方块的子id
     public static int[][][] blockIDMap = {{
-            {18002, 18006,   0  , 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
+            {18002, 18006, 0, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
     }};
+    //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
     short k = getMultiTileEntityRegistryID();
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public int[][][] registryIDMap = {{
@@ -48,82 +65,56 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
             {g, g, g, g, g},
             {g, g, g, g, g},
             {g, g, g, g, g},
-            {g, g, g, g, g},
     }};
-    //T = do ignore block ,F = normally check
+    //T是忽略此位置的方块 ,F是正常检测
+    //T = ignore ,F = normally check
     public static boolean[][][] ignoreMap = {{
-            {F, F, T, F, F},
-            {F, F, F, F, F},
+            {T, T, T, T, T},
             {F, F, F, F, F},
             {F, F, F, F, F},
             {F, F, F, F, F},
     }};
+
+    public int getCheckX(int Facing, int tX, int addX, int addZ) {
+        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
+        return result[Facing];
+    }
+
+    public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
+        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
+        return result[Facing];
+    }
+
     @Override
     public boolean checkStructure2() {
-        int tX = getOffsetXN(mFacing), tY = yCoord, tZ = getOffsetZN(mFacing);
-        if (worldObj.blockExists(tX , tY, tZ )) {
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
+        if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
             if (getFacing() == (short) 2) {
-                tZ -= 1-zMapOffset;
-                tX += xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                        for (checkX = 0; checkX < machineX; checkX++) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX + checkX, tY + checkY, tZ + checkZ, blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = ignoreMap[checkY][checkZ][checkX];
-                                FMLLog.log(Level.FATAL,"failed");
-                            }
-                            FMLLog.log(Level.FATAL,"Checkpo"+mFacing+"/"+ tX+"/"+tY+"/"+tZ+"/"+checkX+"/"+checkY+"/"+checkZ+"/"+ignoreMap[checkY][checkZ][checkX]);
-
-                        }
-                    }
-                }
+                tZ += zMapOffset;
+                tX -= xMapOffset;
             } else if (getFacing() == (short) 3) {
-                tZ += 1-zMapOffset;
-                tX -= xMapOffset ;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                        for (checkX = 0; checkX < machineX; checkX++) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX - checkX, tY + checkY, tZ - checkZ, blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = ignoreMap[checkY][checkZ][checkX];
-                                FMLLog.log(Level.FATAL,"failed");
-                            }
-                            FMLLog.log(Level.FATAL,"Checkpo"+mFacing+"/"+ tX+"/"+tY+"/"+tZ+"/"+checkX+"/"+checkY+"/"+checkZ+"/"+ignoreMap[checkY][checkZ][checkX]);
-
-                        }
-                    }
-                }
+                tZ -= zMapOffset;
+                tX += xMapOffset;
             } else if (getFacing() == (short) 4) {
-                tX -= 1-zMapOffset;
-                tZ -= xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkX = 0; checkX < machineX; checkX++) {
-                        for (checkZ = machineZ - 1; checkZ >= 0; checkZ--) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX + checkX, tY + checkY, tZ - checkZ, blockIDMap[checkY][checkX][checkZ], registryIDMap[checkY][checkX][checkZ], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = ignoreMap[checkY][checkX][checkZ];
-                                FMLLog.log(Level.FATAL,"failed");
-                            }
-                            FMLLog.log(Level.FATAL,"Checkpo"+mFacing+"/"+ tX+"/"+tY+"/"+tZ+"/"+checkX+"/"+checkY+"/"+checkZ+"/"+ignoreMap[checkY][checkX][checkZ]);
-
-                        }
-                    }
-                }
-            } else if (getFacing() == (short) 5) {
-                tX += 1-zMapOffset;
+                tX += zMapOffset;
                 tZ += xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
+            } else if (getFacing() == (short) 5) {
+                tX -= zMapOffset;
+                tZ -= xMapOffset;
+            } else {
+                tSuccess = F;
+            }
+            int checkX, checkY, checkZ;
+            for (checkY  = 0; checkY < machineY; checkY++) {
+                for (checkZ = 0; checkZ < machineZ; checkZ++) {
                     for (checkX = 0; checkX < machineX; checkX++) {
-                        for (checkZ = 0 ; checkZ < machineZ; checkZ++) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX - checkX, tY + checkY, tZ + checkZ, blockIDMap[checkY][checkX][checkZ], registryIDMap[checkY][checkX][checkZ], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = ignoreMap[checkY][checkX][checkZ];
-                                FMLLog.log(Level.FATAL,"failed");
-                            }
-                            FMLLog.log(Level.FATAL,"Checkpo"+mFacing+"/"+ tX+"/"+tY+"/"+tZ+"/"+checkX+"/"+checkY+"/"+checkZ+"/"+ignoreMap[checkY][checkX][checkZ]);
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
+                            tSuccess = ignoreMap[checkY][checkZ][checkX];
+                            //commet For debug: if (!ignorecheck[checkY][checkZ][checkX]) break;
+                            FMLLog.log(Level.FATAL, "failed");
                         }
+                        FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + ignoreMap[checkY][checkZ][checkX]);
                     }
                 }
             }
@@ -132,7 +123,8 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
         return mStructureOkay;
     }
 
-
+    //这是设置主方块的物品提示
+    //controls tooltip of controller block
     static {
         LH.add("gt.tooltip.multiblock.bath.1", "5x5x2 of Stainless Steel Walls");
         LH.add("gt.tooltip.multiblock.bath.2", "Main Block centered on Side-Bottom and facing outwards");
@@ -147,13 +139,15 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
         aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.bath.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
-
+    //这里是设置该机器的内部区域
+    //controls areas inside the machine
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         int tX = getOffsetXN(mFacing), tY = yCoord, tZ = getOffsetZN(mFacing);
         return aX >= tX - 2 && aY >= tY && aZ >= tZ - 2 && aX <= tX + 2 && aY <= tY && aZ <= tZ + 2;
     }
-
+    //下面四个是设置输入输出的地方,return null是任意面
+    //controls where to I/O, return null=any side
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
         return getAdjacentTank(SIDE_BOTTOM);
@@ -173,9 +167,9 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
     public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
         return null;
     }
-
+    //这里填写多方块结构的名称
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.bath";
+        return "ktfru.multitileentity.multiblock.example.complex";
     }
 }
