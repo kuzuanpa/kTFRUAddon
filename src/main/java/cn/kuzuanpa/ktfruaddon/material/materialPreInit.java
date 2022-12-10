@@ -5,8 +5,6 @@ import gregapi.data.FL;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.render.TextureSet;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 
@@ -98,12 +96,28 @@ public class materialPreInit {
         CookedBauxide.heat(2370, 3234);
         CookedBauxide.setOriginalMod(MOD_DATA);
 
-        final OreDictMaterial AcidPickledBauxide = OreDictMaterial.createMaterial(30020, "CookedBauxide", "Cooked Bauxide");
+        final OreDictMaterial AcidPickledBauxide = OreDictMaterial.createMaterial(30021, "CookedBauxide", "Cooked Bauxide");
         AcidPickledBauxide.setTextures(TextureSet.SET_METALLIC);
         AcidPickledBauxide.setRGBa(200, 168, 0, 4);
+        AcidPickledBauxide.put(TD.ItemGenerator.DUSTS);
         AcidPickledBauxide.put(TD.Compounds.DECOMPOSABLE);
         AcidPickledBauxide.heat(2370, 3234);
         AcidPickledBauxide.setOriginalMod(MOD_DATA);
         FL.create("acidpickledbauxide"         , "Acid Pickled Bauxide"    , null                  , 1);
+        FL.create("mixtureoffe2o3na2so4"         , "Mixure Of FE2O3 & Na2SO4"    , null                  , 1);
+        FL.create("mixtureoffe2o3k2so4"         , "Mixure Of FE2O3 & K2SO4"    , null                  , 1);
+        FL.create("sodiumaluminate","Sodium Aluminate",null,1);
+        FL.create("potassiumaluminate","Potassium Aluminate",null,1);
+        final OreDictMaterial BauxiteRedMud = OreDictMaterial.createMaterial(30022, "BauxiteRedMud", "Bauxite Red Mud");
+        BauxiteRedMud.setTextures(TextureSet.SET_METALLIC);
+        BauxiteRedMud.setRGBa(148, 0, 12, 0);
+        BauxiteRedMud.put(TD.ItemGenerator.DUSTS);
+        BauxiteRedMud.put(TD.Compounds.DECOMPOSABLE);
+        BauxiteRedMud.heat(1790, 3234);
+        BauxiteRedMud.setOriginalMod(MOD_DATA);
+        FL.create("asodiumcarbonate","Sodium Carbonate",null,1);
+        FL.create("potassiumcarbonate","Potassium Carbonate",null,1);
+        FL.create("liquifiednaturalgas","Liquified Natural Gas",null,1);
+
     }
 }
