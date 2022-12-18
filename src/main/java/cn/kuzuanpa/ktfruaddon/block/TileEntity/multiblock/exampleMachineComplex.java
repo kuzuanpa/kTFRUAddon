@@ -60,7 +60,7 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
     short k = getMultiTileEntityRegistryID();
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public int[][][] registryIDMap = {{
+    public short[][][] registryIDMap = {{
             {g, g, k, g, g},
             {g, g, g, g, g},
             {g, g, g, g, g},
@@ -84,6 +84,14 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
         int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
         return result[Facing];
     }
+    //change value there to set usage of every block.
+    public int getUsage(int blockID ,short registryID){
+        if (blockID == 18002&&registryID==k) {
+            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+        } else if (blockID == 18002||blockID==18022&&registryID==g) {
+            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
+        }else{return MultiTileEntityMultiBlockPart.NOTHING;}
+    }
 
     @Override
     public boolean checkStructure2() {
@@ -106,15 +114,14 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
                 tSuccess = F;
             }
             int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < machineY; checkY++) {
-                for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                    for (checkX = 0; checkX < machineX; checkX++) {
-                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
+            for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
+                for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
+                    for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
                             tSuccess = ignoreMap[checkY][checkZ][checkX];
-                            //commet For debug: if (!ignorecheck[checkY][checkZ][checkX]) break;
-                            FMLLog.log(Level.FATAL, "failed");
+                            //FMLLog.log(Level.FATAL, "failed");
                         }
-                        FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + ignoreMap[checkY][checkZ][checkX]);
+                      //  FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + ignoreMap[checkY][checkZ][checkX]);
                     }
                 }
             }

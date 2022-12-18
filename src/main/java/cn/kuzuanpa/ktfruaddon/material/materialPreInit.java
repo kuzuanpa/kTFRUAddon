@@ -2,6 +2,7 @@ package cn.kuzuanpa.ktfruaddon.material;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.FL;
+import gregapi.data.MT;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.render.TextureSet;

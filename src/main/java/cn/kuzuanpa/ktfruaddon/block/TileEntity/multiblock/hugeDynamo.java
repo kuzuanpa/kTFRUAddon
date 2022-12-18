@@ -2,37 +2,28 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
 
 import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
-import gregapi.data.CS;
 import gregapi.data.LH;
 import gregapi.tileentity.ITileEntityUnloadable;
-import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import gregapi.tileentity.multiblocks.TileEntityBase11MultiBlockConverter;
 import gregapi.util.ST;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidHandler;
 import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
+public class hugeDynamo extends TileEntityBase11MultiBlockConverter {
     public ITileEntityUnloadable mEmitter = null;
     public final short machineX = 7, machineY = 7, machineZ = 9;
     //This controls where is the start point to check structure,Default is the position of controller block
-
     public final short xMapOffset = -3, zMapOffset = 0;
     public static int[][][] blockIDMap = {{
-            {18002, 18022, 18002, 0, 18002, 18022, 18002},
+            {18002, 18022, 18002,   0  , 18002, 18022, 18002},
             {18002, 18022, 18002, 18002, 18002, 18022, 18002},
             {18002, 18022, 18002, 18002, 18002, 18022, 18002},
             {18002, 18022, 18002, 18002, 18002, 18022, 18002},
@@ -62,15 +53,15 @@ public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
             {18002, 18040, 18040, 18040, 18040, 18040, 18002},
             {18002, 18022, 18022, 18022, 18022, 18022, 18002}
     }, {
-            {18002, 18022, 18022,  30101, 18022, 18022, 18002},
-            {18002, 18040, 18040,  30101, 18040, 18040, 18002},
-            {18002, 18040, 18040,  30101, 18040, 18040, 18002},
-            {18002, 18040, 18040,  30101, 18040, 18040, 18002},
-            {18022, 18040, 18040,  30101, 18040, 18040, 18022},
-            {18002, 18040, 18040,  30101, 18040, 18040, 18002},
-            {18002, 18040, 18040,  30101, 18040, 18040, 18002},
-            {18002, 18040, 18040,  30101, 18040, 18040, 18002},
-            {18002, 18022, 18022,  30101, 18022, 18022, 18002}
+            {18002, 18022, 18022,  30100, 18022, 18022, 18002},
+            {18002, 18040, 18040,  30100, 18040, 18040, 18002},
+            {18002, 18040, 18040,  30100, 18040, 18040, 18002},
+            {18002, 18040, 18040,  30100, 18040, 18040, 18002},
+            {18022, 18040, 18040,  30100, 18040, 18040, 18022},
+            {18002, 18040, 18040,  30100, 18040, 18040, 18002},
+            {18002, 18040, 18040,  30100, 18040, 18040, 18002},
+            {18002, 18040, 18040,  30100, 18040, 18040, 18002},
+            {18002, 18022, 18022,  30100, 18022, 18022, 18002}
     }, {
             {18002, 18022, 18022, 18022, 18022, 18022, 18002},
             {18002, 18040, 18040, 18040, 18040, 18040, 18002},
@@ -100,13 +91,13 @@ public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
             {18002, 18022, 18002, 18002, 18002, 18022, 18002},
             {18002, 18022, 18002, 18002, 18002, 18022, 18002},
             {18002, 18022, 18002, 18002, 18002, 18022, 18002},
-            {18002, 18022, 18002, 18002, 18002, 18022, 18002}
+            {18002, 18022, 18002, 18002, 18002, 18022, 18002},
     }
     };
 
-    short k = getMultiTileEntityRegistryID();
+    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public int[][][] registryIDMap = {{
+    public short[][][] registryIDMap = {{
             {g, g, g, k, g, g, g},
             {g, g, g, g, g, g, g},
             {g, g, g, g, g, g, g},
@@ -179,72 +170,54 @@ public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
     }
     };
 
+    public int getCheckX(int Facing, int tX, int addX, int addZ) {
+        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
+        return result[Facing];
+    }
+
+    public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
+        //Don't process facings up,down and invalid
+        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
+        return result[Facing];
+    }
+    public int getUsage(int blockID, short registryID) {
+        if (blockID == 30100 && registryID == k) {
+            return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+        } else {
+            return MultiTileEntityMultiBlockPart.NOTHING;
+        }
+    }
+
+
     @Override
     public boolean checkStructure2() {
-        int tX = getOffsetXN(mFacing), tY = yCoord, tZ = getOffsetZN(mFacing);
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
             if (getFacing() == (short) 2) {
-                tZ -= 1 - zMapOffset;
-                tX += xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                        for (checkX = 0; checkX < machineX; checkX++) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX + checkX, tY + checkY, tZ + checkZ, blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = F;
-                                FMLLog.log(Level.FATAL, "failed");
-                            }
-                            FMLLog.log(Level.FATAL, "Checkpo" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + checkX + "/" + checkY + "/" + checkZ + "/");
-
-                        }
-                    }
-                }
-            } else if (getFacing() == (short) 3) {
-                tZ += 1 - zMapOffset;
+                tZ += zMapOffset;
                 tX -= xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                        for (checkX = 0; checkX < machineX; checkX++) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX - checkX, tY + checkY, tZ - checkZ, blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = F;
-                                FMLLog.log(Level.FATAL, "failed");
-                            }
-                            FMLLog.log(Level.FATAL, "Checkpo" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + checkX + "/" + checkY + "/" + checkZ + "/" + F);
-
-                        }
-                    }
-                }
+            } else if (getFacing() == (short) 3) {
+                tZ -= zMapOffset;
+                tX += xMapOffset;
             } else if (getFacing() == (short) 4) {
-                tX -= 1 - zMapOffset;
-                tZ -= xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkX = 0; checkX < machineX; checkX++) {
-                        for (checkZ = machineZ - 1; checkZ >= 0; checkZ--) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX + checkX, tY + checkY, tZ - checkZ, blockIDMap[checkY][checkX][checkZ], registryIDMap[checkY][checkX][checkZ], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = F;
-                                FMLLog.log(Level.FATAL, "failed");
-                            }
-                            FMLLog.log(Level.FATAL, "Checkpo" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + checkX + "/" + checkY + "/" + checkZ + "/" + F);
-
-                        }
-                    }
-                }
-            } else if (getFacing() == (short) 5) {
-                tX += 1 - zMapOffset;
+                tX += zMapOffset;
                 tZ += xMapOffset;
-                int checkX, checkY, checkZ;
-                for (checkY = 0; checkY < machineY; checkY++) {
-                    for (checkX = 0; checkX < machineX; checkX++) {
-                        for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                            if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX - checkX, tY + checkY, tZ + checkZ, blockIDMap[checkY][checkX][checkZ], registryIDMap[checkY][checkX][checkZ], 0, MultiTileEntityMultiBlockPart.NOTHING)) {
-                                tSuccess = F;
-                                FMLLog.log(Level.FATAL, "failed");
-                            }
-                            FMLLog.log(Level.FATAL, "Checkpo" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + checkX + "/" + checkY + "/" + checkZ + "/" + F);
+            } else if (getFacing() == (short) 5) {
+                tX -= zMapOffset;
+                tZ -= xMapOffset;
+            } else {
+                tSuccess = F;
+            }
+            int checkX, checkY, checkZ;
+            for (checkY = 0; checkY < machineY && tSuccess; checkY++) {
+                for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) {
+                    for (checkX = 0; checkX < machineX && tSuccess; checkX++) {
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
+                            tSuccess = F;
+                            FMLLog.log(Level.FATAL, "failed,Detail info see the next line");
                         }
+                        FMLLog.log(Level.FATAL, "Checkpos:/Facing:" + mFacing + "/origin point:" + tX + "," + tY + ","+ tZ + "/Now checking:" + getCheckX(mFacing, tX, checkX, checkZ) + "," + (tY + checkY) + "," + getCheckZ(mFacing, tZ, checkX, checkZ) +"/ID:"+ blockIDMap[checkY][checkZ][checkX]+"/Usage:"+getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]));
                     }
                 }
             }
@@ -252,6 +225,7 @@ public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
         }
         return mStructureOkay;
     }
+
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -261,12 +235,12 @@ public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return
-                aX >= xCoord-(SIDE_X_NEG==mFacing?0:SIDE_X_POS==mFacing?3:1) &&
-                        aY >= yCoord-(SIDE_Y_NEG==mFacing?0:SIDE_Y_POS==mFacing?3:1) &&
-                        aZ >= zCoord-(SIDE_Z_NEG==mFacing?0:SIDE_Z_POS==mFacing?3:1) &&
-                        aX <= xCoord+(SIDE_X_POS==mFacing?0:SIDE_X_NEG==mFacing?3:1) &&
-                        aY <= yCoord+(SIDE_Y_POS==mFacing?0:SIDE_Y_NEG==mFacing?3:1) &&
-                        aZ <= zCoord+(SIDE_Z_POS==mFacing?0:SIDE_Z_NEG==mFacing?3:1);
+                aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : 1) &&
+                        aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : 1) &&
+                        aZ >= zCoord - (SIDE_Z_NEG == mFacing ? 0 : SIDE_Z_POS == mFacing ? 3 : 1) &&
+                        aX <= xCoord + (SIDE_X_POS == mFacing ? 0 : SIDE_X_NEG == mFacing ? 3 : 1) &&
+                        aY <= yCoord + (SIDE_Y_POS == mFacing ? 0 : SIDE_Y_NEG == mFacing ? 3 : 1) &&
+                        aZ <= zCoord + (SIDE_Z_POS == mFacing ? 0 : SIDE_Z_NEG == mFacing ? 3 : 1);
     }
 
     static {
@@ -277,21 +251,51 @@ public class hugeGenerator extends TileEntityBase11MultiBlockConverter  {
 
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN     + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.WHITE    + LH.get("gt.tooltip.multiblock.dynamo.1"));
-        aList.add(LH.Chat.WHITE    + LH.get("gt.tooltip.multiblock.dynamo.2"));
-        aList.add(LH.Chat.WHITE    + LH.get("gt.tooltip.multiblock.dynamo.3"));
+        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
+        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.dynamo.1"));
+        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.dynamo.2"));
+        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.dynamo.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
 
-    @Override public TileEntity getEmittingTileEntity() {if (mEmitter == null || mEmitter.isDead()) {mEmitter = null; TileEntity tTileEntity = getTileEntityAtSideAndDistance(OPOS[mFacing], 3); if (tTileEntity instanceof ITileEntityUnloadable) mEmitter = (ITileEntityUnloadable)tTileEntity;} return mEmitter == null ? this : (TileEntity)mEmitter;}
-    @Override public byte getEmittingSide() {return OPOS[mFacing];}
-    @Override public boolean isInput (byte aSide) {return aSide == mFacing;}
-    @Override public boolean isOutput(byte aSide) {return aSide == OPOS[mFacing];}
+    @Override
+    public TileEntity getEmittingTileEntity() {
+        if (mEmitter == null || mEmitter.isDead()) {
+            mEmitter = null;
+            TileEntity tTileEntity = getTileEntityAtSideAndDistance(mFacing, 0);
+            if (tTileEntity instanceof ITileEntityUnloadable) mEmitter = (ITileEntityUnloadable) tTileEntity;
+        }
+        return mEmitter == null ? this : (TileEntity) mEmitter;
+    }
 
-    @Override public byte getDefaultSide() {return SIDE_FRONT;}
-    @Override public boolean[] getValidSides() {return SIDES_VALID;}
+    @Override
+    public byte getEmittingSide() {
+        return mFacing;
+    }
 
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.dynamo";}
+    @Override
+    public boolean isInput(byte aSide) {
+        return aSide == OPOS[mFacing];
+    }
+
+    @Override
+    public boolean isOutput(byte aSide) {
+        return aSide == mFacing;
+    }
+
+    @Override
+    public byte getDefaultSide() {
+        return SIDE_FRONT;
+    }
+
+    @Override
+    public boolean[] getValidSides() {
+        return SIDES_VALID;
+    }
+
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.multiblock.dynamo";
+    }
 }
