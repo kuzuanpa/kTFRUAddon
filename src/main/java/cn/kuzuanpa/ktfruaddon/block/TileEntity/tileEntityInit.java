@@ -1,6 +1,6 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.hugeGenerator;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.hugeDynamo;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.particleCollider;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.exampleMachineComplex;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
@@ -14,7 +14,6 @@ import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
-import gregtech.tileentity.multiblocks.MultiTileEntityLargeDynamo;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 import static gregapi.data.CS.*;
@@ -113,7 +112,7 @@ public class tileEntityInit {
         //aRegistry.add("ktest Steel Wall"     , "Example Mod", 12000, 0, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "kmetalwall"               , NBT_DESIGNS, 7), "wPP", "hPP"       , 'P', OP.plate.dat(MT.StainlessSteel)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(MT.StainlessSteel, 4), ST.tag(10), aRegistry.getItem());
         aRegistry.add("ktest Large Bathing Vat" , "Example Mod", 12001, 0, exampleMachineComplex.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "klargebath"               , NBT_INPUT,    1                      , NBT_ENERGY_ACCEPTED, TD.Energy.TU, NBT_RECIPEMAP, RM.Bath     , NBT_INV_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM                           , NBT_PARALLEL,  64                          , NBT_NO_CONSTANT_POWER, T), "CRC", "PMP", "APA", 'M', aRegistry.getItem(12000), 'R', IL.Processor_Crystal_Ruby, 'C', OD_CIRCUITS[6], 'P', OP.plateDense.dat(MT.StainlessSteel), 'A', IL.ROBOT_ARMS[2]);
 
-        aMat = MT.StainlessSteel;         aRegistry.add("Stainless Steel Dynamo Main Housing", "kTFRUAddin: Multiblock", 30001, 17200, hugeGenerator.class, aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "largedynamo", NBT_INPUT, 4096,NBT_INPUT_MIN , 2048, NBT_INPUT_MAX,8192 , NBT_OUTPUT, 3072, NBT_WASTE_ENERGY, true, NBT_ENERGY_ACCEPTED, TD.Energy.RU, NBT_ENERGY_EMITTED, TD.Energy.EU), "SwS", "CMC", "SBS", 'M', aRegistry.getItem(18022), 'S', OP.stickLong.dat(aMat), 'C', CS.OD_CIRCUITS[6], 'B', "gt:re-battery1");
+        aMat = MT.StainlessSteel;         aRegistry.add("Stainless Steel Dynamo Main Housing", "kTFRUAddin: Multiblock", 30001, 17200, hugeDynamo.class, aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "hugedynamo", NBT_INPUT, 49152,NBT_INPUT_MIN , 32768, NBT_INPUT_MAX,65536 , NBT_OUTPUT, 43008, NBT_WASTE_ENERGY, true, NBT_ENERGY_ACCEPTED, TD.Energy.RU, NBT_ENERGY_EMITTED, TD.Energy.EU), "SwS", "CMC", "SBS", 'M', aRegistry.getItem(18022), 'S', OP.stickLong.dat(aMat), 'C', CS.OD_CIRCUITS[6], 'B', "gt:re-battery1");
         aMat = MT.Osmiridium;           aRegistry.add("Particle Collider"                                   , "kTFRUAddon: MultiBlock", 30002, 20002, particleCollider.class    , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "particlecollider"        , NBT_INPUT, 8192, NBT_INPUT_MIN,    1, NBT_INPUT_MAX,   524288                       , NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.ParticleCollider     , NBT_ENERGY_ACCEPTED_2, TD.Energy.EU, NBT_SPECIAL_IS_START_ENERGY, T), "FFF", "FMF", "FFF", 'M', aRegistry.getItem(18014), 'F', IL.FIELD_GENERATORS[5]);
 
         //parts
