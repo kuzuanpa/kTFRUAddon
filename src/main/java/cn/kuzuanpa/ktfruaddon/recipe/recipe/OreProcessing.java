@@ -2,6 +2,7 @@ package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 import gregapi.data.FL;
 import gregapi.data.MT;
+import gregapi.data.OP;
 import gregapi.data.RM;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.util.OM;
@@ -38,28 +39,32 @@ public class OreProcessing {
         RM.Centrifuge.addRecipeX(T, 32, 20, ST.array(ZL_IS),FL.array(FL.make("mixtureoffe2o3k2so4",1000)),FL.array(ZL_FS),OM.dust(MT.K2CO3,U),OM.dust(MT.Fe2O3,U));
       //transformation between solution and dusts
         //NaAlO2
-        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("sodiumaluminate",1000)),FL.array(FL.Water_Boiling.make(500)),OM.dust(MT.NaAlO2,U));
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("sodiumaluminate",1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.NaAlO2,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(MT.NaAlO2,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("sodiumaluminate",1000)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.NaAlO2,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("sodiumaluminate",1000)),ZL_IS);
         //KAlO2
-        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("potassiumaluminate",1000)),FL.array(FL.Water_Boiling.make(500)),OM.dust(MT.KAlO2,U));
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("potassiumaluminate",1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.KAlO2,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(MT.KAlO2,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("potassiumaluminate",1000)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.KAlO2,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("potassiumaluminate",1000)),ZL_IS);
         //K2CO3
-        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("potassiumcarbonate",1000)),FL.array(FL.Water_Boiling.make(500)),OM.dust(MT.K2CO3,U));
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("potassiumcarbonate",1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.K2CO3,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(MT.K2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("potassiumcarbonate",1000)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.K2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("potassiumcarbonate",1000)),ZL_IS);
         //NaCO3
-        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("asodiumcarbonate",1000)),FL.array(FL.Water_Boiling.make(500)),OM.dust(MT.Na2CO3,U));
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("asodiumcarbonate",1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.Na2CO3,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(MT.Na2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("asodiumcarbonate",1000)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.Na2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("asodiumcarbonate",1000)),ZL_IS);
       //W Process
-        RM.Autoclave.addRecipeX(T, 0, 400,ST.array(OM.dust(OreDictMaterial.get("wolframite"),U),OM.dust(MT.NaOH,U*4)),FL.array(MT.H2O.gas(20000,T)));
-
-
-
-
-
+        RM.Autoclave.addRecipe2(T, 0, 400,new long[] {10000} ,OP.dust.mat(MT.OREMATS.Wolframite,1),OP.dust.mat(MT.NaOH,4),FL.Steam.make(20000),FL.make("sodiumheterotungstate",2000),OM.dust(MT.MgCO3, U));
+        RM.Autoclave.addRecipe2(T, 0, 400,new long[]{10000},OP.dust.mat(MT.OREMATS.Huebnerite,1),OP.dust.mat(MT.NaOH,4),FL.Steam.make(20000),FL.make("sodiumheterotungstate",2000),OM.dust(MT.MnO2, U));
+        RM.Autoclave.addRecipe2(T, 0, 400,new long[] {10000} ,OP.dust.mat(MT.OREMATS.Scheelite,1),OP.dust.mat(MT.Na2CO3,2),FL.Steam.make(20000),FL.make("sodiumheterotungstate",2000),OM.dust(MT.CaCO3, U));
+        RM.Autoclave.addRecipe2(T, 0, 400,new long[]{10000},OP.dust.mat(MT.OREMATS.Tungstate,1),OP.dust.mat(MT.Na2CO3,2),FL.Steam.make(20000),FL.make("sodiumheterotungstate",2000),OM.dust(OreDictMaterial.get(30030), U));
+        RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(FL.make("sodiumheterotungstate",4000),FL.make("hydrochloricacid",4000)),FL.array(FL.make("saltwater",8000)),OM.dust(MT.H2WO4,3*U));
+        RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(FL.make("sodiumheterotungstate",4000),FL.make("ammonia",4000)),FL.array(FL.make("ammoniumtungstate",2000)),OM.dust(MT.NaOH,4*U));
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("sodiumheterotungstate",1000)),FL.array(FL.DistW.make(700)),OM.dust(MT.WO3,U));
+      //Ti Process
+        RM.Bath.addRecipeX(T,0,120,ST.array(OM.dust(MT.OREMATS.Ilmenite,2*U)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(FL.make("martianvitriol",6000)),OM.dust(OreDictMaterial.get(30040),4*U));
+        RM.Drying.addRecipeX(T,32,40, ST.array(OM.dust(OreDictMaterial.get(30040),2*U)),FL.array(ZL_FS),FL.array(FL.DistW.make(200)),OM.dust(MT.TiO2,U));
 
 
 

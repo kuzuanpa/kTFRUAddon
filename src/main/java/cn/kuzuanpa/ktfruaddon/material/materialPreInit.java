@@ -8,6 +8,7 @@ import gregapi.oredict.OreDictMaterial;
 import gregapi.render.TextureSet;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
+import static gregapi.data.CS.U;
 
 public class materialPreInit {
     public materialPreInit(FMLPreInitializationEvent aEvent) {
@@ -45,7 +46,7 @@ public class materialPreInit {
         //        , 6.0 // Speed is 6.0 what is as fast as Steel at mining stuff
         //        , 512 // Durability is 512 what equals Steel too
           //      , 3); // Quality is 3 for Diamond Tool Level
-        tExamplium.setMcfg(0, gregapi.data.MT.Steel, 1 * gregapi.data.CS.U); // This Material consists out of one Unit of Steel.
+        tExamplium.setMcfg(0, gregapi.data.MT.Steel, 1 * U); // This Material consists out of one Unit of Steel.
         tExamplium.setOriginalMod(MOD_DATA); // Gives your Mod the credit for creating this Material.
         tExamplium.aspects(gregapi.data.TC.METALLUM, 3); // Thaumcraft Aspects related to this Material.
 
@@ -61,6 +62,7 @@ public class materialPreInit {
         ammoniumDichromate.put(TD.ItemGenerator.DUSTS);
         ammoniumDichromate.heat(456, 460);
         ammoniumDichromate.setOriginalMod(MOD_DATA);
+
 
 
         //NH4Cr(SO4)2
@@ -119,6 +121,27 @@ public class materialPreInit {
         FL.create("asodiumcarbonate","Sodium Carbonate",null,1);
         FL.create("potassiumcarbonate","Potassium Carbonate",null,1);
         FL.create("liquifiednaturalgas","Liquified Natural Gas",null,1);
+        FL.create("sodiumheterotungstate","Sodium Heterotungstate",null,1);
+        final OreDictMaterial LithiumCarbonate = OreDictMaterial.createMaterial(30030, "LithiumCarbonate", "Lithium Carbonate");
+        LithiumCarbonate.setTextures(TextureSet.SET_METALLIC);
+        LithiumCarbonate.setRGBa(248, 244, 248, 0);
+        LithiumCarbonate.put(TD.ItemGenerator.DUSTS);
+        LithiumCarbonate.put(TD.Compounds.DECOMPOSABLE);
+        LithiumCarbonate.heat(943, 1582);
+        LithiumCarbonate.setOriginalMod(MOD_DATA);
+        FL.create("ammoniumtungstate","Ammonium Tungstate",null,1);
+
+        final OreDictMaterial MetatitanicAcid = OreDictMaterial.createMaterial(30040, "MetatitanicAcid", "Metatitanic Acid");
+        MetatitanicAcid.setTextures(TextureSet.SET_METALLIC);
+        MetatitanicAcid.setRGBa(248, 244, 248, 0);
+        MetatitanicAcid.put(TD.ItemGenerator.DUSTS);
+        MetatitanicAcid.put(TD.Compounds.DECOMPOSABLE);
+        MetatitanicAcid.heat(783, 784);
+        MetatitanicAcid.setOriginalMod(MOD_DATA); 
+
+
+
+        
 
     }
 }
