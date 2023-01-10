@@ -213,11 +213,14 @@ public class hugeDynamo extends TileEntityBase11MultiBlockConverter {
             for (checkY = 0; checkY < machineY && tSuccess; checkY++) {
                 for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) {
                     for (checkX = 0; checkX < machineX && tSuccess; checkX++) {
-                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this,
+                                getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ),
+                                blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0,
+                                getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
                             tSuccess = F;
-                            FMLLog.log(Level.FATAL, "failed,Detail info see the next line");
+                            //FMLLog.log(Level.FATAL, "failed,Detail info see the next line");
                         }
-                        FMLLog.log(Level.FATAL, "Checkpos:/Facing:" + mFacing + "/origin point:" + tX + "," + tY + ","+ tZ + "/Now checking:" + getCheckX(mFacing, tX, checkX, checkZ) + "," + (tY + checkY) + "," + getCheckZ(mFacing, tZ, checkX, checkZ) +"/ID:"+ blockIDMap[checkY][checkZ][checkX]+"/Usage:"+getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]));
+                        //FMLLog.log(Level.FATAL, "Checkpos:/Facing:" + mFacing + "/origin point:" + tX + "," + tY + ","+ tZ + "/Now checking:" + getCheckX(mFacing, tX, checkX, checkZ) + "," + (tY + checkY) + "," + getCheckZ(mFacing, tZ, checkX, checkZ) +"/ID:"+ blockIDMap[checkY][checkZ][checkX]+"/Usage:"+getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]));
                     }
                 }
             }
