@@ -1,23 +1,33 @@
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
+import cpw.mods.fml.common.FMLLog;
 import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.data.RM;
 import gregapi.oredict.OreDictMaterial;
+import gregapi.recipes.Recipe;
 import gregapi.util.OM;
 import gregapi.util.ST;
+import org.apache.logging.log4j.Level;
+
+import java.util.List;
 
 import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.HeatMixer;
 import static gregapi.data.CS.*;
 
 public class OreProcessing {
     public OreProcessing() {
-        //Cr processing
+  //Cr processing
+       // final Recipe.RecipeMap recipeMap;
         RM.Bath.addRecipeX(T,0, 512 , ST.array(OM.dust(OreDictMaterial.get(9113), U*2), OM.dust(OreDictMaterial.get(30014), U*9)), FL.array(MT.H2SO4.liquid(6000,T)), FL.array(FL.Water.make(4000)), OM.dust(OreDictMaterial.get(30012), U*6), OM.dust(OreDictMaterial.get(30013), U*3));
-        RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.liquid(2000,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OM.dust(OreDictMaterial.get(30014),U*9));
-        HeatMixer.addRecipeX(T,256,160,ST.array(OM.dust(OreDictMaterial.get(30011))),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OM.dust(MT.CrO2, U));
-  //Al processing
+        RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2000,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OM.dust(OreDictMaterial.get(30014),U*9));
+        HeatMixer.addRecipeX(T,256,160,ST.array(OM.dust(OreDictMaterial.get(30011))),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OM.dust(MT.CrO2, U * 2));
+       // recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get("gt.recipe.electrolyzer");
+       // recipeMap.mRecipeList.removeAll(recipeMap.getNEIRecipes(OP.dust.mat(MT.Cr,U)));
+       // FMLLog.log(Level.FATAL," "+ recipeMap.mRecipeList + recipeMap.getNEIRecipes(OP.dust.mat(MT.Cr,U)));
+
+        //Al processing
         //Step1:Bauxide process
         HeatMixer.addRecipeX(T,120,80,ST.array(OM.dust(MT.CaCO3,U),OM.dust(MT.Na2CO3,U *2), OM.dust(OreDictMaterial.get(9105),U)),ZL_FS,FL.CarbonDioxide.make(3000),OM.dust(OreDictMaterial.get(30020),U*2));
         RM.Bath.addRecipeX(T, 0, 80, ST.array(OM.dust(OreDictMaterial.get(9105),U)),FL.array(MT.H2SO4.liquid(U *4 ,T)),FL.array(FL.make("acidpickledbauxide",2000)),OM.dust(MT.SiO2,U));
