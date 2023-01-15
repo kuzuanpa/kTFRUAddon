@@ -1,6 +1,6 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
-
-import cpw.mods.fml.common.FMLLog;
+//This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
+//这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import cpw.mods.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 
 import java.util.List;
@@ -50,7 +51,8 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
     //In default (didn't modify offset),main block is on tX,tZ.For example:
     //{main,part},
     //{part,part}
-    //这里是决定每个方块的子id
+    //这里决定每个参与构成本机器的方块的子id
+    //Controls every block needed to build the machine
     public static int[][][] blockIDMap = {{
             {18002, 18006, 0, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
@@ -133,17 +135,17 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {
-        LH.add("gt.tooltip.multiblock.bath.1", "5x5x2 of Stainless Steel Walls");
-        LH.add("gt.tooltip.multiblock.bath.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("gt.tooltip.multiblock.bath.3", "Input and Output at any Blocks");
+        LH.add("gt.tooltip.multiblock.example.complex.1", "5x5x2 of Stainless Steel Walls");
+        LH.add("gt.tooltip.multiblock.example.complex.2", "Main Block centered on Side-Bottom and facing outwards");
+        LH.add("gt.tooltip.multiblock.example.complex.3", "Input and Output at any Blocks");
     }
 
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.bath.1"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.bath.2"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.bath.3"));
+        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.1"));
+        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.2"));
+        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
     //这里是设置该机器的内部区域
