@@ -3,16 +3,17 @@ package cn.kuzuanpa.ktfruaddon.enchant;
 import gregapi.config.Config;
 import gregapi.config.ConfigCategories;
 import gregapi.data.LH;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.entity.EnumCreatureAttribute;
 
-public class enchantSmiteTFC extends EnchantmentDamage {
+public class enchantSmiteTFC extends EnchantmentDamage{
     public final int damageType;
     public static enchantSmiteTFC INSTANCE;
 
     public enchantSmiteTFC() {
         super(Config.addIDConfig(ConfigCategories.IDs.enchantments, "SmiteTFC", 30), 5, -1);
-        LH.add(getName(), "SmiteTFC");
+        LH.add(getName(), "Advanced Smite");
         INSTANCE = this;
         this.damageType = 0;
     }

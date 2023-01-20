@@ -1,6 +1,6 @@
 package cn.kuzuanpa.ktfruaddon.item.item;
 
-import cn.kuzuanpa.ktfruaddon.item.util.ItemLoader;
+import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 
@@ -15,7 +15,7 @@ public class itemIT extends MultiItemRandom {
 
     @Override
     public void addItems() {
-        ItemLoader.BioCircuit.set(addItem(9999, "BioCircuit", "A Circuit that uses live brain. The \"Real Artificial Intelligence\""));
-        ItemLoader.NeuralComputer.set(addItem(10000,"Neural network computer","Extremely fast and intelligent With \"Neural Network\" Technology"));
+        ItemList.BioCircuit.set(addItem(9999, "BioCircuit", "A Circuit that uses live brain. The \"Real Artificial Intelligence\""));
+        ItemList.NeuralComputer.set(addItem(10000,"Neural network computer","Extremely fast and intelligent With \"Neural Network\" Technology"));
     }
 }
