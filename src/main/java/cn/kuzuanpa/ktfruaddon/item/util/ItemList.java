@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import static gregapi.data.CS.*;
 
-public enum ItemLoader implements IItemContainer{
+public enum ItemList implements IItemContainer{
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
     BioCircuit, NeuralComputer
     ;

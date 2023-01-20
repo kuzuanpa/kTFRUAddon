@@ -12,7 +12,7 @@ public class enchantSharpnessTFC extends EnchantmentDamage {
 
     public enchantSharpnessTFC() {
         super(Config.addIDConfig(ConfigCategories.IDs.enchantments, "SharpnessTFC", 29), 10, -1);
-        LH.add(getName(), "SharpnessTFC");
+        LH.add(getName(), "Advanced Sharpness");
         INSTANCE = this;
         this.damageType = 0;
     }
