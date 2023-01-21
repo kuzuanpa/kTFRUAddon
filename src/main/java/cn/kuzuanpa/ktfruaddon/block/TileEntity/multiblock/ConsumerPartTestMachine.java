@@ -7,29 +7,33 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
+import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import gregapi.util.ST;
+import ic2.api.energy.tile.IEnergyAcceptor;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
-public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
+
+public class ConsumerPartTestMachine extends TileEntityBase11MultiInputMachine{
         //决定机器大小
         //this controls the size of machine.
-        public final short machineX = 3, machineY = 2, machineZ = 2;
+        public final short machineX = 1, machineY = 1, machineZ = 2;
         //决定结构检测的起始位置，默认情况下是从主方块起始
         //This controls where is the start point to check structure,Default is the position of controller block
-        public final short xMapOffset = -1, zMapOffset = 0;
+        public final short xMapOffset = 0, zMapOffset = 0;
         //映射表方向:
         //                 |
         //                 |
@@ -57,8 +61,8 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         //这里决定每个参与构成本机器的方块的子id
         //Controls every block needed to build the machine
         public static final int[][][] blockIDMap = {{
-                {18002, 0, 18002},
-                {18002, 18002, 18002},
+                {0, 0, 18002},
+                {20355, 18002, 18002},
         },{
                 {18002, 0, 18002},
                 {18002, 18002, 18002},
@@ -67,7 +71,7 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         short k = getMultiTileEntityRegistryID();
         short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
         public final short[][][] registryIDMap = {{
-                {g, k, g},
+                {k, k, g},
                 {g, k, g}
         },{
                 {g, k, g},
@@ -127,14 +131,15 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
                 for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (blockIDMap[checkY][checkX][checkZ] == 30100) {
-                                if (utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
-                                    tSuccess = ignoreMap[checkY][checkZ][checkX];
-                                } else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
+                            if (blockIDMap[checkY][checkZ][checkX] == 20355) {
+                                if (utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
+                                this.addInputSubSource((MultiTileEntityBasicMachine) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
+                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
                         }
                     }
                 }
+                //FMLLog.log(Level.FATAL,"a"+tSuccess);
                 return tSuccess;
             }
             return mStructureOkay;
@@ -174,6 +179,7 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
             return getAdjacentTank(SIDE_BOTTOM);
         }
 
+
         @Override
         public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
             return getAdjacentTileEntity(SIDE_BOTTOM);
@@ -193,4 +199,5 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         public String getTileEntityName() {
             return "ktfru.multitileentity.multiblock.maskaligner.uv";
         }
-    }
+
+}
