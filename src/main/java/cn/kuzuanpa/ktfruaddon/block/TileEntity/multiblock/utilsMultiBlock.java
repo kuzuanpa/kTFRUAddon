@@ -18,7 +18,7 @@ public class utilsMultiBlock {
         } else if (tTileEntity instanceof MultiTileEntityMultiBlockPart && ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
             ITileEntityMultiBlockController tTarget = ((MultiTileEntityMultiBlockPart) tTileEntity).getTarget(false);
             if (tTarget != aController && tTarget != null) {
-                FMLLog.log(Level.FATAL, "a" + tTarget + "?" + aController + "?" + tTarget);
+                //FMLLog.log(Level.FATAL, "a" + tTarget + "?" + aController + "?" + tTarget);
                 return false;
             } else {
                 ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(aController, aDesign, aMode);

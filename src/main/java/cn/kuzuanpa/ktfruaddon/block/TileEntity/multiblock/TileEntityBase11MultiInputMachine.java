@@ -22,9 +22,9 @@ public abstract class TileEntityBase11MultiInputMachine extends TileEntityBase10
       return this.MultiInputSubBlocks;
     }
     public void isSubSourceRunning(MultiTileEntityMultiBlockPartEnergyConsumer subSource){
-        if (subSource.isInvalid()){ subSourceRunning = false;
-            FMLLog.log(Level.FATAL,"b");
-        }
+        if (subSource.isInvalid()) subSourceRunning = false;
+           // FMLLog.log(Level.FATAL,"b");
+        //}
         subSourceRunning = subSourceRunning && (subSource.getStateRunningPassively() || subSource.getStateRunningActively());
     }
 
@@ -38,7 +38,7 @@ public abstract class TileEntityBase11MultiInputMachine extends TileEntityBase10
             }
             this.MultiInputSubBlocks.forEach(this::isSubSourceRunning);
             if (this.getStateOnOff() != subSourceRunning) this.setStateOnOff(subSourceRunning);
-            FMLLog.log(Level.FATAL, "a" + this.mStructureOkay + "/" + this.MultiInputSubBlocks.isEmpty() + "/" + subSourceRunning);
+            //FMLLog.log(Level.FATAL, "a" + this.mStructureOkay + "/" + this.MultiInputSubBlocks.isEmpty() + "/" + subSourceRunning);
             return subSourceRunning;
         }else return false;
     }
