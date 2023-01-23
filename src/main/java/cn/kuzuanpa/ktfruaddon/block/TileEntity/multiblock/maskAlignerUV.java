@@ -111,13 +111,13 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine{
                                 if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
                             else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], getMultiTileEntityRegistryID(), 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
-                            FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + blockIDMap[checkY][checkZ][checkX]);
+                            //FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + blockIDMap[checkY][checkZ][checkX]);
 
                         }
                     }
                 }
 
-                FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
+               // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
                 return tSuccess;
 
             }
@@ -150,7 +150,7 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine{
         //controls areas inside the machine
         @Override
         public boolean isInsideStructure(int aX, int aY, int aZ) {
-            FMLLog.log(Level.FATAL,"a"+(xCoord-(SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX)));
+            //FMLLog.log(Level.FATAL,"a"+(xCoord-(SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX)));
             return aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX) &&
                     aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : machineY) &&
                     aZ >= zCoord - (SIDE_Z_NEG == mFacing ? 0 : SIDE_Z_POS == mFacing ? 3 : machineZ) &&
