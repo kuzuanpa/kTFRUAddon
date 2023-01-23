@@ -9,7 +9,6 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import gregapi.api.Abstract_Proxy;
 import gregapi.block.MaterialMachines;
 import gregapi.block.MaterialScoopable;
 import gregapi.block.multitileentity.MultiTileEntityBlock;

@@ -8,18 +8,13 @@
  */
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
-import cpw.mods.fml.common.FMLLog;
 import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.data.RM;
 import gregapi.oredict.OreDictMaterial;
-import gregapi.recipes.Recipe;
 import gregapi.util.OM;
 import gregapi.util.ST;
-import org.apache.logging.log4j.Level;
-
-import java.util.List;
 
 import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.HeatMixer;
 import static gregapi.data.CS.*;

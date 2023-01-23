@@ -11,7 +11,6 @@ package cn.kuzuanpa.ktfruaddon.enchant;
 import gregapi.config.Config;
 import gregapi.config.ConfigCategories;
 import gregapi.data.LH;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.entity.EnumCreatureAttribute;
 

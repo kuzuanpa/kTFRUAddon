@@ -5,7 +5,7 @@ This fork supports Gradle 4.4.1 and later. This example project uses Gradle 5.6.
 
 ## How to use this example project
 
-You can download this example project from [here](https://github.com/anatawa12/ForgeGradle-example/archive/master.zip), or use it as a template on Github.
+You can download this example project from [here](https://github.com/anatawa12/ForgeGradle-example/archive/master.zip), or use it as a template on GitHub.
 This project can be used as a replacement for Forge's 1.7.10 MDK.
 
 ## How to replace ForgeGradle 1.2. with anatawa12's fork
