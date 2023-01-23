@@ -12,6 +12,7 @@ import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.ConsumerPartTestMachin
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.hugeDynamo;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.particleCollider;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.exampleMachineComplex;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
@@ -135,23 +136,30 @@ public class tileEntityInit {
         RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
 
         aRegistry.add("Light Module (UV)"     , "kTFRUAddon: Multiblock", 30110, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
-        aRegistry.add("Light Module (DUV)"     , "kTFRUAddon: Multiblock", 30111, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
-        aRegistry.add("Light Module (EUV)"     , "kTFRUAddon: Multiblock", 30112, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
-        aRegistry.add("Light Module (X-Ray)"     , "kTFRUAddon: Multiblock", 30113, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
 
-        aRegistry.add("Mask Aligner IO Module (HV)"     , "kTFRUAddon: Multiblock", 30110, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
         aRegistry.add("Light Module (DUV)"     , "kTFRUAddon: Multiblock", 30111, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
-        aRegistry.add("Light Module (EUV)"     , "kTFRUAddon: Multiblock", 30112, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
-        aRegistry.add("Light Module (X-Ray)"     , "kTFRUAddon: Multiblock", 30113, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
-        RM.Welder.addRecipe2(F, 512, 10240, OP.plateDense.mat(MT.HSSE, 6), OP.casingMachine.mat(MT.HSSE, 1), ST.tag(1), aRegistry.getItem());
 
+        aRegistry.add("Light Module (EUV)"     , "kTFRUAddon: Multiblock", 30112, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
+
+        aRegistry.add("Light Module (X-Ray)"     , "kTFRUAddon: Multiblock", 30113, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
+
+
+        aRegistry.add("Mask Aligner IO Manager (UV)"     , "kTFRUAddon: Multiblock", 30120, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
+
+        aRegistry.add("Mask Aligner IO Manager (DUV)"     , "kTFRUAddon: Multiblock", 30121, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
+
+        aRegistry.add("Mask Aligner IO Manager (EUV)"     , "kTFRUAddon: Multiblock", 30122, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
+
+        aRegistry.add("Mask Aligner IO Manager (X-Ray)"     , "kTFRUAddon: Multiblock", 30123, 17200, MultiTileEntityMultiBlockPart.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
+
+        //special part
+        aRegistry.add("Mask Aligner Energy Module (UV)"     , "kTFRUAddon: Multiblock", 31000, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.Al.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule1"   , NBT_INPUT, 228, NBT_INPUT_MIN,    196, NBT_INPUT_MAX,   256  , NBT_ENERGY_ACCEPTED, TD.Energy.EU));
+
+        aRegistry.add("Mask Aligner Energy Module (DUV)"     , "kTFRUAddon: Multiblock", 31001, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule2"   , NBT_INPUT, 3072, NBT_INPUT_MIN,    2048, NBT_INPUT_MAX,   4096  , NBT_ENERGY_ACCEPTED, TD.Energy.EU));
+
+        aRegistry.add("Mask Aligner Energy Module (EUV)"     , "kTFRUAddon: Multiblock", 31002, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule3"   , NBT_DESIGNS, 7));
+
+        aRegistry.add("Mask Aligner Energy Module (X-Ray)"     , "kTFRUAddon: Multiblock", 31003, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule4"   , NBT_DESIGNS, 7));
 
 
     }

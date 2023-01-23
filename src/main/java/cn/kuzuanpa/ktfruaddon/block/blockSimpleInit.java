@@ -13,13 +13,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 
 
-public class blockLoader
+public class blockSimpleInit
 {
-    public static Block exampleBlock = new blockExampleBlock();
-    public blockLoader(FMLPreInitializationEvent event)
+    public blockSimpleInit(FMLPreInitializationEvent event)
     {
-        register(exampleBlock, "exampleBlock");
+        GameRegistry.registerBlock(new blockExampleBlock(), "exampleBlock");
     }
-
-    private static void register(Block block, String name){GameRegistry.registerBlock(block, name);}
 }

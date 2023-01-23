@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 public  class utilsMultiBlock {
     public utilsMultiBlock() {
     }
-@SuppressWarnings("No belongings check, not applied to blocks in corner")
+@SuppressWarnings("No belongings check, donot apply to blocks in corner")
     public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
         if (tTileEntity == null) return true;

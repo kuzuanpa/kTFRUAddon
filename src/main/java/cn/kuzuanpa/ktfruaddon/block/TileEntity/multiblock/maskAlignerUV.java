@@ -57,31 +57,16 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         //这里决定每个参与构成本机器的方块的子id
         //Controls every block needed to build the machine
         public static final int[][][] blockIDMap = {{
-                {18002, 0, 18002},
-                {18002, 18002, 18002},
+                {18002,   0  , 18002},
+                {18002, 31000, 18002},
         },{
-                {18002, 0, 18002},
-                {18002, 18002, 18002},
+                {18002, 30110, 18002},
+                {18002, 30120, 18002},
         }};
         //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
         short k = getMultiTileEntityRegistryID();
-        short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-        public final short[][][] registryIDMap = {{
-                {g, k, g},
-                {g, k, g}
-        },{
-                {g, k, g},
-                {g, k, g}
-        }};
         //T是忽略此位置的方块 ,F是正常检测
         //T = ignore ,F = normally check
-        public static final boolean[][][] ignoreMap = {{
-                {F, T, F},
-                {F, F, F}
-        },{
-                {F, F, F},
-                {F, F, F}
-        }};
 
         public int getCheckX(int Facing, int tX, int addX, int addZ) {
             int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
@@ -94,13 +79,10 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         }
         //change value there to set usage of every block.
         public int getUsage(int blockID ,short registryID){
-            if (blockID == 18002&&registryID==k) {
+            if (blockID == 30110&&registryID==k) {
                 return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
             }
-            if (blockID==18022&&registryID==k) {
-                return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
-            }
-            return MultiTileEntityMultiBlockPart.NOTHING;
+            return MultiTileEntityMultiBlockPart.EVERYTHING;
         }
 
         @Override
@@ -127,10 +109,10 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
                 for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (blockIDMap[checkY][checkX][checkZ] == 30100) {
-                                if (utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
-                                    tSuccess = ignoreMap[checkY][checkZ][checkX];
-                                } else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
+                            if (blockIDMap[checkY][checkX][checkZ] == 31000) {
+                                if (utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], k, 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) {
+                                    tSuccess = F;
+                                } else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], k, 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
                             }
                         }
                     }
@@ -143,9 +125,12 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         //这是设置主方块的物品提示
         //controls tooltip of controller block
         static {
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.1", "5x5x2 of Stainless Steel Walls");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.2", "Main Block centered on Side-Bottom and facing outwards");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.3", "Input and Output at any Blocks");
+            LH.add("gt.tooltip.multiblock.maskaligner.uv.1", "2 set of 2x2x1 Al Wall. A 1m gap between them.");
+            LH.add("gt.tooltip.multiblock.maskaligner.uv.2", "Main Block facing outwards, in side-bottom of the gap");
+            LH.add("gt.tooltip.multiblock.maskaligner.uv.3", "Light Module is in top of Main Block, Energy Module is behind the Main Block.");
+            LH.add("gt.tooltip.multiblock.maskaligner.uv.4", "The left 1 block space is IO Manager.");
+            LH.add("gt.tooltip.multiblock.maskaligner.uv.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
+            LH.add("gt.tooltip.multiblock.maskaligner.uv.6", "Item and fluid inputs from anyblock in upside, output from MainBlock in bottom.");
         }
 
         @Override
@@ -154,6 +139,9 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
             aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.1"));
             aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.2"));
             aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.3"));
+            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.4"));
+            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.5"));
+            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.6"));
             super.addToolTips(aList, aStack, aF3_H);
         }
         //这里设置该机器的内部区域
@@ -181,12 +169,12 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
 
         @Override
         public DelegatorTileEntity<IInventory> getItemInputTarget(byte aSide) {
-            return getAdjacentInventory(SIDE_ANY);
+            return getAdjacentInventory(SIDE_UP);
         }
 
         @Override
         public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
-            return getAdjacentTank(SIDE_ANY);
+            return getAdjacentTank(SIDE_UP);
         }
         //这里填写多方块结构的名称
         @Override
