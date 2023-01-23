@@ -7,29 +7,30 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
+import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
-import gregapi.util.ST;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
-public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
+public class maskAlignerUV extends TileEntityBase11MultiInputMachine{
         //决定机器大小
         //this controls the size of machine.
         public final short machineX = 3, machineY = 2, machineZ = 2;
         //决定结构检测的起始位置，默认情况下是从主方块起始
         //This controls where is the start point to check structure,Default is the position of controller block
-        public final short xMapOffset = -1, zMapOffset = 0;
+        public final short xMapOffset = -1;
         //映射表方向:
         //                 |
         //                 |
@@ -57,11 +58,11 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         //这里决定每个参与构成本机器的方块的子id
         //Controls every block needed to build the machine
         public static final int[][][] blockIDMap = {{
-                {18002,   0  , 18002},
-                {18002, 31000, 18002},
+                {30102,   0  , 30102},
+                {30102, 31000, 30102},
         },{
-                {18002, 30110, 18002},
-                {18002, 30120, 18002},
+                {30102, 30110, 30102},
+                {30102, 30120, 30102},
         }};
         //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
         short k = getMultiTileEntityRegistryID();
@@ -91,16 +92,12 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
             if (worldObj.blockExists(tX, tY, tZ)) {
                 boolean tSuccess = T;
                 if (getFacing() == (short) 2) {
-                    tZ += zMapOffset;
                     tX -= xMapOffset;
                 } else if (getFacing() == (short) 3) {
-                    tZ -= zMapOffset;
                     tX += xMapOffset;
                 } else if (getFacing() == (short) 4) {
-                    tX += zMapOffset;
                     tZ += xMapOffset;
                 } else if (getFacing() == (short) 5) {
-                    tX -= zMapOffset;
                     tZ -= xMapOffset;
                 } else {
                     tSuccess = F;
@@ -109,15 +106,20 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
                 for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (blockIDMap[checkY][checkX][checkZ] == 31000) {
-                                if (utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], k, 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) {
-                                    tSuccess = F;
-                                } else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], k, 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
+                            if (blockIDMap[checkY][checkZ][checkX] == 31000) {
+                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], getMultiTileEntityRegistryID(), 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
+                                if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
+                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], getMultiTileEntityRegistryID(), 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
+                            FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + blockIDMap[checkY][checkZ][checkX]);
+
                         }
                     }
                 }
+
+                FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
                 return tSuccess;
+
             }
             return mStructureOkay;
         }
@@ -148,6 +150,7 @@ public class maskAlignerUV extends TileEntityBase10MultiBlockMachine{
         //controls areas inside the machine
         @Override
         public boolean isInsideStructure(int aX, int aY, int aZ) {
+            FMLLog.log(Level.FATAL,"a"+(xCoord-(SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX)));
             return aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX) &&
                     aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : machineY) &&
                     aZ >= zCoord - (SIDE_Z_NEG == mFacing ? 0 : SIDE_Z_POS == mFacing ? 3 : machineZ) &&

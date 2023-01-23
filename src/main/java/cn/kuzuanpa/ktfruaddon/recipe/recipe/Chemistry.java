@@ -10,10 +10,7 @@ package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 import gregapi.data.FL;
 import gregapi.data.FM;
-import gregapi.data.MT;
 import gregapi.data.RM;
-import gregapi.oredict.OreDictMaterial;
-import gregapi.util.OM;
 import gregapi.util.ST;
 
 import static gregapi.data.CS.*;

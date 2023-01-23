@@ -1,20 +1,30 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
 
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
+import gregapi.util.UT;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 
 public abstract class TileEntityBase11MultiInputMachine extends TileEntityBase10MultiBlockMachine {
-    public ArrayList<MultiTileEntityBasicMachine> MultiInputSubBlocks = new ArrayList<>();
+    public ArrayList<MultiTileEntityMultiBlockPartEnergyConsumer> MultiInputSubBlocks = new ArrayList<>();
     public boolean subSourceRunning =true;
-    public void addInputSubSource(MultiTileEntityBasicMachine p){
+
+    public void addInputSubSource(MultiTileEntityMultiBlockPartEnergyConsumer p){
         this.MultiInputSubBlocks.add(p);
     }
-    public ArrayList<MultiTileEntityBasicMachine> getInputSubSource(){
+    public ArrayList<MultiTileEntityMultiBlockPartEnergyConsumer> getInputSubSource(){
       return this.MultiInputSubBlocks;
     }
-    public void isSubSourceRunning(MultiTileEntityBasicMachine subSource){
+    public void isSubSourceRunning(MultiTileEntityMultiBlockPartEnergyConsumer subSource){
+        if (subSource.isInvalid()){ subSourceRunning = false;
+            FMLLog.log(Level.FATAL,"b");
+        }
         subSourceRunning = subSourceRunning && (subSource.getStateRunningPassively() || subSource.getStateRunningActively());
     }
 
@@ -22,10 +32,15 @@ public abstract class TileEntityBase11MultiInputMachine extends TileEntityBase10
     public boolean onTickCheck(long aTimer) {
         if (this.mStructureOkay) {
             subSourceRunning = true;
+            if (this.MultiInputSubBlocks.isEmpty()) {
+                this.setStateOnOff(false);
+                return false;
+            }
             this.MultiInputSubBlocks.forEach(this::isSubSourceRunning);
-            //FMLLog.log(Level.FATAL,"isSubSourceEunning:"+subSourceRunning);
             if (this.getStateOnOff() != subSourceRunning) this.setStateOnOff(subSourceRunning);
-        return subSourceRunning;}else return false;
+            FMLLog.log(Level.FATAL, "a" + this.mStructureOkay + "/" + this.MultiInputSubBlocks.isEmpty() + "/" + subSourceRunning);
+            return subSourceRunning;
+        }else return false;
     }
 }
 

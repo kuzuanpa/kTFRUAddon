@@ -7,7 +7,7 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
-import cpw.mods.fml.common.FMLLog;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
@@ -15,13 +15,11 @@ import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
-import ic2.api.energy.tile.IEnergyAcceptor;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -62,17 +60,17 @@ public class ConsumerPartTestMachine extends TileEntityBase11MultiInputMachine{
         //Controls every block needed to build the machine
         public static final int[][][] blockIDMap = {{
                 {0, 0, 18002},
-                {20355, 18002, 18002},
+                {31000, 18002, 18002},
         },{
                 {18002, 0, 18002},
                 {18002, 18002, 18002},
         }};
         //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
-        short k = getMultiTileEntityRegistryID();
-        short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+        final short k = getMultiTileEntityRegistryID();
+        final short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
         public final short[][][] registryIDMap = {{
                 {k, k, g},
-                {g, k, g}
+                {k, k, g}
         },{
                 {g, k, g},
                 {g, k, g}
@@ -113,17 +111,9 @@ public class ConsumerPartTestMachine extends TileEntityBase11MultiInputMachine{
             if (worldObj.blockExists(tX, tY, tZ)) {
                 boolean tSuccess = T;
                 if (getFacing() == (short) 2) {
-                    tZ += zMapOffset;
-                    tX -= xMapOffset;
                 } else if (getFacing() == (short) 3) {
-                    tZ -= zMapOffset;
-                    tX += xMapOffset;
                 } else if (getFacing() == (short) 4) {
-                    tX += zMapOffset;
-                    tZ += xMapOffset;
                 } else if (getFacing() == (short) 5) {
-                    tX -= zMapOffset;
-                    tZ -= xMapOffset;
                 } else {
                     tSuccess = F;
                 }
@@ -131,9 +121,9 @@ public class ConsumerPartTestMachine extends TileEntityBase11MultiInputMachine{
                 for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (blockIDMap[checkY][checkZ][checkX] == 20355) {
-                                if (utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
-                                this.addInputSubSource((MultiTileEntityBasicMachine) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
+                            if (blockIDMap[checkY][checkZ][checkX] == 31000) {
+                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
+                                if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
                             else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage(blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
                         }
@@ -197,7 +187,7 @@ public class ConsumerPartTestMachine extends TileEntityBase11MultiInputMachine{
         //这里填写多方块结构的名称
         @Override
         public String getTileEntityName() {
-            return "ktfru.multitileentity.multiblock.maskaligner.uv";
+            return "ktfru.multitileentity.testmachine.multiinput";
         }
 
 }

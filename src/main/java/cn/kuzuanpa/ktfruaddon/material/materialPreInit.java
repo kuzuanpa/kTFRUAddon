@@ -10,7 +10,6 @@ package cn.kuzuanpa.ktfruaddon.material;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.FL;
-import gregapi.data.MT;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.render.TextureSet;
@@ -54,7 +53,7 @@ public class materialPreInit {
         //        , 6.0 // Speed is 6.0 what is as fast as Steel at mining stuff
         //        , 512 // Durability is 512 what equals Steel too
           //      , 3); // Quality is 3 for Diamond Tool Level
-        tExamplium.setMcfg(0, gregapi.data.MT.Steel, 1 * U); // This Material consists out of one Unit of Steel.
+        tExamplium.setMcfg(0, gregapi.data.MT.Steel, U); // This Material consists out of one Unit of Steel.
         tExamplium.setOriginalMod(MOD_DATA); // Gives your Mod the credit for creating this Material.
         tExamplium.aspects(gregapi.data.TC.METALLUM, 3); // Thaumcraft Aspects related to this Material.
 

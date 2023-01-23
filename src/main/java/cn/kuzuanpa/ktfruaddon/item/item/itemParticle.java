@@ -35,5 +35,5 @@ public class itemParticle extends MultiItemRandom {
         ItemList.Higgs_Boson.set(addItem(1008, "Higgs-Boson", "A Standard Model particle. Origin of mass. "));
         ItemList.Kerr_Blackhole.set(addItem(1009, "Kerr Blackhole", "An extremely rare tiny blackhole that can be manually produced in particle collider "));
 
-    };
+    }
 }

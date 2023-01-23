@@ -8,7 +8,6 @@
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
 
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.ITileEntityUnloadable;
@@ -19,7 +18,6 @@ import gregapi.util.ST;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -203,16 +201,12 @@ public class hugeDynamo extends TileEntityBase11MultiBlockConverter {
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
             if (getFacing() == (short) 2) {
-                tZ += zMapOffset;
                 tX -= xMapOffset;
             } else if (getFacing() == (short) 3) {
-                tZ -= zMapOffset;
                 tX += xMapOffset;
             } else if (getFacing() == (short) 4) {
-                tX += zMapOffset;
                 tZ += xMapOffset;
             } else if (getFacing() == (short) 5) {
-                tX -= zMapOffset;
                 tZ -= xMapOffset;
             } else {
                 tSuccess = F;
