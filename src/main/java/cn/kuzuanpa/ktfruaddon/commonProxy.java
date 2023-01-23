@@ -15,10 +15,8 @@ import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
 import cpw.mods.fml.common.event.*;
-import cn.kuzuanpa.ktfruaddon.block.blockLoader;
+import cn.kuzuanpa.ktfruaddon.block.blockSimpleInit;
 import gregapi.api.Abstract_Proxy;
-import gregapi.config.Config;
-import gregapi.config.ConfigCategories;
 
 public class commonProxy extends Abstract_Proxy {
     public commonProxy() {
@@ -28,7 +26,7 @@ public class commonProxy extends Abstract_Proxy {
         new materialPreInit(aEvent);
         new tileEntityPreInit(aEvent);
         new itemPreInit(aEvent);
-        new blockLoader(aEvent);
+        new blockSimpleInit(aEvent);
 
     }
 
