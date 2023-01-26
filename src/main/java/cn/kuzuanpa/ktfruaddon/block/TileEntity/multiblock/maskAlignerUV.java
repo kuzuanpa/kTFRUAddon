@@ -7,11 +7,10 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBase11MultiInputMachine;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import net.minecraft.inventory.IInventory;
@@ -19,12 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
-public class maskAlignerUV extends TileEntityBase11MultiInputMachine{
+public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
         //决定机器大小
         //this controls the size of machine.
         public final short machineX = 3, machineY = 2, machineZ = 2;
@@ -86,6 +84,12 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine{
             return MultiTileEntityMultiBlockPart.EVERYTHING;
         }
 
+        public int getBlockID(int checkX, int checkY, int checkZ){
+            return blockIDMap[checkY][checkZ][checkX];
+        }
+        public  boolean getIgnore(int checkX,int checkY,int checkZ){
+            return false;
+        }
         @Override
         public boolean checkStructure2() {
             int tX = xCoord, tY = yCoord, tZ = zCoord;
@@ -106,11 +110,11 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine{
                 for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (blockIDMap[checkY][checkZ][checkX] == 31000) {
-                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], getMultiTileEntityRegistryID(), 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
+                            if (getBlockID(checkX,checkY,checkZ) == 31000) {
+                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = getIgnore(checkX,checkY,checkZ);
                                 if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
-                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], getMultiTileEntityRegistryID(), 0, getUsage(blockIDMap[checkY][checkZ][checkX], k))) tSuccess = F;
+                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = getIgnore(checkX,checkY,checkZ);
                             //FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + blockIDMap[checkY][checkZ][checkX]);
 
                         }
