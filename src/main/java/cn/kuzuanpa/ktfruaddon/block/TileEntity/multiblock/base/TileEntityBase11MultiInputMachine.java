@@ -1,4 +1,4 @@
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
+package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
 import cpw.mods.fml.common.FMLLog;
