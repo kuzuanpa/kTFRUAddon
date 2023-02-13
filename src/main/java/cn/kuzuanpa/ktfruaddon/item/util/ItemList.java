@@ -1,4 +1,4 @@
-/**
+/*
  * This class was created by <kuzuanpa>. It is distributed as
  * part of the kTFRUAddon Mod. Get the Source Code in github:
  * https://github.com/kuzuanpa/kTFRUAddon
@@ -36,6 +36,7 @@ public enum ItemList implements IItemContainer{
 
     ;
 
+    //Copied from gt6
     private ItemStack mStack;
     private boolean mHasNotBeenSet = T;
 
