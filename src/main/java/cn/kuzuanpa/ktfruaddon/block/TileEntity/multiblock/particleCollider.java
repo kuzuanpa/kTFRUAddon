@@ -1,4 +1,4 @@
-/**
+/*
  * This class was created by <kuzuanpa>. It is distributed as
  * part of the kTFRUAddon Mod. Get the Source Code in github:
  * https://github.com/kuzuanpa/kTFRUAddon
@@ -25,7 +25,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import java.util.List;
 
 import static gregapi.data.CS.*;
-/**
+/*
  * @author Gregorius Techneticies
  * @author YueSha
  * Copied from GT6U

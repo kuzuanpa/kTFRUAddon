@@ -1,4 +1,4 @@
-/**
+/*
  * This class was created by <kuzuanpa>. It is distributed as
  * part of the kTFRUAddon Mod. Get the Source Code in github:
  * https://github.com/kuzuanpa/kTFRUAddon
@@ -23,38 +23,8 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
-        //决定机器大小
-        //this controls the size of machine.
         public final short machineX = 3, machineY = 2, machineZ = 2;
-        //决定结构检测的起始位置，默认情况下是从主方块起始
-        //This controls where is the start point to check structure,Default is the position of controller block
         public final short xMapOffset = -1;
-        //映射表方向:
-        //                 |
-        //                 |
-        //            ( tX ,tZ-1)
-        //(tX-1, tZ );( tX , tZ );(tX+1, tZ )---->
-        //            ( tX ,tZ+1)             x轴
-        //                 | z轴
-        //                 v
-        //y轴为一张新的表格，代码中位于最上的表是最底下一层
-        //默认情况(不改动偏移量)下主方块位于tX,tZ,如下所示
-        //{main,part},
-        //{part,part}
-
-        //Map direction:
-        //                 |
-        //                 |
-        //            ( tX ,tZ-1)
-        //(tX-1, tZ );( tX , tZ );(tX+1, tZ )---->
-        //            ( tX ,tZ+1)             axisX
-        //                 | axisZ
-        //                 v
-        //In default (didn't modify offset),main block is on tX,tZ.For example:
-        //{main,part},
-        //{part,part}
-        //这里决定每个参与构成本机器的方块的子id
-        //Controls every block needed to build the machine
         public static final int[][][] blockIDMap = {{
                 {30102,   0  , 30102},
                 {30102, 31000, 30102},
@@ -62,11 +32,7 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
                 {30102, 30110, 30102},
                 {30102, 30120, 30102},
         }};
-        //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
         short k = getMultiTileEntityRegistryID();
-        //T是忽略此位置的方块 ,F是正常检测
-        //T = ignore ,F = normally check
-
         public int getCheckX(int Facing, int tX, int addX, int addZ) {
             int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
             return result[Facing];
@@ -87,7 +53,7 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
         public int getBlockID(int checkX, int checkY, int checkZ){
             return blockIDMap[checkY][checkZ][checkX];
         }
-        public  boolean getIgnore(int checkX,int checkY,int checkZ){
+        public  boolean isIgnored(int checkX, int checkY, int checkZ){
             return false;
         }
         @Override
@@ -111,10 +77,10 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
                             if (getBlockID(checkX,checkY,checkZ) == 31000) {
-                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = getIgnore(checkX,checkY,checkZ);
+                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
                                 if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
-                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = getIgnore(checkX,checkY,checkZ);
+                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
                             //FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + blockIDMap[checkY][checkZ][checkX]);
 
                         }
