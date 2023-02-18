@@ -10,11 +10,14 @@ package cn.kuzuanpa.ktfruaddon.material;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.FL;
+import gregapi.data.MT;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
+import gregapi.oredict.OreDictMaterialStack;
 import gregapi.render.TextureSet;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
+import static gregapi.data.CS.NUM_SUB;
 import static gregapi.data.CS.U;
 
 public class materialPreInit {
@@ -69,7 +72,7 @@ public class materialPreInit {
         ammoniumDichromate.put(TD.ItemGenerator.DUSTS);
         ammoniumDichromate.heat(456, 460);
         ammoniumDichromate.setOriginalMod(MOD_DATA);
-
+        ammoniumDichromate.mTooltipChemical = "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2];
 
 
         //NH4Cr(SO4)2
@@ -80,6 +83,7 @@ public class materialPreInit {
         ammoniumChromicSulfate.put(TD.Compounds.DECOMPOSABLE);
         ammoniumChromicSulfate.heat(456, 460);
         ammoniumChromicSulfate.setOriginalMod(MOD_DATA);
+        ammoniumChromicSulfate.mTooltipChemical = "NH"+NUM_SUB[4]+"Cr(SO"+NUM_SUB[4]+")"+NUM_SUB[2];
 
         //NH4Fe(SO4);2
         final OreDictMaterial ammoniumIronIIISulfate = OreDictMaterial.createMaterial(30013, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate");
@@ -88,6 +92,7 @@ public class materialPreInit {
         ammoniumIronIIISulfate.put(TD.ItemGenerator.DUSTS);
         ammoniumIronIIISulfate.heat(368, 524);
         ammoniumIronIIISulfate.setOriginalMod(MOD_DATA);
+        ammoniumIronIIISulfate.mTooltipChemical = "NH"+NUM_SUB[4]+"Fe(SO"+NUM_SUB[4]+")"+NUM_SUB[2];
 
         //(NH4)2SO4
         final OreDictMaterial Sulfanilamide = OreDictMaterial.createMaterial(30014, "Sulfanilamide", "Sulfanilamide");
@@ -97,6 +102,7 @@ public class materialPreInit {
         Sulfanilamide.put(TD.Compounds.DECOMPOSABLE);
         Sulfanilamide.heat(509, 510);
         Sulfanilamide.setOriginalMod(MOD_DATA);
+        Sulfanilamide.mTooltipChemical = "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4];
 
         final OreDictMaterial CookedBauxide = OreDictMaterial.createMaterial(30020, "CookedBauxide", "Cooked Bauxide");
         CookedBauxide.setTextures(TextureSet.SET_METALLIC);
@@ -136,6 +142,8 @@ public class materialPreInit {
         LithiumCarbonate.put(TD.Compounds.DECOMPOSABLE);
         LithiumCarbonate.heat(943, 1582);
         LithiumCarbonate.setOriginalMod(MOD_DATA);
+        LithiumCarbonate.mTooltipChemical = "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3];
+
         FL.create("ammoniumtungstate","Ammonium Tungstate",null,1);
 
         final OreDictMaterial MetatitanicAcid = OreDictMaterial.createMaterial(30040, "MetatitanicAcid", "Metatitanic Acid");
@@ -144,7 +152,8 @@ public class materialPreInit {
         MetatitanicAcid.put(TD.ItemGenerator.DUSTS);
         MetatitanicAcid.put(TD.Compounds.DECOMPOSABLE);
         MetatitanicAcid.heat(783, 784);
-        MetatitanicAcid.setOriginalMod(MOD_DATA); 
+        MetatitanicAcid.setOriginalMod(MOD_DATA);
+        MetatitanicAcid.mTooltipChemical = "TiO(OH)"+NUM_SUB[2];
 
 
 
