@@ -27,7 +27,7 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class ConsumerPartTestMachine extends TileEntityBase12MultiInputMachineComplex {
-    public final static short machineX = 3, machineY = 2, machineZ = 2;
+    public final static short machineX = 1, machineY = 1, machineZ = 2;
     public final static short xMapOffset = -1, zMapOffset = 0;
     @Override
     public short getRegistryID(int x, int y, int z){
