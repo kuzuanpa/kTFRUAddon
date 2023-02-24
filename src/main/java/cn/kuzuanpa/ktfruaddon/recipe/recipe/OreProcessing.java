@@ -24,7 +24,7 @@ public class OreProcessing {
   //Cr processing
        // final Recipe.RecipeMap recipeMap;
         RM.Bath.addRecipeX(T,0, 512 , ST.array(OM.dust(OreDictMaterial.get(9113), U*2), OM.dust(OreDictMaterial.get(30014), U*9)), FL.array(MT.H2SO4.liquid(6000,T)), FL.array(FL.Water.make(4000)), OM.dust(OreDictMaterial.get(30012), U*6), OM.dust(OreDictMaterial.get(30013), U*3));
-        RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2000,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OM.dust(OreDictMaterial.get(30014),U*9));
+        RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2*U,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OM.dust(OreDictMaterial.get(30014),U*9));
         HeatMixer.addRecipeX(T,256,160,ST.array(OM.dust(OreDictMaterial.get(30011))),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OM.dust(MT.CrO2, U * 2));
        // recipeMap = Recipe.RecipeMap.RECIPE_MAPS.get("gt.recipe.electrolyzer");
        // recipeMap.mRecipeList.removeAll(recipeMap.getNEIRecipes(OP.dust.mat(MT.Cr,U)));
