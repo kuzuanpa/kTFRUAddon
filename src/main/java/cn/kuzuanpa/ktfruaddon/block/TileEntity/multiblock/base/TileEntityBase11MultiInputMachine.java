@@ -38,7 +38,6 @@ public abstract class TileEntityBase11MultiInputMachine extends TileEntityBase10
         subSourceRunning = subSourceRunning && (subSource.getStateRunningPassively() || subSource.getStateRunningActively());
     }
 
-    @Override
     public boolean onTickCheck(long aTimer) {
         if (this.mStructureOkay) {
             subSourceRunning = true;
