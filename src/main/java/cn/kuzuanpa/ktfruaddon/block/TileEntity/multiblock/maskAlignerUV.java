@@ -9,6 +9,7 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBase11MultiInputMachine;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
@@ -77,7 +78,7 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
                             if (getBlockID(checkX,checkY,checkZ) == 31000) {
-                                if (!utilsMultiBlock.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
+                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
                                 if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
                             else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
