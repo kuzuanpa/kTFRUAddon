@@ -22,6 +22,7 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase07Paintable;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
@@ -54,14 +55,13 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass)) {
     if (aChatReturn != null) {
-        boolean tmp = T;
-        for (int i=0;i < 3;i++) if (!(slot(i).stackSize ==0)) {
-            tmp = F;
-            aChatReturn.add("Slot"+i+"has" + slot(i).getDisplayName());
+        boolean saidSomething = F;
+        for (int i=0;i < 4;i++) if (slot(i) != null) {
+            saidSomething = T;
+            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
         }
-        if (tmp) aChatReturn.add("Contains no Compute Node");
+        if (!saidSomething) aChatReturn.add("Contains no Compute Node");
     }
-    return 0;
 }
     return 0;}
 
@@ -152,14 +152,34 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
         this.mTarget = aTarget;
         this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();
     }
-    public boolean breakBlock() {
+    @Override
+    public boolean breakBlock(){
+//todo: These code are from various abstract class ,and It should be directly inherit from upper class...but I really didn't know how can this be applied in java..
+//MultiBlockBase
         ITileEntityMultiBlockController tTarget = this.getTarget(false);
         if (tTarget != null) {
             this.mTargetPos = null;
             this.mTarget = null;
             tTarget.onStructureChange();
         }
-        return false;
+//Base05Inventories
+        if (isServerSide()) for (short i = 0; i < invsize(); i++) if (slot(i) != null && canDrop(i) && !ST.debug(slot(i)) && breakDrop(i)) {
+            ItemStack tDumpedStack = ST.amount(UT.Code.bind_(0, 512L * Math.max(1, slot(i).getMaxStackSize()), slot(i).stackSize), slot(i));
+            int tMaxSize = Math.max(1, slot(i).getMaxStackSize());
+
+            while (tDumpedStack.stackSize > tMaxSize) {
+                ST.drop(worldObj, getCoords(), ST.amount(tMaxSize, tDumpedStack));
+                tDumpedStack.stackSize -= tMaxSize;
+                slot(i).stackSize -= tMaxSize;
+            }
+            if (tDumpedStack.stackSize > 0) {
+                slot(i).stackSize -= tDumpedStack.stackSize;
+                ST.drop(worldObj, getCoords(), ST.copy(tDumpedStack));
+            }
+
+            GarbageGT.trash(slot(i));
+        }
+        return F;
     }
     @Override
     public String getTileEntityName() {
