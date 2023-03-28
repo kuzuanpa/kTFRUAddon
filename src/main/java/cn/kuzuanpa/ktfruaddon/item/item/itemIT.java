@@ -57,7 +57,6 @@ public class itemIT extends MultiItemRandom {
         ItemList.CPUGT6799s.set(addItem(10206,"CPU GT-6799s","Ex"));
         ItemList.CPUGT9890s.set(addItem(10207,"CPU GT-9890s","Ex"));
         ItemList.CPUGT13586s.set(addItem(10208,"CPU GT-13586s","Ex"));
-        
 
         ItemList.ComputeClusterTF386.set(addItem(10400,"Compute Cluster TF386","Ex"));
         ItemList.ComputeClusterTF586.set(addItem(10401,"Compute Cluster TF586","Ex"));

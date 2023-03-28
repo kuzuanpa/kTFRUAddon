@@ -11,10 +11,12 @@
 
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart;
 
+import cn.kuzuanpa.ktfruaddon.item.item.itemComputer;
 import gregapi.GT_API;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
-import gregapi.data.CS;
 import gregapi.data.LH;
+import gregapi.network.INetworkHandler;
+import gregapi.network.IPacket;
 import gregapi.old.Textures;
 import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
@@ -27,12 +29,13 @@ import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -43,10 +46,41 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
-    public long totalComputePower;
-    public long getComputePower(){return totalComputePower;}
     protected IIconContainer[][] mTextures;
     public short mDesign;
+    public boolean isRunning;
+    public short[] mDisplaySlot = {0,0,0,0};
+    public short[] oDisplaySlot = {-1,-1,-1,-1};
+
+    public long getComputePower() {
+        int ComputePower =0;
+        for (ItemStack stack:getInventory()) if (stack != null) {
+            ComputePower += itemComputer.getComputePowerFromID(stack.getItemDamage());
+        }
+        return ComputePower;
+    }
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide()&&!isRunning) {
+            byte tSlot = (byte)(aHitY >0.75?0:aHitY>0.5?1:aHitY>0.25?2:3);
+            ItemStack aStack = aPlayer.getCurrentEquippedItem();
+            if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.it.computer"))
+                    if (ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, tSlot) > 0) {
+                        playClick();
+                        mDisplaySlot[tSlot] = 1;
+                    return T;
+                }
+            if (slotHas(tSlot) && aStack == null && UT.Inventories.addStackToPlayerInventoryOrDrop(aPlayer, slot(tSlot), T, worldObj, xCoord + 0.5, yCoord + 1.2, zCoord + 0.5)) {
+                slotKill(tSlot);
+                updateInventory();
+                mDisplaySlot[tSlot] = 0;
+                return T;
+            }
+        }
+
+        return T;
+    }
+
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN     + LH.get(LH.RECIPES_MIXINGBOWL_USAGE));
         aList.add(LH.Chat.ORANGE   + LH.get(LH.NO_GUI_CLICK_TO_INTERACT)   + " (" + LH.get(LH.FACE_TOP) + ")");
@@ -58,9 +92,10 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
         boolean saidSomething = F;
         for (int i=0;i < 4;i++) if (slot(i) != null) {
             saidSomething = T;
-            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
+            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName()+mDisplaySlot[i]);
         }
         if (!saidSomething) aChatReturn.add("Contains no Compute Node");
+        aChatReturn.add("This cluster is Running:"+isRunning);
     }
 }
     return 0;}
@@ -73,15 +108,29 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
 
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
 
-
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        if (aIsServerSide) {
+        for (int i=0;i<4;i++){
+            if (slot(i)!=null)mDisplaySlot[i]=1;
+            else mDisplaySlot[i]=0;
+        }
+        }
+    }
     @Override
     public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-        if (aSlot >= 4) return F;
-        for (int i = 0; i < 4; i++) if (slot(i)== null&&aStack.getItem().getUnlocalizedName().contains("ktfru.item.it.computer")) return i == aSlot;
+        if (aSlot >= 4||isRunning) return F;
+        for (int i = 0; i < 4; i++) if (slot(i)== null&&aStack.getItem().getUnlocalizedName().contains("ktfru.item.it.computer")) {
+            if (i == aSlot) {
+                mDisplaySlot[i] = 1;
+                return T;
+            }
+        }
         return F;
     }
 
-    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot >= 3;}
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
+        return aSlot >= 3;
+    }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -94,14 +143,8 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
             if (GT_API.sBlockIcons == null && aNBT.hasKey(NBT_TEXTURE)) {
                 String tTextureName = aNBT.getString(NBT_TEXTURE);
                 mTextures = new IIconContainer[UT.Code.bind8(aNBT.getShort(NBT_DESIGNS))+1][6];
-                for (short i = 0; i < mTextures.length; i++) {mTextures[i] = new IIconContainer[] {
-                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/"+i+"/colored/bottom"),
-                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/"+i+"/colored/top"),
-                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/"+i+"/colored/side"),
-                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/"+i+"/overlay/bottom"),
-                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/"+i+"/overlay/top"),
-                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/"+i+"/overlay/side")
-                };}
+                for (short i = 0; i < mTextures.length; i++) {
+                    mTextures[i] = new IIconContainer[] {};}
             } else {
                 TileEntity tCanonicalTileEntity = MultiTileEntityRegistry.getCanonicalTileEntity(getMultiTileEntityRegistryID(), getMultiTileEntityID());
                 if (tCanonicalTileEntity instanceof MultiBlockPartComputeCluster) {
@@ -122,11 +165,75 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
             UT.NBT.setNumber(aNBT, "gt.target.z", (long)this.mTargetPos.posZ);
         }
     }
+    public static IIconContainer
+            sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/test/colored/sides"),
+            sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/test/colored/top"),
+            sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/test/colored/bottom"),
+            sTextureNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/colored/nodeside"),
+            sOverlaySides       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/sides"),
+    sOverlayTop         = new Textures.BlockIcons.CustomIcon("machines/test/overlay/top"),
+    sOverlayBottom      = new Textures.BlockIcons.CustomIcon("machines/test/overlay/bottom"),
+    sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside");
     @Override
-    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean @NotNull [] aShouldSideBeRendered) {
-        return aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(this.mTextures[this.mDesign][CS.FACES_TBS[aSide]], this.mRGBa), BlockTextureDefault.get(this.mTextures[this.mDesign][CS.FACES_TBS[aSide] + 3])) : null;
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        switch(aRenderPass) {
+            case 0: return aShouldSideBeRendered[aSide] ?SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa), BlockTextureDefault.get(sOverlayTop)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa), BlockTextureDefault.get(sOverlayBottom)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlaySides)) : null;
+            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[3] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null : null;
+            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[2] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null : null;
+            case 3: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)):  null : null;
+            case 4: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null : null;
+        }
+        return null;
+    }
+    @Override
+    public int getRenderPasses2(Block aBlock, boolean[] aShouldSideBeRendered) {
+        return 5;
+    }
+    @Override
+    public void addCollisionBoxesToList2(AxisAlignedBB aAABB, List<AxisAlignedBB> aList, Entity aEntity) {
+       box(aAABB,aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[ 16], PX_P[ 16]);
+       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 1], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 3], PX_P[16]+0.0001F);
+       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 5], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
+       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 9], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[11], PX_P[16]+0.0001F);
+       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[13], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[15], PX_P[16]+0.0001F);
+    }
+    @Override
+    public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
+        switch(aRenderPass) {
+            case  0: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[ 16], PX_P[ 16]);
+            case  1: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 1], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 3], PX_P[16]+0.0001F);
+            case  2: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 5], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
+            case  3: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 9], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[11], PX_P[16]+0.0001F);
+            case  4: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[13], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[15], PX_P[16]+0.0001F);
+        }
+        return F;
     }
 
+
+@Override
+public boolean onTickCheck(long aTimer) {
+        return super.onTickCheck(aTimer) || mDisplaySlot != oDisplaySlot;
+        }
+
+@Override
+public void onTickResetChecks(long aTimer, boolean aIsServerSide) {
+        super.onTickResetChecks(aTimer, aIsServerSide);
+        oDisplaySlot = mDisplaySlot;
+        }
+
+@Override
+public IPacket getClientDataPacket(boolean aSendAll) {
+        return getClientDataPacketByteArray(aSendAll, UT.Code.toByteS(mDisplaySlot[0], 0), UT.Code.toByteS(mDisplaySlot[1], 1), UT.Code.toByteS(mDisplaySlot[2], 2), UT.Code.toByteS(mDisplaySlot[3], 3));
+        }
+
+@Override
+public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
+    mDisplaySlot[0]=aData[0];
+    mDisplaySlot[1]=aData[1];
+    mDisplaySlot[2]=aData[2];
+    mDisplaySlot[3]=aData[3];
+        return T;
+        }
     //Every thing from MultiBlockPart
     public ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
         if (this.mTargetPos == null) {
