@@ -23,7 +23,26 @@ apply plugin: 'forge'
 // These settings allow you to choose what version of Java you want to be compatible with. Forge 1.7.10 runs on Java 6 to 8.
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
+repositories {
+    mavenCentral()
+    maven {
+        name = "forge"
+        url = "https://maven.minecraftforge.net/"
+    }
+    maven {
+        name = "gt"
+        url = "https://gregtech.mechaenetia.com/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven {
+        name = "gtnh"
+        url = "http://jenkins.usrv.eu:8081/nexus/content/groups/public/"
+        allowInsecureProtocol = true
+    }
+}
 version = project.version
 group = project.group
 
