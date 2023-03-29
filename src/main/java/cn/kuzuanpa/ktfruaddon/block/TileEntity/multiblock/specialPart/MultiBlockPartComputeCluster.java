@@ -13,6 +13,7 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart;
 
 import cn.kuzuanpa.ktfruaddon.item.item.itemComputer;
 import gregapi.GT_API;
+import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
@@ -24,6 +25,7 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase07Paintable;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
@@ -42,7 +44,7 @@ import java.util.List;
 import static gregapi.data.CS.*;
 import static gregapi.data.CS.F;
 
-public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
+public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable implements IMultiTileEntity.IMTE_AddToolTips {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
@@ -50,8 +52,6 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
     public short mDesign;
     public boolean isRunning;
     public short[] mDisplaySlot = {0,0,0,0};
-    public short[] oDisplaySlot = {-1,-1,-1,-1};
-
     public long getComputePower() {
         int ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
@@ -64,16 +64,18 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
         if (isServerSide()&&!isRunning) {
             byte tSlot = (byte)(aHitY >0.75?0:aHitY>0.5?1:aHitY>0.25?2:3);
             ItemStack aStack = aPlayer.getCurrentEquippedItem();
-            if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.it.computer"))
-                    if (ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, tSlot) > 0) {
+            if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.it.computer")&&slot(tSlot)==null)
+                    if (ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, tSlot,1) > 0) {
                         playClick();
                         mDisplaySlot[tSlot] = 1;
+                        updateClientData();
                     return T;
                 }
             if (slotHas(tSlot) && aStack == null && UT.Inventories.addStackToPlayerInventoryOrDrop(aPlayer, slot(tSlot), T, worldObj, xCoord + 0.5, yCoord + 1.2, zCoord + 0.5)) {
                 slotKill(tSlot);
                 updateInventory();
                 mDisplaySlot[tSlot] = 0;
+                updateClientData();
                 return T;
             }
         }
@@ -92,10 +94,10 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
         boolean saidSomething = F;
         for (int i=0;i < 4;i++) if (slot(i) != null) {
             saidSomething = T;
-            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName()+mDisplaySlot[i]);
+            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
         }
         if (!saidSomething) aChatReturn.add("Contains no Compute Node");
-        aChatReturn.add("This cluster is Running:"+isRunning);
+        aChatReturn.add("Is this cluster Running:"+isRunning);
     }
 }
     return 0;}
@@ -122,6 +124,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
         for (int i = 0; i < 4; i++) if (slot(i)== null&&aStack.getItem().getUnlocalizedName().contains("ktfru.item.it.computer")) {
             if (i == aSlot) {
                 mDisplaySlot[i] = 1;
+                updateClientData();
                 return T;
             }
         }
@@ -129,7 +132,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
     }
 
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
-        return aSlot >= 3;
+        return F;
     }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -137,21 +140,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
         if (aNBT.hasKey("gt.target")) {
             this.mTargetPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong("gt.target.x")), UT.Code.bindInt(aNBT.getLong("gt.target.y")), UT.Code.bindInt(aNBT.getLong("gt.target.z")));
         }
-        if (aNBT.hasKey(NBT_DESIGN)) mDesign = UT.Code.unsignB(aNBT.getByte(NBT_DESIGN));
 
-        if (CODE_CLIENT) {
-            if (GT_API.sBlockIcons == null && aNBT.hasKey(NBT_TEXTURE)) {
-                String tTextureName = aNBT.getString(NBT_TEXTURE);
-                mTextures = new IIconContainer[UT.Code.bind8(aNBT.getShort(NBT_DESIGNS))+1][6];
-                for (short i = 0; i < mTextures.length; i++) {
-                    mTextures[i] = new IIconContainer[] {};}
-            } else {
-                TileEntity tCanonicalTileEntity = MultiTileEntityRegistry.getCanonicalTileEntity(getMultiTileEntityRegistryID(), getMultiTileEntityID());
-                if (tCanonicalTileEntity instanceof MultiBlockPartComputeCluster) {
-                    mTextures = ((MultiBlockPartComputeCluster)tCanonicalTileEntity).mTextures;
-                }
-            }
-        }
     }
 
     @Override
@@ -178,10 +167,10 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         switch(aRenderPass) {
             case 0: return aShouldSideBeRendered[aSide] ?SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa), BlockTextureDefault.get(sOverlayTop)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa), BlockTextureDefault.get(sOverlayBottom)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlaySides)) : null;
-            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[3] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null : null;
-            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[2] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null : null;
-            case 3: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)):  null : null;
-            case 4: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1?SIDE_X_NEG==aSide||SIDE_X_POS==aSide||SIDE_Z_POS==aSide||SIDE_Z_NEG==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null : null;
+            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[3] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null ;
+            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[2] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null;
+            case 3: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null;
+            case 4: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)):null;
         }
         return null;
     }
@@ -211,27 +200,13 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable {
 
 
 @Override
-public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer) || mDisplaySlot != oDisplaySlot;
-        }
-
-@Override
-public void onTickResetChecks(long aTimer, boolean aIsServerSide) {
-        super.onTickResetChecks(aTimer, aIsServerSide);
-        oDisplaySlot = mDisplaySlot;
-        }
-
-@Override
 public IPacket getClientDataPacket(boolean aSendAll) {
         return getClientDataPacketByteArray(aSendAll, UT.Code.toByteS(mDisplaySlot[0], 0), UT.Code.toByteS(mDisplaySlot[1], 1), UT.Code.toByteS(mDisplaySlot[2], 2), UT.Code.toByteS(mDisplaySlot[3], 3));
         }
 
 @Override
 public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
-    mDisplaySlot[0]=aData[0];
-    mDisplaySlot[1]=aData[1];
-    mDisplaySlot[2]=aData[2];
-    mDisplaySlot[3]=aData[3];
+        for (int i=0;i<4;i++) mDisplaySlot[i]=aData[i];
         return T;
         }
     //Every thing from MultiBlockPart
