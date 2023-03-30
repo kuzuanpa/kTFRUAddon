@@ -75,11 +75,13 @@ dependencies {
     compile  "com.mod-buildcraft:buildcraft:7.1.23:dev"
     compile  "micdoodle8.mods:GalacticraftCore:1.7-3.0.12.504:Dev"
     compile  "vazkii.botania:Botania:r1.8-250:deobf"
-    compile  "appeng:appliedenergistics2:rv3-beta-6:dev"
+    implementation  "appeng:appliedenergistics2:rv3-beta-6:dev"
     compile  "cofh:CoFHCore:1.7.10R3.0.4:dev"
     compile  "cofh:CoFHLib:1.7.10R3.0.3:dev"
     compile  "applecore:AppleCore:1.7.10-3.1.1:deobf"
-    compile  "ic2:IC2Classic:1.2.1.8:dev"
+    implementation  "ic2:IC2Classic:1.2.1.8:dev"
+    implementation "micdoodle8.mods:MicdoodleCore:1.7-3.0.12.504:Dev"
+
 
 }
 

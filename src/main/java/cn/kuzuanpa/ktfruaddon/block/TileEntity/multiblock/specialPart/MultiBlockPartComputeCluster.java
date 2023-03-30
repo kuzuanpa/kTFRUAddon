@@ -44,21 +44,23 @@ import java.util.List;
 import static gregapi.data.CS.*;
 import static gregapi.data.CS.F;
 
-public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable implements IMultiTileEntity.IMTE_AddToolTips {
+public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
     protected IIconContainer[][] mTextures;
     public short mDesign;
     public boolean isRunning;
-    public short[] mDisplaySlot = {0,0,0,0};
-    public long getComputePower() {
-        int ComputePower =0;
+    public long ComputePower;
+    public byte[] mDisplaySlot = {0,0,0,0};
+    public long updateComputePower() {
+        ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
             ComputePower += itemComputer.getComputePowerFromID(stack.getItemDamage());
         }
         return ComputePower;
     }
+    public long getComputePower(){return ComputePower;}
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (isServerSide()&&!isRunning) {
@@ -84,8 +86,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
     }
 
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN     + LH.get(LH.RECIPES_MIXINGBOWL_USAGE));
-        aList.add(LH.Chat.ORANGE   + LH.get(LH.NO_GUI_CLICK_TO_INTERACT)   + " (" + LH.get(LH.FACE_TOP) + ")");
+        aList.add(LH.Chat.ORANGE   + LH.get(LH.NO_GUI_CLICK_TO_INTERACT)   + " (" + LH.get(LH.FACE_SIDES) + ")");
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
@@ -97,6 +98,8 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
             aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
         }
         if (!saidSomething) aChatReturn.add("Contains no Compute Node");
+        updateComputePower();
+        aChatReturn.add("Total Computing Power:"+getComputePower());
         aChatReturn.add("Is this cluster Running:"+isRunning);
     }
 }
@@ -201,7 +204,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
 
 @Override
 public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll, UT.Code.toByteS(mDisplaySlot[0], 0), UT.Code.toByteS(mDisplaySlot[1], 1), UT.Code.toByteS(mDisplaySlot[2], 2), UT.Code.toByteS(mDisplaySlot[3], 3));
+        return getClientDataPacketByteArray(aSendAll,mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3]);
         }
 
 @Override
