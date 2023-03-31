@@ -14,11 +14,12 @@ import gregapi.api.Abstract_Mod;
 import gregapi.api.Abstract_Proxy;
 import gregapi.code.ModData;
 
-@Mod(modid = cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID, name = ktfruaddon.MOD_NAME, version = cn.kuzuanpa.ktfruaddon.ktfruaddon.VERSION, acceptedMinecraftVersions = "1.7.10")
+@Mod(modid = cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID, name = ktfruaddon.MOD_NAME, version = ktfruaddon.VERSION,dependencies= ktfruaddon.DEPENDS , acceptedMinecraftVersions = "1.7.10")
 public final class ktfruaddon extends Abstract_Mod {
     public static final String MOD_ID = "ktfruaddon";
     public static final String MOD_NAME = "kTFRUAddon";
     public static final String VERSION = "test-MC1710";
+    public static final String DEPENDS = "required-after:gregtech";
     public static ModData MOD_DATA = new ModData("ktfruaddon", "kTFRUAddon");
     @SidedProxy(clientSide = "cn.kuzuanpa.ktfruaddon.clientProxy",
             serverSide = "cn.kuzuanpa.ktfruaddon.commonProxy")

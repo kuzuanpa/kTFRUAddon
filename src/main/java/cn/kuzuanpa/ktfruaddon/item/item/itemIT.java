@@ -45,9 +45,6 @@ public class itemIT extends MultiItemRandom {
         ItemList.CPUGT6799.set(addItem(10106,"CPU GT-6799","Ex"));
         ItemList.CPUGT9890.set(addItem(10107,"CPU GT-9890","Ex"));
         ItemList.CPUGT13586.set(addItem(10108,"CPU GT-13586","Ex"));
-        ItemList.CPUIF2.set(addItem(10109,"CPU IF2","Ex"));
-        ItemList.CPUIF7.set(addItem(10110,"CPU IF7","Ex"));
-        
         ItemList.CPUTF386e.set(addItem(10200,"CPU TF386e","Ex"));
         ItemList.CPUTF586e.set(addItem(10201,"CPU TF586e","Ex"));
         ItemList.CPUAE300s.set(addItem(10202,"CPU AE-300s","Ex"));
@@ -58,27 +55,6 @@ public class itemIT extends MultiItemRandom {
         ItemList.CPUGT9890s.set(addItem(10207,"CPU GT-9890s","Ex"));
         ItemList.CPUGT13586s.set(addItem(10208,"CPU GT-13586s","Ex"));
 
-        ItemList.ComputeClusterTF386.set(addItem(10400,"Compute Cluster TF386","Ex"));
-        ItemList.ComputeClusterTF586.set(addItem(10401,"Compute Cluster TF586","Ex"));
-        ItemList.ComputeClusterAE300.set(addItem(10402,"Compute Cluster AE300","Ex"));
-        ItemList.ComputeClusterAE740.set(addItem(10403,"Compute Cluster AE740","Ex"));
-        ItemList.ComputeClusterGT200.set(addItem(10404,"Compute Cluster GT200","Ex"));
-        ItemList.ComputeClusterGT3490.set(addItem(10405,"Compute Cluster GT3490","Ex"));
-        ItemList.ComputeClusterGT6799.set(addItem(10406,"Compute Cluster GT6799","Ex"));
-        ItemList.ComputeClusterGT9890.set(addItem(10407,"Compute Cluster GT9890","Ex"));
-        ItemList.ComputeClusterGT13586.set(addItem(10408,"Compute Cluster GT13586","Ex"));
-        ItemList.ComputeClusterIF2.set(addItem(10409,"Compute Cluster GT13586","Ex"));
-        ItemList.ComputeClusterIF7.set(addItem(10410,"Compute Cluster GT13586","Ex"));
-        ItemList.ComputeClusterTF386e.set(addItem(10411,"Compute Cluster TF386e","Ex"));
-        ItemList.ComputeClusterTF586e.set(addItem(10412,"Compute Cluster TF586e","Ex"));
-        ItemList.ComputeClusterAE300s.set(addItem(10413,"Compute Cluster AE300s","Ex"));
-        ItemList.ComputeClusterAE740s.set(addItem(10414,"Compute Cluster AE740s","Ex"));
-        ItemList.ComputeClusterGT200s.set(addItem(10415,"Compute Cluster GT200s","Ex"));
-        ItemList.ComputeClusterGT3490s.set(addItem(10416,"Compute Cluster GT3490s","Ex"));
-        ItemList.ComputeClusterGT6799s.set(addItem(10417,"Compute Cluster GT6799s","Ex"));
-        ItemList.ComputeClusterGT9890s.set(addItem(10418,"Compute Cluster GT9890s","Ex"));
-        ItemList.ComputeClusterGT13586s.set(addItem(10419,"Compute Cluster GT13586s","Ex"));
-        
         ItemList.BioCircuit.set(addItem(10998, "BioCircuit", "A Circuit that uses live brain. The \"Real Artificial Intelligence\""));
         ItemList.NeuralComputer.set(addItem(10999,"Neural network computer","Extremely fast and intelligent With \"Neural Network\" Technology"));
     }

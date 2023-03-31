@@ -24,16 +24,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import static gregapi.data.CS.*;
 
 public enum ItemList implements IItemContainer{
-    Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
-    BioCircuit, NeuralComputer,
-    Wafer200um, Wafer72um, Wafer40um, Wafer8um, Wafer400nm, Wafer80nm, Wafer32nm, Wafer14nm, Wafer7nm, Wafer5nm, Wafer2nm,
-    CPUTF386, CPUTF586, CPUAE300, CPUAE740, CPUGT200, CPUGT3490, CPUGT6799, CPUGT9890, CPUGT13586, CPUIF2, CPUIF7,
-    CPUTF386e, CPUTF586e, CPUAE300s, CPUAE740s, CPUGT200s, CPUGT3490s, CPUGT6799s, CPUGT9890s, CPUGT13586s,
-    ComputeNodeTF386, ComputeNodeTF586, ComputeNodeAE300, ComputeNodeAE740, ComputeNodeGT200, ComputeNodeGT3490, ComputeNodeGT6799, ComputeNodeGT9890, ComputeNodeGT13586, ComputeNodeIF2,ComputeNodeIF7,
-    ComputeNodeTF386e, ComputeNodeTF586e, ComputeNodeAE300s, ComputeNodeAE740s, ComputeNodeGT200s, ComputeNodeGT3490s, ComputeNodeGT6799s, ComputeNodeGT9890s, ComputeNodeGT13586s,
-    ComputeClusterTF386, ComputeClusterTF586, ComputeClusterAE300, ComputeClusterAE740, ComputeClusterGT200, ComputeClusterGT3490, ComputeClusterGT6799, ComputeClusterGT9890, ComputeClusterGT13586, ComputeClusterIF2,ComputeClusterIF7,
-    ComputeClusterTF386e, ComputeClusterTF586e, ComputeClusterAE300s, ComputeClusterAE740s, ComputeClusterGT200s, ComputeClusterGT3490s, ComputeClusterGT6799s, ComputeClusterGT9890s, ComputeClusterGT13586s,
-
+    Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole
+    ,BioCircuit, NeuralComputer
+    ,Wafer200um, Wafer72um, Wafer40um, Wafer8um, Wafer400nm, Wafer80nm, Wafer32nm, Wafer14nm, Wafer7nm, Wafer5nm, Wafer2nm
+    ,CPUTF386, CPUTF586, CPUAE300, CPUAE740, CPUGT200, CPUGT3490, CPUGT6799, CPUGT9890, CPUGT13586
+    ,CPUTF386e, CPUTF586e, CPUAE300s, CPUAE740s, CPUGT200s, CPUGT3490s, CPUGT6799s, CPUGT9890s, CPUGT13586s
+    ,ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT2660,ComputerGT2680,ComputerGT2699,ComputerGT2660v2,ComputerGT2680v2,ComputerGT2699v2,ComputerGT2660v3,ComputerGT2680v3,ComputerGT2699v3,ComputerGT2660v4,ComputerGT2680v4,ComputerGT2699v4,ComputerGT2680v3e,ComputerGT2699v3e,ComputerGT2680v4e,ComputerGT2699v4e
     ;
 
     //Copied from gt6
