@@ -11,6 +11,7 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.*;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeCluster;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeClusterSimple;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -164,7 +165,8 @@ public class tileEntityInit {
         aRegistry.add("Mask Aligner Energy Module (EUV)"     , "kTFRUAddon: Multiblock", 31002, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule3"   , NBT_DESIGNS, 7));
 
         aRegistry.add("Mask Aligner Energy Module (X-Ray)"     , "kTFRUAddon: Multiblock", 31003, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule4"   , NBT_DESIGNS, 7));
-        aRegistry.add("testcomputercluster"     , "kTFRUAddon: Multiblock", 32005, 17200, MultiBlockPartComputeCluster.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "particlecollider"   , NBT_DESIGNS, 7));
+        aRegistry.add("Compute Cluster"     , "kTFRUAddon: Multiblock", 32005, 17200, MultiBlockPartComputeCluster.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "particlecollider"   , NBT_DESIGNS, 7));
+        aRegistry.add("Compute Cluster Wild"     , "kTFRUAddon: Multiblock", 32006, 17200, MultiBlockPartComputeClusterSimple.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "particlecollider"   , NBT_DESIGNS, 7));
 
 
     }
