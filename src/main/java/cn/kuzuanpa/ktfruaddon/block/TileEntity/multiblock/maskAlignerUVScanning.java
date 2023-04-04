@@ -7,23 +7,26 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBase11MultiInputMachine;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBaseMultiInputMachine;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import gregapi.util.ST;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
-public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
+public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         public final short machineX = 3, machineY = 2, machineZ = 2;
         public final short xMapOffset = -1;
         public static final int[][][] blockIDMap = {{
@@ -33,17 +36,20 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
                 {30102, 30110, 30102},
                 {30102, 30120, 30102},
         }};
-        short k = getMultiTileEntityRegistryID();
-        public int getCheckX(int Facing, int tX, int addX, int addZ) {
-            int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
-            return result[Facing];
-        }
+    public int getCheckX(int Facing, int tX, int addX, int addZ) {
+        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
+        return result[Facing];
+    }
 
-        public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
-            int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
-            return result[Facing];
-        }
+    public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
+        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
+        return result[Facing];
+    }
+    public short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    public short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
+
         //change value there to set usage of every block.
+
         public int getUsage(int blockID ,short registryID){
             if (blockID == 30110&&registryID==k) {
                 return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
@@ -54,10 +60,16 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
         public int getBlockID(int checkX, int checkY, int checkZ){
             return blockIDMap[checkY][checkZ][checkX];
         }
+
         public  boolean isIgnored(int checkX, int checkY, int checkZ){
             return false;
         }
-        @Override
+    public boolean isSubSource(int blockID){
+        return blockID == 31000;
+    }
+    public short getRegistryID(int x,int y,int z){return k;}
+
+    @Override
         public boolean checkStructure2() {
             int tX = xCoord, tY = yCoord, tZ = zCoord;
             if (worldObj.blockExists(tX, tY, tZ)) {
@@ -77,24 +89,22 @@ public class maskAlignerUV extends TileEntityBase11MultiInputMachine {
                 for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (getBlockID(checkX,checkY,checkZ) == 31000) {
-                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
+                            if (isSubSource(getBlockID(checkX,checkY,checkZ))) {
+                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 0, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX, checkY, checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
                                 if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
-                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getMultiTileEntityRegistryID(), 0, getUsage(getBlockID(checkX,checkY,checkZ), k))) tSuccess = isIgnored(checkX,checkY,checkZ);
-                            //FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + blockIDMap[checkY][checkZ][checkX]);
+                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 0, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
 
-                        }
                     }
                 }
-
-               // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
-                return tSuccess;
-
             }
-            return mStructureOkay;
-        }
 
+            // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
+            return tSuccess;
+
+        }
+        return mStructureOkay;
+    }
         //这是设置主方块的物品提示
         //controls tooltip of controller block
         static {

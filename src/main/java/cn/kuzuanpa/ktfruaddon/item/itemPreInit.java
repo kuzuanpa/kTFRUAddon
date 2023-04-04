@@ -8,9 +8,10 @@
  */
 package cn.kuzuanpa.ktfruaddon.item;
 
-import cn.kuzuanpa.ktfruaddon.item.item.itemComputer;
-import cn.kuzuanpa.ktfruaddon.item.item.itemIT;
-import cn.kuzuanpa.ktfruaddon.item.item.itemParticle;
+import cn.kuzuanpa.ktfruaddon.item.items.itemIT;
+import cn.kuzuanpa.ktfruaddon.item.items.itemParticle;
+import cn.kuzuanpa.ktfruaddon.item.items.fakeItemGuiI18n;
+import cn.kuzuanpa.ktfruaddon.item.items.itemComputer;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class itemPreInit {
@@ -18,5 +19,6 @@ public class itemPreInit {
         new itemParticle();
         new itemIT();
         new itemComputer();
+        new fakeItemGuiI18n();
     }
 }

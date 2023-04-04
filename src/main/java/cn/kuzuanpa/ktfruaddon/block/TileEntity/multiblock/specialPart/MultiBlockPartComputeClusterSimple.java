@@ -11,7 +11,7 @@
 
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart;
 
-import cn.kuzuanpa.ktfruaddon.item.item.itemComputer;
+import cn.kuzuanpa.ktfruaddon.item.items.itemComputer;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
@@ -21,8 +21,6 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.base.TileEntityBase05Inventories;
-import gregapi.tileentity.base.TileEntityBase07Paintable;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.ST;
 import gregapi.util.UT;
@@ -51,13 +49,12 @@ public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeClu
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0};
     @Override
-    public long updateComputePower() {
+    public void updateComputePower() {
         ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
             long toAdd = itemComputer.getComputePowerFromID(stack.getItemDamage());
             if (toAdd < 150) ComputePower += toAdd;
         }
-        return ComputePower;
     }
     public long getComputePower(){return ComputePower;}
     @Override
@@ -151,9 +148,8 @@ public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeClu
         if (mDesign != 0) aNBT.setByte(NBT_DESIGN, (byte)mDesign);
         if (this.mTargetPos != null) {
             UT.NBT.setBoolean(aNBT, "gt.target", true);
-            UT.NBT.setNumber(aNBT, "gt.target.x", (long)this.mTargetPos.posX);
-            UT.NBT.setNumber(aNBT, "gt.target.y", (long)this.mTargetPos.posY);
-            UT.NBT.setNumber(aNBT, "gt.target.z", (long)this.mTargetPos.posZ);
+            UT.NBT.setNumber(aNBT, "gt.target.x", this.mTargetPos.posX);
+            UT.NBT.setNumber(aNBT, "gt.target.z", this.mTargetPos.posZ);
         }
     }
     public static IIconContainer

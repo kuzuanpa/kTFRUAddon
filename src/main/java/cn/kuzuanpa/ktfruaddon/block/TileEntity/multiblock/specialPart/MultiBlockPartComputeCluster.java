@@ -11,10 +11,8 @@
 
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart;
 
-import cn.kuzuanpa.ktfruaddon.item.item.itemComputer;
-import gregapi.GT_API;
+import cn.kuzuanpa.ktfruaddon.item.items.itemComputer;
 import gregapi.block.multitileentity.IMultiTileEntity;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
@@ -25,7 +23,6 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase07Paintable;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
-import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
@@ -53,12 +50,11 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
     public boolean isRunning;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0,0,0};
-    public long updateComputePower() {
+    public void updateComputePower() {
         ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
             ComputePower += itemComputer.getComputePowerFromID(stack.getItemDamage());
         }
-        return ComputePower;
     }
     public long getComputePower(){return ComputePower;}
     @Override
@@ -152,9 +148,9 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
         if (mDesign != 0) aNBT.setByte(NBT_DESIGN, (byte)mDesign);
         if (this.mTargetPos != null) {
             UT.NBT.setBoolean(aNBT, "gt.target", true);
-            UT.NBT.setNumber(aNBT, "gt.target.x", (long)this.mTargetPos.posX);
-            UT.NBT.setNumber(aNBT, "gt.target.y", (long)this.mTargetPos.posY);
-            UT.NBT.setNumber(aNBT, "gt.target.z", (long)this.mTargetPos.posZ);
+            UT.NBT.setNumber(aNBT, "gt.target.x", this.mTargetPos.posX);
+            UT.NBT.setNumber(aNBT, "gt.target.y", this.mTargetPos.posY);
+            UT.NBT.setNumber(aNBT, "gt.target.z", this.mTargetPos.posZ);
         }
     }
     public static IIconContainer
@@ -209,7 +205,7 @@ public IPacket getClientDataPacket(boolean aSendAll) {
 
 @Override
 public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
-        for (int i=0;i<4;i++) mDisplaySlot[i]=aData[i];
+        mDisplaySlot=aData;
         return T;
         }
     //Every thing from MultiBlockPart

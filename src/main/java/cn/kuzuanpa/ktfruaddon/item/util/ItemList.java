@@ -24,12 +24,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import static gregapi.data.CS.*;
 
 public enum ItemList implements IItemContainer{
-    Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole
-    ,BioCircuit, NeuralComputer
-    ,Wafer200um, Wafer72um, Wafer40um, Wafer8um, Wafer400nm, Wafer80nm, Wafer32nm, Wafer14nm, Wafer7nm, Wafer5nm, Wafer2nm
-    ,CPUTF386, CPUTF586, CPUAE300, CPUAE740, CPUGT200, CPUGT3490, CPUGT6799, CPUGT9890, CPUGT13586
-    ,CPUTF386e, CPUTF586e, CPUAE300s, CPUAE740s, CPUGT200s, CPUGT3490s, CPUGT6799s, CPUGT9890s, CPUGT13586s
-    ,ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT2660,ComputerGT2680,ComputerGT2699,ComputerGT2660v2,ComputerGT2680v2,ComputerGT2699v2,ComputerGT2660v3,ComputerGT2680v3,ComputerGT2699v3,ComputerGT2660v4,ComputerGT2680v4,ComputerGT2699v4,ComputerGT2680v3e,ComputerGT2699v3e,ComputerGT2680v4e,ComputerGT2699v4e
+    SiliconBoulePure, MoO2Boule, MoO2BoulePure,
+    SiliconPlate8inchTier1,SiliconPlate8inchTier2, MoO2Plate8inchTier1,MoO2Plate8inchTier2, GraphitePlate8inchTier1,GraphitePlate8inchTier2,
+    SiliconPlate8inchCleanedTier1,SiliconPlate8inchCleanedTier2, MoO2Plate8inchCleanedTier1,MoO2Plate8inchCleanedTier2, GraphitePlate8inchCleanedTier1,GraphitePlate8inchCleanedTier2,
+    SiliconPlate8inchOxidizedTier1,SiliconPlate8inchOxidizedTier2, MoO2Plate8inchOxidizedTier1,MoO2Plate8inchOxidizedTier2, GraphitePlate8inchOxidizedTier1,GraphitePlate8inchOxidizedTier2,
+    SiliconPlate8inchCoatedTier1,SiliconPlate8inchCoatedTier2, MoO2Plate8inchCoatedTier1,MoO2Plate8inchCoatedTier2, GraphitePlate8inchCoatedTier1,GraphitePlate8inchCoatedTier2,
+    SiliconPlate8inchSoftBakedTier1,SiliconPlate8inchSoftBakedTier2, MoO2Plate8inchSoftBakedTier1,MoO2Plate8inchSoftBakedTier2, GraphitePlate8inchSoftBakedTier1,GraphitePlate8inchSoftBakedTier2,
+    CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask40um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm, CPUPhotomask7nm, CPUPhotomask5nm, CPUPhotomask2nm,
+    CPUWafer200um, CPUWafer72um, CPUWafer40um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, CPUWafer7nm, CPUWafer5nm, CPUWafer2nm,
+    //Wafer200-40um Skipped PreBake
+    //Wafer8umPreBaked, CPUWafer400nmPreBaked, CPUWafer80nmPreBaked, CPUWafer32nmPreBaked, CPUWafer14nmPreBaked, CPUWafer7nmPreBaked, CPUWafer5nmPreBaked, CPUWafer2nmPreBaked,
+    CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer40umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, CPUWafer7nmDeveloped, CPUWafer5nmDeveloped, CPUWafer2nmDeveloped,
+    CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer40umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked, CPUWafer7nmHardBaked, CPUWafer5nmHardBaked, CPUWafer2nmHardBaked,
+    CPUDie200um, CPUDie72um, CPUDie40um, CPUDie8um, CPUDie400nm, CPUDie80nm, CPUDie32nm, CPUDie14nm, CPUDie7nm, CPUDie5nm, CPUDie2nm,
+    CPUTF386, CPUTF586, CPUAE300, CPUAE740, CPUGT200, CPUGT3490, CPUGT6799, CPUGT9890, CPUGT13586, CPUIF2, CPUIF7,
+    CPUTF386e, CPUTF586e, CPUAE300s, CPUAE740s, CPUGT200s, CPUGT3490s, CPUGT6799s, CPUGT9890s, CPUGT13586s,
+    ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT2660,ComputerGT2680,ComputerGT2699,ComputerGT2660v2,ComputerGT2680v2,ComputerGT2699v2,ComputerGT2660v3,ComputerGT2680v3,ComputerGT2699v3,ComputerGT2660v4,ComputerGT2680v4,ComputerGT2699v4,ComputerGT2680v3e,ComputerGT2699v3e,ComputerGT2680v4e,ComputerGT2699v4e,
+
+    Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
+
+    fakeItemPhotomask,fakeItemBoule,fakeItemLaserCutting,fakeItemSiliconPlateCleaned,fakeItemSiliconPlateOxidized,fakeItemSiliconPlateCoated,fakeItemSiliconPlateSoftBaked,fakeItemCPUWafer,fakeItemSiliconCPUWaferDeveloped,fakeItemSiliconCPUWaferHardBaked,fakeItemSiliconCPUWaferDoped,fakeItemSiliconCPUWaferChecked,fakeItemCPUDie
     ;
 
     //Copied from gt6
@@ -133,7 +147,6 @@ public enum ItemList implements IItemContainer{
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public ItemStack getWildcard(long aAmount, Object... aReplacements) {
         if (mHasNotBeenSet && Abstract_Mod.sFinalized < Abstract_Mod.sModCountUsingGTAPI) ERR.println("The Enum '" + name() + "' has not been set to an Item at this time!");
         if (ST.invalid(mStack)) return ST.copyFirst(aReplacements);
@@ -223,6 +236,6 @@ public enum ItemList implements IItemContainer{
         return this;
     }
 
-    @SuppressWarnings("deprecation") @Override public Item getItem() {return item();}
-    @SuppressWarnings("deprecation") @Override public Block getBlock() {return block();}
+    @Override public Item getItem() {return item();}
+    @Override public Block getBlock() {return block();}
 }
