@@ -17,4 +17,8 @@ public class matAlia {
     public OreDictMaterial fNH4Fe_SO4_2 = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial nAmmoniumIronIIISulfate = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial pLiuSuanTieAn = matList.AmmoniumIronIIISulfate.mat;
+    public OreDictMaterial fNH4Cr_SO4_2 = matList.AmmoniumChromicSulfate.mat;
+    public OreDictMaterial nAmmoniumChromicSulfate = matList.AmmoniumChromicSulfate.mat;
+    public OreDictMaterial pLiuSuanGeAn = matList.AmmoniumChromicSulfate.mat;
+
 }

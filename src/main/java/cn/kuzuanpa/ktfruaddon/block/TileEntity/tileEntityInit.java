@@ -22,6 +22,7 @@ import gregapi.oredict.OreDictMaterial;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import gregapi.util.ST;
 import gregapi.util.UT;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
@@ -125,11 +126,9 @@ public class tileEntityInit {
                 "SwS", "CMC", "SBS", 'M', aRegistry.getItem(18022), 'S', OP.stickLong.dat(aMat), 'C', CS.OD_CIRCUITS[6], 'B', "gt:re-battery1");
         aMat = MT.Osmiridium;           aRegistry.add("Particle Collider"  , "kTFRUAddon: MultiBlock", 30002, 17200, particleCollider.class    , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "particlecollider"        , NBT_INPUT, 8192, NBT_INPUT_MIN,    1, NBT_INPUT_MAX,   524288  , NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.ParticleCollider     , NBT_ENERGY_ACCEPTED_2, TD.Energy.EU, NBT_SPECIAL_IS_START_ENERGY, T),
                 "FFF", "FMF", "FFF", 'M', aRegistry.getItem(18014), 'F', IL.FIELD_GENERATORS[5]);
-        aMat = MT.StainlessSteel;         aRegistry.add("TestMachine", "kTFRUAddon: Multiblock", 30003, 17200, ConsumerPartTestMachine.class, aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "hugedynamo", NBT_INPUT, 6080,NBT_INPUT_MIN , 4096, NBT_INPUT_MAX,8192, NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.ParticleCollider),
-                "SwS", "CMC", "SBS", 'M', aRegistry.getItem(18022), 'S', OP.stickLong.dat(aMat), 'C', CS.OD_CIRCUITS[6], 'B', "gt:re-battery1");
         aMat = MT.StainlessSteel;         aRegistry.add("TinyDistilltionTower", "kTFRUAddon: Multiblock", 30005, 17200, TinyDistillTower.class, aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "hugedynamo", NBT_INPUT, 6080,NBT_INPUT_MIN , 4096, NBT_INPUT_MAX,8192, NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.ParticleCollider),
                 "SwS", "CMC", "SBS", 'M', aRegistry.getItem(18022), 'S', OP.stickLong.dat(aMat), 'C', CS.OD_CIRCUITS[6], 'B', "gt:re-battery1");
-        aMat = MT.Al;         aRegistry.add("Mask Aligner (UV)", "kTFRUAddon: Multiblock", 30004, 17200, maskAlignerUV.class, aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "maskAlignerUV", NBT_INPUT, 128,NBT_INPUT_MIN , 64, NBT_INPUT_MAX,256, NBT_ENERGY_ACCEPTED, TD.Energy.LU),
+        aMat = MT.Al;         aRegistry.add("Mask Aligner (UV)", "kTFRUAddon: Multiblock", 30004, 17200, maskAlignerUVScanning.class, aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "maskAlignerUV", NBT_INPUT, 128,NBT_INPUT_MIN , 64, NBT_INPUT_MAX,256, NBT_ENERGY_ACCEPTED, TD.Energy.LU),
                 "SwS", "CMC", "SBS", 'M', aRegistry.getItem(18022), 'S', OP.stickLong.dat(aMat), 'C', CS.OD_CIRCUITS[6], 'B', "gt:re-battery1");
 
         //parts
