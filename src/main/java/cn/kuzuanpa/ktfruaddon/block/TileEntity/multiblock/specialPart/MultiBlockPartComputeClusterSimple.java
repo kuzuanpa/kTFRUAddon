@@ -21,6 +21,7 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
+import gregapi.tileentity.base.TileEntityBase05Inventories;
 import gregapi.tileentity.base.TileEntityBase07Paintable;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.ST;
@@ -40,7 +41,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MultiBlockPartComputeClusterSimple extends TileEntityBase07Paintable implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
+public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeCluster implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
@@ -49,6 +50,7 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase07Paintabl
     public boolean isRunning;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0};
+    @Override
     public long updateComputePower() {
         ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
@@ -81,11 +83,12 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase07Paintabl
 
         return T;
     }
-
+@Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.ORANGE   + LH.get(LH.NO_GUI_CLICK_TO_INTERACT)   + " (" + LH.get(LH.FACE_SIDES) + ")");
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
+    @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass)) {
     if (aChatReturn != null) {
@@ -105,7 +108,6 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase07Paintabl
     // Inventory Stuff
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
     @Override public boolean canDrop(int aInventorySlot) {return T;}
-
     private static final int[] ACCESSIBLE_SLOTS = new int[] {0, 1};
 
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
@@ -223,7 +225,7 @@ public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandle
             return aCheckValidity && this.mTarget != null && !this.mTarget.checkStructure(false) ? null : this.mTarget;
         }
     }
-
+@Override
     public void setTarget(ITileEntityMultiBlockController aTarget, int aDesign, int aMode) {
         this.mTarget = aTarget;
         this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();
