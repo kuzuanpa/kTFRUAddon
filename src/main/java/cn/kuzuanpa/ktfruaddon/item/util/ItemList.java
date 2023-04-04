@@ -25,25 +25,27 @@ import static gregapi.data.CS.*;
 
 public enum ItemList implements IItemContainer{
     SiliconBoulePure, MoO2Boule, MoO2BoulePure,
-    SiliconPlate8inchTier1,SiliconPlate8inchTier2, MoO2Plate8inchTier1,MoO2Plate8inchTier2, GraphitePlate8inchTier1,GraphitePlate8inchTier2,
-    SiliconPlate8inchCleanedTier1,SiliconPlate8inchCleanedTier2, MoO2Plate8inchCleanedTier1,MoO2Plate8inchCleanedTier2, GraphitePlate8inchCleanedTier1,GraphitePlate8inchCleanedTier2,
-    SiliconPlate8inchOxidizedTier1,SiliconPlate8inchOxidizedTier2, MoO2Plate8inchOxidizedTier1,MoO2Plate8inchOxidizedTier2, GraphitePlate8inchOxidizedTier1,GraphitePlate8inchOxidizedTier2,
-    SiliconPlate8inchCoatedTier1,SiliconPlate8inchCoatedTier2, MoO2Plate8inchCoatedTier1,MoO2Plate8inchCoatedTier2, GraphitePlate8inchCoatedTier1,GraphitePlate8inchCoatedTier2,
-    SiliconPlate8inchSoftBakedTier1,SiliconPlate8inchSoftBakedTier2, MoO2Plate8inchSoftBakedTier1,MoO2Plate8inchSoftBakedTier2, GraphitePlate8inchSoftBakedTier1,GraphitePlate8inchSoftBakedTier2,
-    CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask40um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm, CPUPhotomask7nm, CPUPhotomask5nm, CPUPhotomask2nm,
-    CPUWafer200um, CPUWafer72um, CPUWafer40um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, CPUWafer7nm, CPUWafer5nm, CPUWafer2nm,
-    //Wafer200-40um Skipped PreBake
-    //Wafer8umPreBaked, CPUWafer400nmPreBaked, CPUWafer80nmPreBaked, CPUWafer32nmPreBaked, CPUWafer14nmPreBaked, CPUWafer7nmPreBaked, CPUWafer5nmPreBaked, CPUWafer2nmPreBaked,
-    CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer40umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, CPUWafer7nmDeveloped, CPUWafer5nmDeveloped, CPUWafer2nmDeveloped,
-    CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer40umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked, CPUWafer7nmHardBaked, CPUWafer5nmHardBaked, CPUWafer2nmHardBaked,
-    CPUDie200um, CPUDie72um, CPUDie40um, CPUDie8um, CPUDie400nm, CPUDie80nm, CPUDie32nm, CPUDie14nm, CPUDie7nm, CPUDie5nm, CPUDie2nm,
-    CPUTF386, CPUTF586, CPUAE300, CPUAE740, CPUGT200, CPUGT3490, CPUGT6799, CPUGT9890, CPUGT13586, CPUIF2, CPUIF7,
-    CPUTF386e, CPUTF586e, CPUAE300s, CPUAE740s, CPUGT200s, CPUGT3490s, CPUGT6799s, CPUGT9890s, CPUGT13586s,
+    SiliconPlate8inchTier1,SiliconPlate8inchTier2, MoO2Plate8inchTier1,MoO2Plate8inchTier2, GraphitePlate8inch,
+    SiliconPlate8inchCleanedTier1,SiliconPlate8inchCleanedTier2, MoO2Plate8inchCleanedTier1,MoO2Plate8inchCleanedTier2, GraphitePlate8inchCleaned,
+    SiliconPlate8inchOxidizedTier1,SiliconPlate8inchOxidizedTier2, MoO2Plate8inchOxidizedTier1,MoO2Plate8inchOxidizedTier2, GraphitePlate8inchOxidized,
+    SiliconPlate8inchCoatedTier1,SiliconPlate8inchCoatedTier2, MoO2Plate8inchCoatedTier1,MoO2Plate8inchCoatedTier2, GraphitePlate8inchCoated,
+    SiliconPlate8inchSoftBakedTier1,SiliconPlate8inchSoftBakedTier2, MoO2Plate8inchSoftBakedTier1,MoO2Plate8inchSoftBakedTier2, GraphitePlate8inchSoftBaked,
+    CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask40um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm,
+    CPUWafer200um, CPUWafer72um, CPUWafer40um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, 
+    CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer40umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, 
+    CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer40umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked,
+    CPUWafer200umDoped, CPUWafer72umDoped, CPUWafer40umDoped, CPUWafer8umDoped, CPUWafer400nmDoped, CPUWafer80nmDoped, CPUWafer32nmDoped, CPUWafer14nmDoped,
+    CPUWafer200umChecked, CPUWafer72umChecked, CPUWafer40umChecked, CPUWafer8umChecked, CPUWafer400nmChecked, CPUWafer80nmChecked, CPUWafer32nmChecked, CPUWafer14nmChecked,
+
+    CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT2660, CPUDieGT2660v2, CPUDieGT2660v3, CPUDieGT2660v4, CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT2680, CPUDieGT2680v2, CPUDieGT2680v3, CPUDieGT2680v4, CPUDieGT2699, CPUDieGT2699v2, CPUDieGT2699v3, CPUDieGT2699v4, CPUDieGT2680v3E, CPUDieGT2680v4E, CPUDieGT2699v3E, CPUDieGT2699v4E,
+    
+    CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT2660, CPUGT2660v2, CPUGT2660v3, CPUGT2660v4, CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT2680, CPUGT2680v2, CPUGT2680v3, CPUGT2680v4, CPUGT2699, CPUGT2699v2, CPUGT2699v3, CPUGT2699v4, CPUGT2680v3E, CPUGT2680v4E, CPUGT2699v3E, CPUGT2699v4E,
+
     ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT2660,ComputerGT2680,ComputerGT2699,ComputerGT2660v2,ComputerGT2680v2,ComputerGT2699v2,ComputerGT2660v3,ComputerGT2680v3,ComputerGT2699v3,ComputerGT2660v4,ComputerGT2680v4,ComputerGT2699v4,ComputerGT2680v3e,ComputerGT2699v3e,ComputerGT2680v4e,ComputerGT2699v4e,
 
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
 
-    fakeItemPhotomask,fakeItemBoule,fakeItemLaserCutting,fakeItemSiliconPlateCleaned,fakeItemSiliconPlateOxidized,fakeItemSiliconPlateCoated,fakeItemSiliconPlateSoftBaked,fakeItemCPUWafer,fakeItemSiliconCPUWaferDeveloped,fakeItemSiliconCPUWaferHardBaked,fakeItemSiliconCPUWaferDoped,fakeItemSiliconCPUWaferChecked,fakeItemCPUDie
+    fakeItemPhotomask,fakeItemBoule,fakeItemLaserCutting,fakeItemSiliconPlateCleaned,fakeItemSiliconPlateOxidized,fakeItemSiliconPlateCoated,fakeItemSiliconPlateSoftBaked,fakeItemWafer,fakeItemSiliconWaferDeveloped,fakeItemSiliconWaferHardBaked,fakeItemSiliconWaferDoped,fakeItemSiliconWaferChecked,fakeItemDie
     ;
 
     //Copied from gt6
@@ -147,6 +149,7 @@ public enum ItemList implements IItemContainer{
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemStack getWildcard(long aAmount, Object... aReplacements) {
         if (mHasNotBeenSet && Abstract_Mod.sFinalized < Abstract_Mod.sModCountUsingGTAPI) ERR.println("The Enum '" + name() + "' has not been set to an Item at this time!");
         if (ST.invalid(mStack)) return ST.copyFirst(aReplacements);
@@ -236,6 +239,6 @@ public enum ItemList implements IItemContainer{
         return this;
     }
 
-    @Override public Item getItem() {return item();}
-    @Override public Block getBlock() {return block();}
+    @SuppressWarnings("deprecation") @Override public Item getItem() {return item();}
+    @SuppressWarnings("deprecation") @Override public Block getBlock() {return block();}
 }
