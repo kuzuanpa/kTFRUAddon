@@ -13,7 +13,7 @@ package cn.kuzuanpa.ktfruaddon.material;
 import gregapi.oredict.OreDictMaterial;
 
 public class matAlia {
-    //f= chemical formula(use _ for quote) ;n = name;p = hanyu pinyin(like phoneic symbol but for zh_CN)
+    //f= chemical formula(use _ for quote) ;n = name;p = hanyu pinyin(like phoneic symbol but for zh)
     public OreDictMaterial fNH4Fe_SO4_2 = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial nAmmoniumIronIIISulfate = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial pLiuSuanTieAn = matList.AmmoniumIronIIISulfate.mat;

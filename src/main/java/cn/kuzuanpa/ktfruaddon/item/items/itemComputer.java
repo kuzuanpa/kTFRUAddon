@@ -20,7 +20,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class itemComputer extends MultiItemRandom {
     public itemComputer() {
     super(MOD_ID, "ktfru.item.it.computer");
-    setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Computers", this, (short) 9999));
+    setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Computers", this, (short) 10));
 }
     public static long getComputePowerFromID(int id){
         if (id > ComputePower.length||id<0) return 0;
@@ -37,22 +37,22 @@ public class itemComputer extends MultiItemRandom {
         ItemList.ComputerGT1090.set(addItem(5,"GT1090 Computer","Computing Power: 816 MFLOPS"));
         ItemList.ComputerGT2000.set(addItem(6,"GT2000 Computer","Computing Power: 3422 MFLOPS"));
         ItemList.ComputerGT2090.set(addItem(7,"GT2090 Computer","Computing Power: 4037 MFLOPS"));
-        ItemList.ComputerGT2660.set(addItem(8,"GT2660 Computer","Computing Power: 10289 MFLOPS"));
-        ItemList.ComputerGT2680.set(addItem(9,"GT2680 Computer","Computing Power: 12554 MFLOPS"));
-        ItemList.ComputerGT2699.set(addItem(10,"GT2699 Computer","Computing Power: 18132 MFLOPS"));
-        ItemList.ComputerGT2660v2.set(addItem(11,"GT2660v2 Computer","Computing Power: 25633 MFLOPS"));
-        ItemList.ComputerGT2680v2.set(addItem(12,"GT2680v2 Computer","Computing Power: 30568 MFLOPS"));
-        ItemList.ComputerGT2699v2.set(addItem(13,"GT2699v2 Computer","Computing Power: 65130 MFLOPS"));
-        ItemList.ComputerGT2660v3.set(addItem(14,"GT2660v3 Computer","Computing Power: 45311 MFLOPS"));
-        ItemList.ComputerGT2680v3.set(addItem(15,"GT2680v3 Computer","Computing Power: 53312 MFLOPS"));
-        ItemList.ComputerGT2699v3.set(addItem(16,"GT2699v3 Computer","Computing Power: 110031 MFLOPS"));
-        ItemList.ComputerGT2660v4.set(addItem(17,"GT2660v4 Computer","Computing Power: 70632 MFLOPS"));
-        ItemList.ComputerGT2680v4.set(addItem(18,"GT2680v4 Computer","Computing Power: 81131 MFLOPS"));
-        ItemList.ComputerGT2699v4.set(addItem(19,"GT2699v4 Computer","Computing Power: 183077 MFLOPS"));
-        ItemList.ComputerGT2680v3e.set(addItem(20,"GT2680v3e Computer","Computing Power: 73909 MFLOPS"));
-        ItemList.ComputerGT2699v3e.set(addItem(21,"GT2699v3e Computer","Computing Power: 156657 MFLOPS"));
-        ItemList.ComputerGT2680v4e.set(addItem(22,"GT2680v4e Computer","Computing Power: 102563 MFLOPS"));
-        ItemList.ComputerGT2699v4e.set(addItem(23,"GT2699v4e Computer","Computing Power: 228567 MFLOPS"));
+        ItemList.ComputerGT3660.set(addItem(8,"GT3660 Computer","Computing Power: 10289 MFLOPS"));
+        ItemList.ComputerGT3680.set(addItem(9,"GT3680 Computer","Computing Power: 12554 MFLOPS"));
+        ItemList.ComputerGT3699.set(addItem(10,"GT3699 Computer","Computing Power: 18132 MFLOPS"));
+        ItemList.ComputerGT3660v2.set(addItem(11,"GT3660v2 Computer","Computing Power: 25633 MFLOPS"));
+        ItemList.ComputerGT3680v2.set(addItem(12,"GT3680v2 Computer","Computing Power: 30568 MFLOPS"));
+        ItemList.ComputerGT3699v2.set(addItem(13,"GT3699v2 Computer","Computing Power: 65130 MFLOPS"));
+        ItemList.ComputerGT3660v3.set(addItem(14,"GT3660v3 Computer","Computing Power: 45311 MFLOPS"));
+        ItemList.ComputerGT3680v3.set(addItem(15,"GT3680v3 Computer","Computing Power: 53312 MFLOPS"));
+        ItemList.ComputerGT3699v3.set(addItem(16,"GT3699v3 Computer","Computing Power: 110031 MFLOPS"));
+        ItemList.ComputerGT3660v4.set(addItem(17,"GT3660v4 Computer","Computing Power: 70632 MFLOPS"));
+        ItemList.ComputerGT3680v4.set(addItem(18,"GT3680v4 Computer","Computing Power: 81131 MFLOPS"));
+        ItemList.ComputerGT3699v4.set(addItem(19,"GT3699v4 Computer","Computing Power: 183077 MFLOPS"));
+        ItemList.ComputerGT3680v3e.set(addItem(20,"GT3680v3e Computer","Computing Power: 73909 MFLOPS"));
+        ItemList.ComputerGT3699v3e.set(addItem(21,"GT3699v3e Computer","Computing Power: 156657 MFLOPS"));
+        ItemList.ComputerGT3680v4e.set(addItem(22,"GT3680v4e Computer","Computing Power: 102563 MFLOPS"));
+        ItemList.ComputerGT3699v4e.set(addItem(23,"GT3699v4e Computer","Computing Power: 228567 MFLOPS"));
 
     }
 }
