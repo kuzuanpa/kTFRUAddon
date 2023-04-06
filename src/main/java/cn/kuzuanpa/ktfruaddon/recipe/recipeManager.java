@@ -14,7 +14,7 @@ import static gregapi.data.CS.*;
 
 public class recipeManager {
     public static final Recipe.RecipeMap
-              HeatMixer          = new Recipe.RecipeMap(null, "ktfru.recipe.heatmixer", "Heat Mixer", "Heat Mixer", 0, 1, RES_PATH_GUI + "machines/Mixer"            ,/*IN-OUT-MIN-ITEM=*/ 6, 1, 0,/*IN-OUT-MIN-FLUID=*/ 6, 2, 0,/*MIN*/ 2,/*AMP=*/ 1, "", 1, "", T, T, T, T, F, T, T)
+              HeatMixer          = new Recipe.RecipeMap(null, "ktfru.recipe.heatmixer", "Heat Mixer", "Heat Mixer", 0, 1, RES_PATH_GUI + "machines/HeatMixer"            ,/*IN-OUT-MIN-ITEM=*/ 6, 2, 0,/*IN-OUT-MIN-FLUID=*/ 6, 2, 0,/*MIN*/ 2,/*AMP=*/ 1, "", 1, "", T, T, T, T, F, T, T)
             , Assembler          = new Recipe.RecipeMap(null, "ktfru.recipe.assembler","Circuit Assembler"  , "Circuit Assembler", 0, 1, RES_PATH_GUI+"machines/Assembler"  ,/*IN-OUT-MIN-ITEM=*/ 9, 1, 1,/*IN-OUT-MIN-FLUID=*/ 1, 0, 0,/*MIN*/ 1,/*AMP=*/ 1, "", 1, "", T, T, T, T, F, F, F)
             , LaserCutter        = new Recipe.RecipeMap(null, "ktfru.recipe.lasercutter", "Laser Cutter", "Laser Cutter", 0, 1, RES_PATH_GUI + "machines/LaserCutter"  ,/*IN-OUT-MIN-ITEM=*/ 1, 3, 1,/*IN-OUT-MIN-FLUID=*/ 0, 0, 0,/*MIN*/ 0,/*AMP=*/ 1, "", 1, "", T, T, T, T, F, F, F)
             , ParticleCollider   = new Recipe.RecipeMap(null, "ktfru.recipe.particlecollider", "Particle Collider", "Particle Collider", 0, 1, RES_PATH_GUI + "machines/Fusion",/*IN-OUT-MIN-ITEM=*/ 2, 6, 1,/*IN-OUT-MIN-FLUID=*/ 2, 6, 0,/*MIN*/ 2,/*AMP=*/ 1, "Start: ", 1, " EU", T, T, T, T, F, F, F)

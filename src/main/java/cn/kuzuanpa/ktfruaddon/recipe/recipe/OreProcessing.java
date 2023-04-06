@@ -35,19 +35,16 @@ public class OreProcessing {
         RM.Bath.addRecipeX(T, 0, 180, ST.array(OM.dust(MT.OREMATS.Bauxite,U),OM.dust(MT.NaOH,U*2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(FL.make("sodiumaluminate",2000)),OM.dust(MT.SiO2,U4),OM.crushedCentrifugedTiny(MT.OREMATS.Ilmenite,1));
         //Step2
         RM.Bath.addRecipeX(T, 0, 180, ST.array(OM.dust(OreDictMaterial.get(30020),U*2),OM.dust(MT.NaOH,U*2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(FL.make("sodiumaluminate",2000)),OM.dust(MT.SiO2,U4),OM.dust(OreDictMaterial.get(30022),U));
-        HeatMixer.addRecipeX(T,120,60,ST.array(OM.dust(MT.NaOH,U * 4)),FL.array(FL.make("acidpickledbauxide",2000)),FL.array(FL.make("mixtureoffe2o3na2so4",1000),FL.make("sodiumaluminate",2000)),ZL_IS);
+        HeatMixer.addRecipeX(T,120,60,ST.array(OM.dust(MT.NaOH,U * 4)),FL.array(FL.make("acidpickledbauxide",2000)),FL.array(FL.make("sodiumaluminate",2000)),OM.dust(MT.Na2SO4,4*U),OM.dust(MT.Fe2O3,U));
         RM.Mixer.addRecipeX(T,0, 800,ST.array(ZL_IS),FL.array(FL.make("sodiumaluminate",1000),FL.Soda.make(1000)),FL.array(FL.make("asodiumcarbonate",2000)),OM.dust(MT.AlO3H3,U*4));
         //Step3: Centrifuge for mixtures
         RM.Centrifuge.addRecipeX(T, 64, 40,ST.array(OM.dust(OreDictMaterial.get(30022),U)),FL.array(ZL_FS),FL.array(ZL_FS),OM.dust(MT.Fe2O3,U),OM.crushedCentrifugedTiny(MT.TiO2,1),OM.dust(MT.SiO2,U4));
-        RM.Centrifuge.addRecipeX(T, 32, 20, ST.array(ZL_IS),FL.array(FL.make("mixtureoffe2o3na2so4",1000)),FL.array(ZL_FS),OM.dust(MT.Na2SO4,4*U),OM.dust(MT.Fe2O3,U));
-      //Use K for sone recipe
+      //Use K for some recipe
         //Step1
         RM.Bath.addRecipeX(T, 0, 180, ST.array(OM.dust(MT.OREMATS.Bauxite,U),OM.dust(MT.KOH,U*2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(FL.make("potassiumaluminate",2000)),OM.dust(MT.SiO2,U4),OM.crushedCentrifugedTiny(MT.OREMATS.Ilmenite,1));
         //Step2
-        HeatMixer.addRecipeX(T,120,60,ST.array(OM.dust(MT.KOH,U * 4)),FL.array(FL.make("acidpickledbauxide",2000)),FL.array(FL.make("mixtureoffe2o3k2so4",1000),FL.make("potassiumaluminate",2000)),ZL_IS);
+        HeatMixer.addRecipeX(T,120,60,ST.array(OM.dust(MT.KOH,U * 4)),FL.array(FL.make("acidpickledbauxide",2000)),FL.array(FL.make("potassiumaluminate",2000)),OM.dust(MT.K2SO4,4*U),OM.dust(MT.Fe2O3,U));
         RM.Mixer.addRecipeX(T,0, 800,ST.array(ZL_IS),FL.array(FL.make("potassiumaluminate",1000),FL.Soda.make(1000)),FL.array(FL.make("asodiumcarbonate",2000)),OM.dust(MT.AlO3H3,U*4));
-        //Step3
-        RM.Centrifuge.addRecipeX(T, 32, 20, ST.array(ZL_IS),FL.array(FL.make("mixtureoffe2o3k2so4",1000)),FL.array(ZL_FS),OM.dust(MT.K2SO4,4*U),OM.dust(MT.Fe2O3,U));
      //W Process
         RM.Autoclave.addRecipe2(T, 0, 400,new long[] {10000} ,OP.dust.mat(MT.OREMATS.Wolframite,1),OP.dust.mat(MT.NaOH,4),FL.Steam.make(20000),FL.make("sodiumheterotungstate",2000),OM.dust(MT.MgCO3, U));
         RM.Autoclave.addRecipe2(T, 0, 400,new long[]{10000},OP.dust.mat(MT.OREMATS.Huebnerite,1),OP.dust.mat(MT.NaOH,4),FL.Steam.make(20000),FL.make("sodiumheterotungstate",2000),OM.dust(MT.MnO2, U));

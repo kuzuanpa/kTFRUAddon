@@ -11,6 +11,7 @@ package cn.kuzuanpa.ktfruaddon;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.tileEntityInit;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.tileEntityPreInit;
 import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
+import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
@@ -26,8 +27,7 @@ public class commonProxy extends Abstract_Proxy {
         new materialPreInit(aEvent);
         new tileEntityPreInit(aEvent);
         new itemPreInit(aEvent);
-        new blockSimpleInit(aEvent);
-
+        new fluidPreInit(aEvent);
     }
 
     public void init(FMLInitializationEvent aEvent) {
