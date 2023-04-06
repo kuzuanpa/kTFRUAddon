@@ -19,4 +19,8 @@ public enum matList {
         mat.setOriginalMod(MOD_DATA);
         if (formula != null)mat.mTooltipChemical = formula;
     }
+
+    public OreDictMaterial get() {
+        return mat;
+    }
 }

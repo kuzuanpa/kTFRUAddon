@@ -39,17 +39,23 @@ public class itemIT extends MultiItemRandom {
         MoO2Plate8inchCleanedTier2.set(addItem(9813,"MoO2Plate8inchCleanedTier2","MoO2Plate8inchCleanedTier2"));
         GraphitePlate8inchCleaned.set(addItem(9814,"GraphitePlate8inchCleanedTier1","GraphitePlate8inchCleanedTier1"));
 
-        SiliconPlate8inchCoatedTier1.set(addItem(9820,"SiliconPlate8inchCoatedTier1","SiliconPlate8inchCoatedTier1"));
-        SiliconPlate8inchCoatedTier2.set(addItem(9821,"SiliconPlate8inchCoatedTier2","SiliconPlate8inchCoatedTier2"));
-        MoO2Plate8inchCoatedTier1.set(addItem(9822,"MoO2Plate8inchCoatedTier1","MoO2Plate8inchCoatedTier1"));
-        MoO2Plate8inchCoatedTier2.set(addItem(9823,"MoO2Plate8inchCoatedTier2","MoO2Plate8inchCoatedTier2"));
-        GraphitePlate8inchCoated.set(addItem(9824,"GraphitePlate8inchCoatedTier1","GraphitePlate8inchCoatedTier1"));
+        SiliconPlate8inchOxidizedTier1.set(addItem(9820,"SiliconPlate8inchOxidizedTier1","SiliconPlate8inchOxidizedTier1"));
+        SiliconPlate8inchOxidizedTier2.set(addItem(9821,"SiliconPlate8inchOxidizedTier2","SiliconPlate8inchOxidizedTier2"));
+        MoO2Plate8inchOxidizedTier1.set(addItem(9822,"MoO2Plate8inchOxidizedTier1","MoO2Plate8inchOxidizedTier1"));
+        MoO2Plate8inchOxidizedTier2.set(addItem(9823,"MoO2Plate8inchOxidizedTier2","MoO2Plate8inchOxidizedTier2"));
+        GraphitePlate8inchOxidized.set(addItem(9824,"GraphitePlate8inchOxidizedTier1","GraphitePlate8inchOxidizedTier1"));
 
-        SiliconPlate8inchSoftBakedTier1.set(addItem(9830,"SiliconPlate8inchSoftBakedTier1","SiliconPlate8inchSoftBakedTier1"));
-        SiliconPlate8inchSoftBakedTier2.set(addItem(9831,"SiliconPlate8inchSoftBakedTier2","SiliconPlate8inchSoftBakedTier2"));
-        MoO2Plate8inchSoftBakedTier1.set(addItem(9832,"MoO2Plate8inchSoftBakedTier1","MoO2Plate8inchSoftBakedTier1"));
-        MoO2Plate8inchSoftBakedTier2.set(addItem(9833,"MoO2Plate8inchSoftBakedTier2","MoO2Plate8inchSoftBakedTier2"));
-        GraphitePlate8inchSoftBaked.set(addItem(9834,"GraphitePlate8inchSoftBakedTier1","GraphitePlate8inchSoftBakedTier1"));
+        SiliconPlate8inchCoatedTier1.set(addItem(9830,"SiliconPlate8inchCoatedTier1","SiliconPlate8inchCoatedTier1"));
+        SiliconPlate8inchCoatedTier2.set(addItem(9831,"SiliconPlate8inchCoatedTier2","SiliconPlate8inchCoatedTier2"));
+        MoO2Plate8inchCoatedTier1.set(addItem(9832,"MoO2Plate8inchCoatedTier1","MoO2Plate8inchCoatedTier1"));
+        MoO2Plate8inchCoatedTier2.set(addItem(9833,"MoO2Plate8inchCoatedTier2","MoO2Plate8inchCoatedTier2"));
+        GraphitePlate8inchCoated.set(addItem(9834,"GraphitePlate8inchCoatedTier1","GraphitePlate8inchCoatedTier1"));
+
+        SiliconPlate8inchSoftBakedTier1.set(addItem(9840,"SiliconPlate8inchSoftBakedTier1","SiliconPlate8inchSoftBakedTier1"));
+        SiliconPlate8inchSoftBakedTier2.set(addItem(9841,"SiliconPlate8inchSoftBakedTier2","SiliconPlate8inchSoftBakedTier2"));
+        MoO2Plate8inchSoftBakedTier1.set(addItem(9842,"MoO2Plate8inchSoftBakedTier1","MoO2Plate8inchSoftBakedTier1"));
+        MoO2Plate8inchSoftBakedTier2.set(addItem(9843,"MoO2Plate8inchSoftBakedTier2","MoO2Plate8inchSoftBakedTier2"));
+        GraphitePlate8inchSoftBaked.set(addItem(9844,"GraphitePlate8inchSoftBakedTier1","GraphitePlate8inchSoftBakedTier1"));
 
         CPUPhotomask200um.set(addItem(9900,"CPU Photo Mask (200um)","CPU Ex"));
         CPUPhotomask72um.set(addItem(9901,"CPU Photo Mask (72um)","CPU Ex"));
@@ -105,5 +111,56 @@ public class itemIT extends MultiItemRandom {
         CPUWafer80nmChecked.set(addItem(10155,"CPU Wafer80nmChecked","CPU Wafer80nmChecked"));
         CPUWafer32nmChecked.set(addItem(10156,"CPU Wafer32nmChecked","CPU Wafer32nmChecked"));
         CPUWafer14nmChecked.set(addItem(10157,"CPU Wafer14nmChecked","CPU Wafer14nmChecked"));
+
+        CPUDieTF3386.set(addItem(10200,"CPUDieTF3386","CPUDieTF3386"));
+        CPUDieTF3586.set(addItem(10201,"CPUDieTF3586","CPUDieTF3586"));
+        CPUDieGT1000.set(addItem(10202,"CPUDieGT1000","CPUDieGT1000"));
+        CPUDieGT2000.set(addItem(10203,"CPUDieGT2000","CPUDieGT2000"));
+        CPUDieGT3660.set(addItem(10204,"CPUDieGT3660","CPUDieGT3660"));
+        CPUDieGT3660v2.set(addItem(10205,"CPUDieGT3660v2","CPUDieGT3660v2"));
+        CPUDieGT3660v3.set(addItem(10206,"CPUDieGT3660v3","CPUDieGT3660v3"));
+        CPUDieGT3660v4.set(addItem(10207,"CPUDieGT3660v4","CPUDieGT3660v4"));
+        CPUDieTF3386S.set(addItem(10208,"CPUDieTF3386S","CPUDieTF3386S"));
+        CPUDieTF3586S.set(addItem(10209,"CPUDieTF3586S","CPUDieTF3586S"));
+        CPUDieGT1090.set(addItem(10210,"CPUDieGT1090","CPUDieGT1090"));
+        CPUDieGT2090.set(addItem(10211,"CPUDieGT2090","CPUDieGT2090"));
+        CPUDieGT3680.set(addItem(10212,"CPUDieGT3680","CPUDieGT3680"));
+        CPUDieGT3680v2.set(addItem(10213,"CPUDieGT3680v2","CPUDieGT3680v2"));
+        CPUDieGT3680v3.set(addItem(10214,"CPUDieGT3680v3","CPUDieGT3680v3"));
+        CPUDieGT3680v4.set(addItem(10215,"CPUDieGT3680v4","CPUDieGT3680v4"));
+        CPUDieGT3699.set(addItem(10216,"CPUDieGT3699","CPUDieGT3699"));
+        CPUDieGT3699v2.set(addItem(10217,"CPUDieGT3699v2","CPUDieGT3699v2"));
+        CPUDieGT3699v3.set(addItem(10218,"CPUDieGT3699v3","CPUDieGT3699v3"));
+        CPUDieGT3699v4.set(addItem(10219,"CPUDieGT3699v4","CPUDieGT3699v4"));
+        CPUDieGT3680v3E.set(addItem(10220,"CPUDieGT3680v3E","CPUDieGT3680v3E"));
+        CPUDieGT3680v4E.set(addItem(10221,"CPUDieGT3680v4E","CPUDieGT3680v4E"));
+        CPUDieGT3699v3E.set(addItem(10222,"CPUDieGT3699v3E","CPUDieGT3699v3E"));
+        CPUDieGT3699v4E.set(addItem(10223,"CPUDieGT3699v4E","CPUDieGT3699v4E"));
+
+        CPUTF3386.set(addItem(10300,"CPUTF3386","CPUTF3386"));
+        CPUTF3586.set(addItem(10301,"CPUTF3586","CPUTF3586"));
+        CPUGT1000.set(addItem(10302,"CPUGT1000","CPUGT1000"));
+        CPUGT2000.set(addItem(10303,"CPUGT2000","CPUGT2000"));
+        CPUGT3660.set(addItem(10304,"CPUGT3660","CPUGT3660"));
+        CPUGT3660v2.set(addItem(10305,"CPUGT3660v2","CPUGT3660v2"));
+        CPUGT3660v3.set(addItem(10306,"CPUGT3660v3","CPUGT3660v3"));
+        CPUGT3660v4.set(addItem(10307,"CPUGT3660v4","CPUGT3660v4"));
+        CPUTF3386S.set(addItem(10308,"CPUTF3386S","CPUTF3386S"));
+        CPUTF3586S.set(addItem(10309,"CPUTF3586S","CPUTF3586S"));
+        CPUGT1090.set(addItem(10310,"CPUGT1090","CPUGT1090"));
+        CPUGT2090.set(addItem(10311,"CPUGT2090","CPUGT2090"));
+        CPUGT3680.set(addItem(10312,"CPUGT3680","CPUGT3680"));
+        CPUGT3680v2.set(addItem(10313,"CPUGT3680v2","CPUGT3680v2"));
+        CPUGT3680v3.set(addItem(10314,"CPUGT3680v3","CPUGT3680v3"));
+        CPUGT3680v4.set(addItem(10315,"CPUGT3680v4","CPUGT3680v4"));
+        CPUGT3699.set(addItem(10316,"CPUGT3699","CPUGT3699"));
+        CPUGT3699v2.set(addItem(10317,"CPUGT3699v2","CPUGT3699v2"));
+        CPUGT3699v3.set(addItem(10318,"CPUGT3699v3","CPUGT3699v3"));
+        CPUGT3699v4.set(addItem(10319,"CPUGT3699v4","CPUGT3699v4"));
+        CPUGT3680v3E.set(addItem(10320,"CPUGT3680v3E","CPUGT3680v3E"));
+        CPUGT3680v4E.set(addItem(10321,"CPUGT3680v4E","CPUGT3680v4E"));
+        CPUGT3699v3E.set(addItem(10322,"CPUGT3699v3E","CPUGT3699v3E"));
+        CPUGT3699v4E.set(addItem(10323,"CPUGT3699v4E","CPUGT3699v4E"));
+
     }
 }
