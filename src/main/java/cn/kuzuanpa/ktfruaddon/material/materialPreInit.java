@@ -8,7 +8,9 @@
  */
 package cn.kuzuanpa.ktfruaddon.material;
 
+import cn.kuzuanpa.ktfruaddon.fluid.fluidList;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import gregapi.data.CS;
 import gregapi.data.FL;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
@@ -93,6 +95,8 @@ public class materialPreInit {
         FL.create("potassiumcarbonate","Potassium Carbonate",null,1);
         FL.create("liquifiednaturalgas","Liquified Natural Gas",null,1);
         FL.create("sodiumheterotungstate","Sodium Heterotungstate",null,1);
+        FL.create("test","TestL11n",null,1,12,890);
+        fluidList.testfluid.register("test","testl",null,1,3,5,65,5,5);
         matList.LithiumCarbonate.register(30030, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
         matList.LithiumCarbonate.mat.put(TD.ItemGenerator.DUSTS);
         FL.create("ammoniumtungstate","Ammonium Tungstate",null,1);
