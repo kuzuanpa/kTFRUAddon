@@ -12,12 +12,11 @@ package cn.kuzuanpa.ktfruaddon.fluid;
 
 import gregapi.data.FL;
 import gregapi.oredict.OreDictMaterial;
-import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 
 
 public enum fluidList {
-    testfluid
+    AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, LiquifiedNaturalgas, SodiumHeterotungstate, AmmoniumTungstate,
     ;
     public Fluid fluid;
     public void register(String name, String localizedName, OreDictMaterial material, int state) {

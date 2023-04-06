@@ -84,22 +84,11 @@ public class materialPreInit {
         matList.AcidPickledBauxide.register(30021, "CookedBauxide", "Cooked Bauxide", 2370, 3234,200, 168, 0, 4, null);
         matList.AcidPickledBauxide.mat.put(TD.ItemGenerator.DUSTS);
 
-        FL.create("acidpickledbauxide"         , "Acid Pickled Bauxide"    , null                  , 1);
-        FL.create("mixtureoffe2o3na2so4"         , "Mixure Of FE2O3 & Na2SO4"    , null                  , 1);
-        FL.create("mixtureoffe2o3k2so4"         , "Mixure Of FE2O3 & K2SO4"    , null                  , 1);
-        FL.create("sodiumaluminate","Sodium Aluminate",null,1);
-        FL.create("potassiumaluminate","Potassium Aluminate",null,1);
         matList.BauxiteRedMud.register(30022, "BauxiteRedMud", "Bauxite Red Mud", 1790, 3234, 148, 0, 12, 0,null);
         matList.BauxiteRedMud.mat.put(TD.ItemGenerator.DUSTS);
-        FL.create("asodiumcarbonate","Sodium Carbonate",null,1);
-        FL.create("potassiumcarbonate","Potassium Carbonate",null,1);
-        FL.create("liquifiednaturalgas","Liquified Natural Gas",null,1);
-        FL.create("sodiumheterotungstate","Sodium Heterotungstate",null,1);
-        FL.create("test","TestL11n",null,1,12,890);
-        fluidList.testfluid.register("test","testl",null,1,3,5,65,5,5);
+
         matList.LithiumCarbonate.register(30030, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
         matList.LithiumCarbonate.mat.put(TD.ItemGenerator.DUSTS);
-        FL.create("ammoniumtungstate","Ammonium Tungstate",null,1);
 
         matList.MetatitanicAcid.register(30040, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
         matList.MetatitanicAcid.mat.put(TD.ItemGenerator.DUSTS);
