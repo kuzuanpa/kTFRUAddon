@@ -15,7 +15,9 @@ import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlock
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import gregapi.util.WD;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 
 public class utils {
     public utils() {
@@ -58,7 +60,6 @@ public class utils {
                 return true;
             }
         } else return false;
-
     }
 }
 

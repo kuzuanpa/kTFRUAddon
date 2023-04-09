@@ -11,11 +11,15 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utilLimitedOutputTarget;
+
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.fluid.FluidTankGT;
+import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
+import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static gregapi.data.CS.FACING_TO_SIDE;
 
-public class TileEntityLimitedOutputMachine extends MultiTileEntityBasicMachine {
+public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10MultiBlockMachine {
     MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
 
     public boolean canLimitedItemOutput(@NotNull ItemStack stack, DelegatorTileEntity<TileEntity> target){
@@ -83,11 +87,14 @@ public class TileEntityLimitedOutputMachine extends MultiTileEntityBasicMachine 
 
     @Override
     public void doOutputFluids() {
-        for (FluidTankGT tCheck : mTanksOutput) if (tCheck.has()) if (getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).mTileEntity == kRegistry.getNewTileEntity(4466)) {
+        for (FluidTankGT tCheck : mTanksOutput) if (tCheck.has())
+            if (utilLimitedOutputTarget.canOutputFluid(this,(TileEntityBase04MultiTileEntities)getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords()), tCheck.fluid())) {
             if (FL.move(tCheck, getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput], tCheck.fluid())) > 0) updateInventory();
         }
     }
 
-
-
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.base.limitedoutput";
+    }
 }
