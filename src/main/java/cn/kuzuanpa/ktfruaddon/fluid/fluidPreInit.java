@@ -14,7 +14,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class fluidPreInit {
     public fluidPreInit(FMLPreInitializationEvent e){
-        fluidList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide"    , null                  , 1);
+        fluidList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide"    , null , 1);
         fluidList.SodiumAluminate.register("sodiumaluminate","Sodium Aluminate",null,1);
         fluidList.PotassiumAluminate.register("potassiumaluminate","Potassium Aluminate",null,1);
         fluidList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",null,1);
