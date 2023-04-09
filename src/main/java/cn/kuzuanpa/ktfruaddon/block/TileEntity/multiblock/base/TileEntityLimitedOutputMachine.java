@@ -10,20 +10,21 @@
 
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
 
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utilLimitedOutputTarget.matchT_F;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utilLimitedOutputTarget;
-
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.fluid.FluidTankGT;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 import static gregapi.data.CS.FACING_TO_SIDE;
 
@@ -88,11 +89,18 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
     @Override
     public void doOutputFluids() {
         for (FluidTankGT tCheck : mTanksOutput) if (tCheck.has())
-            if (utilLimitedOutputTarget.canOutputFluid(this,(TileEntityBase04MultiTileEntities)getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords()), tCheck.fluid())) {
+            if (canOutputFluid((TileEntityBase04MultiTileEntities)getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords()), tCheck.fluid())) {
             if (FL.move(tCheck, getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput], tCheck.fluid())) > 0) updateInventory();
         }
     }
-
+    public static matchT_F[] availMatches = {
+                new matchT_F("target",new String[]{"fluid","fluidA"}),
+                new matchT_F("targetB",new String[]{"fluidB","fluidAB"})
+    };
+    public static boolean canOutputFluid(TileEntityBase04MultiTileEntities Target, Fluid fluidToOutput) {
+        if (Target==null||fluidToOutput==null) return false;
+        return Arrays.stream(availMatches).anyMatch(match -> Target.getTileEntityName().contains(match.targetName) && Arrays.stream(match.fluidNames).anyMatch(fluidName -> fluidToOutput.getUnlocalizedName().contains(fluidName)));
+    }
     @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.base.limitedoutput";
