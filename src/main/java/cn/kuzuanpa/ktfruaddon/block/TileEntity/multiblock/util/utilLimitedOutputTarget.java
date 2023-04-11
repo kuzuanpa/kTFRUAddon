@@ -10,15 +10,27 @@
 
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 public class utilLimitedOutputTarget {
     //Storage matches of Target and Fluid
-
     public static class matchT_F {
         public final String targetName;
         public final String[] fluidNames;
         public matchT_F(String targetName, String[] fluidNames){
             this.targetName=targetName;
             this.fluidNames=fluidNames;
+        }
+    }
+    //Storage matches of Target and Item
+    public static class matchT_I {
+        public final String targetName;
+        public final ItemStack[] stack;
+        public matchT_I(String targetName, ItemStack[] stack){
+            this.targetName=targetName;
+            this.stack=stack;
         }
     }
 }
