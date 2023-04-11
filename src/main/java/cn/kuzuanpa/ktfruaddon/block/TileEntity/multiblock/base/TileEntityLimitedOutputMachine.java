@@ -12,6 +12,7 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utilLimitedOutputTarget.*;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.ItemStackContainer;
 import gregapi.code.ItemStackSet;
@@ -30,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -42,13 +44,22 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
     public ItemStackSet<ItemStackContainer> getItemFilter(DelegatorTileEntity<TileEntity> target){
         ItemStackSet<ItemStackContainer> filter = new ItemStackSet<>();
         Arrays.stream(availMatchesItem).forEach(match -> {
-            if (((TileEntityBase04MultiTileEntities) target.mTileEntity).getTileEntityName().contains(match.targetName))
+            if ((getTargetTileEntityName(target.mTileEntity).contains(match.targetName)))
                 Arrays.stream(match.stack).forEach(filter::add);
         });
         if (filter.isEmpty())return null;
         return filter;
     }
 
+    public static String getTargetTileEntityName(TileEntity tile) {
+        if (tile==null||tile.isInvalid())return "null";
+        try {
+            return ((TileEntityBase04MultiTileEntities)tile).getTileEntityName();
+        }catch (ClassCastException e){
+            if (tile.getClass()==openblocks.common.tileentity.TileEntityTank.class)return "openblocks.tank";
+        }
+        return tile.getClass().getName();
+    }
 
     public static final matchT_I[] availMatchesItem = {
             new matchT_I("minecraft.hopper",new ItemStack[]{}),
@@ -57,14 +68,14 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
     @Override
     public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
         if (aStack==null) return false;
-        return Arrays.stream(availMatchesItem).anyMatch(match -> match.targetName.equals("minecraft.hopper") && Arrays.stream(match.stack).anyMatch(stack -> /*Ignore StackSize*/aStack.getItem().equals(stack.getItem())/*todo: Is this necessary?*/&&aStack.getItemDamage()==stack.getItemDamage()));
+        return Arrays.stream(availMatchesItem).anyMatch(match -> match.targetName.equals("minecraft.hopper") && Arrays.stream(match.stack).anyMatch(stack -> /*Ignore StackSize*/aStack.getItem().equals(stack.getItem()) &&aStack.getItemDamage()==stack.getItemDamage()));
     }
 
 
     @Override
     public void doOutputItems() {
         byte tAutoOutput = CS.FACING_TO_SIDE[this.mFacing][this.mItemAutoOutput];
-        ST.moveAll(this.delegator(tAutoOutput), this.getItemOutputTarget(tAutoOutput),null,F, F, F, T, 64, 1, 64, 1);
+        ST.moveAll(this.delegator(tAutoOutput), this.getItemOutputTarget(tAutoOutput),getItemFilter(this.getItemOutputTarget(tAutoOutput)),F, F, F, T, 64, 1, 64, 1);
     }
 
 
@@ -113,7 +124,7 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
     @Override
     public void doOutputFluids() {
         for (FluidTankGT tCheck : mTanksOutput) if (tCheck.has())
-            if (canOutputFluid((TileEntityBase04MultiTileEntities)getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords()), tCheck.fluid())) {
+            if (canOutputFluid(getTargetTileEntityName(getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords())), tCheck.fluid())) {
             if (FL.move(tCheck, getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput], tCheck.fluid())) > 0) updateInventory();
         }
     }
@@ -121,9 +132,9 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
                 new matchT_F("target",new String[]{"fluid","fluidA"}),
                 new matchT_F("targetB",new String[]{"fluidB","fluidAB"}),
     };
-    public static boolean canOutputFluid(TileEntityBase04MultiTileEntities Target, Fluid fluidToOutput) {
-        if (Target==null||fluidToOutput==null) return false;
-        return Arrays.stream(availMatchesFluid).anyMatch(match -> Target.getTileEntityName().contains(match.targetName) && Arrays.stream(match.fluidNames).anyMatch(fluidName -> fluidToOutput.getUnlocalizedName().contains(fluidName)));
+    public static boolean canOutputFluid(String TileEntityName, Fluid fluidToOutput) {
+        if (TileEntityName==null||fluidToOutput==null) return false;
+        return Arrays.stream(availMatchesFluid).anyMatch(match -> TileEntityName.contains(match.targetName) && Arrays.stream(match.fluidNames).anyMatch(fluidName -> fluidToOutput.getUnlocalizedName().contains(fluidName)));
     }
     @Override
     public String getTileEntityName() {
