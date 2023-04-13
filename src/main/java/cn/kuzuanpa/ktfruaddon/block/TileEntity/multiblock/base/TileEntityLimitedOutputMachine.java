@@ -11,8 +11,7 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utilLimitedOutputTarget.*;
-import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
-import cpw.mods.fml.common.FMLLog;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.ItemStackContainer;
 import gregapi.code.ItemStackSet;
@@ -20,19 +19,16 @@ import gregapi.code.ModData;
 import gregapi.data.CS;
 import gregapi.data.FL;
 import gregapi.data.IL;
+import gregapi.data.MT;
 import gregapi.fluid.FluidTankGT;
-import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
+import gregapi.util.OM;
 import gregapi.util.ST;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.logging.log4j.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -44,26 +40,16 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
     public ItemStackSet<ItemStackContainer> getItemFilter(DelegatorTileEntity<TileEntity> target){
         ItemStackSet<ItemStackContainer> filter = new ItemStackSet<>();
         Arrays.stream(availMatchesItem).forEach(match -> {
-            if ((getTargetTileEntityName(target.mTileEntity).contains(match.targetName)))
+            if ((utils.getTargetTileEntityName(target.mTileEntity).contains(match.targetName)))
                 Arrays.stream(match.stack).forEach(filter::add);
         });
         if (filter.isEmpty())return null;
         return filter;
     }
 
-    public static String getTargetTileEntityName(TileEntity tile) {
-        if (tile==null||tile.isInvalid())return "null";
-        try {
-            return ((TileEntityBase04MultiTileEntities)tile).getTileEntityName();
-        }catch (ClassCastException e){
-            if (tile.getClass()==openblocks.common.tileentity.TileEntityTank.class)return "openblocks.tank";
-        }
-        return tile.getClass().getName();
-    }
-
     public static final matchT_I[] availMatchesItem = {
             new matchT_I("minecraft.hopper",new ItemStack[]{}),
-            new matchT_I("targetB",new ItemStack[]{IL.A97_Hammer.get(1),ST.make(ModData.MODS.get(ModIDs.BOTA),"manaResource",1,6)}),
+            new matchT_I("gt.multitileentity",new ItemStack[]{OM.crushedCentrifuged(MT.Cu,1),IL.A97_Hammer.get(1),ST.make(ModData.MODS.get(ModIDs.BOTA),"manaResource",1,6)}),
     };
     @Override
     public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
@@ -124,7 +110,7 @@ public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10Mu
     @Override
     public void doOutputFluids() {
         for (FluidTankGT tCheck : mTanksOutput) if (tCheck.has())
-            if (canOutputFluid(getTargetTileEntityName(getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords())), tCheck.fluid())) {
+            if (canOutputFluid(utils.getTargetTileEntityName(getTileEntity(getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput],tCheck.fluid()).getCoords())), tCheck.fluid())) {
             if (FL.move(tCheck, getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput], tCheck.fluid())) > 0) updateInventory();
         }
     }

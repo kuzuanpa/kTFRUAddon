@@ -13,11 +13,16 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeCluster;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.registry.IThrowableEntity;
+import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.Level;
 
 public class utils {
     public utils() {
@@ -60,6 +65,16 @@ public class utils {
                 return true;
             }
         } else return false;
+    }
+
+    public static String getTargetTileEntityName(TileEntity tile) {
+        if (tile==null||tile.isInvalid())return "null";
+        try {
+            return ((TileEntityBase04MultiTileEntities)tile).getTileEntityName();
+        }catch (ClassCastException e){
+            if (tile.getClass().getName().contains("net.minecraft.tileentity")) return tile.getClass().getName().replace("net.minecraft.tileentity","minecraft");
+            return tile.getClass().getName();
+        }
     }
 }
 
