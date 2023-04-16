@@ -34,7 +34,7 @@ import java.util.Arrays;
 
 import static gregapi.data.CS.*;
 
-public abstract class  TileEntityLimitedOutputMachine extends TileEntityBase10MultiBlockMachine {
+public abstract class TileEntityBaseLimitedOutputMachine extends TileEntityBase10MultiBlockMachine {
     MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
 
     public ItemStackSet<ItemStackContainer> getItemFilter(DelegatorTileEntity<TileEntity> target){

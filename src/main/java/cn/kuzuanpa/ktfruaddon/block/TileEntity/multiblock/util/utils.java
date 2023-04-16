@@ -13,16 +13,16 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeCluster;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.registry.IThrowableEntity;
+import codechicken.lib.vec.BlockCoord;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.WD;
+import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
-import org.apache.logging.log4j.Level;
+import net.minecraft.util.AxisAlignedBB;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class utils {
     public utils() {
@@ -75,6 +75,36 @@ public class utils {
             if (tile.getClass().getName().contains("net.minecraft.tileentity")) return tile.getClass().getName().replace("net.minecraft.tileentity","minecraft");
             return tile.getClass().getName();
         }
+    }
+    public static class GTTileEntity {
+        public  int aRegistryMeta;
+        public int aRegistryID;
+        public int aDesign;
+        public GTTileEntity(int aRegistryMeta, int aRegistryID, int aDesign){
+            this.aDesign=aDesign;
+            this.aRegistryID=aRegistryID;
+            this.aRegistryMeta=aRegistryMeta;
+        }
+    }
+    public static ArrayList<BlockCoord> checkAndGetRoom(GTTileEntity[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack,AxisAlignedBB checkRange){
+        ArrayList<BlockCoord> checkingBlockCoords = new ArrayList<BlockCoord>() {};
+        //Starting from TOP
+        if (startFromTopOrBack) checkingBlockCoords.add(new BlockCoord(aController.getX(),aController.getY()+1,aController.getZ()));
+        //Starting from Back
+        if (!startFromTopOrBack) checkingBlockCoords.add(new BlockCoord(aController.getOffsetX(((TileEntityBase10MultiBlockBase)aController).mFacing,1),aController.getY(),aController.getZ()));
+        final byte[] forX ={1,-1,0,0,0,0};
+        final byte[] forY ={0,0,1,-1,0,0};
+        final byte[] forZ ={0,0,0,0,1,-1};
+        for (BlockCoord coord : checkingBlockCoords) {//Check blocks at every side
+            for (int i = 0; i < 6; i++) {
+                BlockCoord checkingCoord=new BlockCoord(coord.x+forX[i],coord.y+forY[i],coord.z+forZ[i]);
+                if (Arrays.stream(availableTiles).noneMatch(availTile -> checkAndSetTarget(aController,checkingCoord.x,checkingCoord.y,checkingCoord.z,availTile.aRegistryMeta,availTile.aRegistryID,availTile.aDesign,0))){
+                    if (!checkRange.isVecInside(checkingCoord.toVector3Centered().toVec3D())) return null;
+                    if (!checkingBlockCoords.contains(checkingCoord)) checkingBlockCoords.add(checkingCoord);
+                }
+            }
+        }
+        return checkingBlockCoords;
     }
 }
 

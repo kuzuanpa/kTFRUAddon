@@ -10,13 +10,12 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
 //This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityLimitedOutputMachine;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBaseLimitedOutputMachine;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import gregapi.util.ST;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -28,7 +27,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class exampleMachineComplexLimited extends TileEntityLimitedOutputMachine {
+public class exampleMachineComplexLimited extends TileEntityBaseLimitedOutputMachine {
 
     //决定机器大小
     //this controls the size of machine.
