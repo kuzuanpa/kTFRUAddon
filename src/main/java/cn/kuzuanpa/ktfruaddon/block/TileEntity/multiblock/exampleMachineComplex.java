@@ -5,11 +5,13 @@
  * 
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
+ *
  */
 package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
 //This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
@@ -84,15 +86,6 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
             {F, F, F, F, F},
     }};
 
-    public int getCheckX(int Facing, int tX, int addX, int addZ) {
-        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
-        return result[Facing];
-    }
-
-    public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
-        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
-        return result[Facing];
-    }
     //change value there to set usage of every block.
     public int getUsage(int blockID ,short registryID){
         if (blockID == 18002&&registryID==k) {
@@ -126,7 +119,7 @@ public class exampleMachineComplex extends TileEntityBase10MultiBlockMachine {
             for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                 for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                     for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
                             tSuccess = ignoreMap[checkY][checkZ][checkX];
                             //FMLLog.log(Level.FATAL, "failed");
                         }

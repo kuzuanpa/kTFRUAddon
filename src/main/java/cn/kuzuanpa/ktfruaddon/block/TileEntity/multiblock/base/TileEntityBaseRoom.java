@@ -13,21 +13,35 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
 import codechicken.lib.vec.BlockCoord;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
+import net.minecraft.block.Block;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
 
 import java.util.ArrayList;
 
 public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachine {
+    public TileEntityBaseRoom(){
+    }
     private ArrayList<BlockCoord> roomSpace;
-    private final static utils.GTTileEntity[] availableTiles={new utils.GTTileEntity(1,2,0)};
+    private final utils.GTTileEntity[] availableTiles=getAvailableTiles();
+    public abstract utils.GTTileEntity[] getAvailableTiles();
     private final static boolean startFromTopOrBack=false;
-    private final static int[] checkRange2= {-1,-1,-1,1,1,1};
-    private final AxisAlignedBB checkRange = AxisAlignedBB.getBoundingBox(this.getOffsetX(this.mFacing,checkRange2[1]),this.getOffsetY(mFacing,checkRange2[2]),this.getOffsetZ(this.mFacing,checkRange2[3]),this.getOffsetX(this.mFacing,checkRange2[4]),this.getOffsetY(mFacing,checkRange2[5]),this.getOffsetZ(this.mFacing,checkRange2[6]));
+    public abstract int[] getCheckRange2();
     public boolean checkStructure2(){
+        final int[] checkRange2= getCheckRange2();
+        final BlockCoord StartPoi=utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[0],checkRange2[1],checkRange2[2]);
+        final BlockCoord EndPoi=utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[3],checkRange2[4],checkRange2[5]);
+        AxisAlignedBB checkRange= AxisAlignedBB.getBoundingBox(StartPoi.x,StartPoi.y,StartPoi.z,EndPoi.x,EndPoi.y,EndPoi.z);
         roomSpace = utils.checkAndGetRoom(availableTiles,this,startFromTopOrBack,checkRange);
+        worldObj.setBlock(StartPoi.x,StartPoi.y,StartPoi.z, Block.getBlockById(0));
+        worldObj.setBlock(EndPoi.x,EndPoi.y,EndPoi.z, Block.getBlockById(1));
+
         return roomSpace != null;
     }
-
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.multiblock.room.base";
+    }
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return roomSpace.contains(new BlockCoord(aX,aY,aZ));
