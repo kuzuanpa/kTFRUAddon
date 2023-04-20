@@ -27,7 +27,7 @@ import static gregapi.data.CS.*;
 
 public class exampleMachineRoom extends TileEntityBaseRoom {
 
-    short k = getMultiTileEntityRegistryID();
+    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     //change value there to set usage of every block.
     public int getUsage(int blockID ,short registryID){
@@ -89,5 +89,5 @@ public class exampleMachineRoom extends TileEntityBaseRoom {
 
     @Override
     public int[] getCheckRange2() {
-        return new int[] {-2,-5,-6,1,3,6};
+        return new int[] {-4,-5,-6,3,3,6};
 }}
