@@ -10,9 +10,7 @@
 package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
 import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.*;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeCluster;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeClusterSimple;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.*;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
