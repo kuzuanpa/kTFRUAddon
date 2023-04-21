@@ -12,7 +12,7 @@ package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
 
 public class DistillationTowerUtil {
     public static String[] OutputFluidsLayer1 = {"fuel", "fueloil", "biofuel"};
-public static String[] OutputFluidsLayer2 = {"propane", "methane"};
+    public static String[] OutputFluidsLayer2 = {"propane", "methane"};
     public static String[] OutputFluidsLayer3 = {"butane"};
     public static String[] OutputFluidsLayer4 = {"petrol", "gasoline", "bioethanol"};
     public static String[] OutputFluidsLayer5 = {"kerosene", "kerosine", "glycerol"};

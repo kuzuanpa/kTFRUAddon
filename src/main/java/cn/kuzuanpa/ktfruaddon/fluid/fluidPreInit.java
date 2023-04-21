@@ -11,15 +11,16 @@
 package cn.kuzuanpa.ktfruaddon.fluid;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import gregapi.data.MT;
 
 public class fluidPreInit {
     public fluidPreInit(FMLPreInitializationEvent e){
-        fluidList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide"    , null , 1);
-        fluidList.SodiumAluminate.register("sodiumaluminate","Sodium Aluminate",null,1);
-        fluidList.PotassiumAluminate.register("potassiumaluminate","Potassium Aluminate",null,1);
-        fluidList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",null,1);
-        fluidList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",null,1);
-        fluidList.LiquifiedNaturalgas.register("liquifiednaturalgas","Liquified Natural Gas",null,1);
-        fluidList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,1);
-        fluidList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,1);}
+        flList.AcidPickledBauxide.registerLiquid("acidpickledbauxide", "Acid Pickled Bauxide");
+        flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",MT.NaAlO2,1000);
+        flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", MT.KAlO2,1000);
+        flList.SodiumCarbonate.registerLiquid("sodiumcarbonate","Sodium Carbonate");
+        flList.PotassiumCarbonate.registerLiquid("potassiumcarbonate","Potassium Carbonate");
+        flList.LiquifiedNaturalgas.registerLiquid("liquifiednaturalgas","Liquified Natural Gas");
+        flList.SodiumHeterotungstate.registerLiquid("sodiumheterotungstate","Sodium Heterotungstate");
+        flList.AmmoniumTungstate.registerLiquid("ammoniumtungstate","Ammonium Tungstate");}
 }
