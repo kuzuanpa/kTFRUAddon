@@ -8,13 +8,9 @@
  */
 package cn.kuzuanpa.ktfruaddon.material;
 
-import cn.kuzuanpa.ktfruaddon.fluid.fluidList;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import gregapi.data.CS;
-import gregapi.data.FL;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
-import gregapi.render.TextureSet;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 import static gregapi.data.CS.NUM_SUB;

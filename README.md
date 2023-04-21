@@ -1,37 +1,59 @@
-# anatawa12's ForgeGradle 1.2 fork for Gradle 4.4.1+ - example project
+This is an addon for GregTech6 ,mainly made for TerraFirmaRescue-Unofficial, currently in early-stage development.
 
-This is an example mod using the [fork of ForgeGradle-1.2 made by anatawa12](https://github.com/anatawa12/ForgeGradle-1.2).
-This fork supports Gradle 4.4.1 and later. This example project uses Gradle 5.6.4.
 
-## How to use this example project
+**Development Mention**
 
-You can download this example project from [here](https://github.com/anatawa12/ForgeGradle-example/archive/master.zip), or use it as a template on GitHub.
-This project can be used as a replacement for Forge's 1.7.10 MDK.
+This mod should be used to ADD items,blocks or something, MODIFY and DELETE should be applied to GregTech6-TFRU.
 
-## How to replace ForgeGradle 1.2. with anatawa12's fork
-Although this example project has some differences to Forge's 1.7.10 MDK, anatawa12's fork of ForgeGradle 1.2 can be used by most projects with only minimal changes to their Gradle build script.
+If there are some huge change in something, please consider delete them in GT6-TFRU and re-add them in kTFRUAddon.
 
-Here is a list of changes to Forge's 1.7.10 MDK Gradle build script, to replace the official ForgeGradle 1.2 plugin with the fork. These changes are likely to work with most projects based on Forge's 1.7.10 MDK.
+Doing this is to keep most part of kTFRUAddon functions properly OUTSIDE TFRU.
 
-In the repositories block of the buildscript section, add jcenter, and switch the Forge maven to use HTTPS instead of HTTP:
-```diff
-     repositories {
-         mavenCentral()
-         maven {
-             name = "forge"
--            url = "http://files.minecraftforge.net/maven"
-+            url = "https://maven.minecraftforge.net/"
-         }
-```
 
-Also in the dependencies block of the buildscript section, change the dependency on Forge's official ForgeGradle 1.2 to the fork:
-```diff
-     dependencies {
--        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-+        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.0.+') {
-+            changing = true
-+        }
-     }
-```
+**What is MADE or will MADE**
 
-The Gradle wrapper should also be changed to use Gradle 4.4.1 or higher. <!--Currently, the plugin [does not support Gradle 6.x](https://github.com/anatawa12/ForgeGradle-1.2/issues/9), although this may change in the future. As such, the latest version of Gradle this plugin supports is Gradle 5.6.4.-->
+Semiconductor industry line, from monocrystalline silicon , lithography to packaging and running
+
+More cables, pipes
+
+Multi-Tech-Stage, higher efficiency of copper, iron, chromium, tungsten, titanium, aluminum and other mineral processing method
+
+More efficient power generator
+
+MultiBlock Machine in IV or later
+
+
+Current development focus:
+
+The petrochemical industry builds the foundation of modern society, and we should join them in game! more plastic, more pipes, more machines!
+
+The MaskAligner machine on the side can't wait now, come and add the most critical photoresist to it!
+
+
+zh_CN:
+
+这是一个专为群峦救援非官方版制作的mod,目前还处于早期开发中
+
+
+**开发注意：**
+
+本mod主要用于向GT中“添加”物品、配方、方块等，“修改”与“删除”请至GT6-TFRU进行，如有大幅度改动，建议删除原GT6-TFRU对应代码后迁移至kTFRUAddon中进行修改
+
+
+**包含/计划包含内容**
+
+半导体工业线，从单晶硅到光刻到封装的全流程
+
+更多线缆、管道
+
+根据科技水平分层、更高产率的铜、铁、铬、钨、钛、铝等矿物处理流水线
+
+更多高效、科学的发电方式
+
+使用IV以上电压的更多强力的大机器
+
+**当前开发重点：**
+
+石化工业构建了现代社会的基础，我们应该在游戏里还原它们，更多塑料，更多管道，更多机器！
+
+一旁的光刻机已经迫不及待了，现在来为它加入最关键的光刻胶！

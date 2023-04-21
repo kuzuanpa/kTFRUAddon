@@ -40,9 +40,9 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
      * @param aController The ControllerBlock
      * @param startFromTopOrBack Start Point,true=Top,false=Back
      * @param checkRange Max range when checking
-     * @return null=failed,Otherwise return every available space inside the room
+     * @param shouldCornerBeSealed Should every corner be filled,or just the blocks next to RoomSpace
      */
-    public static void checkAndGetRoom(utils.GTTileEntity[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange){
+    public static void checkAndGetRoom(utils.GTTileEntity[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange, boolean shouldCornerBeSealed){
         checkingBlockCoords  = new ConcurrentHashMap<Integer,BlockCoord>(){};
         roomSpace = new ArrayList<BlockCoord>();
         walls = new ArrayList<BlockCoord>();
@@ -50,18 +50,30 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
         if (startFromTopOrBack) checkingBlockCoords.put(0,new BlockCoord(aController.getX(),aController.getY()+1,aController.getZ()));
         //Starting from Back
         if (!startFromTopOrBack) checkingBlockCoords.put(0, codeUtil.MCCoord2CCCoord(utils.getRealCoord(((TileEntityBase09FacingSingle)aController).mFacing,aController.getX(),aController.getY(),aController.getZ(),0,0,1)));
-        final byte[] forX ={1,-1,0,0,0,0};
-        final byte[] forY ={0,0,1,-1,0,0};
-        final byte[] forZ ={0,0,0,0,1,-1};
+        byte[] fX = {1, -1, 0, 0, 0, 0};
+        byte[] fY = {0, 0, 1, -1, 0, 0};
+        byte[] fZ = {0, 0, 0, 0, 1, -1};
+        byte fi =6;
+        if (shouldCornerBeSealed){
+            fX = new byte[]{-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1};
+            fY = new byte[]{-1,-1,-1,-1,-1,-1,-1,-1,-1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            fZ = new byte[]{-1,-1,-1, 0, 0, 0, 1, 1, 1,-1,-1,-1, 0, 0, 1, 1, 1,-1,-1,-1, 0, 0, 0, 1, 1, 1};
+            fi=26;
+        }
+        final byte[] forX = fX;
+        final byte[] forY = fY;
+        final byte[] forZ = fZ;
+        final byte fori =fi;
         checkingBlockCoords.values().forEach(coord ->{
             //Check blocks at every side
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < fori; i++) {
                 BlockCoord checkingCoord=new BlockCoord(coord.x+forX[i],coord.y+forY[i],coord.z+forZ[i]);
                 if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController,checkingCoord.x,checkingCoord.y,checkingCoord.z,availTile.aRegistryMeta,availTile.aRegistryID,availTile.aDesign, availTile.aUsage))){
                     if (!checkRange.isCoordInBox(checkingCoord)) {
                         FMLLog.log(Level.INFO,"Err: Out of range:"+checkingCoord.x+checkingCoord.y+checkingCoord.z);
                         checkingBlockCoords.clear();
                         walls.clear();
+                        roomSpace.clear();
                         break;
                     }
                     if (!checkingBlockCoords.contains(checkingCoord)){
@@ -84,14 +96,16 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
     }
 
     public abstract utils.GTTileEntity[] getAvailableTiles();
-    private final static boolean startFromTopOrBack=false;
+    public final static boolean startFromTopOrBack=false;
+    public final static boolean shouldCornerBeSealed=true;
+
     public abstract int[] getCheckRange2();
     public boolean checkStructure2(){
         final int[] checkRange2= getCheckRange2();
         final BlockCoord StartPoi= codeUtil.MCCoord2CCCoord(utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[0],checkRange2[1],checkRange2[2]));
         final BlockCoord EndPoi= codeUtil.MCCoord2CCCoord(utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[3],checkRange2[4],checkRange2[5]));
         BoundingBox checkRange=new BoundingBox(StartPoi,EndPoi);
-        checkAndGetRoom(getAvailableTiles(),this,startFromTopOrBack,checkRange);
+        checkAndGetRoom(getAvailableTiles(),this,startFromTopOrBack,checkRange,shouldCornerBeSealed);
         return !walls.isEmpty();
     }
     @Override
