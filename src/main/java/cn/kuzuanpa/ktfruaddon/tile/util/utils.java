@@ -9,10 +9,10 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
+package cn.kuzuanpa.ktfruaddon.tile.util;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiBlockPartComputeCluster;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartComputeCluster;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
@@ -78,11 +78,11 @@ public class utils {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
         if (tTileEntity == null) return false;
         if (tTileEntity == aController) return true;
-        else if (tTileEntity instanceof MultiTileEntityMultiBlockPartEnergyConsumer && ((MultiTileEntityMultiBlockPartEnergyConsumer) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiTileEntityMultiBlockPartEnergyConsumer) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
-            ITileEntityMultiBlockController tTarget = ((MultiTileEntityMultiBlockPartEnergyConsumer) tTileEntity).getTarget(false);
+        else if (tTileEntity instanceof MultiBlockPartEnergyConsumer && ((MultiBlockPartEnergyConsumer) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiBlockPartEnergyConsumer) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
+            ITileEntityMultiBlockController tTarget = ((MultiBlockPartEnergyConsumer) tTileEntity).getTarget(false);
             if (tTarget != aController && tTarget != null) return false;
             else {
-                ((MultiTileEntityMultiBlockPartEnergyConsumer) tTileEntity).setTarget(aController, aDesign, aMode);
+                ((MultiBlockPartEnergyConsumer) tTileEntity).setTarget(aController, aDesign, aMode);
                 return true;
             }
         } else return false;

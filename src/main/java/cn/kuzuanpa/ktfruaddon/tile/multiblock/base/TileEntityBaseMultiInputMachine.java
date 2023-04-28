@@ -8,26 +8,24 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
-import cpw.mods.fml.common.FMLLog;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
-import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 
 public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10MultiBlockMachine {
-    public ArrayList<MultiTileEntityMultiBlockPartEnergyConsumer> MultiInputSubBlocks = new ArrayList<>();
+    public ArrayList<MultiBlockPartEnergyConsumer> MultiInputSubBlocks = new ArrayList<>();
     public boolean subSourceRunning =true;
 
-    public void addInputSubSource(MultiTileEntityMultiBlockPartEnergyConsumer p){
+    public void addInputSubSource(MultiBlockPartEnergyConsumer p){
         this.MultiInputSubBlocks.add(p);
     }
-    public ArrayList<MultiTileEntityMultiBlockPartEnergyConsumer> getInputSubSource(){
+    public ArrayList<MultiBlockPartEnergyConsumer> getInputSubSource(){
       return this.MultiInputSubBlocks;
     }
-    public void isSubSourceRunning(MultiTileEntityMultiBlockPartEnergyConsumer subSource){
+    public void isSubSourceRunning(MultiBlockPartEnergyConsumer subSource){
         if (subSource.isInvalid()) subSourceRunning = false;
         subSourceRunning = subSourceRunning && (subSource.getStateRunningPassively() || subSource.getStateRunningActively());
     }

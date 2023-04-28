@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
+package cn.kuzuanpa.ktfruaddon.tile.util;
 
 public class DistillationTowerUtil {
     public static String[] OutputFluidsLayer1 = {"fuel", "fueloil", "biofuel"};

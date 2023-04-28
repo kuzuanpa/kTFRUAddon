@@ -7,10 +7,20 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  *
  */
-package cn.kuzuanpa.ktfruaddon.block.TileEntity;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.*;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.*;
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+package cn.kuzuanpa.ktfruaddon.tile;
+
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.*;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.*;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
@@ -140,6 +150,7 @@ public class tileEntityInit {
                 "wPP", "hPP", 'P', OP.plate.dat(aMat)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(aMat, 4), ST.tag(10), aRegistry.getItem());
 
 
+
         aMat = MT.Al;              aRegistry.add("Light Module (UV)"     , "kTFRUAddon: Multiblock", 30110, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7),
                 "SwS", "PLP", "XMX", 'L',  IL.Comp_Laser_Gas_Ar , 'S', OP.stick.dat(aMat), 'X', OP.wireGt02.dat(MT.Cu), 'C', CS.OD_CIRCUITS[2], 'M', OP.casingMachine.dat(aMat),'P',OP.plate.dat(aMat));
 
@@ -162,7 +173,7 @@ public class tileEntityInit {
 
 
         //special part
-        aMat = MT.Al;              aRegistry.add("Mask Aligner Energy Module (UV)"     , "kTFRUAddon: Multiblock", 31000, 17200, MultiTileEntityMultiBlockPartEnergyConsumer.class , MT.Al.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule1"   , NBT_INPUT, 218, NBT_INPUT_MIN,    176, NBT_INPUT_MAX,   256  , NBT_ENERGY_ACCEPTED, TD.Energy.EU),
+        aMat = MT.Al;              aRegistry.add("Mask Aligner Energy Module (UV)"     , "kTFRUAddon: Multiblock", 31000, 17200, MultiBlockPartEnergyConsumer.class , MT.Al.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule1"   , NBT_INPUT, 218, NBT_INPUT_MIN,    176, NBT_INPUT_MAX,   256  , NBT_ENERGY_ACCEPTED, TD.Energy.EU),
                 "ShS", "CwC", "XTX" ,'T',gRegistry.getItem(10042), 'S', OP.stickLong.dat(aMat), 'X', OP.wireGt08.dat(MT.Cu), 'C', CS.OD_CIRCUITS[2], 'M', OP.casingMachine.dat(aMat));
 
 

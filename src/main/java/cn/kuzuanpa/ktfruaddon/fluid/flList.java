@@ -10,6 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.fluid;
 
+import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.RM;
@@ -30,38 +31,24 @@ public enum flList {
     ;
     public Fluid fluid;
     public String name;
-    /**This will create Solutions with transform recipe**/
+    /**This will create Gas with transforming recipe**/
+    public void registerGas(String name, String localizedName, @NotNull OreDictMaterial material,int temp,int density) {
+        fluid = FL.create(name,localizedName,material,3,20000,temp);
+        fluid.setDensity(density);
+        fluid.setViscosity(16);
+        this.name=name;
+        RM.CryoMixer.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make(fluid,20000)),FL.array(), OM.dust(material,U));
+        RM.Drying.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(ZL_FS),FL.array(FL.make(fluid,20000)),ZL_IS);
+        recipeManager.HeatMixer.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(ZL_FS),FL.array(FL.make(fluid,20000)),ZL_IS);
+
+    }
+    /**This will create Solutions with transforming recipe**/
     public void registerSolution(String name, String localizedName, @NotNull OreDictMaterial material, int AmountPerUnit) {
         fluid = FL.create(name,localizedName,material,1);
         this.name=name;
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make(fluid,AmountPerUnit)),FL.array(FL.DistW.make(800)), OM.dust(material,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);
-    }
-
-    public void registerLiquid(String name, String localizedName) {
-        fluid = FL.create(name,localizedName,null,1);
-        this.name=name;
-    }
-    public void registerGas(String name, String localizedName) {
-        fluid = FL.create(name,localizedName,null,2);
-        this.name=name;
-    }
-    public void registerPlasma(String name, String localizedName) {
-        fluid = FL.create(name,localizedName,null,3);
-        this.name=name;
-    }
-    public void registerLiquid(String name, String localizedName, @Nullable OreDictMaterial material) {
-        fluid = FL.create(name,localizedName,material,1);
-        this.name=name;
-    }
-    public void registerGas(String name, String localizedName, @Nullable OreDictMaterial material) {
-        fluid = FL.create(name,localizedName,material,2);
-        this.name=name;
-    }
-    public void registerPlasma(String name, String localizedName, @Nullable OreDictMaterial material) {
-        fluid = FL.create(name, localizedName, material, 3);
-        this.name = name;
     }
     public void register(String name, String localizedName, @Nullable OreDictMaterial material, int state) {
         fluid = FL.create(name,localizedName,material,state);

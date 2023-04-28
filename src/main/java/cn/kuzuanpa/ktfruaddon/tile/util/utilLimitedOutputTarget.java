@@ -8,11 +8,9 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util;
+package cn.kuzuanpa.ktfruaddon.tile.util;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class utilLimitedOutputTarget {
     //Storage matches of Target and Fluid

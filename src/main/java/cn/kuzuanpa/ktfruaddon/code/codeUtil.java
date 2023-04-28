@@ -22,5 +22,11 @@ public class codeUtil {
     public static BlockCoord MCCoord2CCCoord(ChunkCoordinates coord){
         return new BlockCoord(coord.posX,coord.posY,coord.posZ);
     }
+    public static String WXYZAToString(int world, int x, int y, int z) {
+        return world + ":" + x + ":" + y + ":" + z;
+    }
+    public static String WCoordToString(int world, BlockCoord coord) {
+        return world + ":" + coord.x + ":" + coord.y + ":" + coord.z;
+    }
 
 }

@@ -10,7 +10,7 @@ If there are some huge change in something, please consider delete them in GT6-T
 Doing this is to keep most part of kTFRUAddon functions properly OUTSIDE TFRU.
 
 
-**What is MADE or will MADE**
+**What has MADE or will MADE**
 
 Semiconductor industry line, from monocrystalline silicon , lithography to packaging and running
 

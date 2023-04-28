@@ -6,7 +6,7 @@
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-public class maskAlignerDUV {
+public class maskAlignerUVStepper {
 }

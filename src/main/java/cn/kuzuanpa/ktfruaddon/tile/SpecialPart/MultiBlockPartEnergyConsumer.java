@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart;
+package cn.kuzuanpa.ktfruaddon.tile.SpecialPart;
 
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
@@ -22,7 +22,7 @@ import net.minecraft.util.ChunkCoordinates;
 
 import java.util.List;
 
-public class MultiTileEntityMultiBlockPartEnergyConsumer extends MultiTileEntityBasicMachine {
+public class MultiBlockPartEnergyConsumer extends MultiTileEntityBasicMachine {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 

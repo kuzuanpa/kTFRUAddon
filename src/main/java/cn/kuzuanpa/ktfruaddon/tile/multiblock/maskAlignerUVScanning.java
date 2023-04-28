@@ -6,10 +6,10 @@
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBaseMultiInputMachine;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.specialPart.MultiTileEntityMultiBlockPartEnergyConsumer;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -91,7 +90,7 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
                             if (isSubSource(getBlockID(checkX,checkY,checkZ))) {
                                 if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 0, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX, checkY, checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
-                                if (tSuccess) this.addInputSubSource((MultiTileEntityMultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
+                                if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
                             else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 0, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
 
