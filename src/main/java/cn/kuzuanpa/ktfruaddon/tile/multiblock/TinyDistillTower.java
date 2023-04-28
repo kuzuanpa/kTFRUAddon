@@ -8,10 +8,10 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.DistillationTowerUtil;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
+import cn.kuzuanpa.ktfruaddon.tile.util.DistillationTowerUtil;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.LH;

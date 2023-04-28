@@ -7,9 +7,9 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  *
  */
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base.TileEntityBaseRoom;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseRoom;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;

@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;

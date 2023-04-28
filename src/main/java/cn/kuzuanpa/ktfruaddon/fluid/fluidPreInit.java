@@ -14,13 +14,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.MT;
 
 public class fluidPreInit {
+    private final int PlASMA=3;
+    private final int GAS=2;
+    private final int LIQUID=1;
     public fluidPreInit(FMLPreInitializationEvent e){
-        flList.AcidPickledBauxide.registerLiquid("acidpickledbauxide", "Acid Pickled Bauxide");
+        flList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide",null,LIQUID);
         flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",MT.NaAlO2,1000);
         flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", MT.KAlO2,1000);
-        flList.SodiumCarbonate.registerLiquid("sodiumcarbonate","Sodium Carbonate");
-        flList.PotassiumCarbonate.registerLiquid("potassiumcarbonate","Potassium Carbonate");
-        flList.LiquifiedNaturalgas.registerLiquid("liquifiednaturalgas","Liquified Natural Gas");
-        flList.SodiumHeterotungstate.registerLiquid("sodiumheterotungstate","Sodium Heterotungstate");
-        flList.AmmoniumTungstate.registerLiquid("ammoniumtungstate","Ammonium Tungstate");}
+        flList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",null,LIQUID);
+        flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",null,LIQUID);
+        flList.LiquifiedNaturalgas.register("liquifiednaturalgas","Liquified Natural Gas",null,LIQUID);
+        flList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,LIQUID);
+        flList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,LIQUID);}
 }

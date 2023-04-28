@@ -8,9 +8,9 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.code.codeUtil;
 import codechicken.lib.vec.BlockCoord;

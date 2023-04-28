@@ -8,15 +8,14 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.tileEntityInit;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.tileEntityPreInit;
+import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit;
+import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
 import cpw.mods.fml.common.event.*;
-import cn.kuzuanpa.ktfruaddon.block.blockSimpleInit;
 import gregapi.api.Abstract_Proxy;
 
 public class commonProxy extends Abstract_Proxy {

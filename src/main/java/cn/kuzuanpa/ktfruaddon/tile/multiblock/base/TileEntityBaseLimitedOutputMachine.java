@@ -8,10 +8,10 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.base;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utilLimitedOutputTarget.*;
-import cn.kuzuanpa.ktfruaddon.block.TileEntity.multiblock.util.utils;
+import cn.kuzuanpa.ktfruaddon.tile.util.utilLimitedOutputTarget.*;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.ItemStackContainer;
 import gregapi.code.ItemStackSet;
