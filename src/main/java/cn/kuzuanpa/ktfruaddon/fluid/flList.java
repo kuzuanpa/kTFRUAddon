@@ -31,6 +31,7 @@ public enum flList {
     AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, LiquifiedNaturalgas, SodiumHeterotungstate, AmmoniumTungstate
     //Oil Process And Plastics
     ,Acetylene,Acetone
+    ,Dichloromethane
     ;
     public Fluid fluid;
     public String name;
