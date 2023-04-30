@@ -10,8 +10,10 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
+import cn.kuzuanpa.ktfruaddon.tile.util.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.tile.util.utilLimitedOutputTarget.*;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.ItemStackContainer;
 import gregapi.code.ItemStackSet;
@@ -29,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
 
@@ -60,6 +63,7 @@ public abstract class TileEntityBaseLimitedOutputMachine extends TileEntityBase1
 
     @Override
     public void doOutputItems() {
+        FMLLog.log(Level.FATAL, CodeTranslate.itemToCode(slot(0)));
         byte tAutoOutput = CS.FACING_TO_SIDE[this.mFacing][this.mItemAutoOutput];
         ST.moveAll(this.delegator(tAutoOutput), this.getItemOutputTarget(tAutoOutput),getItemFilter(this.getItemOutputTarget(tAutoOutput)),F, F, F, T, 64, 1, 64, 1);
     }

@@ -7,8 +7,12 @@ import gregapi.render.TextureSet;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 
 public enum matList {
+    //Ore Processing
     AmmoniumDichromate, AmmoniumChromicSulfate, AmmoniumIronIIISulfate,Sulfanilamide,CookedBauxide,AcidPickledBauxide
     ,BauxiteRedMud,LithiumCarbonate,MetatitanicAcid
+    //Oil Process And Plastics
+    ,Acetylene,Acetone
+    ,CalciumAcetate
     ;
     public OreDictMaterial mat;
     public void register(int id, String OreDictName, String EnglishName, int meltTemp, int boilTemp, int colorR, int colorG, int colorB, int colorA, String formula) {

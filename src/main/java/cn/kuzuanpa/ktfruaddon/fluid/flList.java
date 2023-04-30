@@ -27,7 +27,10 @@ import static gregapi.data.CS.ZL_IS;
 
 
 public enum flList {
-    AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, LiquifiedNaturalgas, SodiumHeterotungstate, AmmoniumTungstate,
+    //Ore Process
+    AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, LiquifiedNaturalgas, SodiumHeterotungstate, AmmoniumTungstate
+    //Oil Process And Plastics
+    ,Acetylene,Acetone
     ;
     public Fluid fluid;
     public String name;
