@@ -13,12 +13,13 @@ package cn.kuzuanpa.ktfruaddon.material;
 import gregapi.oredict.OreDictMaterial;
 
 public class matAlia {
-    //f= chemical formula(use _ for quote) ;n = name;p = hanyu pinyin(like phoneic symbol but for zh)
+    //f= chemical formula(use _ for quote) ;n = name;p = hanyu pinyin(like phoneic symbol but for zh);a = commonly used abbreviated name
     public OreDictMaterial fNH4Fe_SO4_2 = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial nAmmoniumIronIIISulfate = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial pLiuSuanTieAn = matList.AmmoniumIronIIISulfate.mat;
     public OreDictMaterial fNH4Cr_SO4_2 = matList.AmmoniumChromicSulfate.mat;
     public OreDictMaterial nAmmoniumChromicSulfate = matList.AmmoniumChromicSulfate.mat;
     public OreDictMaterial pLiuSuanGeAn = matList.AmmoniumChromicSulfate.mat;
-
+    public OreDictMaterial aDPC = matList.DiphenylCarbonate.mat;
+    public OreDictMaterial aPC = matList.EpoxyResin.mat;
 }

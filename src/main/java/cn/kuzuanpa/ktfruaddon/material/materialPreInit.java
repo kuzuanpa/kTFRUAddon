@@ -55,47 +55,70 @@ public class materialPreInit {
           //      , 3); // Quality is 3 for Diamond Tool Level
         tExamplium.setMcfg(0, gregapi.data.MT.Steel, U); // This Material consists out of one Unit of Steel.
         tExamplium.setOriginalMod(MOD_DATA); // Gives your Mod the credit for creating this Material.
-        tExamplium.aspects(gregapi.data.TC.METALLUM, 3); // Thaumcraft Aspects related to this Material.
+        //tExamplium.aspects(gregapi.data.TC.METALLUM, 3); // Thaumcraft Aspects related to this Material.
 
-
-
-
-
-        //Cr Producing ID=30010-30019
-        //Cr2O7(NH3)2
-        matList.AmmoniumDichromate.register(30011, "AmmoniumDichromate", "Ammonium Dichromate",456, 460, 255, 160, 51, 0,  "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2]);
+        int i=30011;
+        matList.AmmoniumDichromate.register(i++, "AmmoniumDichromate", "Ammonium Dichromate",456, 460, 255, 160, 51, 0,  "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2]);
         matList.AmmoniumDichromate.mat.put(TD.ItemGenerator.DUSTS);
-        //NH4Cr(SO4)2
-        matList.AmmoniumChromicSulfate.register(30012, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate",456, 460, 72, 0, 161, 0,  "NH"+NUM_SUB[4]+"Cr(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
+
+        matList.AmmoniumChromicSulfate.register(i++, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate",456, 460, 72, 0, 161, 0,  "NH"+NUM_SUB[4]+"Cr(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
         matList.AmmoniumChromicSulfate.mat.put(TD.ItemGenerator.DUSTS);
-        //NH4Fe(SO4);2
-        matList.AmmoniumIronIIISulfate.register(30013, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate", 368, 524, 230, 220, 242, 0, "NH"+NUM_SUB[4]+"Fe(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
+
+        matList.AmmoniumIronIIISulfate.register(i++, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate", 368, 524, 230, 220, 242, 0, "NH"+NUM_SUB[4]+"Fe(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
         matList.AmmoniumIronIIISulfate.mat.put(TD.ItemGenerator.DUSTS);
-        //(NH4)2SO4
-        matList.Sulfanilamide.register(30014, "Sulfanilamide", "Sulfanilamide",509, 510, 251, 251, 216, 2, "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4]);
+
+        matList.Sulfanilamide.register(i++, "Sulfanilamide", "Sulfanilamide",509, 510, 251, 251, 216, 2, "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4]);
         matList.Sulfanilamide.mat.put(TD.ItemGenerator.DUSTS);
 
-        matList.CookedBauxide .register(30020, "CookedBauxide", "Cooked Bauxide", 2370, 3234, 229, 141, 0, 4, null);
+        matList.CookedBauxide .register(i++, "CookedBauxide", "Cooked Bauxide", 2370, 3234, 229, 141, 0, 4, null);
         matList.CookedBauxide.mat.put(TD.ItemGenerator.DUSTS);
 
-        matList.AcidPickledBauxide.register(30021, "CookedBauxide", "Cooked Bauxide", 2370, 3234,200, 168, 0, 4, null);
+        matList.AcidPickledBauxide.register(i++, "CookedBauxide", "Cooked Bauxide", 2370, 3234,200, 168, 0, 4, null);
         matList.AcidPickledBauxide.mat.put(TD.ItemGenerator.DUSTS);
 
-        matList.BauxiteRedMud.register(30022, "BauxiteRedMud", "Bauxite Red Mud", 1790, 3234, 148, 0, 12, 0,null);
+        matList.BauxiteRedMud.register(i++, "BauxiteRedMud", "Bauxite Red Mud", 1790, 3234, 148, 0, 12, 0,null);
         matList.BauxiteRedMud.mat.put(TD.ItemGenerator.DUSTS);
 
-        matList.LithiumCarbonate.register(30030, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
+        matList.LithiumCarbonate.register(i++, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
         matList.LithiumCarbonate.mat.put(TD.ItemGenerator.DUSTS);
 
-        matList.MetatitanicAcid.register(30040, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
+        matList.MetatitanicAcid.register(i++, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
         matList.MetatitanicAcid.mat.put(TD.ItemGenerator.DUSTS);
+        //丙酮
+        matList.Acetone.register(i++,"Acetone","Acetone",143,293,210,210,210,140,"C"+NUM_SUB[3]+"H"+NUM_SUB[6]+"O");
+        matList.Acetone.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE);
+        //乙炔
+        matList.Acetylene.register(i++,"Acetylene","Acetylene",147,217,210,210,210,180,"CH"+Symbols[0]+"CH");
+        matList.Acetylene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE);
+        //光气
+        matList.Phosgene.registerC(i++,"Phosgene","Phosgene",-128,8,240,245,255,240,"COCl"+NUM_SUB[2]);
+        matList.Phosgene.mat.put(TD.Compounds.DECOMPOSABLE);
+        //三乙基铝
+        matList.TriethylAluminium.register(i++,"TriethylAluminium","Triethyl Aluminium",-50,128,255,255,255,255,"Al(CH"+NUM_SUB[2]+"CH"+NUM_SUB[3]+")"+NUM_SUB[3]);
+        matList.TriethylAluminium.mat.put(TD.Compounds.DECOMPOSABLE,TD.Properties.FLAMMABLE);
+        //二氯甲烷
+        matList.Dichloromethane.register(i++,"Dichloromethane","Dichloromethane",-97,39,255,255,255,255,"CH"+NUM_SUB[2]+"Cl"+NUM_SUB[2]);
+        matList.Dichloromethane.mat.put(TD.Compounds.DECOMPOSABLE);
+        //醋酸钙
+        matList.CalciumAcetate.register(i++,"CalciumAcetate","Calcium Acetate",396,397,245,246,245,0,"CH"+NUM_SUB[3]+"COOCaOOCCH"+NUM_SUB[3]);
+        matList.CalciumAcetate.mat.put(TD.Compounds.DECOMPOSABLE);
 
-        matList.Acetone.register(30050,"Acetone","Acetone",143,293,210,210,210,140,"C"+NUM_SUB[3]+"H"+NUM_SUB[6]+"O");
-        matList.Acetone.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT);
-
-        matList.Acetylene.register(30051,"Acetylene","Acetylene",147,217,210,210,210,180,"CH"+Symbols[0]+"CH");
-        matList.Acetylene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.EXPLOSIVE,TD.Properties.TRANSPARENT);
-
-        matList.CalciumAcetate.register(30052,"CalciumAcetate","Calcium Acetate",396,397,245,246,245,0,"C"+NUM_SUB[4]+"H"+NUM_SUB[6]+"CaO"+NUM_SUB[4]);
+        matList.BPA.registerC(i++,"BPA","BPA",158,226,255,255,255,10,"CH"+NUM_SUB[3]+"C"+"(PhOH)"+NUM_SUB[2]+"CH"+NUM_SUB[3]);
+        matList.BPA.mat.put(TD.Compounds.DECOMPOSABLE);
+        //DPC,碳酸二苯酯
+        matList.DiphenylCarbonate.registerC(i++,"DiphenylCarbonate","Diphenyl Carbonate",82,301,255,255,255,10,"PhOCOOPh");
+        matList.DiphenylCarbonate.mat.put(TD.Compounds.DECOMPOSABLE);
+        //PC,环氧树脂
+        matList.EpoxyResin.registerC(i++,"EpoxyResin","Epoxy Resin",115,252,255,255,255,10,"(C"+NUM_SUB[3]+"H"+NUM_SUB[5]+"ClO)");
+        matList.EpoxyResin.mat.put(TD.Compounds.DECOMPOSABLE);
+        //次氯酸
+        matList.HypochlorousAcid.registerC(i++,"HypochlorousAcid","Hypochlorous Acid",0,100,180,255,180,150,"HClO");
+        matList.HypochlorousAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE);
+        //氯酸
+        matList.ChloricAcid.registerC(i++,"ChloricAcid","Chloric Acid",0,41,235,255,210,210,"HClO"+NUM_SUB[3]);
+        matList.ChloricAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE);
+        //高氯酸
+        matList.PerchloricAcid.registerC(i++,"PerchloricAcid","Perchloric Acid",-112,19,255,255,255,255,"HClO"+NUM_SUB[4]);
+        matList.PerchloricAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE);
     }
 }

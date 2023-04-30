@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.util;
+package cn.kuzuanpa.ktfruaddon.code;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.data.IL;

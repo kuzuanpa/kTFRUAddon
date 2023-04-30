@@ -10,7 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
-import cn.kuzuanpa.ktfruaddon.tile.util.CodeTranslate;
+import cn.kuzuanpa.ktfruaddon.code.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.tile.util.utilLimitedOutputTarget.*;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import cpw.mods.fml.common.FMLLog;

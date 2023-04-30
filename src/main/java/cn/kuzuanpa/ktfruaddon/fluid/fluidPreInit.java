@@ -22,11 +22,12 @@ public class fluidPreInit {
         flList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide",null,LIQUID);
         flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",MT.NaAlO2,1000);
         flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", MT.KAlO2,1000);
-        flList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",null,LIQUID);
-        flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",null,LIQUID);
+        flList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",MT.Na2CO3,LIQUID);
+        flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",MT.K2CO3,LIQUID);
         flList.LiquifiedNaturalgas.register("liquifiednaturalgas","Liquified Natural Gas",null,LIQUID);
         flList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,LIQUID);
         flList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,LIQUID);
+        
         flList.Acetone.register("acetone","Acetone", matList.Acetone.mat,LIQUID);
         flList.Acetylene.register("acetylene","Acetylene",matList.Acetylene.mat, GAS);
     }
