@@ -12,6 +12,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 
+import static cn.kuzuanpa.ktfruaddon.code.Variables.Symbols;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 import static gregapi.data.CS.NUM_SUB;
 import static gregapi.data.CS.U;
@@ -89,7 +90,12 @@ public class materialPreInit {
         matList.MetatitanicAcid.register(30040, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
         matList.MetatitanicAcid.mat.put(TD.ItemGenerator.DUSTS);
 
-        
+        matList.Acetone.register(30050,"Acetone","Acetone",143,293,210,210,210,140,"C"+NUM_SUB[3]+"H"+NUM_SUB[6]+"O");
+        matList.Acetone.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT);
 
+        matList.Acetylene.register(30051,"Acetylene","Acetylene",147,217,210,210,210,180,"CH"+Symbols[0]+"CH");
+        matList.Acetylene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.EXPLOSIVE,TD.Properties.TRANSPARENT);
+
+        matList.CalciumAcetate.register(30052,"CalciumAcetate","Calcium Acetate",396,397,245,246,245,0,"C"+NUM_SUB[4]+"H"+NUM_SUB[6]+"CaO"+NUM_SUB[4]);
     }
 }

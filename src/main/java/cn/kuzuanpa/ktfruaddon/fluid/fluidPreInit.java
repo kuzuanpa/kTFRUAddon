@@ -10,6 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.fluid;
 
+import cn.kuzuanpa.ktfruaddon.material.matList;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.MT;
 
@@ -25,5 +26,8 @@ public class fluidPreInit {
         flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",null,LIQUID);
         flList.LiquifiedNaturalgas.register("liquifiednaturalgas","Liquified Natural Gas",null,LIQUID);
         flList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,LIQUID);
-        flList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,LIQUID);}
+        flList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,LIQUID);
+        flList.Acetone.register("acetone","Acetone", matList.Acetone.mat,LIQUID);
+        flList.Acetylene.register("acetylene","Acetylene",matList.Acetylene.mat, GAS);
+    }
 }
