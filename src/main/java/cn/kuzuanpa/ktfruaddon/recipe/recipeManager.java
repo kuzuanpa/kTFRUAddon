@@ -8,6 +8,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.recipe;
 
+import gregapi.data.RM;
 import gregapi.recipes.Recipe;
 
 import static gregapi.data.CS.*;
@@ -27,5 +28,8 @@ public class recipeManager {
             , WaferTester        = new Recipe.RecipeMap(null, "ktfru.recipe.wafertester", "Wafer Tester", "Wafer Tester", 0, 1, RES_PATH_GUI + "machines/WaferTester",/*IN-OUT-MIN-ITEM=*/ 6, 2, 1,/*IN-OUT-MIN-FLUID=*/3, 0, 0,/*MIN*/ 2,/*AMP=*/ 1, "", 1, "", T, T, T, T, F, F, F)
             , Fluidsolidifier    = new Recipe.RecipeMap(null, "ktfru.recipe.fluidsolidifier"              , "Fluid Solidifier"                , null, 0, 1, RES_PATH_GUI+"machines/Generifier"                ,/*IN-OUT-MIN-ITEM=*/ 1, 1, 0,/*IN-OUT-MIN-FLUID=*/ 1, 1, 0,/*MIN*/ 1,/*AMP=*/ 1, "",    1, ""      , T, T, T, T, F, F, F)
             , Ionizer            = new Recipe.RecipeMap(null, "ktfru.recipe.ionizer"                      , "Ionizer"                         , null, 0, 1, RES_PATH_GUI+"machines/Ionizer"                   ,/*IN-OUT-MIN-ITEM=*/ 1, 1, 0,/*IN-OUT-MIN-FLUID=*/ 1, 1, 0,/*MIN*/ 1,/*AMP=*/ 1, ""   ,    1, ""      , T, T, T, T, F, F, F)
+            , DistillTower       = new Recipe.RecipeMap(null, "ktfru.recipe.distilltower"           , "Distillation Tower"   ,    "Distillation Tower", 0, 1, RES_PATH_GUI+ "machines/DistillationTower",     /*IN-OUT-MIN-ITEM=*/ 1, 3, 0,/*IN-OUT-MIN-FLUID=*/ 1, 9, 0,/*MIN*/ 1,/*AMP=*/ 1, "",    1, ""      , T, T, T, T, F, F, F)
+            , SmallDistillTower  = new Recipe.RecipeMap(null, "ktfru.recipe.smalldistilltower", "Small Distillation Tower", "Small Distillation Tower", 0, 1, RES_PATH_GUI +"machines/SmallDistillationTower",/*IN-OUT-MIN-ITEM=*/ 1, 3, 0,/*IN-OUT-MIN-FLUID=*/ 1, 6, 0,/*MIN*/ 1,/*AMP=*/ 1, "", 1, "", T, T, T, T, F, F, F)
+            , TinyDistillTower   = new Recipe.RecipeMap(null, "ktfru.recipe.tinydistilltower"  , "Tiny Distillation Tower",  "Tiny Distillation Tower", 0, 1, RES_PATH_GUI+ "machines/TinyDistillationTower", /*IN-OUT-MIN-ITEM=*/ 1, 3, 0,/*IN-OUT-MIN-FLUID=*/ 1, 3, 0,/*MIN*/ 1,/*AMP=*/ 1, "",    1, ""      , T, T, T, T, F, F, F)
             ;
 }
