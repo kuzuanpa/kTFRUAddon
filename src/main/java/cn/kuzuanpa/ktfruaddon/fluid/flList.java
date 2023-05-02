@@ -36,6 +36,7 @@ public enum flList {
     ,CarbonMonoxide,OilDesulphurizationAgent,OilGas,InitalBottomOil,Naphtha
     ,HypochlorousAcid,ChloricAcid,PerchloricAcid,Phosgene
     ,Methanol,Propanol,Propanediol
+    ,Formaldehyde
     ,Acetylene,Acetone
     ,Dichloromethane
     ;

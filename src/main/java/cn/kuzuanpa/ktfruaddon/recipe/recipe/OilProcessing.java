@@ -78,8 +78,13 @@ public class OilProcessing {
         RM.BurnMixer.addRecipe0(false,64,400,FL.array(flList.Naphtha.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(50),FL.Hydrogen.make(250),FL.CarbonDioxide.make(30)));
 
         RM.Mixer.addRecipe1(false,64,80,OP.dust.mat(MT.Pt,0),FL.array(FL.Nitrogen.make(400),FL.Oxygen.make(500)),FL.array(MT.NO.fluid(4*U10,false),FL.Water.make(600)));
-        
 
+        recipeManager.HeatMixer.addRecipe2(false,64,200,OP.dust.mat(MT.Fe,0),OP.dust.mat(MT.Mo,0),FL.array(FL.Methane.make(100),FL.Oxygen.make(100)),FL.array(flList.Formaldehyde.make(100),FL.Water.make(100)));
+
+        RM.Mixer.addRecipe0(false,64,20,FL.array(flList.Propanol.make(100),MT.H2SO4.liquid(2000,false)),FL.array(FL.Propylene.make(100),MT.H2SO4.liquid(1000,false)));
+        RM.Mixer.addRecipe0(false,64,20,FL.array(FL.BioEthanol.make(100),MT.H2SO4.liquid(2000,false)),FL.array(FL.Ethylene.make(100),MT.H2SO4.liquid(1000,false)));
+
+        //RM.CokeOven
     }
 }
 
