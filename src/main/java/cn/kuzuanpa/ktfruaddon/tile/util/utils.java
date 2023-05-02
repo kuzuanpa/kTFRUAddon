@@ -34,7 +34,6 @@ public class utils {
                 return false;
             } else {
                 ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(aController, aDesign, aMode);
-                FMLLog.log(Level.FATAL,"Out of range:"+aX+aY+aZ+aRegistryMeta);
                 return true;
             }
         } else if (tTileEntity instanceof MultiBlockPartComputeCluster && ((MultiBlockPartComputeCluster) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiBlockPartComputeCluster) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {

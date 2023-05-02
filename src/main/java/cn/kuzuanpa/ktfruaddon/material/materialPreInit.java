@@ -84,24 +84,47 @@ public class materialPreInit {
 
         matList.MetatitanicAcid.register(i++, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
         matList.MetatitanicAcid.mat.put(TD.ItemGenerator.DUSTS);
+        //石油底渣
+        matList.OilScarp.registerC(i++,"OilScarp","Oil Scarp",90,231,12,9,2,0,null);
+        matList.OilScarp.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
+        //甲醇
+        matList.Methanol.registerC(i++,"Methanol","Methanol",-98,64,90,80,210,140,"CH"+NUM_SUB[3]+"OH");
+        matList.Methanol.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
+        //乙醇
+        //Already exists in GT
+        //丙醇
+        matList.Propanol.registerC(i++,"Propanol","Propanol",-127,97,60,60,150,140,"CH"+NUM_SUB[2]+"CH"+NUM_SUB[2]+"CH"+NUM_SUB[3]+"OH");
+        matList.Propanol.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
+        //丙二醇
+        matList.Propanediol.registerC(i++,"Propanediol","Propanediol",-60,187,60,60,150,140,"CH"+NUM_SUB[2]+"CH"+NUM_SUB[2]+"CH"+NUM_SUB[3]+"OH");
+        matList.Propanediol.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
         //丙酮
         matList.Acetone.register(i++,"Acetone","Acetone",143,293,210,210,210,140,"C"+NUM_SUB[3]+"H"+NUM_SUB[6]+"O");
-        matList.Acetone.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE);
+        matList.Acetone.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
         //乙炔
         matList.Acetylene.register(i++,"Acetylene","Acetylene",147,217,210,210,210,180,"CH"+Symbols[0]+"CH");
-        matList.Acetylene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE);
+        matList.Acetylene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.GASES);
+        //次氯酸
+        matList.HypochlorousAcid.registerC(i++,"HypochlorousAcid","Hypochlorous Acid",0,100,180,255,180,150,"HClO");
+        matList.HypochlorousAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
+        //氯酸
+        matList.ChloricAcid.registerC(i++,"ChloricAcid","Chloric Acid",0,41,235,255,210,210,"HClO"+NUM_SUB[3]);
+        matList.ChloricAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
+        //高氯酸
+        matList.PerchloricAcid.registerC(i++,"PerchloricAcid","Perchloric Acid",-112,19,255,255,255,255,"HClO"+NUM_SUB[4]);
+        matList.PerchloricAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
         //光气
         matList.Phosgene.registerC(i++,"Phosgene","Phosgene",-128,8,240,245,255,240,"COCl"+NUM_SUB[2]);
-        matList.Phosgene.mat.put(TD.Compounds.DECOMPOSABLE);
+        matList.Phosgene.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.GASES);
         //三乙基铝
-        matList.TriethylAluminium.register(i++,"TriethylAluminium","Triethyl Aluminium",-50,128,255,255,255,255,"Al(CH"+NUM_SUB[2]+"CH"+NUM_SUB[3]+")"+NUM_SUB[3]);
-        matList.TriethylAluminium.mat.put(TD.Compounds.DECOMPOSABLE,TD.Properties.FLAMMABLE);
+        matList.TriethylAluminium.registerC(i++,"TriethylAluminium","Triethyl Aluminium",-50,128,255,255,255,255,"Al(CH"+NUM_SUB[2]+"CH"+NUM_SUB[3]+")"+NUM_SUB[3]);
+        matList.TriethylAluminium.mat.put(TD.Compounds.DECOMPOSABLE,TD.Properties.FLAMMABLE,TD.Properties.BURNING,TD.ItemGenerator.DUSTS);
         //二氯甲烷
-        matList.Dichloromethane.register(i++,"Dichloromethane","Dichloromethane",-97,39,255,255,255,255,"CH"+NUM_SUB[2]+"Cl"+NUM_SUB[2]);
-        matList.Dichloromethane.mat.put(TD.Compounds.DECOMPOSABLE);
+        matList.Dichloromethane.registerC(i++,"Dichloromethane","Dichloromethane",-97,39,255,255,255,255,"CH"+NUM_SUB[2]+"Cl"+NUM_SUB[2]);
+        matList.Dichloromethane.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
         //醋酸钙
         matList.CalciumAcetate.register(i++,"CalciumAcetate","Calcium Acetate",396,397,245,246,245,0,"CH"+NUM_SUB[3]+"COOCaOOCCH"+NUM_SUB[3]);
-        matList.CalciumAcetate.mat.put(TD.Compounds.DECOMPOSABLE);
+        matList.CalciumAcetate.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
 
         matList.BPA.registerC(i++,"BPA","BPA",158,226,255,255,255,10,"CH"+NUM_SUB[3]+"C"+"(PhOH)"+NUM_SUB[2]+"CH"+NUM_SUB[3]);
         matList.BPA.mat.put(TD.Compounds.DECOMPOSABLE);
@@ -110,15 +133,7 @@ public class materialPreInit {
         matList.DiphenylCarbonate.mat.put(TD.Compounds.DECOMPOSABLE);
         //PC,环氧树脂
         matList.EpoxyResin.registerC(i++,"EpoxyResin","Epoxy Resin",115,252,255,255,255,10,"(C"+NUM_SUB[3]+"H"+NUM_SUB[5]+"ClO)");
-        matList.EpoxyResin.mat.put(TD.Compounds.DECOMPOSABLE);
-        //次氯酸
-        matList.HypochlorousAcid.registerC(i++,"HypochlorousAcid","Hypochlorous Acid",0,100,180,255,180,150,"HClO");
-        matList.HypochlorousAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE);
-        //氯酸
-        matList.ChloricAcid.registerC(i++,"ChloricAcid","Chloric Acid",0,41,235,255,210,210,"HClO"+NUM_SUB[3]);
-        matList.ChloricAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE);
-        //高氯酸
-        matList.PerchloricAcid.registerC(i++,"PerchloricAcid","Perchloric Acid",-112,19,255,255,255,255,"HClO"+NUM_SUB[4]);
-        matList.PerchloricAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE);
+        matList.EpoxyResin.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
+
     }
 }

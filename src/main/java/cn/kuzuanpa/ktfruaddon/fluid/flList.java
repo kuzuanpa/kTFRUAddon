@@ -18,6 +18,7 @@ import gregapi.oredict.OreDictMaterial;
 import gregapi.util.OM;
 import gregapi.util.ST;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -28,8 +29,13 @@ import static gregapi.data.CS.ZL_IS;
 
 public enum flList {
     //Ore Process
-    AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, LiquifiedNaturalgas, SodiumHeterotungstate, AmmoniumTungstate
+    AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, SodiumHeterotungstate, AmmoniumTungstate
     //Oil Process And Plastics
+    ,DesaltOilExtraHeavy,DesaltOilHeavy,DesaltOilMedium,DesaltOilNormal,DesaltOilLight
+    ,CleanedOilExtraHeavy,CleanedOilHeavy,CleanedOilMedium,CleanedOilNormal,CleanedOilLight
+    ,CarbonMonoxide,OilDesulphurizationAgent,OilGas,InitalBottomOil,Naphtha
+    ,HypochlorousAcid,ChloricAcid,PerchloricAcid,Phosgene
+    ,Methanol,Propanol,Propanediol
     ,Acetylene,Acetone
     ,Dichloromethane
     ;
@@ -86,6 +92,9 @@ public enum flList {
         this.name=name;
     }
 
+    public FluidStack make(int amount) {
+        return FL.make(fluid,amount);
+    }
 
 
     public Fluid get() {

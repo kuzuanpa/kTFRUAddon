@@ -11,10 +11,13 @@ public enum matList {
     AmmoniumDichromate, AmmoniumChromicSulfate, AmmoniumIronIIISulfate,Sulfanilamide,CookedBauxide,AcidPickledBauxide
     ,BauxiteRedMud,LithiumCarbonate,MetatitanicAcid
     //Oil Process And Plastics
+    ,HypochlorousAcid,ChloricAcid,PerchloricAcid
+    ,Methanol,Propanol,Propanediol
+    ,OilScarp
     ,Acetylene,Acetone
     ,Dichloromethane,Phosgene,TriethylAluminium
     ,DiphenylCarbonate,BPA, EpoxyResin
-    ,HypochlorousAcid,ChloricAcid,PerchloricAcid
+
     ,CalciumAcetate
     ;
     public OreDictMaterial mat;

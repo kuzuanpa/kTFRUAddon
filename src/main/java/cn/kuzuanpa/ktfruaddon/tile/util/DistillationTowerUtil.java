@@ -11,10 +11,22 @@
 package cn.kuzuanpa.ktfruaddon.tile.util;
 
 public class DistillationTowerUtil {
-    public static String[] OutputFluidsLayer1 = {"fuel", "fueloil", "biofuel"};
-    public static String[] OutputFluidsLayer2 = {"propane", "methane"};
-    public static String[] OutputFluidsLayer3 = {"butane"};
+    public static String[] OutputFluidsLayer7 = {"butane"};
+    public static String[] OutputFluidsLayer6 = {"propane", "methane"};
+    public static String[] OutputFluidsLayer5 = {"oilgas"};
     public static String[] OutputFluidsLayer4 = {"petrol", "gasoline", "bioethanol"};
-    public static String[] OutputFluidsLayer5 = {"kerosene", "kerosine", "glycerol"};
-    public static String[] OutputFluidsLayer6 = {"diesel", "biodiesel"};
+    public static String[] OutputFluidsLayer3 = {"naphtha"};
+    public static String[] OutputFluidsLayer2 = {"kerosene", "kerosine", "glycerol"};
+    public static String[] OutputFluidsLayer1 = {"diesel", "biodiesel", "initalbottomoil"};
+
+    public static String[] TinyOutputFluidsLayer3 = {"oilgas"};
+    public static String[] TinyOutputFluidsLayer2 = {"naphtha"};
+    public static String[] TinyOutputFluidsLayer1 = {"initalbottomoil"};
+
+    public static String[] SmallOutputFluidsLayer5 = {"oilgas"};
+    public static String[] SmallOutputFluidsLayer4 = {"petrol", "gasoline", "bioethanol"};
+    public static String[] SmallOutputFluidsLayer3 = {"naphtha"};
+    public static String[] SmallOutputFluidsLayer2 = {"kerosene", "kerosine", "glycerol"};
+    public static String[] SmallOutputFluidsLayer1 = {"diesel", "biodiesel", "initalbottomoil"};
+
 }

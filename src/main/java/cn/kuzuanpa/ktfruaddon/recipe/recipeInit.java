@@ -18,5 +18,6 @@ public class recipeInit {
         new OreProcessing();
         new Chemistry();
         new ComputerBuilding();
+        new OilProcessing();
     }
 }
