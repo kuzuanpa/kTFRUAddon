@@ -40,6 +40,8 @@ public class fluidPreInit {
         flList.Acetylene.register("acetylene","Acetylene",matList.Acetylene.mat, GAS,1000,277,-90);
         //甲醇
         flList.Methanol.register("Methanol","Methanol",matList.Methanol.get(), LIQUID,1000,277,790);
+        //乙醇
+        //FL.
         //丙醇
         flList.Propanol.register("Propanol","Propanol",matList.Propanol.get(), LIQUID,1000,277,894);
         //丙二醇
