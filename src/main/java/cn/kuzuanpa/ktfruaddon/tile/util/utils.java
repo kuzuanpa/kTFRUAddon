@@ -19,6 +19,7 @@ import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.Vec3;
 import org.apache.logging.log4j.Level;
 
 public class utils {
@@ -144,6 +145,12 @@ public class utils {
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return new ChunkCoordinates(resultX[Facing],oY +addY,resultZ[Facing]);
     }
+    public static Vec3 getRealCoordD(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ) {
+        double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
+        double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
+        return Vec3.createVectorHelper(resultX[Facing],oY +addY,resultZ[Facing]);
+    }
+
 
     public static class GTTileEntity {
         public  int aRegistryMeta;
