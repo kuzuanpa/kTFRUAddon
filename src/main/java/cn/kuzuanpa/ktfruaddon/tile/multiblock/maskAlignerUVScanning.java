@@ -7,15 +7,23 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
+
+import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
+import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -159,8 +167,45 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
             return getAdjacentTank(SIDE_UP);
         }
-        //这里填写多方块结构的名称
-        @Override
+        
+    public int mRenderedRGBA = UNCOLORED;
+
+    @Override
+    public int getRenderPasses2(Block aBlock, boolean[] aShouldSideBeRendered) {
+        return 1;
+    }
+
+    @Override
+    public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
+        if (mStructureOkay) {
+            BoundingBox box = new BoundingBox(utils.getRealCoordD(mFacing,0.5,0.5,0.5,-1.501,-0.501,-0.501), utils.getRealCoordD(mFacing,0.5,0.5,0.5,1.501,1.501,1.501));
+            box(aBlock, box.minX,box.minY,box.minZ,box.maxX,box.maxY,box.maxZ);
+        }
+        return T;
+    }
+
+
+    public static IIconContainer
+            sTextureSides      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/sides"),
+            sTextureFront       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/front"),
+            sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/top"),
+            sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/bottom"),
+            sTextureFrontActive       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/active/front"),
+            sTextureSidesSingle      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/sides"),
+            sTextureFrontSingle       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/front"),
+            sTextureTopSingle         = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/top"),
+            sTextureBottomSingle      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/bottom")
+                    ;
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (mStructureOkay&&mActive) {
+            return aSide == mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureFrontActive, mRGBa)):SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa));
+        } else if (mStructureOkay) {
+            return aSide == mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureFront, mRGBa)):SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa));
+        }
+        return aShouldSideBeRendered[aSide] ?aSide == mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureFrontSingle, mRGBa)):SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopSingle, mRGBa)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottomSingle, mRGBa)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesSingle, mRGBa)) : null;
+    } 
+    @Override
         public String getTileEntityName() {
             return "ktfru.multitileentity.multiblock.maskaligner.uv";
         }

@@ -69,7 +69,6 @@ public class OilProcessing {
         recipeManager.DistillTower.addRecipe0(F, 64,  16, new long[] { 500,  500,  500}, FL.array(FL.BiomassIC2    .make( 80)), FL.array(FL.Reikanol.make(20, FL.BioEthanol), MT.Glycerol.liquid(U50, F), FL.Methane.make(4), FL.DistW.make(50)), ZL_IS);
         recipeManager.DistillTower.addRecipe0(F, 64,  64, new long[] {1000, 1000, 1000}, FL.array(FL.Oil_Soulsand  .make( 25)), FL.array(FL.Diesel.make( 5), FL.Kerosine.make( 5), FL.Petrol.make( 5), FL.Propane.make( 5), FL.Butane.make( 5), FL.lube(40)), dustTiny.mat(MT.WaxParaffin, 1), dustTiny.mat(MT.Asphalt, 1), dustTiny.mat(MT.PetCoke, 1));
 
-        recipeManager.HeatMixer.addRecipe0(F,70,200,flList.SulfuredOilDesulfurizationer.make(100),FL.array(flList.OilDesulfurizationer.make(100),MT.H2S.gas(U100,false)));
         //Natural Gas
         RM.Centrifuge.addRecipe0(F,80,100,FL.array(FL.Gas_Natural.make(400)),FL.array(FL.CarbonDioxide.make(8),FL.Water.make(1),FL.Methane.make(380),FL.Nitrogen.make(8)),ZL_IS);
 
