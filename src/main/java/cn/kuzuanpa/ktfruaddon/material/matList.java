@@ -13,6 +13,8 @@ public enum matList {
     //Oil Process And Plastics
     ,HypochlorousAcid,ChloricAcid,PerchloricAcid
     ,Methanol,Propanol,Propanediol
+    ,Benzene
+    ,Formaldehyde,Acetaldehyde,Propionaldehyde
     ,OilScarp
     ,Acetylene,Acetone
     ,Dichloromethane,Phosgene,TriethylAluminium
