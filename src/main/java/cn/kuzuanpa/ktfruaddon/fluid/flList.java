@@ -10,7 +10,6 @@
 
 package cn.kuzuanpa.ktfruaddon.fluid;
 
-import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.RM;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import static gregapi.data.CS.*;
-import static gregapi.data.CS.ZL_IS;
 
 
 public enum flList {
@@ -33,26 +31,18 @@ public enum flList {
     //Oil Process And Plastics
     ,DesaltOilExtraHeavy,DesaltOilHeavy,DesaltOilMedium,DesaltOilNormal,DesaltOilLight
     ,CleanedOilExtraHeavy,CleanedOilHeavy,CleanedOilMedium,CleanedOilNormal,CleanedOilLight
-    ,CarbonMonoxide,OilDesulphurizationAgent,OilGas,InitalBottomOil,Naphtha
+    ,CarbonMonoxide, OilDesulfurizationer,SulfuredOilDesulfurizationer,OilGas,InitalBottomOil,Naphtha
     ,HypochlorousAcid,ChloricAcid,PerchloricAcid,Phosgene
+    ,Benzene
     ,Methanol,Propanol,Propanediol
-    ,Formaldehyde
+    ,Formaldehyde,Acetaldehyde,Propionaldehyde
     ,Acetylene,Acetone
     ,Dichloromethane
+    ,CoalTar, WoodTar
+    ,BlendedFuel95,BlendedFuel92
     ;
     public Fluid fluid;
     public String name;
-    /**This will create Gas with transforming recipe**/
-    public void registerGas(String name, String localizedName, @NotNull OreDictMaterial material,int temp,int density) {
-        fluid = FL.create(name,localizedName,material,3,20000,temp);
-        fluid.setDensity(density);
-        fluid.setViscosity(16);
-        this.name=name;
-        RM.CryoMixer.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make(fluid,20000)),FL.array(), OM.dust(material,U));
-        RM.Drying.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(ZL_FS),FL.array(FL.make(fluid,20000)),ZL_IS);
-        recipeManager.HeatMixer.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(ZL_FS),FL.array(FL.make(fluid,20000)),ZL_IS);
-
-    }
     /**This will create Solutions with transforming recipe**/
     public void registerSolution(String name, String localizedName, @NotNull OreDictMaterial material, int AmountPerUnit) {
         fluid = FL.create(name,localizedName,material,1);

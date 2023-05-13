@@ -104,6 +104,18 @@ public class materialPreInit {
         //乙炔
         matList.Acetylene.register(i++,"Acetylene","Acetylene",147,217,210,210,210,180,"CH"+Symbols[0]+"CH");
         matList.Acetylene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.GASES);
+        //苯
+        matList.Benzene.registerC(i++,"Benzene","Benzene",5,80,255,255,130,140,"C"+NUM_SUB[6]+"H"+NUM_SUB[6]);
+        matList.Benzene.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.LIQUID);
+        //甲醛
+        matList.Formaldehyde.registerC(i++,"Formaldehyde","Formaldehyde",-15,97,255,255,255,255,"CH"+NUM_SUB[2]+"O");
+        matList.Formaldehyde.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.GASES);
+        //乙醛
+        matList.Acetaldehyde.registerC(i++,"Acetaldehyde","Acetaldehyde",-125,21,255,255,255,255,"O=CHCH"+NUM_SUB[3]);
+        matList.Acetaldehyde.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.GASES);
+        //丙醛
+        matList.Propionaldehyde.registerC(i++,"Propionaldehyde","Propionaldehyde",-81,46,255,255,255,255,"O=CHCH"+NUM_SUB[2]+"CH"+NUM_SUB[3]);
+        matList.Propionaldehyde.mat.put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.GASES);
         //次氯酸
         matList.HypochlorousAcid.registerC(i++,"HypochlorousAcid","Hypochlorous Acid",0,100,180,255,180,150,"HClO");
         matList.HypochlorousAcid.mat.put(TD.Properties.ACID,TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);

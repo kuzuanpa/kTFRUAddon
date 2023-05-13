@@ -12,14 +12,7 @@ package cn.kuzuanpa.ktfruaddon.fluid;
 
 import cn.kuzuanpa.ktfruaddon.material.matList;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import gregapi.data.FL;
 import gregapi.data.MT;
-import gregapi.data.TD;
-
-import javax.swing.plaf.ListUI;
-
-import static cn.kuzuanpa.ktfruaddon.code.Variables.Symbols;
-import static gregapi.data.CS.NUM_SUB;
 
 public class fluidPreInit {
     private final int PlASMA=3;
@@ -34,14 +27,19 @@ public class fluidPreInit {
         flList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,LIQUID);
         flList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,LIQUID);
 
+        //甲醛
+        flList.Formaldehyde.register("formaldehyde","Formaldehyde",matList.Formaldehyde.mat,GAS,1000,277,8);
+        //乙醛
+        flList.Acetaldehyde.register("acetaldehyde","Acetaldehyde",matList.Acetaldehyde.mat,GAS,1000,277,-216);
+        //丙醛
+        flList.Propionaldehyde.register("propionaldehyde","Propionaldehyde",matList.Propionaldehyde.mat, GAS,1000,277,-195);
         //丙酮
         flList.Acetone.register("acetone","Acetone", matList.Acetone.mat,LIQUID,1000,277,1120);
         //乙炔
         flList.Acetylene.register("acetylene","Acetylene",matList.Acetylene.mat, GAS,1000,277,-90);
         //甲醇
         flList.Methanol.register("Methanol","Methanol",matList.Methanol.get(), LIQUID,1000,277,790);
-        //乙醇
-        //FL.
+        //乙醇: FL.BioEthanol
         //丙醇
         flList.Propanol.register("Propanol","Propanol",matList.Propanol.get(), LIQUID,1000,277,894);
         //丙二醇
@@ -65,7 +63,8 @@ public class fluidPreInit {
         flList.DesaltOilNormal.register("desaltoilnormal","Desalinized Oil",null,LIQUID,1000,277,700,1000);
         flList.DesaltOilLight.register("desaltoillight","Desalinized Light Oil",null,LIQUID,1000,277,600,1000);
 
-        flList.OilDesulphurizationAgent.register("oildesulphurizationagent","Oil Desulphurization Agent",null,LIQUID);
+        flList.OilDesulfurizationer.register("oildesulphurizationer","Oil Desulphurizationer",null,LIQUID);
+        flList.SulfuredOilDesulfurizationer.register("sulfuredoildesulphurizationer","Sulfured Oil Desulphurizationer",null,LIQUID);
         flList.OilGas.register("oilgas","Oil Gas",null,GAS,1000,277,100,16);
 
         flList.CarbonMonoxide.register("carbonmonoxide", "carbon Monixide",null,GAS,1000,277,100);
@@ -73,6 +72,12 @@ public class fluidPreInit {
         flList.InitalBottomOil.register("initalbottomoil","Inital Bottom Oil",null, LIQUID,1000,277,500);
         //石脑油
         flList.Naphtha.register("naphtha","Naphtha",null,LIQUID);
+
+
+        //木煤气
+        flList.WoodTar.register("woodgas","Wood Gas",null,GAS,1000,277,-300,160);
+        //煤焦油
+        flList.CoalTar.register("coalgas","Coal Gas",null,GAS,1000,277,-600,120);
 
         flList.CleanedOilExtraHeavy.register("cleanoilextraheavy","Cleaned Very Heavy Oil",null,LIQUID,1000,277,900,1000);
         flList.CleanedOilHeavy.register("cleanoilheavy","Cleaned Heavy Oil",null,LIQUID,1000,277,800,1000);
