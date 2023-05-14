@@ -19,9 +19,11 @@
  */
 package cn.kuzuanpa.ktfruaddon.tile;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.*;
-import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.*;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartComputeCluster;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartComputeClusterSimple;
+import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.*;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -32,7 +34,6 @@ import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
-import gregtech.tileentity.multiblocks.MultiTileEntityDistillationTower;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 import static gregapi.data.CS.*;
@@ -152,17 +153,17 @@ public class tileEntityInit {
 
         i=31000;
         //parts
-        aMat = MT.TitaniumGold;    aRegistry.add("Transmission Shaft (Ti3Au)"     , "kTFRUAddon: Multiblock", 30100, 17200, MultiTileEntityMultiBlockPart.class , MT.TitaniumGold.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.TitaniumGold, NBT_HARDNESS,   12.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "shaft0" , NBT_DESIGNS, 7));
+        aMat = MT.TitaniumGold;    aRegistry.add("Transmission Shaft (Ti3Au)"     , "kTFRUAddon: Multiblock", i++, 17200, MultiTileEntityMultiBlockPart.class , MT.TitaniumGold.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.TitaniumGold, NBT_HARDNESS,   12.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "shaft0" , NBT_DESIGNS, 7));
 
-        aMat = MT.HSSE;            aRegistry.add("Transmission Shaft (HSSE)"     , "kTFRUAddon: Multiblock", 30101, 17200, MultiTileEntityMultiBlockPart.class , MT.HSSE.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.HSSE, NBT_HARDNESS,   16.0F, NBT_RESISTANCE,   16.0F, NBT_TEXTURE, "shaft1"               , NBT_DESIGNS, 7));
+        aMat = MT.HSSE;            aRegistry.add("Transmission Shaft (HSSE)"     , "kTFRUAddon: Multiblock", i++, 17200, MultiTileEntityMultiBlockPart.class , MT.HSSE.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.HSSE, NBT_HARDNESS,   16.0F, NBT_RESISTANCE,   16.0F, NBT_TEXTURE, "shaft1"               , NBT_DESIGNS, 7));
 
 
-        aMat = MT.Al;              aRegistry.add("Alumnium Wall"  , "kTFRUAddon: Multiblock", 30102, 17200, MultiTileEntityMultiBlockPart.class , MT.Al.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   12.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "metalwall" , NBT_DESIGNS, 7),
+        aMat = MT.Al;              aRegistry.add("Alumnium Wall"  , "kTFRUAddon: Multiblock", i++, 17200, MultiTileEntityMultiBlockPart.class , MT.Al.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   12.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "metalwall" , NBT_DESIGNS, 7),
                 "wPP", "hPP", 'P', OP.plate.dat(aMat)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(aMat, 4), ST.tag(10), aRegistry.getItem());
 
 
-
-        aMat = MT.Al;              aRegistry.add("Light Module (UV)"     , "kTFRUAddon: Multiblock", 30110, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7),
+i=31110;
+        aMat = MT.Al;              aRegistry.add("Light Module (UV)"     , "kTFRUAddon: Multiblock", i++, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7),
                 "SwS", "PLP", "XMX", 'L',  IL.Comp_Laser_Gas_Ar , 'S', OP.stick.dat(aMat), 'X', OP.wireGt02.dat(MT.Cu), 'C', CS.OD_CIRCUITS[2], 'M', OP.casingMachine.dat(aMat),'P',OP.plate.dat(aMat));
 
 
@@ -172,8 +173,8 @@ public class tileEntityInit {
 
 
 
-
-        aMat = MT.Al;              aRegistry.add("Mask Aligner IO Manager (UV)"     , "kTFRUAddon: Multiblock", 30120, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7),
+i=31120;
+        aMat = MT.Al;              aRegistry.add("Mask Aligner IO Manager (UV)"     , "kTFRUAddon: Multiblock", i++, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7),
                 "SCS", "YMY", "XwX", 'C', CS.OD_CIRCUITS[2], 'S', OP.pipeSmall.dat(aMat),'Y', IL.CONVEYERS[2], 'X', OP.wireGt02.dat(MT.Cu), 'C', CS.OD_CIRCUITS[2], 'M', OP.casingMachine.dat(aMat));
 
 
@@ -182,9 +183,9 @@ public class tileEntityInit {
         //aMat = ;     aRegistry.add("Mask Aligner IO Manager (EUV)"     , "kTFRUAddon: Multiblock", 30122, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "lightmodule1"   , NBT_DESIGNS, 7));
 
 
-
+i=31200;
         //special part
-        aMat = MT.Al;              aRegistry.add("Mask Aligner Energy Module (UV)"     , "kTFRUAddon: Multiblock", 31000, 17200, MultiBlockPartEnergyConsumer.class , MT.Al.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule1"   , NBT_INPUT, 218, NBT_INPUT_MIN,    176, NBT_INPUT_MAX,   256  , NBT_ENERGY_ACCEPTED, TD.Energy.EU),
+        aMat = MT.Al;              aRegistry.add("Mask Aligner Energy Module (UV)"     , "kTFRUAddon: Multiblock", i++, 17200, MultiBlockPartEnergyConsumer.class , MT.Al.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "energymodule1"   , NBT_INPUT, 218, NBT_INPUT_MIN,    176, NBT_INPUT_MAX,   256  , NBT_ENERGY_ACCEPTED, TD.Energy.EU),
                 "ShS", "CwC", "XTX" ,'T',gRegistry.getItem(10042), 'S', OP.stickLong.dat(aMat), 'X', OP.wireGt08.dat(MT.Cu), 'C', CS.OD_CIRCUITS[2], 'M', OP.casingMachine.dat(aMat));
 
 

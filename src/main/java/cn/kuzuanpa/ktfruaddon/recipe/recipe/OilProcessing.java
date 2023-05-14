@@ -62,8 +62,8 @@ public class OilProcessing {
         recipeManager.SmallDistillTower.addRecipe0(F,196,120,FL.array(flList.InitalBottomOil.make(400)),FL.array(FL.Diesel.make(120),FL.Kerosine.make(200),flList.Naphtha.make(80),FL.Petrol.make(320),flList.OilGas.make(100)), OM.dust(matList.OilScarp.mat,U4));
         recipeManager.DistillTower     .addRecipe0(F,196, 95,FL.array(flList.InitalBottomOil.make(400)),FL.array(FL.Diesel.make(120),FL.Kerosine.make(200),flList.Naphtha.make(80),FL.Petrol.make(320),flList.OilGas.make(100)), OM.dust(matList.OilScarp.mat,U4));
 
-        RM.Centrifuge.addRecipeX(F,64,80,new long[]{8000,8000} , ST.array(OM.dust(matList.OilScarp.get(),U4)),ZL_FS,FL.array(FL.Kerosine.make(40),FL.Lubricant.make(60)), dustTiny.mat(MT.WaxParaffin, 1), dustTiny.mat(MT.Asphalt, 1));
-        RM.Centrifuge.addRecipeX(F,64,80,new long[]{8000,8000} , ST.array(OM.dust(matList.OilScarp.get(),U)),ZL_FS,FL.array(FL.Kerosine.make(360),FL.Lubricant.make(540)), dust.mat(MT.WaxParaffin, 1), dust.mat(MT.Asphalt, 1));
+        RM.Centrifuge.addRecipeX(F,64,80,new long[]{8000,8000} , ST.array(OM.dust(matList.OilScarp.get(),U4)),ZL_FS,FL.array(FL.Kerosine.make(20),FL.Lubricant.make(60)), dustTiny.mat(MT.WaxParaffin, 1), dustTiny.mat(MT.Asphalt, 1));
+        RM.Centrifuge.addRecipeX(F,64,80,new long[]{8000,8000} , ST.array(OM.dust(matList.OilScarp.get(),U)),ZL_FS,FL.array(FL.Kerosine.make(180),FL.Lubricant.make(540)), dust.mat(MT.WaxParaffin, 1), dust.mat(MT.Asphalt, 1));
 
         recipeManager.DistillTower.addRecipe0(F, 64,  16, new long[] { 500,  500,  500}, FL.array(FL.Biomass       .make( 80)), FL.array(FL.Reikanol.make(20, FL.BioEthanol), MT.Glycerol.liquid(U50, F), FL.Methane.make(4), FL.DistW.make(50)), ZL_IS);
         recipeManager.DistillTower.addRecipe0(F, 64,  16, new long[] { 500,  500,  500}, FL.array(FL.BiomassIC2    .make( 80)), FL.array(FL.Reikanol.make(20, FL.BioEthanol), MT.Glycerol.liquid(U50, F), FL.Methane.make(4), FL.DistW.make(50)), ZL_IS);
