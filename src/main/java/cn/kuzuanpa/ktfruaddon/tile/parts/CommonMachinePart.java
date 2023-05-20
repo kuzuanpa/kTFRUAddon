@@ -8,32 +8,32 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.SpecialPart;
+package cn.kuzuanpa.ktfruaddon.tile.parts;
 
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.UT;
 import gregapi.util.WD;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
-import java.util.List;
+import static gregapi.data.CS.*;
 
-public class MultiBlockPartEnergyConsumer extends MultiTileEntityBasicMachine {
+public class CommonMachinePart extends MultiTileEntityBasicMachine {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
-public void readFromNBT2(NBTTagCompound aNBT) {
+    public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey("gt.target")) {
-            this.mTargetPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong("gt.target.x")), UT.Code.bindInt(aNBT.getLong("gt.target.y")), UT.Code.bindInt(aNBT.getLong("gt.target.z")));
-        }
+        if (aNBT.hasKey(NBT_TARGET)) {mTargetPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));}
+        if (aNBT.hasKey(NBT_DESIGN)) mDesign = UT.Code.unsignB(aNBT.getByte(NBT_DESIGN));
+        if (aNBT.hasKey(NBT_MODE)) mMode = (byte)aNBT.getInteger(NBT_MODE);
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
+        if (mDesign != 0) aNBT.setByte(NBT_DESIGN, (byte)mDesign);
+        if (mMode   != 0) aNBT.setInteger(NBT_MODE, mMode);
         if (this.mTargetPos != null) {
             UT.NBT.setBoolean(aNBT, "gt.target", true);
             UT.NBT.setNumber(aNBT, "gt.target.x", (long)this.mTargetPos.posX);
@@ -41,6 +41,8 @@ public void readFromNBT2(NBTTagCompound aNBT) {
             UT.NBT.setNumber(aNBT, "gt.target.z", (long)this.mTargetPos.posZ);
         }
     }
+
+    public int mDesign = 0;
 
     public ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
         if (this.mTargetPos == null) {
@@ -65,6 +67,7 @@ public void readFromNBT2(NBTTagCompound aNBT) {
     public void setTarget(ITileEntityMultiBlockController aTarget, int aDesign, int aMode) {
         this.mTarget = aTarget;
         this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();
+        this.mDesign = aDesign;
     }
     public boolean breakBlock() {
         ITileEntityMultiBlockController tTarget = this.getTarget(false);
@@ -77,14 +80,12 @@ public void readFromNBT2(NBTTagCompound aNBT) {
         return false;
     }
     @Override
+    public int getLightOpacity(){
+        return mDesign==7?0:255;
+    }
+    @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.machine.part.electric";
+        return "ktfru.multitileentity.machine.part";
     }
-    @Override
-    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-    }
-    @Override
-    public boolean allowRightclick(Entity aEntity) {
-        return false;
-    }
+
 }

@@ -7,15 +7,22 @@
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+
+import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
-import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
+import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -28,12 +35,14 @@ import static gregapi.data.CS.*;
 public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         public final short machineX = 3, machineY = 2, machineZ = 2;
         public final short xMapOffset = -1;
-        public static final int[][][] blockIDMap = {{
-                {30102,   0  , 30102},
-                {30102, 31000, 30102},
+    public IIconContainer[] mTexturesMaterial = null, mTexturesInactive = null, mTexturesActive = null, mTexturesRunning = null;
+
+    public static final int[][][] blockIDMap = {{
+                {31002,   0  , 31002},
+                {31002, 31200, 31002},
         },{
-                {30102, 30110, 30102},
-                {30102, 30120, 30102},
+                {31002, 31110, 31002},
+                {31002, 31120, 31002},
         }};
     public int getCheckX(int Facing, int tX, int addX, int addZ) {
         int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
@@ -50,10 +59,11 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         //change value there to set usage of every block.
 
         public int getUsage(int blockID ,short registryID){
-            if (blockID == 30110&&registryID==k) {
-                return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+            if (registryID==k) switch (blockID){
+                case 31110: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+                case 31120: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
             }
-            return MultiTileEntityMultiBlockPart.EVERYTHING;
+            return MultiTileEntityMultiBlockPart.ONLY_IN;
         }
 
         public int getBlockID(int checkX, int checkY, int checkZ){
@@ -64,7 +74,7 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             return false;
         }
     public boolean isSubSource(int blockID){
-        return blockID == 31000;
+        return blockID == 31200;
     }
     public short getRegistryID(int x,int y,int z){return k;}
 
@@ -89,10 +99,10 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
                     for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                         for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
                             if (isSubSource(getBlockID(checkX,checkY,checkZ))) {
-                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 0, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX, checkY, checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
+                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 7, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX, checkY, checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
                                 if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
                             }
-                            else if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 0, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
+                            else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 7, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
 
                     }
                 }
@@ -147,20 +157,97 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
 
         @Override
         public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-            return getAdjacentTileEntity(SIDE_BOTTOM);
+            return getAdjacentTileEntity(SIDE_BACK);
         }
 
         @Override
         public DelegatorTileEntity<IInventory> getItemInputTarget(byte aSide) {
-            return getAdjacentInventory(SIDE_UP);
+            return getAdjacentInventory(SIDE_TOP);
         }
 
         @Override
         public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
             return getAdjacentTank(SIDE_UP);
         }
-        //这里填写多方块结构的名称
-        @Override
+
+
+    @Override
+    public int getRenderPasses2(Block aBlock, boolean[] aShouldSideBeRendered) {
+        return 5;
+    }
+
+    @Override
+    public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
+        if (mStructureOkay) {
+            BoundingBox box;
+            switch (aRenderPass) {
+                case 0:
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.502, -0.499, -0.502), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 2.5, 1.501));
+                    return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+                case 1:
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 0.5));
+                    return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+                case 2:
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, 0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 1.5));
+                    return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+                case 3:
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5, -0.501, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5, 1.501, 1.5));
+                    return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+                case 4:
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.501, -0.5, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 1.5, 1.5));
+                    return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+            }
+        }
+        return T;
+    }
+
+
+    public static IIconContainer
+            sTextureSidesA      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/sidesa"),
+            sTextureSidesB      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/sidesb"),
+            sTextureSingle      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/sides"),
+            sOverlaySingleFront = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/front"),
+            sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front"),
+            sOverlayFrontRunning = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front_running"),
+            sOverlayFrontActive = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front_active"),
+            sOverlayBack        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/back"),
+            sOverlayTopA        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/topa"),
+            sOverlayTopB        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/topb"),
+            sOverlayBottomB        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/bottom"),
+    sTextureTopA       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/topa"),
+    sTextureTopB       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/topb"),
+    sTextureTopC       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/topc"),
+    sTextureTopD       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/topd")
+            ;
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (mStructureOkay) {
+            switch (aRenderPass) {
+                case 0:
+                    if (mActive) {
+                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontActive)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ?null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa)) : null;
+                    } else if (mRunning) {
+                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontRunning)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa)) : null;
+                    }
+                    return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFront)) :  SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null :  aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa)) : null;
+                case 1:
+                    return aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sOverlayTopA)):null;
+                case 2:
+                    return aSide == SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sOverlayBottomB)):aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sOverlayTopB)):null;
+                case 3:
+                    if(mFacing==2) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopA,mRGBa)):null;
+                    if(mFacing==3) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopB,mRGBa)):null;
+                    if(mFacing==4) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopC,mRGBa)):null;
+                    if(mFacing==5) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopD,mRGBa)):null;
+
+                case 4:
+                    return aSide != mFacing &&aSide != OPOS[mFacing] &&aSide != SIDE_BOTTOM &&aSide != SIDE_TOP ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesB, mRGBa)):null;
+
+            }
+        }
+        return aShouldSideBeRendered[aSide] ?aSide == mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureSingle, mRGBa),BlockTextureDefault.get(sOverlaySingleFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureSingle, mRGBa)) : null;
+    }
+    @Override
         public String getTileEntityName() {
             return "ktfru.multitileentity.multiblock.maskaligner.uv";
         }

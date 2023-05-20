@@ -12,9 +12,10 @@ package cn.kuzuanpa.ktfruaddon.code;
 
 import codechicken.lib.vec.BlockCoord;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.Vec3;
 
 public class BoundingBox {
-    private final double minX,minY,minZ,maxX,maxY,maxZ;
+    public final double minX,minY,minZ,maxX,maxY,maxZ;
     public BoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ){
         if (minX>maxX){double tmp=maxX;maxX=minX;minX=tmp;}
         if (minY>maxY){double tmp=maxY;maxY=minY;minY=tmp;}
@@ -26,6 +27,12 @@ public class BoundingBox {
         if (StartCoord.y>EndCoord.y){int tmp=EndCoord.y;EndCoord.y=StartCoord.y;StartCoord.y=tmp;}
         if (StartCoord.z>EndCoord.z){int tmp=EndCoord.z;EndCoord.z=StartCoord.z;StartCoord.z=tmp;}
         this.maxX=EndCoord.x;this.maxY=EndCoord.y;this.maxZ=EndCoord.z;this.minX=StartCoord.x;this.minY=StartCoord.y;this.minZ=StartCoord.z;
+    }
+    public BoundingBox(Vec3 StartCoord, Vec3 EndCoord){
+        if (StartCoord.xCoord>EndCoord.xCoord){double tmp=EndCoord.xCoord;EndCoord.xCoord=StartCoord.xCoord;StartCoord.xCoord=tmp;}
+        if (StartCoord.yCoord>EndCoord.yCoord){double tmp=EndCoord.yCoord;EndCoord.yCoord=StartCoord.yCoord;StartCoord.yCoord=tmp;}
+        if (StartCoord.zCoord>EndCoord.zCoord){double tmp=EndCoord.zCoord;EndCoord.zCoord=StartCoord.zCoord;StartCoord.zCoord=tmp;}
+        this.maxX=EndCoord.xCoord;this.maxY=EndCoord.yCoord;this.maxZ=EndCoord.zCoord;this.minX=StartCoord.xCoord;this.minY=StartCoord.yCoord;this.minZ=StartCoord.zCoord;
     }
     public boolean isCoordInBox(BlockCoord coord){
         return minX<coord.x&&coord.x<maxX&&
