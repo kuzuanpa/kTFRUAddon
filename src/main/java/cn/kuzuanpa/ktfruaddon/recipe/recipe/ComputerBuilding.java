@@ -50,7 +50,7 @@ public class ComputerBuilding {
 
         //MaskAlign
         recipeManager.MaskAligner.addRecipeX(T, 120, 4000, ST.array(ItemList.SiliconPlate8inchSoftBakedTier1.get(1),ItemList.CPUPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer200um.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 256, 4000, ST.array(ItemList.SiliconPlate8inchSoftBakedTier2.get(1),ItemList.CPUPhotomask72um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer72um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 256, 4000, ST.array(ItemList.SiliconPlate8inchSoftBakedTier1.get(1),ItemList.CPUPhotomask72um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer72um.get(1));
 
         //Develop
         recipeManager.UltraCleanBath.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200um.get(1)),FL.array(/*TODO*/),FL.array(ZL_FS), ItemList.CPUWafer200umDeveloped.get(1));
