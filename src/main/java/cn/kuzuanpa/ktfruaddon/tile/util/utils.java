@@ -11,8 +11,8 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.util;
 
-import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartComputeCluster;
-import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartComputeCluster;
+import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
@@ -49,7 +49,8 @@ public class utils {
             return false;
         }
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
+
+        public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(coord);
         if (tTileEntity == aController) {
             return true;
@@ -145,10 +146,26 @@ public class utils {
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return new ChunkCoordinates(resultX[Facing],oY +addY,resultZ[Facing]);
     }
-    public static Vec3 getRealCoordD(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ) {
+    public static int getRealX(byte Facing, int oX, int oY, int oZ, int addX, int addY, int addZ){
+        int[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
+        return resultX[Facing];
+    }
+    public static int getRealZ(byte Facing, int oX, int oY, int oZ, int addX, int addY, int addZ){
+        int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
+        return resultZ[Facing];
+    }
+    public static Vec3 getRealCoordDouble(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ) {
         double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return Vec3.createVectorHelper(resultX[Facing],oY +addY,resultZ[Facing]);
+    }
+    public static double getRealXDouble(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ){
+        double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
+        return resultX[Facing];
+    }
+    public static double getRealZDouble(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ){
+        double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
+        return resultZ[Facing];
     }
 
 

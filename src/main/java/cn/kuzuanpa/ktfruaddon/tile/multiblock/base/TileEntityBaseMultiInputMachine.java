@@ -10,7 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
-import cn.kuzuanpa.ktfruaddon.tile.SpecialPart.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10MultiBlockMachine {
     public ArrayList<MultiBlockPartEnergyConsumer> MultiInputSubBlocks = new ArrayList<>();
     public boolean subSourceRunning =true;
+
 
     public void addInputSubSource(MultiBlockPartEnergyConsumer p){
         this.MultiInputSubBlocks.add(p);
