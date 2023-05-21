@@ -17,6 +17,7 @@ public class recipeInit {
         new ParticleCollinder();
         new OreProcessing();
         new Chemistry();
+        new Circuits();
         new ComputerBuilding();
         new OilProcessing();
     }

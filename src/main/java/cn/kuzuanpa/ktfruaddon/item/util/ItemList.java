@@ -41,6 +41,33 @@ public enum ItemList implements IItemContainer{
     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4, CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4, CPUDieGT3699, CPUDieGT3699v2, CPUDieGT3699v3, CPUDieGT3699v4, CPUDieGT3680v3E, CPUDieGT3680v4E, CPUDieGT3699v3E, CPUDieGT3699v4E,
     
     CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4, CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4, CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4, CPUGT3680v3E, CPUGT3680v4E, CPUGT3699v3E, CPUGT3699v4E,
+      //Circuits
+    //These Tier NOT corresponding the Tier of GT Circuits
+    ResistanceT1, CapacitorT1, CoilT1,DiodeT1,
+    ResistanceT2, CapacitorT2, CoilT2,DiodeT2,
+    ResistanceT3, CapacitorT3, CoilT3,DiodeT3,
+    ResistanceT4, CapacitorT4, CoilT4,DiodeT4,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //itemComputer
     ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT3660,ComputerGT3680,ComputerGT3699,ComputerGT3660v2,ComputerGT3680v2,ComputerGT3699v2,ComputerGT3660v3,ComputerGT3680v3,ComputerGT3699v3,ComputerGT3660v4,ComputerGT3680v4,ComputerGT3699v4,ComputerGT3680v3e,ComputerGT3699v3e,ComputerGT3680v4e,ComputerGT3699v4e,
     //itemParticle
@@ -48,6 +75,7 @@ public enum ItemList implements IItemContainer{
 
     //fakeItemGuiI18n
     fakeItemPhotomask,fakeItemBoule,fakeItemLaserCutting,fakeItemSiliconPlateCleaned,fakeItemSiliconPlateOxidized,fakeItemSiliconPlateCoated,fakeItemSiliconPlateSoftBaked,fakeItemWafer,fakeItemSiliconWaferDeveloped,fakeItemSiliconWaferHardBaked,fakeItemSiliconWaferDoped,fakeItemSiliconWaferChecked,fakeItemDie
+
     ;
 
     //Copied from gt6
