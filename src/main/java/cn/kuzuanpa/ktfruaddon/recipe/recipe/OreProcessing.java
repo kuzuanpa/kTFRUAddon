@@ -14,7 +14,6 @@ import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.data.RM;
-import gregapi.oredict.OreDictMaterial;
 import gregapi.util.OM;
 import gregapi.util.ST;
 
@@ -63,8 +62,8 @@ public class OreProcessing {
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("potassiumcarbonate",1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.K2CO3,U));
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.K2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("potassiumcarbonate",1000)),ZL_IS);
         //NaCO3
-        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make("asodiumcarbonate",1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.Na2CO3,U));
-        RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.Na2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make("asodiumcarbonate",1000)),ZL_IS);
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.SodiumCarbonate.make(1000)),FL.array(FL.DistW.make(750)),OM.dust(MT.Na2CO3,U));
+        RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(MT.Na2CO3,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(flList.SodiumCarbonate.make(1000)),ZL_IS);
 
     }
 }
