@@ -30,41 +30,45 @@ public class ComputerBuilding {
         ), null, ZL_LONG, FL.array(FL.Sap_Rainbow.make(250)),ZL_FS, 0, 0, 0);
 
         //addRecipeX(T,GUt,Duration, ST.array(),FL.array(),FL.array(), );
-        //EDA
+
+        //EDA 设计电路 EU
         recipeManager.EDA.addRecipeX(T,32,36000, ST.array(IL.Circuit_Good.get(0), gRegistry.getItem(10102,0),gRegistry.getItem(10112,0), OP.plate.mat(MT.Sapphire,2)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.CPUPhotomask200um.get(1));
 
-        //Cut Boule to plate
+        //Cut Boule to plate 切割单晶硅 LU
         recipeManager.LaserCutter.addRecipeX(T,96,2000, ST.array(OP.bouleGt.mat(MT.Si, 1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchTier1.get(12));
 
-        //Clean
-        recipeManager.UltraCleanBath.addRecipeX(T,0,800, ST.array( ItemList.SiliconPlate8inchTier1.get(1)),FL.array(/*TODO*/),FL.array(ZL_FS), ItemList.SiliconPlate8inchCleanedTier1.get(1));
+        //Clean 清洗 TU
+        //T1 skipped clean
+        //recipeManager.UltraCleanBath.addRecipeX(T,0,800, ST.array( ItemList.SiliconPlate8inchTier1.get(1)),FL.array(/*TODO*/),FL.array(ZL_FS), ItemList.SiliconPlate8inchCleanedTier1.get(1));
 
-        //Oxidize
-        recipeManager.UltraCleanFurnace.addRecipeX(T,110,1200, ST.array(ItemList.SiliconPlate8inchCleanedTier1.get(1)),FL.array(FL.Steam.make(40000),FL.Oxygen.make(1000)),FL.array(ZL_FS), ItemList.SiliconPlate8inchOxidizedTier1.get(1));
+        //Oxidize 氧化 HU
+        //T1 skipped oxidize
+        //recipeManager.UltraCleanFurnace.addRecipeX(T,110,1200, ST.array(ItemList.SiliconPlate8inchCleanedTier1.get(1)),FL.array(FL.Steam.make(40000),FL.Oxygen.make(1000)),FL.array(ZL_FS), ItemList.SiliconPlate8inchOxidizedTier1.get(1));
 
-        //Coat
+        //Coat 涂胶 EU
         recipeManager.WaferCoater.addRecipeX(T,64,200, ST.array(ItemList.SiliconPlate8inchOxidizedTier1.get(1)),FL.array(/*TODO*/),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedTier1.get(1));
 
-        //SoftBake
-        recipeManager.UltraCleanDryer.addRecipeX(T,0,400, ST.array(ItemList.SiliconPlate8inchCoatedTier1.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchSoftBakedTier1.get(1));
+        //SoftBake 固化光刻胶 HU
+        //T1 skipped softbake
+        //recipeManager.UltraCleanDryer.addRecipeX(T,0,400, ST.array(ItemList.SiliconPlate8inchCoatedTier1.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchSoftBakedTier1.get(1));
 
-        //MaskAlign
+        //MaskAlign 光刻 EU+LU
         recipeManager.MaskAligner.addRecipeX(T, 120, 4000, ST.array(ItemList.SiliconPlate8inchSoftBakedTier1.get(1),ItemList.CPUPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer200um.get(1));
         recipeManager.MaskAligner.addRecipeX(T, 256, 4000, ST.array(ItemList.SiliconPlate8inchSoftBakedTier1.get(1),ItemList.CPUPhotomask72um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer72um.get(1));
 
-        //Develop
+        //Develop 显影 TU
         recipeManager.UltraCleanBath.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200um.get(1)),FL.array(/*TODO*/),FL.array(ZL_FS), ItemList.CPUWafer200umDeveloped.get(1));
 
-        //HardBake
+        //HardBake 除胶 HU
         recipeManager.UltraCleanFurnace.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200umDeveloped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUWafer200umHardBaked.get(1));
 
-        //Dope
+        //Dope 掺杂 TU
         recipeManager.UltraCleanBath.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer200umDoped.get(1));
 
-        //Check
+        //Check 检测 EU
         recipeManager.WaferTester.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200umDoped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUWafer200umChecked.get(1));
 
-        //Cut into Die
+        //Cut into Die 切割 LU
         recipeManager.LaserCutter.addRecipeX(T,0,400,new long[]{4000,1200}, ST.array(ItemList.CPUWafer200umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3386.get(37),ItemList.CPUDieTF3386.get(22));
 
 

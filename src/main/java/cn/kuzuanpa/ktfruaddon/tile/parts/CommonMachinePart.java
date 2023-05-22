@@ -76,7 +76,6 @@ public class CommonMachinePart extends MultiTileEntityBasicMachine {
             this.mTarget = null;
             tTarget.onStructureChange();
         }
-
         return false;
     }
     @Override

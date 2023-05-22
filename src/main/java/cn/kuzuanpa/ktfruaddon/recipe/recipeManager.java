@@ -29,6 +29,7 @@ public class recipeManager {
     , SmallDistillTower      = new Recipe.RecipeMap(null, "ktfru.recipe.smalldistilltower"  , "Small Distillation Tower"  , "Small Distillation Tower",  0, 1, RES_PATH_GUI + "machines/SmallDistillationTower",  1, 3, 0, 1, 6, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
     , TinyDistillTower       = new Recipe.RecipeMap(null, "ktfru.recipe.tinydistilltower"   , "Tiny Distillation Tower"   , "Tiny Distillation Tower",   0, 1, RES_PATH_GUI + "machines/TinyDistillationTower",   1, 3, 0, 1, 3, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
     , CVD                    = new Recipe.RecipeMap(null, "ktfru.recipe.cvd"                , "Chemical Vapor Depositor"  , "Chemical Vapor Depositor",  0, 1, RES_PATH_GUI + "machines/ChemicalVaporDepositor",  6, 3, 0, 1, 6, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
+    , Code                   = new Recipe.RecipeMap(null, "ktfru.recipe.code"               , ""  , "",  0, 1, RES_PATH_GUI + "machines/code",  9, 3, 0, 6, 6, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
 
     ;
     @Deprecated

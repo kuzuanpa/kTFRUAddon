@@ -75,9 +75,9 @@ public class fluidPreInit {
 
 
         //木煤气
-        flList.WoodTar.register("woodgas","Wood Gas",null,GAS,1000,277,-300,160);
+        flList.WoodTar.register("woodtar","Wood Tar",null,GAS,1000,277,-300,160);
         //煤焦油
-        flList.CoalTar.register("coalgas","Coal Gas",null,GAS,1000,277,-600,120);
+        flList.CoalTar.register("coaltar","Coal Tar",null,GAS,1000,277,-600,120);
 
         flList.CleanedOilExtraHeavy.register("cleanoilextraheavy","Cleaned Very Heavy Oil",null,LIQUID,1000,277,900,1000);
         flList.CleanedOilHeavy.register("cleanoilheavy","Cleaned Heavy Oil",null,LIQUID,1000,277,800,1000);
