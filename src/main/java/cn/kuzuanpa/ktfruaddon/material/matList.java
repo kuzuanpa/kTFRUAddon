@@ -1,8 +1,10 @@
 package cn.kuzuanpa.ktfruaddon.material;
 
 
+import gregapi.data.OP;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.render.TextureSet;
+import net.minecraft.item.ItemStack;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 
@@ -36,5 +38,17 @@ public enum matList {
     }
     public OreDictMaterial get() {
         return mat;
+    }
+    public ItemStack getDust(int amount){
+        return OP.dust.mat(this.mat,amount);
+    }
+    public ItemStack getDustTiny(int amount){
+        return OP.dustTiny.mat(this.mat,amount);
+    }
+    public ItemStack getDustDiv72(int amount){
+        return OP.dustDiv72.mat(this.mat,amount);
+    }
+    public ItemStack getDustSmall(int amount){
+        return OP.dustSmall.mat(this.mat,amount);
     }
 }
