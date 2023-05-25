@@ -31,13 +31,14 @@ public enum flList {
     //Oil Process And Plastics
     ,DesaltOilExtraHeavy,DesaltOilHeavy,DesaltOilMedium,DesaltOilNormal,DesaltOilLight
     ,CleanedOilExtraHeavy,CleanedOilHeavy,CleanedOilMedium,CleanedOilNormal,CleanedOilLight
-    ,CarbonMonoxide, OilDesulfurizationer,SulfuredOilDesulfurizationer,OilGas,InitalBottomOil,Naphtha
-    ,HypochlorousAcid,ChloricAcid,PerchloricAcid,Phosgene
-    ,Benzene
-    ,Methanol,Propanol,Propanediol
-    ,Formaldehyde,Acetaldehyde,Propionaldehyde
-    ,Acetylene,Acetone
-    ,Dichloromethane
+    ,/**一氧化碳**/CarbonMonoxide,/**石油脱硫剂**/ OilDesulfurizationer,/**硫化石油脱硫剂**/SulfuredOilDesulfurizationer,/**石油气**/OilGas,/**初底油**/InitalBottomOil,/**石脑油**/Naphtha
+    ,/**次氯酸**/HypochlorousAcid,/**氯酸**/ChloricAcid,/**高氯酸**/PerchloricAcid,/**光气**/Phosgene
+    ,/**苯**/Benzene
+    ,/**甲醇**/Methanol,/**丙醇**/Propanol,/**丙二醇**/Propanediol
+    ,/**甲醛**/Formaldehyde,/**乙醛**/Acetaldehyde,/**丙醛**/Propionaldehyde
+    ,/**乙炔**/Acetylene
+    ,/**丙酮**/Acetone
+    ,/**二氯甲烷**/Dichloromethane
     ,CoalTar, WoodTar
     ,BlendedFuel95,BlendedFuel92
     ;

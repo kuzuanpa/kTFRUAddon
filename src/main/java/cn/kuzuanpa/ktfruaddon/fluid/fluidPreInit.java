@@ -84,5 +84,8 @@ public class fluidPreInit {
         flList.CleanedOilMedium.register("cleanoilmedium","Cleaned Medium Oil",null,LIQUID,1000,277,700,1000);
         flList.CleanedOilNormal.register("cleanoilnormal","Cleaned Oil",null,LIQUID,1000,277,700,1000);
         flList.CleanedOilLight.register("cleanoillight","Cleaned Light Oil",null,LIQUID,1000,277,600,1000);
+        //苯
+        flList.Benzene.register("benzene","Benzene",matList.Benzene.mat, LIQUID);
+
     }
 }
