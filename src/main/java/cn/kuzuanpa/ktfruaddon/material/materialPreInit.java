@@ -9,6 +9,7 @@
 package cn.kuzuanpa.ktfruaddon.material;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import gregapi.data.MT;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 
@@ -67,8 +68,8 @@ public class materialPreInit {
         matList.AmmoniumIronIIISulfate.register(i++, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate", 368, 524, 230, 220, 242, 0, "NH"+NUM_SUB[4]+"Fe(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
         matList.AmmoniumIronIIISulfate.mat.put(TD.ItemGenerator.DUSTS);
 
-        matList.Sulfanilamide.register(i++, "Sulfanilamide", "Sulfanilamide",509, 510, 251, 251, 216, 2, "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4]);
-        matList.Sulfanilamide.mat.put(TD.ItemGenerator.DUSTS);
+        matList.AmmoniumSulfate.register(i++, "AmmoniumSulfate", "Ammonium Sulfate",509, 510, 251, 251, 216, 2, "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4]);
+        matList.AmmoniumSulfate.mat.put(TD.ItemGenerator.DUSTS);
 
         matList.CookedBauxide .register(i++, "CookedBauxide", "Cooked Bauxide", 2370, 3234, 229, 141, 0, 4, null);
         matList.CookedBauxide.mat.put(TD.ItemGenerator.DUSTS);
@@ -135,8 +136,7 @@ public class materialPreInit {
         matList.Dichloromethane.registerC(i++,"Dichloromethane","Dichloromethane",-97,39,255,255,255,255,"CH"+NUM_SUB[2]+"Cl"+NUM_SUB[2]);
         matList.Dichloromethane.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
         //醋酸钙
-        matList.CalciumAcetate.register(i++,"CalciumAcetate","Calcium Acetate",396,397,245,246,245,0,"CH"+NUM_SUB[3]+"COOCaOOCCH"+NUM_SUB[3]);
-        matList.CalciumAcetate.mat.put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
+        matList.CalciumAcetate.registerHeatDecomp(i++,"CalciumAcetate","Calcium Acetate",396+273,245,246,245,0,"CH"+NUM_SUB[3]+"COOCaOOCCH"+NUM_SUB[3],1,new matList.decomposingTarget(MT.CaCO3,1));
 
         matList.BPA.registerC(i++,"BPA","BPA",158,226,255,255,255,10,"CH"+NUM_SUB[3]+"C"+"(PhOH)"+NUM_SUB[2]+"CH"+NUM_SUB[3]);
         matList.BPA.mat.put(TD.Compounds.DECOMPOSABLE);

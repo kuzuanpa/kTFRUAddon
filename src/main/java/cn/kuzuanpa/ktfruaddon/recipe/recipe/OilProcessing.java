@@ -33,11 +33,11 @@ public class OilProcessing {
         RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Heavy.make(115),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilHeavy.make(115)) );
         RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_ExtraHeavy.make(115),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilExtraHeavy.make(100)));
 
-        recipeManager.HeatMixer.addRecipeX(false,150,14, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(4),flList.DesaltOilLight.make(100)),FL.array(flList.CleanedOilLight.make(100) ,flList.SulfuredOilDesulfurizationer.make(8)), ZL_IS);
-        recipeManager.HeatMixer.addRecipeX(false,150,20, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(6),flList.DesaltOilNormal.make(100)),FL.array(flList.CleanedOilNormal.make(100) ,flList.SulfuredOilDesulfurizationer.make(10)), ZL_IS);
-        recipeManager.HeatMixer.addRecipeX(false,150,26, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(8),flList.DesaltOilMedium.make(100)),FL.array(flList.CleanedOilMedium.make(100) ,flList.SulfuredOilDesulfurizationer.make(12)), ZL_IS);
-        recipeManager.HeatMixer.addRecipeX(false,150,32, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(10),flList.DesaltOilHeavy.make(100)),FL.array(flList.CleanedOilHeavy.make(100),flList.SulfuredOilDesulfurizationer.make(14)), ZL_IS);
-        recipeManager.HeatMixer.addRecipeX(false,150,38, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(12),flList.DesaltOilExtraHeavy.make(100)),FL.array(flList.CleanedOilExtraHeavy.make(100) ,flList.SulfuredOilDesulfurizationer.make(16)), ZL_IS);
+        recipeManager.HeatMixer.addRecipeX(false,150,14, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(4),flList.DesaltOilLight.make(100)),FL.array(flList.CleanedOilLight.make(100) ,flList.SulfuredOilDesulfurizationer.make(4)), ZL_IS);
+        recipeManager.HeatMixer.addRecipeX(false,150,20, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(6),flList.DesaltOilNormal.make(100)),FL.array(flList.CleanedOilNormal.make(100) ,flList.SulfuredOilDesulfurizationer.make(6)), ZL_IS);
+        recipeManager.HeatMixer.addRecipeX(false,150,26, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(8),flList.DesaltOilMedium.make(100)),FL.array(flList.CleanedOilMedium.make(100) ,flList.SulfuredOilDesulfurizationer.make(8)), ZL_IS);
+        recipeManager.HeatMixer.addRecipeX(false,150,32, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(10),flList.DesaltOilHeavy.make(100)),FL.array(flList.CleanedOilHeavy.make(100),flList.SulfuredOilDesulfurizationer.make(10)), ZL_IS);
+        recipeManager.HeatMixer.addRecipeX(false,150,38, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(12),flList.DesaltOilExtraHeavy.make(100)),FL.array(flList.CleanedOilExtraHeavy.make(100) ,flList.SulfuredOilDesulfurizationer.make(12)), ZL_IS);
 
         recipeManager.HeatMixer.addRecipe0(false,32,2400,FL.array(flList.SulfuredOilDesulfurizationer.make(1000),FL.Hydrogen.make(200)), FL.array(flList.OilDesulfurizationer.make(1000),MT.H2S.gas(U10,false)));
 
@@ -120,6 +120,7 @@ public class OilProcessing {
         FM.Burn         .addRecipe0(T, - 16, 18, flList.DesaltOilLight.make(1)                        , FL.CarbonDioxide.make(1), ZL_IS);
         FM.Burn         .addRecipe0(T, - 16, 24, flList.DesaltOilNormal.make(1)                       , FL.CarbonDioxide.make(1), ZL_IS);
 
+        RM.Centrifuge.addRecipe0(false,256,200,flList.OilGas.make(100),FL.array(flList.Benzene.make(30),FL.Hydrogen.make(20),FL.Nitrogen.make(10),flList.CarbonMonoxide.make(70)));
 
     }
 }

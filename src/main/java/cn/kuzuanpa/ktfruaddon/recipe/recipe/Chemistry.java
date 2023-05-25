@@ -8,15 +8,16 @@
  */
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
+import cn.kuzuanpa.ktfruaddon.material.matList;
 import gregapi.data.FL;
-import gregapi.data.FM;
+import gregapi.data.MT;
+import gregapi.data.OP;
 import gregapi.data.RM;
-import gregapi.util.ST;
 
-import static gregapi.data.CS.*;
+import static gregapi.data.CS.F;
 
 public class Chemistry {
     public Chemistry() {
-
+        RM.Mixer.addRecipe1(F,16,40, OP.dust.mat(MT.CaCO3,1),FL.array(FL.Vinegar_Grape.make(2000)),FL.array(FL.Water.make(1000),FL.CarbonDioxide.make(1000)), matList.CalciumAcetate.getDust(1));
     }
 }
