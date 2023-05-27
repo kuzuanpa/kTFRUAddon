@@ -75,7 +75,7 @@ public enum matList {
     }
 
     public void registerC(int id, String OreDictName, String EnglishName, int meltTempC, int boilTempC, int colorR, int colorG, int colorB, int colorA, String formula) {
-        register(id, OreDictName, EnglishName, meltTempC+235, boilTempC+235, colorR, colorG, colorB, colorA, formula);
+        register(id, OreDictName, EnglishName, meltTempC+273, boilTempC+235, colorR, colorG, colorB, colorA, formula);
     }
     public OreDictMaterial get() {
         return mat;
