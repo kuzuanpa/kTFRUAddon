@@ -46,7 +46,7 @@ public enum flList {
     public String name;
     /**This will create Solutions with transforming recipe**/
     public void registerSolution(String name, String localizedName, @NotNull OreDictMaterial material, int AmountPerUnit) {
-        fluid = FL.create(name,localizedName,material,1);
+        fluid = FL.create(name,localizedName,material,1,AmountPerUnit,277);
         this.name=name;
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make(fluid,AmountPerUnit)),FL.array(FL.DistW.make(800)), OM.dust(material,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);

@@ -8,9 +8,14 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
+import cn.kuzuanpa.ktfruaddon.client.TileEntityRenderExampleMultiBlock;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.exampleMachineCustomModel;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class clientProxy extends commonProxy {
     public void preInit(FMLPreInitializationEvent event) {
@@ -23,5 +28,10 @@ public class clientProxy extends commonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerRenderers(){
+        ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineCustomModel.class, new TileEntityRenderExampleMultiBlock());
     }
 }

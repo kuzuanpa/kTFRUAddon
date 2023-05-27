@@ -8,6 +8,7 @@
  *
  */
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseRoom;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -23,7 +24,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
-import static gregapi.data.CS.*;
+import static gregapi.data.CS.SIDE_BOTTOM;
 
 public class exampleMachineRoom extends TileEntityBaseRoom {
 
@@ -59,6 +60,7 @@ public class exampleMachineRoom extends TileEntityBaseRoom {
     //controls where to I/O, return null=any side
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
+
         return getAdjacentTank(SIDE_BOTTOM);
     }
 

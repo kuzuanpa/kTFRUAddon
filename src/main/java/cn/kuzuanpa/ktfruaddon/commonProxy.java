@@ -8,20 +8,23 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit;
-import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
+import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit;
+import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cpw.mods.fml.common.event.*;
 import gregapi.api.Abstract_Proxy;
+
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.PROXY;
 
 public class commonProxy extends Abstract_Proxy {
     public commonProxy() {
     }
-
+    public void registerRenderers() {
+    }
     public void preInit(FMLPreInitializationEvent aEvent) {
         new materialPreInit(aEvent);
         new tileEntityPreInit(aEvent);
@@ -29,10 +32,14 @@ public class commonProxy extends Abstract_Proxy {
         new fluidPreInit(aEvent);
     }
 
+
+
     public void init(FMLInitializationEvent aEvent) {
         new tileEntityInit(aEvent);
         new recipeInit(aEvent);
         new enchantInit();
+        PROXY.registerRenderers();
+
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {

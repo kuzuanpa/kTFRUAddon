@@ -11,7 +11,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 //This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseLimitedOutputMachine;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlock;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
@@ -29,7 +29,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
+public class exampleMachineCustomModel extends ModelRenderBaseMultiBlock {
 
     //决定机器大小
     //this controls the size of machine.
@@ -96,7 +96,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
     }
 
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure3(boolean shouldPartsTransparent) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
@@ -119,7 +119,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
             for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                 for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                     for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], shouldPartsTransparent?7:0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
                             tSuccess = ignoreMap[checkY][checkZ][checkX];
                             //FMLLog.log(Level.FATAL, "failed");
                         }
@@ -131,6 +131,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
         }
         return mStructureOkay;
     }
+
 
     //这是设置主方块的物品提示
     //controls tooltip of controller block
