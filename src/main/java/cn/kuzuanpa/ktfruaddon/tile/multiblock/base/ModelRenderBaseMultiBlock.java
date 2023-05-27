@@ -10,21 +10,42 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
+import gregapi.data.CS;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.ITexture;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
+import net.minecraft.block.Block;
 
-public abstract class ModelRenderBaseMultiBlock extends TileEntityBase10MultiBlockMachine {
-    public boolean usingModelRender = false;
-    public void setPartsTransparent(){
-        usingModelRender=true;
-        if (!this.checkStructure(true)){
-            usingModelRender=false;
-            this.checkStructure(true);
-        }
-    }
+import static gregapi.data.CS.FACING_ROTATIONS;
+import static gregapi.data.CS.T;
+
+public abstract class ModelRenderBaseMultiBlock extends TileEntityBase10MultiBlockMachine { public boolean usingModelRender = false;
     @Override
     public boolean checkStructure2(){
-        return checkStructure3(usingModelRender);
+        if (!checkStructure3(true)){
+            resetParts();
+            return false;
+        }return true;
     }
+
+    @Override public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        return mStructureOkay ? null : aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(mTexturesMaterial[FACING_ROTATIONS[mFacing][aSide]], mRGBa), BlockTextureDefault.get((mActive || worldObj == null ? mTexturesActive : mRunning ? mTexturesRunning : mTexturesInactive)[FACING_ROTATIONS[mFacing][aSide]])) : null;}
+
     public abstract boolean checkStructure3(boolean shouldPartsTransparent);
+
+    @Override
+    public boolean breakBlock() {
+        setStateOnOff(T);
+        CS.GarbageGT.trash(mTanksInput);
+        CS.GarbageGT.trash(mTanksOutput);
+        CS.GarbageGT.trash(mOutputItems);
+        CS.GarbageGT.trash(mOutputFluids);
+        breakBlock2();
+        resetParts();
+        return super.breakBlock();
+    }
+    public void breakBlock2(){}
+    public abstract void resetParts();
 
 }

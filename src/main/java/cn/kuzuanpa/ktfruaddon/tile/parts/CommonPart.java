@@ -17,7 +17,7 @@ public class CommonPart extends MultiTileEntityMultiBlockPart {
 
     @Override
     public int getLightOpacity(){
-        return mDesign==7?0:255;
+        return mDesign==1?0:255;
     }
     @Override
     public String getTileEntityName(){

@@ -33,7 +33,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
 
     //决定机器大小
     //this controls the size of machine.
-    public final short machineX = 1, machineY = 1, machineZ = 2;
+    public final short machineX = 5, machineY = 1, machineZ = 4;
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
@@ -69,7 +69,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
             {18002, 18002, 18002, 18002, 18002},
     }};
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
-    short k = getMultiTileEntityRegistryID();
+    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public short[][][] registryIDMap = {{
             {g, g, k, g, g},

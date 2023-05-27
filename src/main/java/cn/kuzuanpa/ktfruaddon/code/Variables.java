@@ -9,12 +9,7 @@
  */
 
 package cn.kuzuanpa.ktfruaddon.code;
-
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
-
 public class Variables {
-    public static MultiTileEntityRegistry gRegistry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
-    public static MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
     /**0:Triple Key:≡, 1:Benzene:⌬**/
     public static final String[] Symbols ={"\u2261","\u232c"};
 }
