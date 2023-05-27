@@ -49,6 +49,16 @@ public class utils {
             return false;
         }
     }
+    public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign, int aMode) {
+        TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
+        if (tTileEntity == aController) {
+            return true;
+        }
+        try {
+            ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
+        } catch (Throwable ignored){}
+        return true;
+    }
 
         public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(coord);
@@ -75,7 +85,16 @@ public class utils {
             return false;
         }
     }
-    public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
+    public static boolean resetTarget(ITileEntityMultiBlockController aController,ChunkCoordinates coord, int aDesign, int aMode) {
+        TileEntity tTileEntity = aController.getTileEntity(coord.posX, coord.posY, coord.posZ);
+        if (tTileEntity == aController) {
+            return true;
+        }
+        try {
+            ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
+        } catch (Throwable ignored){}
+        return true;
+    }   public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
         if (tTileEntity == null) return false;
         if (tTileEntity == aController) return true;
@@ -132,7 +151,7 @@ public class utils {
      * <pre>You can also use Dummy Structure Map,please turn to exampleMachine class to get a look into that.</pre>
      * <pre></pre>
     **/
-    private static void dontSpamMyIDE(){/*long JavaDoc can be annoying because it can fill whole screen when you hovered your mouse on it...*/};
+    private static void dontSpamMyIDE(){/*long JavaDoc is annoying because it can fill whole screen when you hovered your mouse on it...*/};
 
     /**
      * Detailed help can be found in utils.java
@@ -146,11 +165,11 @@ public class utils {
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return new ChunkCoordinates(resultX[Facing],oY +addY,resultZ[Facing]);
     }
-    public static int getRealX(byte Facing, int oX, int oY, int oZ, int addX, int addY, int addZ){
+    public static int getRealX(byte Facing, int oX, int addX, int addZ){
         int[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         return resultX[Facing];
     }
-    public static int getRealZ(byte Facing, int oX, int oY, int oZ, int addX, int addY, int addZ){
+    public static int getRealZ(byte Facing, int oZ, int addX, int addZ){
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }
@@ -168,6 +187,14 @@ public class utils {
         return resultZ[Facing];
     }
 
+    public static int offsetX(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
+        int[] resultX = {0, 0, tX - offsetX, tX + offsetX, tX + offsetZ, tX - offsetZ, 0, 0};
+        return resultX[Facing];
+    }
+    public static int offsetZ(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
+        int[] resultZ = {0, 0, tZ + offsetZ, tZ - offsetZ, tZ + offsetX, tZ - offsetX, 0, 0};
+        return resultZ[Facing];
+    }
 
     public static class GTTileEntity {
         public  int aRegistryMeta;

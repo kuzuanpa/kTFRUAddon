@@ -53,7 +53,6 @@ public class TileEntityRenderExampleMultiBlock extends TileEntitySpecialRenderer
         int brightX = bright % 65536;
         int brightY = bright / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-        multiBlockTile.setPartsTransparent();
 
         //Rotate and move the model into position
         GL11.glTranslated(x + .5f, y, z + 0.5f);
