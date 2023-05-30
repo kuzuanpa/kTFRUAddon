@@ -2,12 +2,22 @@
  * This class was created by <kuzuanpa>. It is distributed as
  * part of the kTFRUAddon Mod. Get the Source Code in github:
  * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
  * 
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  *
  */
-package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.model;
 //This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 
@@ -29,14 +39,14 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class exampleMachineCustomModel extends ModelRenderBaseMultiBlock {
+public class exampleMachineModel extends ModelRenderBaseMultiBlock {
 
     //决定机器大小
     //this controls the size of machine.
-    public final short machineX = 5, machineY = 1, machineZ = 4;
+    public final short machineX = 4, machineY = 2, machineZ = 1;
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
-    public final short xMapOffset = -2, zMapOffset = 0;
+    public final short xMapOffset = -3,yMapOffset=-1,zMapOffset = 0;
     //映射表方向:
     //                 |
     //                 |
@@ -63,28 +73,25 @@ public class exampleMachineCustomModel extends ModelRenderBaseMultiBlock {
     //这里决定每个参与构成本机器的方块的子id
     //Controls every block needed to build the machine
     public static int[][][] blockIDMap = {{
-            {31002, 31002, 0, 31002, 31002},
-            {31002, 31002, 31002, 31002, 31002},
-            {31002, 31002, 31002, 31002, 31002},
-            {31002, 31002, 31002, 31002, 31002},
-    }};
+            {31002, 31002, 31002,31002 }
+    },{
+            {31002, 31002, 31002,0 }
+    },};
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public short[][][] registryIDMap = {{
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-    }};
+            {k, k, k, k},
+    },{
+            {k, k, k, k},
+    },};
     //T是忽略此位置的方块 ,F是正常检测
     //T = ignore ,F = normally check
     public static boolean[][][] ignoreMap = {{
-            {F, F, T, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-    }};
+            {F, F, F, F},
+    },{
+            {F, F, F, T},
+    },};
 
     //change value there to set usage of every block.
     public int getUsage(int blockID ,short registryID){
@@ -94,6 +101,13 @@ public class exampleMachineCustomModel extends ModelRenderBaseMultiBlock {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
+    public int getBlockID(int checkX, int checkY, int checkZ){
+        return blockIDMap[checkY][checkZ][checkX];
+    }
+
+    public  boolean isIgnored(int checkX, int checkY, int checkZ){ return ignoreMap[checkY][checkZ][checkX];}
+    //Special Model Machines need to set every part to transparent, so we need to use parts in our own registry.
+    public short getRegistryID(int x,int y,int z){return k;}
 
     @Override
     public boolean checkStructure3(boolean shouldPartsTransparent) {
@@ -101,16 +115,17 @@ public class exampleMachineCustomModel extends ModelRenderBaseMultiBlock {
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
             tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,zMapOffset);
+            tY+=yMapOffset;
             tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,zMapOffset);
-            int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
-                for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
-                    for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                        if (!utils.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], shouldPartsTransparent?1:0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
-                            tSuccess = ignoreMap[checkY][checkZ][checkX];
+            int cX, cY, cZ;
+            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
+                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
+                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
+                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, cX, cZ), tY + cY, utils.getCheckZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
+                            tSuccess = F;
                             //FMLLog.log(Level.FATAL, "failed");
                         }
-                        //  FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + ignoreMap[checkY][checkZ][checkX]);
+                        //  FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,cX,cZ) + "/" + cY + "/" +  getCheckZ(mFacing,tZ,cX,cZ)  + "/" + ignoreMap[cY][cZ][cX]);
                     }
                 }
             }
@@ -123,12 +138,13 @@ public class exampleMachineCustomModel extends ModelRenderBaseMultiBlock {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,zMapOffset);
+            tY+=yMapOffset;
             tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,zMapOffset);
-            int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < machineY; checkY++) {
-                for (checkZ = 0; checkZ < machineZ; checkZ++) {
-                    for (checkX = 0; checkX < machineX; checkX++) {
-                        utils.resetTarget(this, utils.getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getCheckZ(mFacing, tZ, checkX, checkZ), 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]));
+            int cX, cY, cZ;
+            for (cY  = 0; cY < machineY; cY++) {
+                for (cZ = 0; cZ < machineZ; cZ++) {
+                    for (cX = 0; cX < machineX; cX++) {
+                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getCheckX(mFacing, tX, cX, cZ), tY + cY, utils.getCheckZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
                     }
                 }
             }

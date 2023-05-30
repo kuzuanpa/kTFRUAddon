@@ -8,8 +8,10 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
+import cn.kuzuanpa.ktfruaddon.client.TileEntityRenderCircuitAssembler;
 import cn.kuzuanpa.ktfruaddon.client.TileEntityRenderExampleMultiBlock;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.exampleMachineCustomModel;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -32,6 +34,7 @@ public class clientProxy extends commonProxy {
 
     @SideOnly(Side.CLIENT)
     public void registerRenderers(){
-        ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineCustomModel.class, new TileEntityRenderExampleMultiBlock());
+        ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TileEntityRenderExampleMultiBlock());
+        ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TileEntityRenderCircuitAssembler());
     }
 }

@@ -83,27 +83,20 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             int tX = xCoord, tY = yCoord, tZ = zCoord;
             if (worldObj.blockExists(tX, tY, tZ)) {
                 boolean tSuccess = T;
-                if (getFacing() == (short) 2) {
-                    tX -= xMapOffset;
-                } else if (getFacing() == (short) 3) {
-                    tX += xMapOffset;
-                } else if (getFacing() == (short) 4) {
-                    tZ += xMapOffset;
-                } else if (getFacing() == (short) 5) {
-                    tZ -= xMapOffset;
-                } else {
-                    tSuccess = F;
-                }
-                int checkX, checkY, checkZ;
-                for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
-                    for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
-                        for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                            if (isSubSource(getBlockID(checkX,checkY,checkZ))) {
-                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 2, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX, checkY, checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
-                                if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ)));
+                tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,0);
+                tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,0);
+                int cX, cY, cZ;
+                for (cY  = 0; cY < machineY&&tSuccess; cY++) {
+                    for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
+                        for (cX = 0; cX < machineX&&tSuccess; cX++) {
+                            if(!isIgnored(cX,cY,cZ)) {
+                                if (isSubSource(getBlockID(cX, cY, cZ))) {
+                                    if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 2, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                        tSuccess = F;
+                                    if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ)));
+                                } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 2, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                    tSuccess = F;
                             }
-                            else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, getCheckZ(mFacing, tZ, checkX, checkZ), getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ), 2, getUsage(getBlockID(checkX,checkY,checkZ), getRegistryID(checkX,checkY,checkZ)))) tSuccess = isIgnored(checkX,checkY,checkZ);
-
                     }
                 }
             }
