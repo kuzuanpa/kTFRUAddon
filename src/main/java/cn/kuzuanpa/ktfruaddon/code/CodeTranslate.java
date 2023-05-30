@@ -13,23 +13,36 @@ package cn.kuzuanpa.ktfruaddon.code;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.data.IL;
 import gregapi.oredict.OreDictMaterial;
+import gregapi.oredict.OreDictPrefix;
 import net.minecraft.item.ItemStack;
+
+import java.util.Map;
 
 /**
  * Translate ID and Names that Got from Minecraft Game to Codes
  */
 public class CodeTranslate {
         public static String itemToCode(ItemStack stack){
+            if(stack==null)return null;
             if(stack.getUnlocalizedName().startsWith("gt.multiitem.")) for (IL gItem: IL.values()) if (gItem!=null&&gItem.exists()&&gItem.get(1)!=null&& gItem.get(1).getItem()==stack.getItem()&&gItem.get(1).getItemDamage()==stack.getItemDamage()) return "IL."+gItem.toString()+".get("+stack.stackSize+")";
             if(stack.getUnlocalizedName().startsWith("ktfru.item.")) for (ItemList kItem:ItemList.values())if (kItem!=null&&kItem.get(1)!=null&&kItem.get(1).getItem()==stack.getItem()&&kItem.get(1).getItemDamage()==stack.getItemDamage()) return "ItemList."+kItem.toString()+".get("+stack.stackSize+")";
-            if(stack.getItem().getUnlocalizedName().startsWith("gt.block.")) return stack.getUnlocalizedName();
+            if(stack.getItem().getUnlocalizedName().startsWith("gt.")) {
+            String tmp= OreDictPrefixToCode(stack);
+            if (tmp!=null)return tmp;
             if(stack.getItem().getUnlocalizedName().startsWith("gt.multitileentity.")) return "gRegistry.getItem("+stack.getItemDamage()+")";
-            if(stack.getItem().getUnlocalizedName().startsWith("gt.meta.")) return OreDickPrefixToCode(stack);
-            return stack.getUnlocalizedName()+"/"+stack.getItem().getUnlocalizedName();
+            }
+            return "No Translate found"+stack.getUnlocalizedName()+"/"+stack.getItem().getUnlocalizedName();
         }
         @SuppressWarnings("Not really finished")
         public static String materialIDToCode(int id){
-        return "OreDictMaterial.get("+id+"/*"+OreDictMaterial.get(id).toString()+"*/)";
+        return "OreDictMaterial.get("+id+"/*"+OreDictMaterial.get(id).mNameInternal+"*/)";
         }
-        public static String OreDickPrefixToCode(ItemStack stack){return "OM."+stack.getItem().getUnlocalizedName().replace("gt.meta.","")+"("+materialIDToCode(stack.getItemDamage())+","+stack.stackSize+")";}
+        public static String OreDictPrefixToCode(ItemStack stack){
+            final Map<String, OreDictPrefix> sPrefixes = OreDictPrefix.sPrefixes;
+            for (OreDictPrefix prefix:sPrefixes.values()){
+                if (prefix.mat(OreDictMaterial.get(stack.getItemDamage()),1)!=null &&prefix.mat(OreDictMaterial.get(stack.getItemDamage()),1).getItem() ==stack.getItem())
+                    return "OP."+prefix.mNameInternal+".mat("+materialIDToCode(stack.getItemDamage())+","+stack.stackSize+")";
+            }
+            return null;
+        }
 }

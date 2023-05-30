@@ -16,7 +16,6 @@ import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.logging.log4j.Level;
 
-import static gregapi.data.CS.ERR;
 import static gregapi.data.CS.T;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine {
@@ -25,8 +24,8 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
     if (isServerSide()) {
         openGUI(aPlayer, aSide);
         try {
-            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,CodeTranslate.itemToCode(slot(i)));
-        }catch (Throwable e) {e.printStackTrace(ERR);}
+            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+CodeTranslate.itemToCode(slot(i)));
+        }catch (Throwable ignored) {}
     }
     return T;
 }

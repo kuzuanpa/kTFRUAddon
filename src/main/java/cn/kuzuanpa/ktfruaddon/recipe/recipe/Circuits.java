@@ -56,23 +56,17 @@ public class Circuits {
         recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Nb,32)/*TODO:这里是聚四氟乙烯*/), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(32));
         recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Ta,32)/*TODO:这里是聚四氟乙烯*/), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(32));
 
-        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(4),   IL.Circuit_Board_Basic.get(1),    ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
-        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(4),   IL.Circuit_Board_Basic.get(1),    ItemList.CoilT2.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
-        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(4),   IL.Circuit_Board_Basic.get(1),    ItemList.CoilT1.get(1),ItemList.CapacitorT2.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
-        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(4),   IL.Circuit_Board_Basic.get(1),    ItemList.CoilT2.get(1),ItemList.CapacitorT2.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
+        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(4),   IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(4),    IL.Circuit_Board_Good.get(1),     ItemList.CoilT1.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
-        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(4),    IL.Circuit_Board_Good.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
-        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(4),    IL.Circuit_Board_Good.get(1),     ItemList.CoilT1.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
-        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(4),    IL.Circuit_Board_Good.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
+        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(4),    IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,256 ,160,ST.array(IL.Circuit_Part_Advanced.get(4),IL.Circuit_Board_Advanced.get(1), ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Advanced.get(1));
+        recipeManager.Assembler.addRecipeX(F,256 ,160,ST.array(IL.Circuit_Part_Advanced.get(4),IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Advanced.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,512 ,160,ST.array(IL.Circuit_Part_Elite.get(4),   IL.Circuit_Board_Elite.get(1),    ItemList.CoilT2.get(4),ItemList.CapacitorT2.get(8),ItemList.ResistanceT2.get(20),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Elite.get(1));
+        recipeManager.Assembler.addRecipeX(F,512 ,160,ST.array(IL.Circuit_Part_Elite.get(4),   IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(4),ItemList.CapacitorT2.get(8),ItemList.ResistanceT2.get(20),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Elite.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,2048,160,ST.array(IL.Circuit_Part_Master.get(4),  IL.Circuit_Board_Master.get(1),   ItemList.CoilT3.get(8),ItemList.CapacitorT3.get(24),ItemList.ResistanceT3.get(64),ItemList.DiodeT2.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Master.get(1));
+        recipeManager.Assembler.addRecipeX(F,2048,160,ST.array(IL.Circuit_Part_Master.get(4),  IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT3.get(8),ItemList.CapacitorT3.get(24),ItemList.ResistanceT3.get(64),ItemList.DiodeT2.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Master.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,8192,160,ST.array(IL.Circuit_Part_Ultimate.get(4),IL.Circuit_Board_Ultimate.get(1), ItemList.CoilT4.get(8),ItemList.CapacitorT3.get(64),ItemList.ResistanceT4.get(128),ItemList.DiodeT3.get(16)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Ultimate.get(1));
+        recipeManager.Assembler.addRecipeX(F,8192,160,ST.array(IL.Circuit_Part_Ultimate.get(4),IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT4.get(8),ItemList.CapacitorT3.get(64),ItemList.ResistanceT4.get(128),ItemList.DiodeT3.get(16)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Ultimate.get(1));
 
     }
 }
