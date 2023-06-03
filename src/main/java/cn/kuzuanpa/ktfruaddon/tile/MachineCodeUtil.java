@@ -25,6 +25,7 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
         openGUI(aPlayer, aSide);
         try {
             for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+CodeTranslate.itemToCode(slot(i)));
+            if(aPlayer.isSneaking())CodeTranslate.genItemListAll();
         }catch (Throwable ignored) {}
     }
     return T;
