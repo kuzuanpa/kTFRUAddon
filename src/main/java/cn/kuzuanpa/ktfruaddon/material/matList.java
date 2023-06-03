@@ -42,7 +42,7 @@ public enum matList {
     /** Register Material that decomposes when heating
      * @param decompAmount how many unit of this material will decompose to decompTargets material
      */
-    public void registerHeatDecomp(int id, String OreDictName, String EnglishName, int decompTempK, int colorR, int colorG, int colorB, int colorA, String formula, int decompAmount,decomposingTarget... decompTargets) {
+    public OreDictMaterial registerHeatDecomp(int id, String OreDictName, String EnglishName, int decompTempK, int colorR, int colorG, int colorB, int colorA, String formula, int decompAmount,decomposingTarget... decompTargets) {
         mat = OreDictMaterial.createMaterial(id, OreDictName, EnglishName);
         mat.setTextures(TextureSet.SET_METALLIC);
         mat.setRGBa(colorR, colorG, colorB, colorA);
@@ -55,8 +55,9 @@ public enum matList {
         ItemStack[] outputs=new ItemStack[outputsTmp.size()];
         outputsTmp.toArray(outputs);
         RM.CrucibleSmelting.addRecipe(new Recipe(F, F, F, ST.array(getDust(decompAmount)),outputs, null, null, ZL_FS, ZL_FS, 0, 0,decompTempK));
+    return mat;
     }
-    public void registerWithDust(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
+    public OreDictMaterial registerWithDust(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
         mat = OreDictMaterial.createMaterial(id, OreDictName, EnglishName);
         mat.setTextures(TextureSet.SET_METALLIC);
         mat.setRGBa(colorR, colorG, colorB, colorA);
@@ -64,18 +65,20 @@ public enum matList {
         mat.setOriginalMod(MOD_DATA);
         if (formula != null)mat.mTooltipChemical = formula;
         mat.put(TD.ItemGenerator.DUSTS);
+        return mat;
     }
-    public void register(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
+    public OreDictMaterial register(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
         mat = OreDictMaterial.createMaterial(id, OreDictName, EnglishName);
         mat.setTextures(TextureSet.SET_METALLIC);
         mat.setRGBa(colorR, colorG, colorB, colorA);
         mat.heat(meltTempK, boilTempK);
         mat.setOriginalMod(MOD_DATA);
         if (formula != null)mat.mTooltipChemical = formula;
+        return mat;
     }
 
-    public void registerC(int id, String OreDictName, String EnglishName, int meltTempC, int boilTempC, int colorR, int colorG, int colorB, int colorA, String formula) {
-        register(id, OreDictName, EnglishName, meltTempC+273, boilTempC+235, colorR, colorG, colorB, colorA, formula);
+    public OreDictMaterial registerC(int id, String OreDictName, String EnglishName, int meltTempC, int boilTempC, int colorR, int colorG, int colorB, int colorA, String formula) {
+        return register(id, OreDictName, EnglishName, meltTempC+273, boilTempC+235, colorR, colorG, colorB, colorA, formula);
     }
     public OreDictMaterial get() {
         return mat;

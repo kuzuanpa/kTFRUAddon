@@ -11,12 +11,13 @@
 package cn.kuzuanpa.ktfruaddon.item.items;
 
 
+import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.item.multiitem.MultiItemRandom;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
-import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
-
-//These Item is to resolve i18n problems in DidYouKnow fakeRecipe and more...
+/**These Item is to resolve i18n problems in DidYouKnow fakeRecipe and more...
+ * Notice: Don't change the order of codes and always append newline
+ **/
 public class fakeItemGuiI18n extends MultiItemRandom {
     public fakeItemGuiI18n() {
         super(MOD_ID, "ktfru.item.fake.guii18n");
