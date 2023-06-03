@@ -13,10 +13,11 @@ package cn.kuzuanpa.ktfruaddon.item.items;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
-import net.minecraft.item.Item;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
-
+/**
+ * Notice: Don't change the order of codes and always append newline
+ **/
 public class itemComputer extends MultiItemRandom {
     public itemComputer() {
     super(MOD_ID, "ktfru.item.it.computer");

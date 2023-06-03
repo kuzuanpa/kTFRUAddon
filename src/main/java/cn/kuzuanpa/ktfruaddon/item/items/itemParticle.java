@@ -13,7 +13,9 @@ import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
-
+/**
+ * Notice: Don't change the order of codes and always append newline
+ **/
 public class itemParticle extends MultiItemRandom {
     public itemParticle() {
         super(MOD_ID, "ktfru.item.particle");
