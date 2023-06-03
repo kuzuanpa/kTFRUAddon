@@ -63,7 +63,8 @@ public class materialPreInit {
 //        tExamplium.setOriginalMod(MOD_DATA); // Gives your Mod the credit for creating this Material.
 //        //tExamplium.aspects(gregapi.data.TC.METALLUM, 3); // Thaumcraft Aspects related to this Material.
 //
-        int i=30011;
+        //Don't change this value after release!
+        int i=22000;
         matList.AmmoniumDichromate.register(i++, "AmmoniumDichromate", "Ammonium Dichromate",456, 460, 255, 160, 51, 0,  "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2]);
         matList.AmmoniumDichromate.mat.put(TD.ItemGenerator.DUSTS);
 
