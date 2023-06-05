@@ -19,6 +19,7 @@ import static gregapi.data.CS.NUM_SUB;
  **/
 public class materialPreInit {
     public materialPreInit(FMLPreInitializationEvent aEvent) {
+        //todo: make these id static when releasing
         int i=21999;
         matList.AmmoniumDichromate.registerWithDust(++i, "AmmoniumDichromate", "Ammonium Dichromate",456, 460, 255, 160, 51, 0,  "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2]);
         matList.AmmoniumChromicSulfate.registerWithDust(++i, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate",456, 460, 72, 0, 161, 0,  "NH"+NUM_SUB[4]+"Cr(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
