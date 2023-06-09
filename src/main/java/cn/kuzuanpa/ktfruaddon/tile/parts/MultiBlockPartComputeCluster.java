@@ -21,7 +21,7 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.base.TileEntityBase07Paintable;
+import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.ST;
 import gregapi.util.UT;
@@ -40,7 +40,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
+public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
@@ -49,6 +49,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
     public boolean isRunning;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0,0,0};
+    public MultiBlockPartComputeCluster(){}
     public void updateComputePower() {
         ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
@@ -151,24 +152,28 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
             UT.NBT.setNumber(aNBT, "gt.target.y", this.mTargetPos.posY);
             UT.NBT.setNumber(aNBT, "gt.target.z", this.mTargetPos.posZ);
         }
+        aNBT.setByte(NBT_FACING, mFacing);
+
     }
     public static IIconContainer
             sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/test/colored/sides"),
             sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/test/colored/top"),
             sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/test/colored/bottom"),
             sTextureNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/colored/nodeside"),
+            sTextureNodeFront = new Textures.BlockIcons.CustomIcon("machines/test/texture/nodefront"),
+            sTextureFront = new Textures.BlockIcons.CustomIcon("machines/test/texture/front"),
             sOverlaySides       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/sides"),
-            sOverlayTop         = new Textures.BlockIcons.CustomIcon("machines/test/overlay/top"),
-            sOverlayBottom      = new Textures.BlockIcons.CustomIcon("machines/test/overlay/bottom"),
-            sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside");
+            sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/front"),
+            sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside"),
+            sOverlayNodeFront = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodefront");
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         switch(aRenderPass) {
-            case 0: return aShouldSideBeRendered[aSide] ?SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa), BlockTextureDefault.get(sOverlayTop)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa), BlockTextureDefault.get(sOverlayBottom)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlaySides)) : null;
-            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[3] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null ;
-            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[2] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null;
-            case 3: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null;
-            case 4: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)):null;
+            case 0: return aShouldSideBeRendered[aSide] ?SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa)):mFacing==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureFront,mRGBa),BlockTextureDefault.get(sOverlayFront)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlaySides)) : null;
+            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[3] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)): null ;
+            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[2] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)): null;
+            case 3: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)): null;
+            case 4: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)):null;
         }
         return null;
     }
@@ -179,10 +184,6 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
     @Override
     public void addCollisionBoxesToList2(AxisAlignedBB aAABB, List<AxisAlignedBB> aList, Entity aEntity) {
        box(aAABB,aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[ 16], PX_P[ 16]);
-       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 1], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 3], PX_P[16]+0.0001F);
-       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 5], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
-       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 9], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[11], PX_P[16]+0.0001F);
-       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[13], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[15], PX_P[16]+0.0001F);
     }
     @Override
     public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
@@ -195,16 +196,20 @@ public class MultiBlockPartComputeCluster extends TileEntityBase07Paintable impl
         }
         return F;
     }
+    @Override public boolean[] getValidSides() {return SIDES_HORIZONTAL;}
+    @Override public byte getDefaultSide() {return SIDE_FRONT;}
 
 
-@Override
-public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll,mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3]);
+    @Override
+    public IPacket getClientDataPacket(boolean aSendAll) {
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3]);
         }
 
-@Override
-public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
-        mDisplaySlot=aData;
+    @Override
+    public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
+        mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
+        setDirectionData(aData[3]);
+        for (short i=0;i<4;i++)mDisplaySlot[i]=aData[i+4];
         return T;
         }
     //Every thing from MultiBlockPart

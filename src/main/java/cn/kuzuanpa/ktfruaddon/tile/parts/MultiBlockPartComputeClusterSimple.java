@@ -38,7 +38,7 @@ import net.minecraft.util.ChunkCoordinates;
 import java.util.List;
 
 import static gregapi.data.CS.*;
-
+//todo: apply changes in common cluster
 public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeCluster implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
