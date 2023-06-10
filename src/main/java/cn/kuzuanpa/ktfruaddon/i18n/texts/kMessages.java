@@ -8,9 +8,11 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.code;
-public class Variables {
-    /**0:Triple Key:≡, 1:Benzene:⌬**/
-    public static final String[] Symbols ={"\u2261","\u232c"};
+package cn.kuzuanpa.ktfruaddon.i18n.texts;
+public class kMessages {
+    public static final String
+             FUEL_BATTERY_0="ktfru.tooltip.msg.energy.fuelbattery.0"
+            ,FUEL_BATTERY_1="ktfru.tooltip.msg.energy.fuelbattery.1"
+                    ;
 
 }
