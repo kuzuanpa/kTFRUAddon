@@ -143,7 +143,7 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
             if (mEnergy >= mRate) {
-                Util.emitEnergyToNetwork(mEnergyTypeEmitted, mRate, 1, this);
+                ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeEmitted, mRate, 1, this);
                 mEnergy -= mRate;
             }
             if (!changingStaticTank&&mEnergy < mRate * 2 && !mStopped &&slot(0)!=null&&slot(1)!=null) {

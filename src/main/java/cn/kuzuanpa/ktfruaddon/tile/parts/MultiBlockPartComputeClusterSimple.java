@@ -21,6 +21,7 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
+import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.ST;
 import gregapi.util.UT;
@@ -39,7 +40,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 //todo: apply changes in common cluster
-public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeCluster implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
+public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
     public ChunkCoordinates mTargetPos = null;
     public ITileEntityMultiBlockController mTarget = null;
 
@@ -48,7 +49,6 @@ public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeClu
     public boolean isRunning;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0};
-    @Override
     public void updateComputePower() {
         ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
@@ -190,17 +190,22 @@ public class MultiBlockPartComputeClusterSimple extends MultiBlockPartComputeClu
         return F;
     }
 
+    @Override public boolean[] getValidSides() {return SIDES_HORIZONTAL;}
+    @Override public byte getDefaultSide() {return SIDE_FRONT;}
 
-@Override
-public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll,mDisplaySlot[0], mDisplaySlot[1]);
-        }
 
-@Override
-public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
-        mDisplaySlot=aData;
+    @Override
+    public IPacket getClientDataPacket(boolean aSendAll) {
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3]);
+    }
+
+    @Override
+    public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
+        mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
+        setDirectionData(aData[3]);
+        for (short i=0;i<4;i++)mDisplaySlot[i]=aData[i+4];
         return T;
-        }
+    }
     //Every thing from MultiBlockPart
     public ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
         if (this.mTargetPos == null) {
@@ -221,7 +226,6 @@ public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandle
             return aCheckValidity && this.mTarget != null && !this.mTarget.checkStructure(false) ? null : this.mTarget;
         }
     }
-@Override
     public void setTarget(ITileEntityMultiBlockController aTarget, int aDesign, int aMode) {
         this.mTarget = aTarget;
         this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();

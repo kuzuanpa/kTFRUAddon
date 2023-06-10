@@ -211,7 +211,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
         setDirectionData(aData[3]);
         for (short i=0;i<4;i++)mDisplaySlot[i]=aData[i+4];
         return T;
-        }
+    }
     //Every thing from MultiBlockPart
     public ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
         if (this.mTargetPos == null) {
