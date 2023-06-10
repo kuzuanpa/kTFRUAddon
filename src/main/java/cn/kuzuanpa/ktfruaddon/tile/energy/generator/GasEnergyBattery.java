@@ -19,6 +19,8 @@
 //This class is complete copied from GT6U
 package cn.kuzuanpa.ktfruaddon.tile.energy.generator;
 
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.code.TagData;
@@ -45,7 +47,6 @@ import gregapi.tileentity.machines.ITileEntityAdjacentOnOff;
 import gregapi.tileentity.machines.ITileEntityRunningActively;
 import gregapi.util.ST;
 import gregapi.util.UT;
-import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,7 +64,7 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 /**
- * @author Gregorius Techneticies
+ * @author kuzuanpa
  */
 public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray {
     public boolean mStopped = F;
@@ -82,7 +83,8 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     public boolean changingStaticTank =false;
     //stores materialId of positive and negative electrode.
     public short[] mDisplayMat = {0,0};
-    public GasEnergyBattery(){}//NBT
+    public GasEnergyBattery(){}
+    //NBT
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -119,11 +121,13 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(Chat.CYAN     + LH.get(LH.RECIPES) + ": " + Chat.WHITE + LH.get(mRecipes.mNameInternal));
+        aList.add(Chat.GREEN    + LH.get(LH.FLUID_INPUT)+ ": " + Chat.WHITE + LH.get(kTooltips.SIDE_FRONT)+", "+LH.get(kTooltips.SIDE_BACK)+" "+LH.get(kTooltips.AUTO));
+        aList.add(Chat.RED      + LH.get(LH.FLUID_OUTPUT)+ ": " + Chat.WHITE + LH.get(kTooltips.SIDE_RIGHT)+", "+LH.get(kTooltips.SIDE_LEFT)+" "+LH.get(kTooltips.AUTO));
         aList.add(LH.getToolTipEfficiency(mEfficiency));
         LH.addEnergyToolTips(this, aList, null, mEnergyTypeEmitted, null, LH.get(LH.FACE_FRONT));
         aList.add(Chat.ORANGE   + LH.get(LH.NO_GUI_FUNNEL_TAP_TO_TANK));
         aList.add(Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
-        aList.add(Chat.DGRAY    + LH.get("ktfru.tooltip.battery.gas.0"));
+        aList.add(Chat.DGRAY    + LH.get(kTooltips.FUEL_BATTERY_0));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
@@ -142,10 +146,12 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
+            //emitEnergy
             if (mEnergy >= mRate) {
                 ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeEmitted, mRate, 1, this);
                 mEnergy -= mRate;
             }
+            //doRecipe
             if (!changingStaticTank&&mEnergy < mRate * 2 && !mStopped &&slot(0)!=null&&slot(1)!=null) {
                 mActivity.mActive = F;
                 Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, T, Long.MAX_VALUE, NI, mTanksRecipe, slot(0),slot(1));
@@ -176,12 +182,10 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
                 }
             }
             if (mEnergy < 0) mEnergy = 0;
-
+            //AutoOutput
             if (getOutputTankHasFluid()!=null) {
+                FL.move(getOutputTankHasFluid(), getAdjacentTank(mFacing));
                 FL.move(getOutputTankHasFluid(), getAdjacentTank(OPOS[mFacing]));
-                if (FL.gas(getOutputTankHasFluid()) && !WD.hasCollide(worldObj, getOffset(OPOS[mFacing], 1))) {
-                    getOutputTankHasFluid().setEmpty();
-                }
             }
         }
     }
@@ -202,9 +206,11 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
             return 1;
         }
         if(aTool.equals(TOOL_monkeywrench)){
-            changingStaticTank= !changingStaticTank;
-            aChatReturn.add(LH.get("ktfru.message.energy.battery.changing-static-tank"));
+            if (changingStaticTank) aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_1));
+            else aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_0));
+            changingStaticTank = !changingStaticTank;
         }
+        if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
         return 0;
     }
 

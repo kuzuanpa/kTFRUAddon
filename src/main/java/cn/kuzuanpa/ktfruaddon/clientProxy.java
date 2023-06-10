@@ -32,6 +32,7 @@ public class clientProxy extends commonProxy {
         super.postInit(event);
     }
 
+
     @SideOnly(Side.CLIENT)
     public void registerRenderers(){
         ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TileEntityRenderExampleMultiBlock());

@@ -10,6 +10,7 @@ package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
+import cn.kuzuanpa.ktfruaddon.i18n.i18nInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.material.prefix.prefixPreInit;
@@ -45,6 +46,7 @@ public class commonProxy extends Abstract_Proxy {
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
+        new i18nInit(aEvent);
     }
 
     public void serverStarting(FMLServerStartingEvent aEvent) {

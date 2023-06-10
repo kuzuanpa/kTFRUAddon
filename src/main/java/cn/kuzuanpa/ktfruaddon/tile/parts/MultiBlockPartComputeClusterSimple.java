@@ -49,6 +49,7 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     public boolean isRunning;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0};
+    public MultiBlockPartComputeClusterSimple(){}
     public void updateComputePower() {
         ComputePower =0;
         for (ItemStack stack:getInventory()) if (stack != null) {
@@ -88,19 +89,21 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass)) {
-    if (aChatReturn != null) {
-        boolean saidSomething = F;
-        for (int i=0;i < 2;i++) if (slot(i) != null) {
-            saidSomething = T;
-            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
+            if (aChatReturn != null) {
+                boolean saidSomething = F;
+                for (int i=0;i < 2;i++) if (slot(i) != null) {
+                    saidSomething = T;
+                    aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
+                }
+                if (!saidSomething) aChatReturn.add("Contains no Compute Node");
+                updateComputePower();
+                aChatReturn.add("Total Computing Power:"+getComputePower());
+                aChatReturn.add("Is this cluster Running:"+isRunning);
+            }
         }
-        if (!saidSomething) aChatReturn.add("Contains no Compute Node");
-        updateComputePower();
-        aChatReturn.add("Total Computing Power:"+getComputePower());
-        aChatReturn.add("Is this cluster Running:"+isRunning);
+        if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
+        return 0;
     }
-}
-    return 0;}
 
     // Inventory Stuff
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
@@ -149,8 +152,10 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
         if (this.mTargetPos != null) {
             UT.NBT.setBoolean(aNBT, "gt.target", true);
             UT.NBT.setNumber(aNBT, "gt.target.x", this.mTargetPos.posX);
+            UT.NBT.setNumber(aNBT, "gt.target.y", this.mTargetPos.posY);
             UT.NBT.setNumber(aNBT, "gt.target.z", this.mTargetPos.posZ);
         }
+
     }
     public static IIconContainer
             sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/test/colored/sides"),
@@ -158,9 +163,9 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
             sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/test/colored/bottom"),
             sTextureNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/colored/nodeside"),
             sOverlaySides       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/sides"),
-    sOverlayTop         = new Textures.BlockIcons.CustomIcon("machines/test/overlay/top"),
-    sOverlayBottom      = new Textures.BlockIcons.CustomIcon("machines/test/overlay/bottom"),
-    sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside");
+            sOverlayTop         = new Textures.BlockIcons.CustomIcon("machines/test/overlay/top"),
+            sOverlayBottom      = new Textures.BlockIcons.CustomIcon("machines/test/overlay/bottom"),
+            sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside");
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         switch(aRenderPass) {
@@ -177,8 +182,6 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     @Override
     public void addCollisionBoxesToList2(AxisAlignedBB aAABB, List<AxisAlignedBB> aList, Entity aEntity) {
        box(aAABB,aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[ 16], PX_P[ 16]);
-       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[ 5], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
-       box(aAABB,aList, PX_P[ 0]-0.0001F, PX_P[13], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[15], PX_P[16]+0.0001F);
     }
     @Override
     public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
@@ -193,17 +196,16 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     @Override public boolean[] getValidSides() {return SIDES_HORIZONTAL;}
     @Override public byte getDefaultSide() {return SIDE_FRONT;}
 
-
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3]);
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1]);
     }
 
     @Override
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
         mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
         setDirectionData(aData[3]);
-        for (short i=0;i<4;i++)mDisplaySlot[i]=aData[i+4];
+        for (short i=0;i<2;i++)mDisplaySlot[i]=aData[i+4];
         return T;
     }
     //Every thing from MultiBlockPart

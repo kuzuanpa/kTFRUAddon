@@ -85,21 +85,24 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
         aList.add(LH.Chat.ORANGE   + LH.get(LH.NO_GUI_CLICK_TO_INTERACT)   + " (" + LH.get(LH.FACE_SIDES) + ")");
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
+    @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass)) {
-    if (aChatReturn != null) {
-        boolean saidSomething = F;
-        for (int i=0;i < 4;i++) if (slot(i) != null) {
-            saidSomething = T;
-            aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
+            if (aChatReturn != null) {
+                boolean saidSomething = F;
+                for (int i=0;i < 4;i++) if (slot(i) != null) {
+                    saidSomething = T;
+                    aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
+                }
+                if (!saidSomething) aChatReturn.add("Contains no Compute Node");
+                updateComputePower();
+                aChatReturn.add("Total Computing Power:"+getComputePower());
+                aChatReturn.add("Is this cluster Running:"+isRunning);
+            }
         }
-        if (!saidSomething) aChatReturn.add("Contains no Compute Node");
-        updateComputePower();
-        aChatReturn.add("Total Computing Power:"+getComputePower());
-        aChatReturn.add("Is this cluster Running:"+isRunning);
+        if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
+        return 0;
     }
-}
-    return 0;}
 
     // Inventory Stuff
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[4];}
@@ -152,7 +155,6 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
             UT.NBT.setNumber(aNBT, "gt.target.y", this.mTargetPos.posY);
             UT.NBT.setNumber(aNBT, "gt.target.z", this.mTargetPos.posZ);
         }
-        aNBT.setByte(NBT_FACING, mFacing);
 
     }
     public static IIconContainer
