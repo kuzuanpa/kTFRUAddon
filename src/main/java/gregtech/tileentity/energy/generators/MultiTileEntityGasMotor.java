@@ -215,7 +215,8 @@ public class MultiTileEntityGasMotor extends TileEntityBase09FacingSingle implem
     @Override public boolean canDrop(int aInventorySlot) {return T;}
 
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {return aEmitting && aEnergyType == mEnergyTypeEmitted;}
-    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aSide == mFacing && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);}
+    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {
+        return aSide == mFacing && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);}
     @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {return Math.min(mRate, mEnergy);}
     @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return mRate;}
     @Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return mRate;}
