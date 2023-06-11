@@ -21,6 +21,7 @@ package cn.kuzuanpa.ktfruaddon.tile;
 
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.GasEnergyBattery;
+import cn.kuzuanpa.ktfruaddon.tile.energy.generator.ManualMotor;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.*;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.parts.CommonPart;
@@ -117,6 +118,7 @@ public class tileEntityInit {
         aMat = ANY.W;                   aRegistry.add("Small Gas Battery (" + aMat.getLocal() + ")"             , "Engines"                             ,  i++,  1304, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_FUELMAP, FM.Gas, NBT_EFFICIENCY, 3500, NBT_OUTPUT,  384, NBT_ENERGY_EMITTED, TD.Energy.EU), "PLP", "SMS", "GOC", 'M', OP.casingMachineDouble.dat(aMat), 'O', OP.pipeQuadruple.dat(aMat), 'P', OP.plateTriple.dat(aMat), 'S', OP.rotor.dat(aMat), 'G', OP.gearGt.dat(aMat), 'C', OP.gearGtSmall.dat(aMat), 'L', OD.itemLubricant);
         aMat = MT.Ir;                   aRegistry.add("Small Gas Battery (" + aMat.getLocal() + ")"             , "Engines"                             ,  i++,  1304, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_FUELMAP, FM.Gas, NBT_EFFICIENCY, 3500, NBT_OUTPUT,  512, NBT_ENERGY_EMITTED, TD.Energy.EU), "PLP", "SMS", "GOC", 'M', OP.casingMachineDouble.dat(aMat), 'O', OP.pipeQuadruple.dat(aMat), 'P', OP.plateTriple.dat(aMat), 'S', OP.rotor.dat(aMat), 'G', OP.gearGt.dat(aMat), 'C', OP.gearGtSmall.dat(aMat), 'L', OD.itemLubricant);
         aMat = MT.SteelGalvanized;      aRegistry.add("Fusion Battery"                                          , "Multiblock Machines"                 ,  i++, 17101, GasEnergyBattery.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F, NBT_FUELMAP ,recipeManager.GasBattery,NBT_WASTE_ENERGY,false, NBT_OUTPUT, 16, NBT_OUTPUT_MIN,    16, NBT_OUTPUT_MAX,   32                       , NBT_ENERGY_ACCEPTED, TD.Energy.TU, NBT_ENERGY_EMITTED, TD.Energy.EU));
+        aMat = MT.SteelGalvanized;      aRegistry.add("Manual Battery"                                          , "Multiblock Machines"                 ,  i++, 17101, ManualMotor.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F, NBT_OUTPUT, 16, NBT_ENERGY_EMITTED, TD.Energy.EU,"ktfru.nbt.energy.manualmotor.maxtime",600));
 
 
         //20000-29999,Single block machines
