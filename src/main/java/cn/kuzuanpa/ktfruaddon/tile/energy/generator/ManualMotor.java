@@ -13,6 +13,8 @@ package cn.kuzuanpa.ktfruaddon.tile.energy.generator;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
+import gregapi.network.INetworkHandler;
+import gregapi.network.IPacket;
 import gregapi.old.Textures;
 import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
@@ -39,12 +41,14 @@ import net.minecraftforge.fluids.IFluidTank;
 import java.util.Collection;
 import java.util.List;
 
+import static cn.kuzuanpa.ktfruaddon.tile.kTileNBT.Generator.ManualMotorNBT;
 import static gregapi.data.CS.*;
 
 public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
     public boolean mStopped = F;
     public short mEfficiency = 10000;
-    public long mEnergy = 0, mRateMin = 32,mRateMax  = 64,timeRemaining=0,timeGainRate=50,maxTime=800;
+    public byte vProgressLevel;
+    public long mEnergy = 0, mOutput= 32, mOutputMin = 16, mOutputMax = 64,timeRemaining=0,timeGainRate=8,maxTime=800;
     public TagData mEnergyTypeEmitted = TD.Energy.RU;
     public TE_Behavior_Active_Trinary mActivity = null;
 
@@ -54,11 +58,13 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
         mEnergy = aNBT.getLong(NBT_ENERGY);
         mActivity = new TE_Behavior_Active_Trinary(this, aNBT);
         if (aNBT.hasKey(NBT_STOPPED)) mStopped = aNBT.getBoolean(NBT_STOPPED);
-        if (aNBT.hasKey(NBT_OUTPUT_MIN)) mRateMin = aNBT.getLong(NBT_OUTPUT_MIN);
-        if (aNBT.hasKey(NBT_OUTPUT_MAX)) mRateMax = aNBT.getLong(NBT_OUTPUT_MAX);
+        if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
+        if (aNBT.hasKey(NBT_OUTPUT)) mOutput = aNBT.getLong(NBT_OUTPUT);
+        if (aNBT.hasKey(NBT_OUTPUT_MAX)) mOutputMax = aNBT.getLong(NBT_OUTPUT_MAX);
         if (aNBT.hasKey(NBT_EFFICIENCY)) mEfficiency = (short) UT.Code.bind_(0, 10000, aNBT.getShort(NBT_EFFICIENCY));
         if (aNBT.hasKey(NBT_ENERGY_EMITTED)) mEnergyTypeEmitted = TagData.createTagData(aNBT.getString(NBT_ENERGY_EMITTED));
-        if (aNBT.hasKey("ktfru.nbt.energy.manualmotor.maxtime")) maxTime = aNBT.getLong("ktfru.nbt.energy.manualmotor.maxtime");
+        if (aNBT.hasKey(ManualMotorNBT.MAX_TIME)) maxTime = aNBT.getLong(ManualMotorNBT.MAX_TIME);
+        if (aNBT.hasKey(ManualMotorNBT.TIME_GAIN_EACH_PRESS)) timeGainRate = aNBT.getLong(ManualMotorNBT.TIME_GAIN_EACH_PRESS);
     }
 
     @Override
@@ -76,10 +82,25 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
         super.addToolTips(aList, aStack, aF3_H);
     }
 
+    public byte getProgressLevel() {
+        if(isServerSide()) {
+            float temp = ((float) timeRemaining / (float) maxTime);
+            return (byte) (temp > 0.8 ? 5 : temp > 0.6 ? 4 : temp > 0.4 ? 3 : temp > 0.2 ? 2 : 1);
+        }
+        return 0;
+    }
+
     public long getRate(){
-        float temp = ((float)timeRemaining/(float)maxTime);
-        long outputRange = mRateMax-mRateMin;
-        return (int) (temp>0.8?mRateMax:temp>0.6?mRateMax-outputRange*0.3:temp>0.4?mRateMax-outputRange*0.6:temp>0.2?mRateMax-outputRange*0.9:mRateMin);
+        byte temp = getProgressLevel();
+        long outputRange = mOutputMax - mOutputMin;
+        switch (temp){
+            case 5 :return mOutputMax;
+            case 4 :return (long) (mOutputMax -outputRange*0.25);
+            case 3 :return (long) (mOutputMax -outputRange*0.5);
+            case 2 :return (long) (mOutputMax -outputRange*0.75);
+            case 1 :return mOutputMin;
+        }
+        return 0;
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
@@ -101,7 +122,6 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
         if (isServerSide()&&aPlayer.isEntityAlive()) {
             timeRemaining+=timeGainRate;
         }
-
         return T;
     }
     @Override
@@ -113,6 +133,7 @@ return 0;
 
     @Override
     public boolean onTickCheck(long aTimer) {
+        if(vProgressLevel!=getProgressLevel())updateClientData();
         return mActivity.check(mStopped) || super.onTickCheck(aTimer);
     }
 
@@ -154,10 +175,10 @@ return 0;
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (!aShouldSideBeRendered[aSide]) return null;
         if (aSide == mFacing)
-            return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[0], mRGBa), BlockTextureDefault.get((mActivity.mState > 0 ? sOverlaysActive : sOverlays)[0]));
+            return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[0], mRGBa), BlockTextureDefault.get(mActivity.mState > 0 ? (vProgressLevel==5?sOverlaysActiveFrontSpeed[0]:vProgressLevel==4?sOverlaysActiveFrontSpeed[1]:vProgressLevel==3?sOverlaysActiveFrontSpeed[2]:vProgressLevel==2?sOverlaysActiveFrontSpeed[3]:sOverlaysActiveFrontSpeed[4]) : sOverlays[0]));
         if (aSide == OPOS[mFacing])
             return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[1], mRGBa), BlockTextureDefault.get((mActivity.mState > 0 ? sOverlaysActive : sOverlays)[1]));
-        return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[2], mRGBa), BlockTextureDefault.get((mActivity.mState > 0 ? sOverlaysActive : sOverlays)[2]));
+        return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[2], mRGBa), BlockTextureDefault.get(mActivity.mState > 0 ? (vProgressLevel==5?sOverlaysActiveSidesSpeed[0]:vProgressLevel==4?sOverlaysActiveSidesSpeed[1]:vProgressLevel==3?sOverlaysActiveSidesSpeed[2]:vProgressLevel==2?sOverlaysActiveSidesSpeed[3]:sOverlaysActiveSidesSpeed[4]) : sOverlays[2]));
     }
 
     @Override
@@ -187,17 +208,17 @@ return 0;
 
     @Override
     public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {
-        return getRate();
+        return mOutput;
     }
 
     @Override
     public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {
-        return getRate();
+        return mOutputMin;
     }
 
     @Override
     public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {
-        return getRate();
+        return mOutputMax;
     }
 
     @Override
@@ -239,21 +260,44 @@ return 0;
 
     // Icons
     public static IIconContainer[] sColoreds = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/colored/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/colored/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/colored/sides"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/colored/front"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/colored/back"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/colored/sides"),
     }, sOverlays = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay/sides"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay/front"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay/back"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay/sides"),
     }, sOverlaysActive = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay_active/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay_active/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay_active/sides"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active/back"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active/back")
+    },
+            sOverlaysActiveFrontSpeed =new IIconContainer[]{
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/full"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/fast"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/medium"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/slow"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/least"),
+            },   sOverlaysActiveSidesSpeed =new IIconContainer[]{
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/full"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/fast"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/medium"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/slow"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/least"),
     };
-
     @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.generator.manualmotor";
+    }
+    @Override    public IPacket getClientDataPacket(boolean aSendAll) {
+        return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mActivity.mState,getProgressLevel());
+    }
+
+    @Override
+    public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
+        mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
+        setDirectionData(aData[3]);
+        mActivity.mState=aData[4];
+        vProgressLevel=aData[5];
+        return T;
     }
 }
