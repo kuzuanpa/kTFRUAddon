@@ -26,11 +26,11 @@ import static gregapi.data.CS.*;
 public enum ItemList implements IItemContainer{
     //itemIT
     SiliconBoulePure, MoO2Boule, MoO2BoulePure,
-    SiliconPlate8inchTier1,SiliconPlate8inchTier2, MoO2Plate8inchTier1,MoO2Plate8inchTier2, GraphitePlate8inch,
-    SiliconPlate8inchCleanedTier1,SiliconPlate8inchCleanedTier2, MoO2Plate8inchCleanedTier1,MoO2Plate8inchCleanedTier2, GraphitePlate8inchCleaned,
-    SiliconPlate8inchOxidizedTier1,SiliconPlate8inchOxidizedTier2, MoO2Plate8inchOxidizedTier1,MoO2Plate8inchOxidizedTier2, GraphitePlate8inchOxidized,
-    SiliconPlate8inchCoatedTier1,SiliconPlate8inchCoatedTier2, MoO2Plate8inchCoatedTier1,MoO2Plate8inchCoatedTier2, GraphitePlate8inchCoated,
-    SiliconPlate8inchSoftBakedTier1,SiliconPlate8inchSoftBakedTier2, MoO2Plate8inchSoftBakedTier1,MoO2Plate8inchSoftBakedTier2, GraphitePlate8inchSoftBaked,
+    SiliconPlate8inchT1,SiliconPlate8inchT2, MoO2Plate8inchT1,MoO2Plate8inchT2, GraphitePlate8inch,
+    SiliconPlate8inchCleanedT1,SiliconPlate8inchCleanedT2, MoO2Plate8inchCleanedT1,MoO2Plate8inchCleanedT2, GraphitePlate8inchCleaned,
+    SiliconPlate8inchOxidizedT1,SiliconPlate8inchOxidizedT2, MoO2Plate8inchOxidizedT1,MoO2Plate8inchOxidizedT2, GraphitePlate8inchOxidized,
+    SiliconPlate8inchCoatedT1,SiliconPlate8inchCoatedT2, MoO2Plate8inchCoatedT1,MoO2Plate8inchCoatedT2, GraphitePlate8inchCoated,
+    SiliconPlate8inchSoftBakedT1,SiliconPlate8inchSoftBakedT2, MoO2Plate8inchSoftBakedT1,MoO2Plate8inchSoftBakedT2, GraphitePlate8inchSoftBaked,
     CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask40um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm,
     CPUWafer200um, CPUWafer72um, CPUWafer40um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, 
     CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer40umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, 
@@ -41,7 +41,16 @@ public enum ItemList implements IItemContainer{
     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4, CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4, CPUDieGT3699, CPUDieGT3699v2, CPUDieGT3699v3, CPUDieGT3699v4, CPUDieGT3680v3E, CPUDieGT3680v4E, CPUDieGT3699v3E, CPUDieGT3699v4E,
     
     CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4, CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4, CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4, CPUGT3680v3E, CPUGT3680v4E, CPUGT3699v3E, CPUGT3699v4E,
-//Circuits
+
+    CircuitPartPhotomaskT3, CircuitPartPhotomaskT4, CircuitPartPhotomaskT5, CircuitPartPhotomaskT6,
+    CircuitPartWaferT3, CircuitPartWaferT4, CircuitPartWaferT5, CircuitPartWaferT6,
+    CircuitPartWaferT3Developed, CircuitPartWaferT4Developed, CircuitPartWaferT5Developed, CircuitPartWaferT6Developed,
+    CircuitPartWaferT3HardBaked, CircuitPartWaferT4HardBaked, CircuitPartWaferT5HardBaked, CircuitPartWaferT6HardBaked,
+    CircuitPartWaferT3Doped, CircuitPartWaferT4Doped, CircuitPartWaferT5Doped, CircuitPartWaferT6Doped,
+    CircuitPartWaferT3Checked, CircuitPartWaferT4Checked, CircuitPartWaferT5Checked, CircuitPartWaferT6Checked,
+
+
+    //Circuits
     //These Tier NOT corresponding the Tier of GT Circuits
     ResistanceT1, CapacitorT1, CoilT1,DiodeT1,
     ResistanceT2, CapacitorT2, CoilT2,DiodeT2,

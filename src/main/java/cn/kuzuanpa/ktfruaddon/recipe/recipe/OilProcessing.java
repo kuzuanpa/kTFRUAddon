@@ -61,6 +61,7 @@ public class OilProcessing {
 
         recipeManager.SmallDistillTower.addRecipe0(F,196,120,FL.array(flList.InitalBottomOil.make(400)),FL.array(FL.Diesel.make(120),FL.Kerosine.make(200),flList.Naphtha.make(80),FL.Petrol.make(320),flList.OilGas.make(100)), OM.dust(matList.OilScarp.mat,U4));
         recipeManager.DistillTower     .addRecipe0(F,196, 95,FL.array(flList.InitalBottomOil.make(400)),FL.array(FL.Diesel.make(120),FL.Kerosine.make(200),flList.Naphtha.make(80),FL.Petrol.make(320),flList.OilGas.make(100)), OM.dust(matList.OilScarp.mat,U4));
+        RM.Centrifuge.addRecipe0(F,80,100,FL.array(FL.Gas_Natural.make(400)),FL.array(FL.CarbonDioxide.make(4),FL.Methane.make(20),FL.Propane.make(160),FL.Butane.make(180)),ZL_IS);
 
         RM.Centrifuge.addRecipeX(F,64,80,new long[]{8000,8000} , ST.array(OM.dust(matList.OilScarp.get(),U4)),ZL_FS,FL.array(FL.Kerosine.make(20),FL.Lubricant.make(60)), dustTiny.mat(MT.WaxParaffin, 1), dustTiny.mat(MT.Asphalt, 1));
         RM.Centrifuge.addRecipeX(F,64,80,new long[]{8000,8000} , ST.array(OM.dust(matList.OilScarp.get(),U)),ZL_FS,FL.array(FL.Kerosine.make(180),FL.Lubricant.make(540)), dust.mat(MT.WaxParaffin, 1), dust.mat(MT.Asphalt, 1));
