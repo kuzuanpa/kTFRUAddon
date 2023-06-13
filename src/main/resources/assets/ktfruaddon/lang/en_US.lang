@@ -1,3 +1,13 @@
+ktfru.tooltip.common.auto=(auto)
+ktfru.tooltip.common.side.back=bottom
+ktfru.tooltip.common.side.bottom=left
+ktfru.tooltip.common.side.front=top
+ktfru.tooltip.common.side.left=Front
+ktfru.tooltip.common.side.right=Back
+ktfru.tooltip.common.side.top=right
+ktfru.tooltip.energy.fuelbattery.0=Use Monkey Wrench to Change Contents.
+ktfru.tooltip.msg.energy.fuelbattery.0=Changing Contents
+ktfru.tooltip.msg.energy.fuelbattery.1=Done Changing Contents
 ktfru.multitileentity.10000=Small Gas Turbine (Bronze)
 ktfru.multitileentity.10001=Small Gas Turbine (Steel)
 ktfru.multitileentity.10002=Small Gas Turbine (Invar)

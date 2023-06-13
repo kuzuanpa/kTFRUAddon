@@ -27,35 +27,35 @@ public class itemIT extends MultiItemRandom {
         ItemList.MoO2Boule.set(addItem(9702, "MoO2 Boule", "Ready to Cut into Plates"));
         ItemList.MoO2BoulePure.set(addItem(9703, "Pure MoO2 Boule", "Ready to Cut into Plates"));
 
-        ItemList.SiliconPlate8inchTier1.set(addItem(9800, "SiliconPlate8inchTier1", "SiliconPlate8inchTier1"));
-        ItemList.SiliconPlate8inchTier2.set(addItem(9801, "SiliconPlate8inchTier2", "SiliconPlate8inchTier2"));
-        ItemList.MoO2Plate8inchTier1.set(addItem(9802, "MoO2Plate8inchTier1", "MoO2Plate8inchTier1"));
-        ItemList.MoO2Plate8inchTier2.set(addItem(9803, "MoO2Plate8inchTier2", "MoO2Plate8inchTier2"));
-        ItemList.GraphitePlate8inch.set(addItem(9804, "GraphitePlate8inchTier1", "GraphitePlate8inchTier1"));
+        ItemList.SiliconPlate8inchT1.set(addItem(9800, "SiliconPlate8inchT1", "SiliconPlate8inchT1"));
+        ItemList.SiliconPlate8inchT2.set(addItem(9801, "SiliconPlate8inchT2", "SiliconPlate8inchT2"));
+        ItemList.MoO2Plate8inchT1.set(addItem(9802, "MoO2Plate8inchT1", "MoO2Plate8inchT1"));
+        ItemList.MoO2Plate8inchT2.set(addItem(9803, "MoO2Plate8inchT2", "MoO2Plate8inchT2"));
+        ItemList.GraphitePlate8inch.set(addItem(9804, "GraphitePlate8inchT1", "GraphitePlate8inchT1"));
 
-        ItemList.SiliconPlate8inchCleanedTier1.set(addItem(9810, "SiliconPlate8inchCleanedTier1", "SiliconPlate8inchCleanedTier1"));
-        ItemList.SiliconPlate8inchCleanedTier2.set(addItem(9811, "SiliconPlate8inchCleanedTier2", "SiliconPlate8inchCleanedTier2"));
-        ItemList.MoO2Plate8inchCleanedTier1.set(addItem(9812, "MoO2Plate8inchCleanedTier1", "MoO2Plate8inchCleanedTier1"));
-        ItemList.MoO2Plate8inchCleanedTier2.set(addItem(9813, "MoO2Plate8inchCleanedTier2", "MoO2Plate8inchCleanedTier2"));
-        ItemList.GraphitePlate8inchCleaned.set(addItem(9814, "GraphitePlate8inchCleanedTier1", "GraphitePlate8inchCleanedTier1"));
+        ItemList.SiliconPlate8inchCleanedT1.set(addItem(9810, "SiliconPlate8inchCleanedT1", "SiliconPlate8inchCleanedT1"));
+        ItemList.SiliconPlate8inchCleanedT2.set(addItem(9811, "SiliconPlate8inchCleanedT2", "SiliconPlate8inchCleanedT2"));
+        ItemList.MoO2Plate8inchCleanedT1.set(addItem(9812, "MoO2Plate8inchCleanedT1", "MoO2Plate8inchCleanedT1"));
+        ItemList.MoO2Plate8inchCleanedT2.set(addItem(9813, "MoO2Plate8inchCleanedT2", "MoO2Plate8inchCleanedT2"));
+        ItemList.GraphitePlate8inchCleaned.set(addItem(9814, "GraphitePlate8inchCleanedT1", "GraphitePlate8inchCleanedT1"));
 
-        ItemList.SiliconPlate8inchOxidizedTier1.set(addItem(9820, "SiliconPlate8inchOxidizedTier1", "SiliconPlate8inchOxidizedTier1"));
-        ItemList.SiliconPlate8inchOxidizedTier2.set(addItem(9821, "SiliconPlate8inchOxidizedTier2", "SiliconPlate8inchOxidizedTier2"));
-        ItemList.MoO2Plate8inchOxidizedTier1.set(addItem(9822, "MoO2Plate8inchOxidizedTier1", "MoO2Plate8inchOxidizedTier1"));
-        ItemList.MoO2Plate8inchOxidizedTier2.set(addItem(9823, "MoO2Plate8inchOxidizedTier2", "MoO2Plate8inchOxidizedTier2"));
-        ItemList.GraphitePlate8inchOxidized.set(addItem(9824, "GraphitePlate8inchOxidizedTier1", "GraphitePlate8inchOxidizedTier1"));
+        ItemList.SiliconPlate8inchOxidizedT1.set(addItem(9820, "SiliconPlate8inchOxidizedT1", "SiliconPlate8inchOxidizedT1"));
+        ItemList.SiliconPlate8inchOxidizedT2.set(addItem(9821, "SiliconPlate8inchOxidizedT2", "SiliconPlate8inchOxidizedT2"));
+        ItemList.MoO2Plate8inchOxidizedT1.set(addItem(9822, "MoO2Plate8inchOxidizedT1", "MoO2Plate8inchOxidizedT1"));
+        ItemList.MoO2Plate8inchOxidizedT2.set(addItem(9823, "MoO2Plate8inchOxidizedT2", "MoO2Plate8inchOxidizedT2"));
+        ItemList.GraphitePlate8inchOxidized.set(addItem(9824, "GraphitePlate8inchOxidizedT1", "GraphitePlate8inchOxidizedT1"));
 
-        ItemList.SiliconPlate8inchCoatedTier1.set(addItem(9830, "SiliconPlate8inchCoatedTier1", "SiliconPlate8inchCoatedTier1"));
-        ItemList.SiliconPlate8inchCoatedTier2.set(addItem(9831, "SiliconPlate8inchCoatedTier2", "SiliconPlate8inchCoatedTier2"));
-        ItemList.MoO2Plate8inchCoatedTier1.set(addItem(9832, "MoO2Plate8inchCoatedTier1", "MoO2Plate8inchCoatedTier1"));
-        ItemList.MoO2Plate8inchCoatedTier2.set(addItem(9833, "MoO2Plate8inchCoatedTier2", "MoO2Plate8inchCoatedTier2"));
-        ItemList.GraphitePlate8inchCoated.set(addItem(9834, "GraphitePlate8inchCoatedTier1", "GraphitePlate8inchCoatedTier1"));
+        ItemList.SiliconPlate8inchCoatedT1.set(addItem(9830, "SiliconPlate8inchCoatedT1", "SiliconPlate8inchCoatedT1"));
+        ItemList.SiliconPlate8inchCoatedT2.set(addItem(9831, "SiliconPlate8inchCoatedT2", "SiliconPlate8inchCoatedT2"));
+        ItemList.MoO2Plate8inchCoatedT1.set(addItem(9832, "MoO2Plate8inchCoatedT1", "MoO2Plate8inchCoatedT1"));
+        ItemList.MoO2Plate8inchCoatedT2.set(addItem(9833, "MoO2Plate8inchCoatedT2", "MoO2Plate8inchCoatedT2"));
+        ItemList.GraphitePlate8inchCoated.set(addItem(9834, "GraphitePlate8inchCoatedT1", "GraphitePlate8inchCoatedT1"));
 
-        ItemList.SiliconPlate8inchSoftBakedTier1.set(addItem(9840, "SiliconPlate8inchSoftBakedTier1", "SiliconPlate8inchSoftBakedTier1"));
-        ItemList.SiliconPlate8inchSoftBakedTier2.set(addItem(9841, "SiliconPlate8inchSoftBakedTier2", "SiliconPlate8inchSoftBakedTier2"));
-        ItemList.MoO2Plate8inchSoftBakedTier1.set(addItem(9842, "MoO2Plate8inchSoftBakedTier1", "MoO2Plate8inchSoftBakedTier1"));
-        ItemList.MoO2Plate8inchSoftBakedTier2.set(addItem(9843, "MoO2Plate8inchSoftBakedTier2", "MoO2Plate8inchSoftBakedTier2"));
-        ItemList.GraphitePlate8inchSoftBaked.set(addItem(9844, "GraphitePlate8inchSoftBakedTier1", "GraphitePlate8inchSoftBakedTier1"));
+        ItemList.SiliconPlate8inchSoftBakedT1.set(addItem(9840, "SiliconPlate8inchSoftBakedT1", "SiliconPlate8inchSoftBakedT1"));
+        ItemList.SiliconPlate8inchSoftBakedT2.set(addItem(9841, "SiliconPlate8inchSoftBakedT2", "SiliconPlate8inchSoftBakedT2"));
+        ItemList.MoO2Plate8inchSoftBakedT1.set(addItem(9842, "MoO2Plate8inchSoftBakedT1", "MoO2Plate8inchSoftBakedT1"));
+        ItemList.MoO2Plate8inchSoftBakedT2.set(addItem(9843, "MoO2Plate8inchSoftBakedT2", "MoO2Plate8inchSoftBakedT2"));
+        ItemList.GraphitePlate8inchSoftBaked.set(addItem(9844, "GraphitePlate8inchSoftBakedT1", "GraphitePlate8inchSoftBakedT1"));
 
         ItemList.CPUPhotomask200um.set(addItem(9900, "CPU Photo Mask (200um)", "CPU Ex"));
         ItemList.CPUPhotomask72um.set(addItem(9901, "CPU Photo Mask (72um)", "CPU Ex"));
@@ -161,6 +161,8 @@ public class itemIT extends MultiItemRandom {
         ItemList.CPUGT3680v4E.set(addItem(10321, "CPUGT3680v4E", "CPUGT3680v4E"));
         ItemList.CPUGT3699v3E.set(addItem(10322, "CPUGT3699v3E", "CPUGT3699v3E"));
         ItemList.CPUGT3699v4E.set(addItem(10323, "CPUGT3699v4E", "CPUGT3699v4E"));
+        
+
 //Circuits
         int i=20000;
         ItemList.ResistanceT1.set(addItem(i++, "Resistance (T1)",""));
@@ -179,5 +181,37 @@ public class itemIT extends MultiItemRandom {
         ItemList.DiodeT4     .set(addItem(i++, "Diode (T4)",""));
         ItemList.CapacitorT4 .set(addItem(i++, "Capacitor (T4)",""));
         ItemList.CoilT4      .set(addItem(i++, "Coil (T4)",""));
+
+        ItemList.CircuitPartPhotomaskT3.set(addItem(20100, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT4.set(addItem(20101, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT5.set(addItem(20102, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT6.set(addItem(20103, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+        ItemList.CircuitPartPhotomaskT3.set(addItem(20110, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT4.set(addItem(20111, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT5.set(addItem(20112, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT6.set(addItem(20113, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+        ItemList.CircuitPartWaferT3Developed.set(addItem(20120, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT4Developed.set(addItem(20121, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT5Developed.set(addItem(20122, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT6Developed.set(addItem(20123, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+        ItemList.CircuitPartWaferT3HardBaked.set(addItem(20130, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT4HardBaked.set(addItem(20131, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT5HardBaked.set(addItem(20132, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT6HardBaked.set(addItem(20133, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+        ItemList.CircuitPartWaferT3Doped.set(addItem(20140, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT4Doped.set(addItem(20141, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT5Doped.set(addItem(20142, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT6Doped.set(addItem(20143, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+        ItemList.CircuitPartWaferT3Checked.set(addItem(20150, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT4Checked.set(addItem(20151, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT5Checked.set(addItem(20152, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT6Checked.set(addItem(20153, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+
     }
 }

@@ -23,12 +23,15 @@ More efficient power generator
 MultiBlock Machine in IV or later
 
 
-Current development focus:
+**Current development Focusing**
 
 The petrochemical industry builds the foundation of modern society, and we should join them in game! more plastic, more pipes, more machines!
 
 The MaskAligner machine on the side can't wait now, come and add the most critical photoresist to it!
 
+**Internationalization && Localization**
+
+Unlike GtegTech6 itself,kTFRUAddon use internal language files. If you are good at English and another language, feel free to PR!
 
 zh_CN:
 
@@ -51,6 +54,10 @@ zh_CN:
 更多高效、科学的发电方式
 
 使用IV以上电压的更多强力的大机器
+
+**国际化与本地化**
+
+不像GregTech本身，kTFRUAddon使用mod内置的语言文件进行本地化工作，如果你擅长英语和另一门语言，欢迎提交PR
 
 **当前开发重点：**
 
