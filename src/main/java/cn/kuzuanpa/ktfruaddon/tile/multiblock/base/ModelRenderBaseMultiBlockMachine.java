@@ -20,7 +20,7 @@ import net.minecraft.block.Block;
 import static gregapi.data.CS.FACING_ROTATIONS;
 import static gregapi.data.CS.T;
 
-public abstract class ModelRenderBaseMultiBlock extends TileEntityBase10MultiBlockMachine { public boolean usingModelRender = false;
+public abstract class ModelRenderBaseMultiBlockMachine extends TileEntityBase10MultiBlockMachine { public boolean usingModelRender = false;
     @Override
     public boolean checkStructure2(){
         if (!checkStructure3(true)){

@@ -16,6 +16,7 @@ public class itemPreInit {
         new itemParticle();
         new itemIT();
         new itemComputer();
+        new itemBatteryPole();
         new itemCompact();
         new fakeItemGuiI18n();
     }

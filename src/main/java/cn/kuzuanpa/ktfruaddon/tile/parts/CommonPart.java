@@ -17,8 +17,10 @@ public class CommonPart extends MultiTileEntityMultiBlockPart {
 
     @Override
     public int getLightOpacity(){
-        return mDesign==1?0:255;
+        return mDesign==1?255:0;
     }
+    //When this part be hidden, This will made adjoining block's side rendering properly.
+    @Override public boolean isSurfaceOpaque2       (byte aSide) {return mDesign!=1;}
     @Override
     public String getTileEntityName(){
         return "kfru.multitileentity.multiblock.commonpart";

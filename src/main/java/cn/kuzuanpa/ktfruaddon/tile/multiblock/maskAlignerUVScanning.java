@@ -91,10 +91,10 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
                         for (cX = 0; cX < machineX&&tSuccess; cX++) {
                             if(!isIgnored(cX,cY,cZ)) {
                                 if (isSubSource(getBlockID(cX, cY, cZ))) {
-                                    if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 2, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                    if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
                                         tSuccess = F;
                                     if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ)));
-                                } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 2, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
                                     tSuccess = F;
                             }
                     }

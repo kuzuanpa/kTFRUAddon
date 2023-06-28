@@ -14,9 +14,9 @@ public class kTileNBT {
     public static class Generator {
         public static class ManualMotorNBT {
             public static String MAX_TIME = "ktfru.nbt.energy.manualmotor.maxtime"
-                    , TIME_GAIN_EACH_PRESS = "ktfru.nbt.energy.manualmotor.timegainrate";
+                    , TIME_GAIN_EACH_PRESS = "ktfru.nbt.energy.manualmotor.timegainrate"
+        ;}
 
-        }
     }
 }
 
