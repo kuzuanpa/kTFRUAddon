@@ -22,7 +22,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.model;
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlock;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlockMachine;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
@@ -39,7 +39,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class exampleMachineModel extends ModelRenderBaseMultiBlock {
+public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
 
     //决定机器大小
     //this controls the size of machine.

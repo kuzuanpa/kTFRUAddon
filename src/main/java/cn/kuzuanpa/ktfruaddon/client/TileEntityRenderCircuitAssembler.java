@@ -10,7 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlock;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlockMachine;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -39,7 +39,7 @@ public class TileEntityRenderCircuitAssembler extends TileEntitySpecialRenderer 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x,
                                    double y, double z, float f) {
-        ModelRenderBaseMultiBlock multiBlockTile = (ModelRenderBaseMultiBlock)tile;
+        ModelRenderBaseMultiBlockMachine multiBlockTile = (ModelRenderBaseMultiBlockMachine)tile;
         boolean rendNow =false;
         for (byte i = 1; i < 7; i++) {
             if (multiBlockTile.shouldSideBeRendered(i)) rendNow = true;

@@ -32,6 +32,7 @@ import gregapi.fluid.FluidTankGT;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
 import gregapi.old.Textures;
+import gregapi.oredict.OreDictMaterial;
 import gregapi.recipes.Recipe;
 import gregapi.recipes.Recipe.RecipeMap;
 import gregapi.render.BlockTextureDefault;
@@ -66,12 +67,12 @@ import static gregapi.data.CS.*;
 /**
  * @author kuzuanpa
  */
-public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray {
+public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray {
     public boolean mStopped = F;
     public short mEfficiency = 10000;
     public long mEnergy = 0, mRate = 32;
     public TagData mEnergyTypeEmitted = TD.Energy.EU;
-    public RecipeMap mRecipes = recipeManager.GasBattery;
+    public RecipeMap mRecipes = recipeManager.FuelBattery;
     public Recipe mLastRecipe = null;
     public FluidTankGT[] mTanks = {new FluidTankGT(1000),new FluidTankGT(1000), new FluidTankGT(1000), new FluidTankGT(1000), new FluidTankGT(1000)}
 
@@ -83,7 +84,7 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     public boolean changingStaticTank =false;
     //stores materialId of positive and negative electrode.
     public short[] mDisplayMat = {0,0};
-    public GasEnergyBattery(){}
+    public FuelBattery(){}
     //NBT
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -209,6 +210,8 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
             if (changingStaticTank) aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_1));
             else aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_0));
             changingStaticTank = !changingStaticTank;
+            mActivity.mActive =F;
+            updateClientData();
         }
         if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
         return 0;
@@ -236,12 +239,48 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
         return mTanks;
     }
 
+    // Icons
+    public static IIconContainer
+            sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/colored/sides"),
+            sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/colored/top"),
+            sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/colored/bottom"),
+            sOverlaySides       = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides"),
+            sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/front"),
+            sOverlaySidesActive       = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides_active"),
+            sOverlayFrontActive = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/front_active"),
+            sOverlayFrontPole   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/front_pole"),
+
+    sOverlaySidesPoleA   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides_pole_a"),
+            sOverlaySidesPoleB   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides_pole_b")
+                    ;
+
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (!aShouldSideBeRendered[aSide]) return null;
-        if (aSide == mFacing)              return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[0], mRGBa), BlockTextureDefault.get((mActivity.mState > 0?sOverlaysActive:sOverlays)[0]));
-        if (aSide == OPOS[mFacing])   return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[1], mRGBa), BlockTextureDefault.get((mActivity.mState > 0?sOverlaysActive:sOverlays)[1]));
-        return BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[2], mRGBa), BlockTextureDefault.get((mActivity.mState > 0?sOverlaysActive:sOverlays)[2]));
+        if (aSide == mFacing||aSide == OPOS[mFacing]){
+            if (mDisplayMat[0]==0||mDisplayMat[1]==0) {
+                //If any pole didn't exist
+                if (mDisplayMat[0]!=0&&aSide==mFacing)              return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole, UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)));
+                if (mDisplayMat[1]!=0&&aSide==OPOS[mFacing])        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole, UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
+                return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront));
+            }
+            if (mActivity.mState>0) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole,aSide==mFacing? UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid):UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)),BlockTextureDefault.get(sOverlayFrontActive));
+            return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole,aSide==mFacing? UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid):UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
+
+        }
+        if (aSide == SIDE_TOP) return                        BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop   , mRGBa));
+        if (aSide == SIDE_BOTTOM) return                     BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa));
+
+        //Left Right
+        if (mDisplayMat[0]==0||mDisplayMat[1]==0) {
+            //If any pole didn't exist
+            if (mDisplayMat[0]!=0)        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleA,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)));
+            if (mDisplayMat[1]!=0)        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleB,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
+            return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides));
+        }
+        if (mActivity.mState>0) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleA,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)),BlockTextureDefault.get(sOverlaySidesPoleB,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)),BlockTextureDefault.get(sOverlaySidesActive));
+        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleA,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)),BlockTextureDefault.get(sOverlaySidesPoleB,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
+
     }
 
 
@@ -263,22 +302,6 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     @Override public boolean setStateOnOff(boolean aOnOff) {mStopped = !aOnOff; return !mStopped;}
     @Override public boolean getStateOnOff() {return !mStopped;}
 
-    // Icons
-    public static IIconContainer[] sColoreds = new IIconContainer[] {
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/colored/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/colored/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/colored/sides"),
-    }, sOverlays = new IIconContainer[] {
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay/sides"),
-    }, sOverlaysActive = new IIconContainer[] {
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay_active/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay_active/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_liquid/overlay_active/sides"),
-    };
-
-
     public FluidTankGT getAvailInputTank(Fluid input) {
         if (changingStaticTank&&!mTankStatic.isFull()) return mTankStatic;
         else {
@@ -298,7 +321,7 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     //Visuals
 
     public short getSlotItemMaterial(int slot){
-        if(slot(slot)!=null&&slot(slot).getUnlocalizedName().contains("ktfru.battery.pole")&&slot(slot).getItemDamage()<32768)return (short) slot(slot).getItemDamage();
+        if(slot(slot)!=null&&slot(slot).getUnlocalizedName().contains("ktfru.item.battery.pole")&&slot(slot).getItemDamage()<32768)return (short) slot(slot).getItemDamage();
         return 0;
     }
 
@@ -328,7 +351,7 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     @Override
     public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
         if (aSlot >= 2) return F;
-        for (int i = 0; i < 2; i++) if (slot(i)== null/*&&aStack.getItem().getUnlocalizedName().contains("ktfru.item.battery.pole")*/&&i==aSlot) return T;
+        for (int i = 0; i < 2; i++) if (slot(i)== null&&aStack.getItem().getUnlocalizedName().contains("ktfru.item.battery.pole")&&i==aSlot) return T;
         return F;
     }
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
@@ -338,9 +361,11 @@ public class GasEnergyBattery extends TileEntityBase09FacingSingle implements IF
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (/*isServerSide()&&*/changingStaticTank&&!mActivity.mActive) {
           //  byte tSlot = (byte)((mFacing==2||mFacing==4)?aHitX<0.5?0:1:(mFacing==3||mFacing==5)&&aHitZ<0.5?0:1);
-            byte tSlot =(byte)(aHitY<0.5?0:1);
+            byte tSlot = 0;
             ItemStack aStack = aPlayer.getCurrentEquippedItem();
-            if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.it.computer")&&slot(tSlot)==null)
+            if (aStack!=null) tSlot=(byte)(slot(0)==null?0:1);
+            else tSlot=(byte)(slot(1)!=null?1:0);
+            if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.battery.pole")&&slot(tSlot)==null)
                 if (ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, tSlot,1) > 0) {
                     playClick();
                     updateClientData();

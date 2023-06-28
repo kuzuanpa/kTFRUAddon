@@ -80,7 +80,7 @@ public class CommonMachinePart extends MultiTileEntityBasicMachine {
     }
     @Override
     public int getLightOpacity(){
-        return mDesign==7?0:255;
+        return mDesign==1?255:0;
     }
     @Override
     public String getTileEntityName() {
