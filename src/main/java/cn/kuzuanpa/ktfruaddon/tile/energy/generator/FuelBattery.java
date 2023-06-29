@@ -210,7 +210,6 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
             if (changingStaticTank) aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_1));
             else aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_0));
             changingStaticTank = !changingStaticTank;
-            mActivity.mActive =F;
             updateClientData();
         }
         if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
@@ -260,30 +259,36 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         if (aSide == mFacing||aSide == OPOS[mFacing]){
             if (mDisplayMat[0]==0||mDisplayMat[1]==0) {
                 //If any pole didn't exist
-                if (mDisplayMat[0]!=0&&aSide==mFacing)              return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole, UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)));
-                if (mDisplayMat[1]!=0&&aSide==OPOS[mFacing])        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole, UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
-                return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront));
+                if (mDisplayMat[0]!=0&&aSide==mFacing) return       BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFrontPole, getColorForTexture(mDisplayMat[0])),BlockTextureDefault.get(sOverlayFront));
+                if (mDisplayMat[1]!=0&&aSide==OPOS[mFacing]) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFrontPole, getColorForTexture(mDisplayMat[1])),BlockTextureDefault.get(sOverlayFront));
+                return                                              BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa)                                                                               ,BlockTextureDefault.get(sOverlayFront));
             }
-            if (mActivity.mState>0) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole,aSide==mFacing? UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid):UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)),BlockTextureDefault.get(sOverlayFrontActive));
-            return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontPole,aSide==mFacing? UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid):UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
+            if (mActivity.mState>0) return                          BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFrontPole, aSide==mFacing? getColorForTexture(mDisplayMat[0]) : getColorForTexture(mDisplayMat[1])),BlockTextureDefault.get(sOverlayFront),BlockTextureDefault.get(sOverlayFrontActive));
+            return                                                  BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlayFrontPole, aSide==mFacing? getColorForTexture(mDisplayMat[0]) : getColorForTexture(mDisplayMat[1])),BlockTextureDefault.get(sOverlayFront));
 
         }
-        if (aSide == SIDE_TOP) return                        BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop   , mRGBa));
-        if (aSide == SIDE_BOTTOM) return                     BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa));
+        if (aSide == SIDE_TOP) return                               BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop   , mRGBa));
+        if (aSide == SIDE_BOTTOM) return                            BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa));
 
         //Left Right
         if (mDisplayMat[0]==0||mDisplayMat[1]==0) {
             //If any pole didn't exist
-            if (mDisplayMat[0]!=0)        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleA,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)));
-            if (mDisplayMat[1]!=0)        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleB,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
-            return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides));
+            if (mDisplayMat[0]!=0) return                           BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySidesPoleA,getColorForTexture(mDisplayMat[0])),BlockTextureDefault.get(sOverlaySides));
+            if (mDisplayMat[1]!=0) return                           BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySidesPoleB,getColorForTexture(mDisplayMat[1])),BlockTextureDefault.get(sOverlaySides));
+            return                                                  BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa)                                                                               ,BlockTextureDefault.get(sOverlaySides));
         }
-        if (mActivity.mState>0) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleA,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)),BlockTextureDefault.get(sOverlaySidesPoleB,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)),BlockTextureDefault.get(sOverlaySidesActive));
-        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesPoleA,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[0]).mRGBaSolid)),BlockTextureDefault.get(sOverlaySidesPoleB,UT.Code.getRGBInt(OreDictMaterial.get(mDisplayMat[1]).mRGBaSolid)));
+        if (mActivity.mState>0) return                              BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySidesPoleA,getColorForTexture(mDisplayMat[0])),BlockTextureDefault.get(sOverlaySidesPoleB,getColorForTexture(mDisplayMat[1])),BlockTextureDefault.get(sOverlaySides),BlockTextureDefault.get(sOverlaySidesActive));
+        return                                                      BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides , mRGBa),BlockTextureDefault.get(sOverlaySidesPoleA,getColorForTexture(mDisplayMat[0])),BlockTextureDefault.get(sOverlaySidesPoleB,getColorForTexture(mDisplayMat[1])),BlockTextureDefault.get(sOverlaySides));
 
     }
 
-
+    public int getColorForTexture(int materialID){
+        OreDictMaterial mat=OreDictMaterial.get(materialID);
+        short newR = (short) (mat.mRGBaSolid[0]>235?255:(mat.mRGBaSolid[0]+20));
+        short newG = (short) (mat.mRGBaSolid[1]>235?255:(mat.mRGBaSolid[1]+20));
+        short newB = (short) (mat.mRGBaSolid[2]>235?255:(mat.mRGBaSolid[2]+20));
+        return UT.Code.getRGBInt(newR,newG,newB);
+    }
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
         return aEmitting && aEnergyType == mEnergyTypeEmitted;}
     @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {

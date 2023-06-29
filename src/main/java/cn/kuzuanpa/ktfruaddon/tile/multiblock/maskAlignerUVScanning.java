@@ -175,19 +175,21 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             BoundingBox box;
             switch (aRenderPass) {
                 case 0:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.502, -0.499, -0.502), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 2.5, 1.501));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5002, -0.4999, -0.5002), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5001, 2.5, 1.5001));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 1:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 0.5));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.5002, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.5002, 0.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 2:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, 0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 1.5));
+                    //box for Top&Bottom overlay
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.5002, 0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.5002, 1.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 3:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5, -0.501, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5, 1.501, 1.5));
+                    //box for Top&Bottom texture
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5, -0.5001, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5, 1.5001, 2.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 4:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.501, -0.5, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 1.5, 1.5));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5001, -0.5, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5001, 1.5, 1.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
             }
         }
@@ -218,19 +220,19 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             switch (aRenderPass) {
                 case 0:
                     if (mActive) {
-                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontActive)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ?null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa)) : null;
+                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontActive)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ?null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
                     } else if (mRunning) {
-                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontRunning)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa)) : null;
+                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontRunning)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
                     }
-                    return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFront)) :  SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null :  aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa)) : null;
+                    return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFront)) :  SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null :  aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
                 case 1:
                     return aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sOverlayTopA)):null;
                 case 2:
                     return aSide == SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sOverlayBottomB)):aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sOverlayTopB)):null;
                 case 3:
-                    if(mFacing==2) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopA,mRGBa)):null;
-                    if(mFacing==3) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopB,mRGBa)):null;
-                    if(mFacing==4) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopC,mRGBa)):null;
+                    if(mFacing==2) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopC,mRGBa)):null;
+                    if(mFacing==3) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopA,mRGBa)):null;
+                    if(mFacing==4) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopB,mRGBa)):null;
                     if(mFacing==5) return aSide == SIDE_BOTTOM||aSide == SIDE_TOP?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTopD,mRGBa)):null;
 
                 case 4:
