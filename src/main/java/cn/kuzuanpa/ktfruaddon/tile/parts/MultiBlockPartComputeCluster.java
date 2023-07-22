@@ -46,7 +46,8 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
 
     protected IIconContainer[][] mTextures;
     public short mDesign;
-    public boolean isRunning;
+    public boolean isRunning,isActive;
+    public byte mState;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0,0,0};
     public MultiBlockPartComputeCluster(){}
@@ -56,10 +57,33 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
             ComputePower += itemComputer.getComputePowerFromID(stack.getItemDamage());
         }
     }
+    public void updateState(){
+        isRunning=mState==1;
+        isActive =mState==2;
+    }
+    public void active(){
+        isRunning=true;
+        isActive=true;
+        mState=2;
+    }
+    public void run(){
+        isRunning=true;
+        mState=1;
+    }
+    public void inactive(){
+        isActive=false;
+        isRunning=true;
+        mState=1;
+    }
+    public void stop(){
+        isActive=false;
+        isRunning=false;
+        mState=0;
+    }
     public long getComputePower(){return ComputePower;}
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()&&!isRunning&&aSide!=SIDE_BOTTOM&&aSide!=SIDE_TOP) {
+        if (isServerSide()&&!isActive&&aSide!=SIDE_BOTTOM&&aSide!=SIDE_TOP) {
             byte tSlot = (byte)(aHitY >0.75?0:aHitY>0.5?1:aHitY>0.25?2:3);
             ItemStack aStack = aPlayer.getCurrentEquippedItem();
             if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.it.computer")&&slot(tSlot)==null)
@@ -158,24 +182,37 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
 
     }
     public static IIconContainer
-            sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/test/colored/sides"),
-            sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/test/colored/top"),
-            sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/test/colored/bottom"),
-            sTextureNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/colored/nodeside"),
-            sTextureNodeFront = new Textures.BlockIcons.CustomIcon("machines/test/texture/nodefront"),
-            sTextureFront = new Textures.BlockIcons.CustomIcon("machines/test/texture/front"),
-            sOverlaySides       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/sides"),
-            sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/front"),
-            sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside"),
-            sOverlayNodeFront = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodefront");
+            sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/background"),
+            sTextureSides = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/normal/sides"),
+            sTextureFront = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/normal/front"),
+            sTextureNode  = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/normal/nodes"),
+            sRunningSide = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/running/sides"),
+            sRunningFront = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/running/front"),
+            sRunningNode  = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/running/nodes"),
+            sActiveFront = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/active/front"),
+            sActiveNode  = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computecluster/active/nodes");
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if(isActive) switch(aRenderPass) {
+            case 0: return !aShouldSideBeRendered[aSide]?null: aSide==SIDE_TOP||aSide==SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon)): aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureFront),BlockTextureDefault.get(sActiveFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sRunningSide));
+            case 1: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[3] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sActiveNode)):null;
+            case 2: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[2] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sActiveNode)):null;
+            case 3: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[1] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sActiveNode)):null;
+            case 4: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[0] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sActiveNode)):null;
+        }
+        if(isRunning) switch(aRenderPass) {
+            case 0: return !aShouldSideBeRendered[aSide]?null: aSide==SIDE_TOP||aSide==SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon)): aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureFront),BlockTextureDefault.get(sRunningFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sRunningSide));
+            case 1: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[3] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sRunningNode)):null;
+            case 2: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[2] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sRunningNode)):null;
+            case 3: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[1] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sRunningNode)):null;
+            case 4: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[0] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sRunningNode)):null;
+        }
         switch(aRenderPass) {
-            case 0: return aShouldSideBeRendered[aSide] ?SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa)):mFacing==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureFront,mRGBa),BlockTextureDefault.get(sOverlayFront)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlaySides)) : null;
-            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[3] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)): null ;
-            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[2] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)): null;
-            case 3: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)): null;
-            case 4: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeFront,mRGBa),BlockTextureDefault.get(sOverlayNodeFront)) :BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa),BlockTextureDefault.get(sOverlayNodeSide)):null;
+            case 0: return !aShouldSideBeRendered[aSide]?null: aSide==SIDE_TOP||aSide==SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon)): aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureSides));
+            case 1: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[3] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode)):null;
+            case 2: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[2] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode)):null;
+            case 3: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[1] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode)):null;
+            case 4: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[0] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode)):null;
         }
         return null;
     }
@@ -191,10 +228,10 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
     public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
         switch(aRenderPass) {
             case  0: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[ 16], PX_P[ 16]);
-            case  1: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 1], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 3], PX_P[16]+0.0001F);
+            case  1: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 2], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 4], PX_P[16]+0.0001F);
             case  2: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 5], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
             case  3: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 9], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[11], PX_P[16]+0.0001F);
-            case  4: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[13], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[15], PX_P[16]+0.0001F);
+            case  4: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[12], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[14], PX_P[16]+0.0001F);
         }
         return F;
     }
@@ -204,7 +241,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
 
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3]);
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1], mDisplaySlot[2],mDisplaySlot[3],mState);
         }
 
     @Override
@@ -212,6 +249,8 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
         mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
         setDirectionData(aData[3]);
         for (short i=0;i<4;i++)mDisplaySlot[i]=aData[i+4];
+        mState=aData[8];
+        updateState();
         return T;
     }
     //Every thing from MultiBlockPart
@@ -241,7 +280,6 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
     }
     @Override
     public boolean breakBlock(){
-//todo: These code are from various abstract class ,and It should be directly inherit from upper class...but I really didn't know how can this be applied in java..
 //MultiBlockBase
         ITileEntityMultiBlockController tTarget = this.getTarget(false);
         if (tTarget != null) {

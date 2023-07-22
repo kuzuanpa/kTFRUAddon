@@ -27,13 +27,13 @@ public class ComputerBuilding {
                 , ItemList.fakeItemSiliconWaferDoped.get(1)
                 , ItemList.fakeItemSiliconWaferChecked.get(1)
                 , ItemList.fakeItemDie.get(1)
-        ), null, ZL_LONG, FL.array(FL.Sap_Rainbow.make(250)),ZL_FS, 0, 0, 0);
+        ), null, ZL_LONG, FL.array(FL.Sap_Rainbow.make(U)),ZL_FS, 0, 0, 0);
 
         //addRecipeX(T,GUt,Duration, ST.array(),FL.array(),FL.array(), );
 
         //EDA 设计电路 EU
-        recipeManager.EDA.addRecipeX(T,16,36000, ST.array(IL.Circuit_Good.get(0), gRegistry.getItem(10102,0),gRegistry.getItem(10112,0),OD.paneGlass.mItems.get(0)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.CPUPhotomask200um.get(1));
-        recipeManager.EDA.addRecipeX(T,16,36000, ST.array(IL.Circuit_Good.get(0),IL.Circuit_Part_Good.get(0),OD.paneGlass.mItems.get(0)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.CircuitPartPhotomaskT3.get(1));
+        recipeManager.EDA.addRecipeX(T,16,36000, ST.array(IL.Circuit_Good.get(0), gRegistry.getItem(10102,0),gRegistry.getItem(10112,0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.CPUPhotomask200um.get(1));
+        recipeManager.EDA.addRecipeX(T,16,36000, ST.array(IL.Circuit_Good.get(0),IL.Circuit_Part_Good.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.CircuitPartPhotomaskT3.get(1));
 
         //Cut Boule to plate 切割单晶硅 LU
         recipeManager.LaserCutter.addRecipeX(T,96,2000, ST.array(OP.bouleGt.mat(MT.Si, 1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchT1.get(12));

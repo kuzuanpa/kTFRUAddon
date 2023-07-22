@@ -15,6 +15,8 @@ import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 
 import java.util.ArrayList;
 
+import static gregapi.data.CS.T;
+
 public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10MultiBlockMachine {
     public ArrayList<MultiBlockPartEnergyConsumer> MultiInputSubBlocks = new ArrayList<>();
     public boolean subSourceRunning =true;
@@ -31,7 +33,9 @@ public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10Mu
         subSourceRunning = subSourceRunning && (subSource.getStateRunningPassively() || subSource.getStateRunningActively());
     }
 
+    @Override
     public boolean onTickCheck(long aTimer) {
+        if (refreshStructureOnActiveStateChange() && (mActive != oActive || mRunning != oRunning)) checkStructure(T);
         if (this.mStructureOkay) {
             subSourceRunning = true;
             if (this.MultiInputSubBlocks.isEmpty()) {
@@ -41,7 +45,7 @@ public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10Mu
             this.MultiInputSubBlocks.forEach(this::isSubSourceRunning);
             if (this.getStateOnOff() != subSourceRunning) this.setStateOnOff(subSourceRunning);
             return subSourceRunning;
-        }else return false;
+        }else return super.onTickCheck(aTimer);
     }
 }
 

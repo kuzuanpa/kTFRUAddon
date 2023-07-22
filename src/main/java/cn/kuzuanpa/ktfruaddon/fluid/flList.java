@@ -31,16 +31,16 @@ public enum flList {
     //Oil Process And Plastics
     ,DesaltOilExtraHeavy,DesaltOilHeavy,DesaltOilMedium,DesaltOilNormal,DesaltOilLight
     ,CleanedOilExtraHeavy,CleanedOilHeavy,CleanedOilMedium,CleanedOilNormal,CleanedOilLight
-    ,/**一氧化碳**/CarbonMonoxide,/**石油脱硫剂**/ OilDesulfurizationer,/**硫化石油脱硫剂**/SulfuredOilDesulfurizationer,/**石油气**/OilGas,/**初底油**/InitalBottomOil,/**石脑油**/Naphtha
+    ,/**一氧化碳**/CarbonMonoxide,/**石油脱硫剂**/ OilDesulfurizationer,/**硫化石油脱硫剂**/SulfuredOilDesulfurizationer,/**石油气**/OilGas,/**裂化石油气**/CrackedOilGas,/**初底油**/InitalBottomOil,/**石脑油**/Naphtha
     ,/**次氯酸**/HypochlorousAcid,/**氯酸**/ChloricAcid,/**高氯酸**/PerchloricAcid,/**光气**/Phosgene
-    ,/**苯**/Benzene
+    ,/**苯**/Benzene,/**甲苯**/Toluene
     ,/**甲醇**/Methanol,/**丙醇**/Propanol,/**丙二醇**/Propanediol
     ,/**甲醛**/Formaldehyde,/**乙醛**/Acetaldehyde,/**丙醛**/Propionaldehyde
     ,/**乙炔**/Acetylene
     ,/**丙酮**/Acetone
     ,/**二氯甲烷**/Dichloromethane
     ,CoalTar, WoodTar
-    ,BlendedFuel95,BlendedFuel92
+    ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,
     ;
     public Fluid fluid;
     public String name;

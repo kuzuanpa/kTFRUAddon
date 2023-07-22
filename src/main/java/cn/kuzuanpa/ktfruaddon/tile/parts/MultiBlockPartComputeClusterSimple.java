@@ -46,7 +46,8 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
 
     protected IIconContainer[][] mTextures;
     public short mDesign;
-    public boolean isRunning;
+    public boolean isRunning,isActive;
+    public byte mState;
     public long ComputePower;
     public byte[] mDisplaySlot = {0,0};
     public MultiBlockPartComputeClusterSimple(){}
@@ -58,9 +59,32 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
         }
     }
     public long getComputePower(){return ComputePower;}
+    public void updateState(){
+        isRunning=mState==1;
+        isActive =mState==2;
+    }
+    public void active(){
+        isRunning=true;
+        isActive=true;
+        mState=2;
+    }
+    public void run(){
+        isRunning=true;
+        mState=1;
+    }
+    public void inactive(){
+        isActive=false;
+        isRunning=true;
+        mState=1;
+    }
+    public void stop(){
+        isActive=false;
+        isRunning=false;
+        mState=0;
+    }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()&&!isRunning&&aSide!=SIDE_BOTTOM&&aSide!=SIDE_TOP) {
+        if (isServerSide()&&!isActive&&aSide!=SIDE_BOTTOM&&aSide!=SIDE_TOP){
             byte tSlot = (byte)(aHitY >0.5?0:1);
             ItemStack aStack = aPlayer.getCurrentEquippedItem();
             if (ST.valid(aStack) && aStack.getUnlocalizedName().contains("ktfru.item.it.computer")&&slot(tSlot)==null)
@@ -78,7 +102,6 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
                 return T;
             }
         }
-
         return T;
     }
 @Override
@@ -158,21 +181,33 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
 
     }
     public static IIconContainer
-            sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/test/colored/sides"),
-            sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/test/colored/top"),
-            sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/test/colored/bottom"),
-            sTextureNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/colored/nodeside"),
-            sOverlaySides       = new Textures.BlockIcons.CustomIcon("machines/test/overlay/sides"),
-            sOverlayTop         = new Textures.BlockIcons.CustomIcon("machines/test/overlay/top"),
-            sOverlayBottom      = new Textures.BlockIcons.CustomIcon("machines/test/overlay/bottom"),
-            sOverlayNodeSide = new Textures.BlockIcons.CustomIcon("machines/test/overlay/nodeside");
+            sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/background"),
+            sTextureSides = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/normal/sides"),
+            sTextureFront = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/normal/front"),
+            sTextureNode  = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/normal/nodes"),
+            sRunningSide = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/running/sides"),
+            sRunningFront = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/running/front"),
+            sRunningNode  = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/running/nodes"),
+            sActiveFront = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/active/front"),
+            sActiveNode  = new Textures.BlockIcons.CustomIcon("machines/multiblockparts/computeclustersimple/active/nodes");
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        switch(aRenderPass) {
-            case 0: return aShouldSideBeRendered[aSide] ?SIDE_TOP == aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureTop, mRGBa), BlockTextureDefault.get(sOverlayTop)):SIDE_BOTTOM==aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureBottom, mRGBa), BlockTextureDefault.get(sOverlayBottom)): BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlaySides)) : null;
-            case 1: return aShouldSideBeRendered[aSide]&&mDisplaySlot[1] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)): null;
-            case 2: return aShouldSideBeRendered[aSide]&&mDisplaySlot[0] ==1&&SIDE_TOP!=aSide&&SIDE_BOTTOM!=aSide?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNodeSide, mRGBa), BlockTextureDefault.get(sOverlayNodeSide)):null;
+        if(isActive) switch(aRenderPass) {
+            case 0: return !aShouldSideBeRendered[aSide]?null: aSide==SIDE_TOP||aSide==SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon)): aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureFront),BlockTextureDefault.get(sActiveFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sRunningSide));
+            case 1: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[1] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sActiveNode)):null;
+            case 2: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[0] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sActiveNode)):null;
         }
+        if(!isActive&&isRunning) switch(aRenderPass) {
+            case 0: return !aShouldSideBeRendered[aSide]?null: aSide==SIDE_TOP||aSide==SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon)): aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureFront),BlockTextureDefault.get(sRunningFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sRunningSide));
+            case 1: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[1] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sRunningNode)):null;
+            case 2: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[0] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode),BlockTextureDefault.get(sRunningNode)):null;
+        }
+        switch(aRenderPass) {
+            case 0: return !aShouldSideBeRendered[aSide]?null: aSide==SIDE_TOP||aSide==SIDE_BOTTOM?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon)): aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureFront)):BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon),BlockTextureDefault.get(sTextureSides));
+            case 1: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[1] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode)):null;
+            case 2: return !aShouldSideBeRendered[aSide]?null: mDisplaySlot[0] ==1&&aSide==mFacing?BlockTextureMulti.get(BlockTextureDefault.get(sTextureNode)):null;
+        }
+
         return null;
     }
     @Override
@@ -187,8 +222,8 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
         switch(aRenderPass) {
             case  0: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[ 16], PX_P[ 16]);
-            case  1: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 5], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
-            case  2: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[13], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[15], PX_P[16]+0.0001F);
+            case  1: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 2], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[ 7], PX_P[16]+0.0001F);
+            case  2: return box(aBlock, PX_P[ 0]-0.0001F, PX_P[ 9], PX_P[ 0]-0.0001F, PX_P[16]+0.0001F, PX_P[14], PX_P[16]+0.0001F);
         }
         return F;
     }
@@ -198,7 +233,7 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
 
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1]);
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getDirectionData(),mDisplaySlot[0], mDisplaySlot[1],mState);
     }
 
     @Override
@@ -206,6 +241,8 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
         mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
         setDirectionData(aData[3]);
         for (short i=0;i<2;i++)mDisplaySlot[i]=aData[i+4];
+        mState=aData[6];
+        updateState();
         return T;
     }
     //Every thing from MultiBlockPart
@@ -234,7 +271,6 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     }
     @Override
     public boolean breakBlock(){
-//todo: These code are from various abstract class ,and It should be directly inherit from upper class...but I really didn't know how can this be applied in java..
 //MultiBlockBase
         ITileEntityMultiBlockController tTarget = this.getTarget(false);
         if (tTarget != null) {

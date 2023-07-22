@@ -13,6 +13,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachi
 import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import gregapi.data.CS;
 import gregapi.data.LH;
 import gregapi.old.Textures;
 import gregapi.render.BlockTextureDefault;
@@ -91,21 +92,36 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
                         for (cX = 0; cX < machineX&&tSuccess; cX++) {
                             if(!isIgnored(cX,cY,cZ)) {
                                 if (isSubSource(getBlockID(cX, cY, cZ))) {
-                                    if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                    if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 1, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
                                         tSuccess = F;
                                     if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ)));
-                                } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 1, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
                                     tSuccess = F;
                             }
                     }
                 }
             }
-
+            if (tSuccess==F) resetParts();
             // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
             return tSuccess;
 
         }
         return mStructureOkay;
+    }
+    public void resetParts() {
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
+        if (worldObj.blockExists(tX, tY, tZ)) {
+            tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,0);
+            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,0);
+            int cX, cY, cZ;
+            for (cY  = 0; cY < machineY; cY++) {
+                for (cZ = 0; cZ < machineZ; cZ++) {
+                    for (cX = 0; cX < machineX; cX++) {
+                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getCheckX(mFacing, tX, cX, cZ), tY + cY, utils.getCheckZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
+                    }
+                }
+            }
+        }
     }
         //这是设置主方块的物品提示
         //controls tooltip of controller block
@@ -175,21 +191,21 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             BoundingBox box;
             switch (aRenderPass) {
                 case 0:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5002, -0.4999, -0.5002), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5001, 2.5, 1.5001));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.502, -0.4999, -0.502), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 2.5, 1.501));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 1:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.5002, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.5002, 0.5));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 0.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 2:
                     //box for Top&Bottom overlay
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.5002, 0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.5002, 1.5));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, 0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 1.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 3:
                     //box for Top&Bottom texture
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5, -0.5001, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5, 1.5001, 2.5));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5, -0.501, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5, 1.501, 2.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 4:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5001, -0.5, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5001, 1.5, 1.5));
+                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.501, -0.5, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 1.5, 1.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
             }
         }
@@ -214,6 +230,16 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
     sTextureTopC       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/topc"),
     sTextureTopD       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/normal/topd")
             ;
+    @Override
+    public boolean breakBlock() {
+        setStateOnOff(T);
+        CS.GarbageGT.trash(mTanksInput);
+        CS.GarbageGT.trash(mTanksOutput);
+        CS.GarbageGT.trash(mOutputItems);
+        CS.GarbageGT.trash(mOutputFluids);
+        resetParts();
+        return super.breakBlock();
+    }
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (mStructureOkay) {

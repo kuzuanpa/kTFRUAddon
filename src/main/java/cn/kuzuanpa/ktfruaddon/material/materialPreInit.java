@@ -53,6 +53,9 @@ public class materialPreInit {
         //苯
         matList.Benzene.registerC(++i,"Benzene","Benzene",5,80,255,255,130,140,"C"+NUM_SUB[6]+"H"+NUM_SUB[6])
                 .put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.LIQUID);
+        //甲苯
+        matList.Toluene.registerC(++i,"Toluene","Toluene",-95,110,255,255,130,140,"CH"+NUM_SUB[3]+"C"+NUM_SUB[5]+"H"+NUM_SUB[6])
+                .put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.LIQUID);
         //甲醛
         matList.Formaldehyde.registerC(++i,"Formaldehyde","Formaldehyde",-15,97,255,255,255,255,"CH"+NUM_SUB[2]+"O")
                 .put(TD.Properties.FLAMMABLE,TD.Properties.TRANSPARENT,TD.ItemGenerator.GASES);
