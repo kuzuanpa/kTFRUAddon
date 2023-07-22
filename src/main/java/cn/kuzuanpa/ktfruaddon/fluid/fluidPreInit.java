@@ -66,6 +66,7 @@ public class fluidPreInit {
         flList.OilDesulfurizationer.register("oildesulphurizationer","Oil Desulphurizationer",null,LIQUID);
         flList.SulfuredOilDesulfurizationer.register("sulfuredoildesulphurizationer","Sulfured Oil Desulphurizationer",null,LIQUID);
         flList.OilGas.register("oilgas","Oil Gas",null,GAS,1000,277,100,16);
+        flList.CrackedOilGas.register("crackedoilgas","Cracked Oil Gas",null,GAS,1000,277,100,16);
 
         flList.CarbonMonoxide.register("carbonmonoxide", "carbon Monixide",null,GAS,1000,277,100);
         //初底油
@@ -86,6 +87,15 @@ public class fluidPreInit {
         flList.CleanedOilLight.register("cleanoillight","Cleaned Light Oil",null,LIQUID,1000,277,600,1000);
         //苯
         flList.Benzene.register("benzene","Benzene",matList.Benzene.mat, LIQUID);
+        //甲苯
+        flList.Toluene.register("toluene","Toluene",matList.Toluene.mat, LIQUID);
 
+        flList.BlendedFuel1.register("blendedfuel1","Blended Fuel 1",null, LIQUID);
+        flList.BlendedFuel2.register("blendedfuel2","Blended Fuel 2",null, LIQUID);
+        flList.BlendedFuel3.register("blendedfuel3","Blended Fuel 3",null, LIQUID);
+        flList.BlendedFuel4.register("blendedfuel4","Blended Fuel 4",null, LIQUID);
+        flList.BlendedFuel5.register("blendedfuel5","Blended Fuel 5",null, LIQUID);
+        flList.BioFuel1.register("biofuel1","Bio Fuel 1",null, LIQUID);
+        flList.BioFuel2.register("biofuel2","Bio Fuel 2",null, LIQUID);
     }
 }

@@ -23,7 +23,7 @@ public enum matList {
     ,/**碳酸锂**/LithiumCarbonate,/**钛酸**/MetatitanicAcid
     //Oil Process And Plastics
     ,/**次氯酸**/HypochlorousAcid,/**氯酸**/ChloricAcid,/**高氯酸**/PerchloricAcid
-    ,/**苯**/Benzene
+    ,/**苯**/Benzene,/**甲苯**/Toluene
     ,/**甲醇**/Methanol,/**丙醇**/Propanol,/**丙二醇**/Propanediol
     ,/**甲醛**/Formaldehyde,/**乙醛**/Acetaldehyde,/**丙醛**/Propionaldehyde
     ,/**石油底渣**/OilScarp

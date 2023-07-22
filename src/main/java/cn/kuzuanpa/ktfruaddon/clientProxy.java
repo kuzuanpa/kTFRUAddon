@@ -8,8 +8,8 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.client.TileEntityRenderCircuitAssembler;
-import cn.kuzuanpa.ktfruaddon.client.TileEntityRenderExampleMultiBlock;
+import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderCircuitAssembler;
+import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderExampleMultiBlock;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
 import cpw.mods.fml.client.registry.ClientRegistry;
