@@ -2,19 +2,12 @@ package cn.kuzuanpa.ktfruaddon.material;
 
 
 import gregapi.data.OP;
-import gregapi.data.RM;
 import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
-import gregapi.recipes.Recipe;
 import gregapi.render.TextureSet;
-import gregapi.util.ST;
 import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
-import static gregapi.data.CS.F;
-import static gregapi.data.CS.ZL_FS;
 
 public enum matList {
     //Ore Processing
@@ -25,38 +18,18 @@ public enum matList {
     ,/**次氯酸**/HypochlorousAcid,/**氯酸**/ChloricAcid,/**高氯酸**/PerchloricAcid
     ,/**苯**/Benzene,/**甲苯**/Toluene
     ,/**甲醇**/Methanol,/**丙醇**/Propanol,/**丙二醇**/Propanediol
-    ,/**甲醛**/Formaldehyde,/**乙醛**/Acetaldehyde,/**丙醛**/Propionaldehyde
+    ,/**甲醛**/Formaldehyde,/**乙醛**/Acetaldehyde,/**丙醛**/Propionaldehyde,/**乙烷**/Ethane
     ,/**石油底渣**/OilScarp
     ,/**乙炔**/Acetylene
     ,/**丙酮**/Acetone
-    ,/**二氯甲烷**/Dichloromethane,/**光气**/Phosgene,/**三乙基铝**/TriethylAluminium
-    ,/**DPC,碳酸二苯酯**/DiphenylCarbonate,/**双酚**/BPA, /**PC,环氧树脂**/EpoxyResin
+    ,/**一氯甲烷**/Chloromethane,/**二氯甲烷**/Dichloromethane,/**三氯甲烷/氯仿**/Chloroform,/**光气**/Phosgene,/**氯丙烯**/AllylChloride,/**二氯丙醇**/DichloroPropanol,/**环氧氯丙烷**/Epichlorohydrin
+    ,/**三乙基铝**/TriethylAluminium
+    ,/**DPC,碳酸二苯酯**/DiphenylCarbonate,/**双酚**/BPA, /**PC,聚碳酸酯/工程塑料**/Polycarbonate ,/**四氟乙烯**/Tetrafluoroethylene
 
+    ,/**铬酸锌**/ ZincChromate,/**氧化锌**/Zincoxide,/**氯化锌**/ZincChloride
     ,/**醋酸钙**/CalciumAcetate
     ;
     public OreDictMaterial mat;
-    public static class decomposingTarget{ public OreDictMaterial material;public int amount;
-        public decomposingTarget(OreDictMaterial material,int amount){this.amount=amount;this.material=material;}
-    }
-
-    /** Register Material that decomposes when heating
-     * @param decompAmount how many unit of this material will decompose to decompTargets material
-     */
-    public OreDictMaterial registerHeatDecomp(int id, String OreDictName, String EnglishName, int decompTempK, int colorR, int colorG, int colorB, int colorA, String formula, int decompAmount,decomposingTarget... decompTargets) {
-        mat = OreDictMaterial.createMaterial(id, OreDictName, EnglishName);
-        mat.setTextures(TextureSet.SET_METALLIC);
-        mat.setRGBa(colorR, colorG, colorB, colorA);
-        mat.heat(decompTempK+1, decompTempK+2);
-        mat.setOriginalMod(MOD_DATA);
-        if (formula != null)mat.mTooltipChemical = formula;
-        mat.put(TD.ItemGenerator.DUSTS,TD.Compounds.DECOMPOSABLE);
-        ArrayList<ItemStack> outputsTmp= new ArrayList<>();
-        for (decomposingTarget target:decompTargets) outputsTmp.add(OP.dust.mat(target.material,target.amount));
-        ItemStack[] outputs=new ItemStack[outputsTmp.size()];
-        outputsTmp.toArray(outputs);
-        RM.CrucibleSmelting.addRecipe(new Recipe(F, F, F, ST.array(getDust(decompAmount)),outputs, null, null, ZL_FS, ZL_FS, 0, 0,decompTempK));
-    return mat;
-    }
     public OreDictMaterial registerWithDust(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
         mat = OreDictMaterial.createMaterial(id, OreDictName, EnglishName);
         mat.setTextures(TextureSet.SET_METALLIC);
@@ -78,7 +51,7 @@ public enum matList {
     }
 
     public OreDictMaterial registerC(int id, String OreDictName, String EnglishName, int meltTempC, int boilTempC, int colorR, int colorG, int colorB, int colorA, String formula) {
-        return register(id, OreDictName, EnglishName, meltTempC+273, boilTempC+235, colorR, colorG, colorB, colorA, formula);
+        return register(id, OreDictName, EnglishName, meltTempC+273, boilTempC+273, colorR, colorG, colorB, colorA, formula);
     }
     public OreDictMaterial get() {
         return mat;

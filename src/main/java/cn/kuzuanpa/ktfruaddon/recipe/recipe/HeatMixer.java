@@ -16,7 +16,7 @@ import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.HeatMixer;
 import static gregapi.data.CS.*;
 
 public class HeatMixer {
-    public HeatMixer() {
+    public static void init(){
         HeatMixer.addRecipe1(T, 16, 354, OM.dust(MT.LiOH, U * 18), FL.array(MT.Cl.gas(U * 6, T)), FL.array(MT.H2O.liquid(U * 9, F), MT.LiClO3.liquid(U * 5, F)), OM.dust(MT.LiCl, U * 10));
         HeatMixer.addRecipe1(T, 16, 48, OM.dust(MT.S, U), MT.H.gas(U * 2, T), MT.H2S.gas(U * 3, F), ZL_IS);
         HeatMixer.addRecipe1(T, 16, 48, OM.dust(MT.Blaze, U9), MT.H.gas(U * 2, T), MT.H2S.gas(U * 3, F), ZL_IS);

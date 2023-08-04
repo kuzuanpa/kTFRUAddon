@@ -9,6 +9,6 @@
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 public class Worktable {
-    public Worktable(){
+    public static void init(){
     }
 }

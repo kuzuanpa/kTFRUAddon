@@ -21,5 +21,5 @@ public class matAlia {
     public OreDictMaterial nAmmoniumChromicSulfate = matList.AmmoniumChromicSulfate.mat;
     public OreDictMaterial pLiuSuanGeAn = matList.AmmoniumChromicSulfate.mat;
     public OreDictMaterial aDPC = matList.DiphenylCarbonate.mat;
-    public OreDictMaterial aPC = matList.EpoxyResin.mat;
+    public OreDictMaterial aPC = matList.Polycarbonate.mat;
 }

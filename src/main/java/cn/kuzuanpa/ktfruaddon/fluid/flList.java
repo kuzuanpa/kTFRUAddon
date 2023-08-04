@@ -33,12 +33,15 @@ public enum flList {
     ,CleanedOilExtraHeavy,CleanedOilHeavy,CleanedOilMedium,CleanedOilNormal,CleanedOilLight
     ,/**一氧化碳**/CarbonMonoxide,/**石油脱硫剂**/ OilDesulfurizationer,/**硫化石油脱硫剂**/SulfuredOilDesulfurizationer,/**石油气**/OilGas,/**裂化石油气**/CrackedOilGas,/**初底油**/InitalBottomOil,/**石脑油**/Naphtha
     ,/**次氯酸**/HypochlorousAcid,/**氯酸**/ChloricAcid,/**高氯酸**/PerchloricAcid,/**光气**/Phosgene
-    ,/**苯**/Benzene,/**甲苯**/Toluene
-    ,/**甲醇**/Methanol,/**丙醇**/Propanol,/**丙二醇**/Propanediol
+    ,/**苯**/Benzene,/**甲苯**/Toluene,/**苯酚**/Phenol
+    ,/**甲醇**/Methanol,/**丙醇**/Propanol,/**丙二醇**/Propanediol,/**乙烷**/Ethane,/**二甲醚**/Methoxymethane
     ,/**甲醛**/Formaldehyde,/**乙醛**/Acetaldehyde,/**丙醛**/Propionaldehyde
     ,/**乙炔**/Acetylene
     ,/**丙酮**/Acetone
-    ,/**二氯甲烷**/Dichloromethane
+    ,/**一氯甲烷**/Chloromethane,/**二氯甲烷**/Dichloromethane,/**三氯甲烷/氯仿**/Chloroform,/**氯丙烯**/AllylChloride,/**二氯丙醇**/DichloroPropanol,/**丙烯醇**/AllylAlcohol,/**乙酸烯丙酯**/AllylAcetate,/**环氧氯丙烷**/Epichlorohydrin,/**甲基丙烯酸**/MethacrylicAcid
+    ,/**冰醋酸**/GlacialAceticAcid
+    ,/**双酚钠盐溶液**/ SolutionBPASodium
+    ,/**四氟乙烯**/Tetrafluoroethylene
     ,CoalTar, WoodTar
     ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,
     ;

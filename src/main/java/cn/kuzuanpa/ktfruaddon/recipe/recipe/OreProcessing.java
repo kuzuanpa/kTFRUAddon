@@ -21,7 +21,7 @@ import gregapi.util.ST;
 import static gregapi.data.CS.*;
 
 public class OreProcessing {
-    public OreProcessing() {
+    public static void init(){
   //Cr processing
         RM.Bath.addRecipeX(T,0, 512 , ST.array(OM.dust(MT.OREMATS.Chromite, U*2), OM.dust(matList.AmmoniumSulfate.get(), U*9)), FL.array(MT.H2SO4.liquid(U*6,F)), FL.array(FL.Water.make(4000)), OM.dust(matList.AmmoniumChromicSulfate.get(), U*6), OM.dust(matList.AmmoniumIronIIISulfate.mat, U*3));
         RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2*U,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OM.dust(matList.AmmoniumSulfate.mat,U*9));

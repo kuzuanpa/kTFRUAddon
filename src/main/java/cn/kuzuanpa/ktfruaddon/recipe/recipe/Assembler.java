@@ -10,7 +10,7 @@ package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 public class Assembler
 {
-    public Assembler() {
+    public static void init(){
 
     }
 }
