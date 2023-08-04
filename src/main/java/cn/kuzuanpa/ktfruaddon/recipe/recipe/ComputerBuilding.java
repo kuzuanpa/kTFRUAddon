@@ -9,7 +9,7 @@ import gregapi.util.ST;
 import static gregapi.data.CS.*;
 
 public class ComputerBuilding {
-    public ComputerBuilding(){
+    public static void init(){
         MultiTileEntityRegistry gRegistry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
         MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
 

@@ -23,7 +23,7 @@ import static gregapi.data.CS.*;
 import static gregapi.util.CR.DEF_REV;
 
 public class Circuits {
-    public Circuits(){
+    public static void init(){
         CR.shaped(ItemList.ResistanceT1.get(2),DEF_REV,"RCh","LPL"," Cx", 'P',OP.plateTiny.mat(MT.Ceramic,1),'L',OP.wireFine.mat(MT.Cupronickel,1),'C',OP.plateTiny.mat(MT.Cu,1),'R',OP.foil.mat(MT.Rubber,1));
         CR.shaped(ItemList.ResistanceT2.get(2),DEF_REV,"RCh","LPL"," Cx", 'P',OP.plateTiny.mat(MT.Ceramic,1),'L',OP.wireFine.mat(MT.Nichrome,1),'C',OP.plateTiny.mat(MT.Cu,1),'R',OP.foil.mat(MT.Rubber,1));
         recipeManager.Assembler.addRecipeX(F,16,120,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Cupronickel,10),OP.plate.mat(MT.Ceramic,1),OP.foil.mat(MT.Rubber,6)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.ResistanceT1.get(12));

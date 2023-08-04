@@ -187,10 +187,10 @@ public class itemIT extends MultiItemRandom {
         ItemList.CircuitPartPhotomaskT5.set(addItem(20102, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
         ItemList.CircuitPartPhotomaskT6.set(addItem(20103, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
 
-        ItemList.CircuitPartPhotomaskT3.set(addItem(20110, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartPhotomaskT4.set(addItem(20111, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartPhotomaskT5.set(addItem(20112, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartPhotomaskT6.set(addItem(20113, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT3.set(addItem(20110, "CircuitPart Wafer (200um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT4.set(addItem(20111, "CircuitPart Wafer (72um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT5.set(addItem(20112, "CircuitPart Wafer (40um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT6.set(addItem(20113, "CircuitPart Wafer (8um)", "CircuitPart Ex"));
 
         ItemList.CircuitPartWaferT3Developed.set(addItem(20120, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
         ItemList.CircuitPartWaferT4Developed.set(addItem(20121, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));

@@ -13,12 +13,13 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class recipeInit {
     public recipeInit(FMLInitializationEvent aEvent){
-        new HeatMixer();
-        new ParticleCollinder();
-        new OreProcessing();
-        new Chemistry();
-        new Circuits();
-        new ComputerBuilding();
-        new OilProcessing();
+        HeatMixer.init();
+        ParticleCollinder.init();
+        OreProcessing.init();
+        Chemistry.init();
+        Circuits.init();
+        ComputerBuilding.init();
+        OilProcessing.init();
+        Plastic.init();
     }
 }

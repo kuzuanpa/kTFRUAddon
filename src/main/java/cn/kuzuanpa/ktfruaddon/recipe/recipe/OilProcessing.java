@@ -21,7 +21,7 @@ import static gregapi.data.CS.*;
 import static gregapi.data.OP.*;
 
 public class OilProcessing {
-    public OilProcessing() {
+    public static void init(){
 //Oil
         recipeManager.HeatMixer.addRecipeX(false,32,200,ST.array(OP.dust.mat(MT.Cu,0), OP.dustTiny.mat(MT.Zn,0), OP.dustTiny.mat(MT.Cr,0)),FL.array(FL.Hydrogen.make(200),flList.CarbonMonoxide.make(100)),FL.array(flList.Methanol.make(120)));
         RM.Mixer.addRecipeX(false,64,640, ST.array(OM.dust(MT.NaOH,U)), FL.array(flList.Methanol.make(500), FL.Water.make(1500)),FL.array(flList.OilDesulfurizationer.make(2000)));

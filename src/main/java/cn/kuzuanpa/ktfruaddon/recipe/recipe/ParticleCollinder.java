@@ -13,11 +13,12 @@ import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.util.ST;
 
-import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.*;
-import static gregapi.data.CS.*;
+import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.ParticleCollider;
+import static gregapi.data.CS.T;
+import static gregapi.data.CS.U;
 
 public class ParticleCollinder {
-    public ParticleCollinder() {
+    public static void init(){
         //Copied from GT6U
         ParticleCollider.addRecipe1(T, 8192, 20, new long[]{100, 100, 10, 200, 200, 50}, ST.tag(1), FL.Hydrogen.make(10), FL.Hydrogen.make(5), ItemList.Proton.get(1), ItemList.Anti_Proton.get(1), ItemList.Neutron.get(1), ItemList.Electron.get(1), ItemList.Positron.get(1), ItemList.Neutrino.get(1)).setSpecialNumber(10000000);
         ParticleCollider.addRecipe1(T, 8192, 40, new long[]{80, 80, 8, 160, 160, 30}, ST.tag(1), FL.Helium.make(10), FL.Helium.make(6), ItemList.Proton.get(1), ItemList.Anti_Proton.get(1), ItemList.Neutron.get(1), ItemList.Electron.get(1), ItemList.Positron.get(1), ItemList.Neutrino.get(1)).setSpecialNumber(10000000);

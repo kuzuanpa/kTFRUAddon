@@ -24,10 +24,8 @@ MultiBlock Machine in IV or later
 
 
 **Current development Focusing**
-
-The petrochemical industry builds the foundation of modern society, and we should join them in game! more plastic, more pipes, more machines!
-
-The MaskAligner machine on the side can't wait now, come and add the most critical photoresist to it!
+![](libs/readme1.png)
+We shouldn't generates electric only by some rotating thing, use chemicals directly will be more effective.
 
 **Internationalization && Localization**
 
@@ -61,6 +59,5 @@ zh_CN:
 
 **当前开发重点：**
 
-石化工业构建了现代社会的基础，我们应该在游戏里还原它们，更多塑料，更多管道，更多机器！
-
-一旁的光刻机已经迫不及待了，现在来为它加入最关键的光刻胶！
+![](libs/readme1.png)
+人们不能只依靠那些转来转去的东西发电, 使用化学物质直接发电会更加高效.
