@@ -53,5 +53,11 @@ public class Plastic {
 
         recipeManager.HeatMixer .addRecipe1(F,256,120,OP.dust.mat(MT.K2S2O7,0),FL.array(flList.Tetrafluoroethylene.make(1000),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.Teflon,7));
 
+        recipeManager.HeatMixer .addRecipe2(F,320,120,matList.BPA.getDust(1),OP.dust.mat(MT.NaOH,2),FL.array(flList.Epichlorohydrin.make(1000)),FL.array(FL.Saltwater.make(800)),/*TODO*/);
+
+        recipeManager.HeatMixer .addRecipe1(F,148,87 ,matList.TriethylAluminium.getDust(0),FL.array(FL.Ethylene.make(100),MT.TiCl4.liquid(0,false)),ZL_FS,OP.dust.mat(MT.Plastic,1));
+
+        recipeManager.HeatMixer .addRecipe0(F,320,120,FL.array(MT.H2SO4.liquid(0,false),flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
+        recipeManager.HeatMixer .addRecipe1(F,320,120,OP.dust.mat(MT.NaOH,0),FL.array(flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
     }
 }
