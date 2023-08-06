@@ -102,7 +102,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(2000);
         mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(200 * 15);
         mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(200 * 15);
-        mTanks[4].readFromNBT(aNBT, NBT_TANK+".static").setCapacity(1000);
+        mTanks[4].readFromNBT(aNBT, NBT_TANK+".4").setCapacity(1000);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         mTanks[1].writeToNBT(aNBT, NBT_TANK+".1");
         mTanks[2].writeToNBT(aNBT, NBT_TANK+".2");
         mTanks[3].writeToNBT(aNBT, NBT_TANK+".3");
-        mTanks[4].writeToNBT(aNBT, NBT_TANK+".static");
+        mTanks[4].writeToNBT(aNBT, NBT_TANK+".4");
     }
 
     @Override
