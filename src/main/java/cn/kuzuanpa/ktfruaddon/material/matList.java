@@ -23,11 +23,11 @@ public enum matList {
     ,/**乙炔**/Acetylene
     ,/**丙酮**/Acetone
     ,/**一氯甲烷**/Chloromethane,/**二氯甲烷**/Dichloromethane,/**三氯甲烷/氯仿**/Chloroform,/**光气**/Phosgene,/**氯丙烯**/AllylChloride,/**二氯丙醇**/DichloroPropanol,/**环氧氯丙烷**/Epichlorohydrin
-    ,/**三乙基铝**/TriethylAluminium
-    ,/**DPC,碳酸二苯酯**/DiphenylCarbonate,/**双酚**/BPA, /**PC,聚碳酸酯/工程塑料**/Polycarbonate ,/**四氟乙烯**/Tetrafluoroethylene
-
+    ,/**三乙基铝**/TriethylAluminium,/**电石**/CalciumCarbide,/**氢氧化钙**/CalciumHydroxide
+    ,/**DPC,碳酸二苯酯**/DiphenylCarbonate,/**双酚**/BPA, /**PC,聚碳酸酯/工程塑料**/Polycarbonate ,/**四氟乙烯**/Tetrafluoroethylene,/**环氧树脂**/EpoxyResin
+    ,/**乙酸乙烯酯**/VinylAcetate,/**聚乙酸乙烯**/PolyVinylAcetate,/**丁二烯**/Butadiene
     ,/**铬酸锌**/ ZincChromate,/**氧化锌**/Zincoxide,/**氯化锌**/ZincChloride
-    ,/**醋酸钙**/CalciumAcetate
+    ,/**醋酸钙**/CalciumAcetate,/**甲基氯化镁**/MethylmagnesiumChloride,/**一甲三氯硅烷**/Methyltrichlorosilane,/**二甲二氯硅烷**/Dichlorodimethylsilane,/**硅橡胶液**/SiliconeRubber,/**氯化汞**/MercuryIIChloride,/**二氯乙烷**/DichloroEthane,/**二氯丙烷**/DichloroPropane,/**氯乙烯**/VinylChloride,/**乙苯**/Ethylbenzene,/**一氯乙苯**/ChloroPhenylethane,/**乙烯苯**/Styrene,/**丁苯橡胶液**/SBR,/**异戊二烯**/Isoprene,/**氯乙醇**/Chloroethanol,/**乙二醇**/EthyleneGlycol,/**聚甲基丙烯酸甲酯**/PolymethylMethacrylate,/**聚乙烯醇**/PVA,/**六氟丙烯**/HPF,/**四氟磺内酯**/TFES,/**全氟环氧丙烷**/HFPO,/**全氟磺酸单体前体**/PrecursorPSVE,/**全氟磺酸单体**/PSVE,/**全氟树脂**/PFSA,/**八氟环丁烷**/Perfluorocyclobutane,/**四氯化硅**/Tetrachorosilane,/**氢溴酸**/HydrobromicAcid
     ;
     public OreDictMaterial mat;
     public OreDictMaterial registerWithDust(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
