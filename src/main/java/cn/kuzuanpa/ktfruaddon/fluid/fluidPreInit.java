@@ -84,13 +84,60 @@ public class fluidPreInit {
         flList.MethacrylicAcid.register("methacrylicacid","MethacrylicAcid",null, LIQUID);
         //冰醋酸
         flList.GlacialAceticAcid.register("glacialaceticacid","GlacialAceticAcid",null, LIQUID);
-
-
+        //硅橡胶液
+        flList.LiquidSiliconeRubber.register("LiquidSiliconeRubber","LiquidSiliconeRubber",matList.SiliconeRubber.get(), LIQUID);
+        //甲基氯化镁
+        flList.MethylmagnesiumChloride.register("MethylmagnesiumChloride","MethylmagnesiumChloride",matList.MethylmagnesiumChloride.get(), LIQUID);
+        //一甲三氯硅烷
+        flList.Methyltrichlorosilane.register("Methyltrichlorosilane","Methyltrichlorosilane",matList.Methyltrichlorosilane.get(), LIQUID);
+        //二甲二氯硅烷
+        flList.Dichlorodimethylsilane.register("Dichlorodimethylsilane","Dichlorodimethylsilane",matList.Dichlorodimethylsilane.get(), LIQUID);
+        //二氯乙烷
+        flList.DichloroEthane.register("DichloroEthane","DichloroEthane",matList.DichloroEthane.get(), LIQUID);
+        //二氯丙烷
+        flList.DichloroPropane.register("DichloroPropane","DichloroPropane",matList.DichloroPropane.get(), LIQUID);
+        //氯乙烯
+        flList.VinylChloride.register("VinylChloride","VinylChloride",matList.VinylChloride.get(), GAS);
+        //乙苯
+        flList.Ethylbenzene.register("Ethylbenzene","Ethylbenzene",matList.Ethylbenzene.get(), LIQUID);
+        //一氯乙苯
+        flList.ChloroPhenylethane.register("ChloroPhenylethane","ChloroPhenylethane",matList.ChloroPhenylethane.get(), LIQUID);
+        //乙烯苯
+        flList.Styrene.register("Styrene","Styrene",matList.Styrene.get(), LIQUID);
+        //丁苯橡胶液
+        flList.SBR.register("SBR","SBR",matList.SBR.get(), LIQUID);
+        //异戊二烯
+        flList.Isoprene.register("Isoprene","Isoprene",matList.Isoprene.get(), LIQUID);
+        //氯乙醇
+        flList.Chloroethanol.register("Chloroethanol","Chloroethanol",matList.Chloroethanol.get(), LIQUID);
+        //乙二醇
+        flList.EthyleneGlycol.register("EthyleneGlycol","EthyleneGlycol",matList.EthyleneGlycol.get(), LIQUID);
+        //六氟丙烯
+        flList.HexaFluoroPropylene.register("HPF","HPF",matList.HPF.get(), GAS);
+        //四氟磺内酯
+        flList.TFES.register("TFES","TFES",matList.TFES.get(), LIQUID);
+        //全氟环氧丙烷
+        flList.HFPO.register("HFPO","HFPO",matList.HFPO.get(), GAS);
+        //聚甲基丙烯酸甲酯
+        flList.PolymethylMethacrylate.register("PolymethylMethacrylate","Polymethyl Methacrylate",matList.PolymethylMethacrylate.get(), LIQUID);
+        //全氟磺酸单体前体
+        flList.PrecursorPSVE.register("PrecursorPSVE","PrecursorPSVE",matList.PrecursorPSVE.get(), LIQUID);
+        //全氟磺酸单体
+        flList.PSVE.register("PSVE","PSVE",matList.PSVE.get(), LIQUID);
+        //八氟环丁烷
+        flList.Perfluorocyclobutane.register("perfluorocyclobutane","perfluorocyclobutane",matList.Perfluorocyclobutane.get(), GAS);
+        //乙酸乙烯酯
+        flList.VinylAcetate.register("VinylAcetate","VinylAcetate",matList.VinylAcetate.get(), LIQUID);
+        //丁二烯
+        flList.Butadiene.register("Butadiene","Butadiene",matList.Butadiene.get(), GAS);
         //双酚钠盐溶液
         flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
-
         //四氟乙烯
         flList.Tetrafluoroethylene.register("tetrafluoroethylene","Tetrafluoroethylene",null,GAS);
+        //四氯化硅
+        flList.Tetrachorosilane.register("Tetrachorosilane","Tetrachorosilane",matList.Tetrachorosilane.get(), LIQUID);
+        //氢溴酸
+        flList.HydrobromicAcid.register("HydrobromicAcid","HydrobromicAcid",matList.HydrobromicAcid.get(), GAS);
 
         flList.DesaltOilExtraHeavy.register("desaltoilextraheavy","Desalinized Very Heavy Oil",null,LIQUID,1000,277,900,1000);
         flList.DesaltOilHeavy.register("desaltoilheavy","Desalinized Heavy Oil",null,LIQUID,1000,277,800,1000);
