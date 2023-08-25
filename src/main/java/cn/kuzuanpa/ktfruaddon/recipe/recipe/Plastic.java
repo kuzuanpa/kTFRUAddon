@@ -40,13 +40,13 @@ public class Plastic {
         RM.           Mixer              .addRecipe0(F,100,120,FL.array(flList.AllylChloride.make(100),flList.HypochlorousAcid.make(100)),FL.array(flList.Dichloromethane.make(100)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140,100,FL.array(MT.Glycerol.liquid(U10,false),MT.HCl.gas(U5,false),flList.GlacialAceticAcid.make(0)),FL.array(flList.Dichloromethane.make(100)),ZL_IS);
         recipeManager.HeatMixer          .addRecipe1(F,256,80,OP.dust.mat(MT.Ag, 0),FL.array(FL.Propylene.make(100),FL.Oxygen.make(100),FL.Hydrogen.make(100)),flList.AllylAlcohol.make(100),ZL_IS);
-        RM.           Mixer              .addRecipe1(F,256,80,OP.dust.mat(MT.Pd, 0),FL.array(FL.Propylene.make(100),FL.Oxygen.make(100),flList.GlacialAceticAcid.make(40)),flList.AllylAcetate.make(100),ZL_IS);
+        RM.           Mixer              .addRecipe1(F,256,80,OP.dust.mat(MT.Pb, 0),FL.array(FL.Propylene.make(100),FL.Oxygen.make(100),flList.GlacialAceticAcid.make(40)),flList.AllylAcetate.make(100),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140,10,FL.array(flList.AllylAcetate.make(100),FL.Water.make(100)),FL.array(flList.AllylAlcohol.make(100),flList.GlacialAceticAcid.make(40)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140,40,FL.array(flList.AllylAlcohol.make(100),MT.Cl.gas(U5,false)),FL.array(flList.DichloroPropanol.make(100),MT.HCl.gas(U5,false)),ZL_IS);
         recipeManager.HeatMixer          .addRecipe1(F,148,120,OP.dust.mat(MT.NaOH,1),FL.array(flList.DichloroPropanol.make(100)),FL.array(flList.Epichlorohydrin.make(100)),ZL_IS);
         recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.CarbonMonoxide.make(100),FL.Propylene.make(100),MT.HF.gas(0,false)),FL.array(flList.MethacrylicAcid.make(100)),ZL_IS);
 
-        RM           .Bath               .addRecipe2(F,0,80,OP.dust.mat(MT.NaOH,4),matList.BPA.getDust(4),ZL_FS,FL.array(flList.SolutionBPASodium.make(1000)),ZL_IS);
+        RM           .Bath               .addRecipe2(F,0,80,OP.dust.mat(MT.NaOH,4),matList.BPA.getDust(4),FL.array(FL.Water.make(1000)),FL.array(flList.SolutionBPASodium.make(1000)),ZL_IS);
         recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.SolutionBPASodium.make(1000),flList.Phosgene.make(200),flList.Dichloromethane.make(200)),ZL_FS,matList.Polycarbonate.getDust(4));
 
         recipeManager.HeatMixer          .addRecipe1(F,142,380,OP.dust.mat(MT.Zn,1),FL.array(MT.HF.gas(16*U10,false),flList.Chloroform.make(800)),FL.array(flList.Tetrafluoroethylene.make(400),MT.HCl.gas(2*U,false)),matList.ZincChloride.getDust(1));
@@ -97,7 +97,7 @@ public class Plastic {
 
         recipeManager.HeatMixer          .addRecipe0(F,256,120,FL.array(flList.Tetrafluoroethylene.make(700)),FL.array(flList.HexaFluoroPropylene.make(200),flList.Perfluorocyclobutane.make(200)),ZL_IS);
 
-        RM.           Electrolyzer       .addRecipe1(F,320,40,ItemList.ProtonExchangeMembrane.get(0),FL.array(flList.HexaFluoroPropylene.make(200),MT.Br.liquid(U5,false),FL.Water.make(200)),FL.array(flList.HFPO.make(200),flList.HydrobromicAcid.make(200),FL.Hydrogen.make(100)),ZL_IS);
+        RM.           Electrolyzer       .addRecipe1(F,320,40,ItemList.ProtonExchangeMembrane.get(0),FL.array(flList.HexaFluoroPropylene.make(200),MT.Br.liquid(U5,false)),FL.array(flList.HFPO.make(200),flList.HydrobromicAcid.make(200),FL.Hydrogen.make(100)),ZL_IS);
 
         recipeManager.PressureHeatMixer  .addRecipe0(F,0,1600,FL.array(flList.HexaFluoroPropylene.make(100),FL.Oxygen.make(100),flList.Benzene.make(0)),FL.array(flList.HFPO.make(100)),ZL_IS);
 
@@ -111,11 +111,11 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe0(F,512,120,FL.array(flList.MethacrylicAcid.make(100),flList.Methanol.make(100)),FL.array(FL.Water.make(100)),OP.dust.mat(matList.PolymethylMethacrylate.get(),1));
 
-        recipeManager.HeatMixer          .addRecipe2(F,310,120,OP.dust.mat(MT.Au,0),OP.dust.mat(MT.Pd,0),FL.array(FL.Ethylene.make(100),flList.GlacialAceticAcid.make(100),FL.Oxygen.make(100)),FL.array(FL.CarbonDioxide.make(100),FL.Water.make(100)),OP.dust.mat(matList.PolymethylMethacrylate.get(),1));
+        recipeManager.HeatMixer          .addRecipe2(F,310,120,OP.dust.mat(MT.Au,0),OP.dust.mat(MT.Pb,0),FL.array(FL.Ethylene.make(100),flList.GlacialAceticAcid.make(100),FL.Oxygen.make(100)),FL.array(FL.CarbonDioxide.make(100),FL.Water.make(100)),OP.dust.mat(matList.VinylAcetate.get(),1));
 
-        recipeManager.HeatMixer          .addRecipe0(F,262,140,FL.array(flList.Acetylene.make(100),flList.GlacialAceticAcid.make(100)),ZL_FS,OP.dust.mat(matList.PolymethylMethacrylate.get(),1));
+        recipeManager.HeatMixer          .addRecipe0(F,262,140,FL.array(flList.Acetylene.make(100),flList.GlacialAceticAcid.make(100)),FL.array(flList.VinylAcetate.make(100)),ZL_IS);
 
-        recipeManager.HeatMixer          .addRecipe1(F,262,140,matList.PolymethylMethacrylate.getDust(1),FL.array(MT.H2O2.liquid(5*U100,false),flList.Methanol.make(0)),FL.array(FL.Water.make(50)),OP.dust.mat(matList.PolyVinylAcetate.get(),1));
+        recipeManager.HeatMixer          .addRecipe1(F,262,140,matList.VinylAcetate.getDust(1),FL.array(MT.H2O2.liquid(5*U100,false),flList.Methanol.make(0)),FL.array(FL.Water.make(50)),OP.dust.mat(matList.PolyVinylAcetate.get(),1));
 
         RM.           Mixer              .addRecipe2(F,140,320,matList.PolyVinylAcetate.getDust(1),OP.dust.mat(MT.NaOH,1),FL.array(flList.Methanol.make(0)),FL.array(flList.GlacialAceticAcid.make(100)),OP.dust.mat(matList.PVA.get(),1));
 

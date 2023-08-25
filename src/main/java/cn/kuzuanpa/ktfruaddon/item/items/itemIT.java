@@ -165,6 +165,8 @@ public class itemIT extends MultiItemRandom {
 
 //Circuits
         int i=20000;
+        ItemList.CircuitBoardEmptyT2.set(addItem(i++, "Plastic Circuit Board",""));
+        ItemList.CircuitBoardEmptyT3.set(addItem(i++, "Epoxy Resin Circuit Board",""));
         ItemList.ResistanceT1.set(addItem(i++, "Resistance (T1)",""));
         ItemList.DiodeT1     .set(addItem(i++, "Diode (T1)",""));
         ItemList.CapacitorT1 .set(addItem(i++, "Capacitor (T1)",""));
@@ -178,8 +180,6 @@ public class itemIT extends MultiItemRandom {
         ItemList.CapacitorT3 .set(addItem(i++, "Capacitor (T3)",""));
         ItemList.CoilT3      .set(addItem(i++, "Coil (T3)",""));
         ItemList.ResistanceT4.set(addItem(i++, "Resistance (T4)",""));
-        ItemList.DiodeT4     .set(addItem(i++, "Diode (T4)",""));
-        ItemList.CapacitorT4 .set(addItem(i++, "Capacitor (T4)",""));
         ItemList.CoilT4      .set(addItem(i++, "Coil (T4)",""));
 
         ItemList.CircuitPartPhotomaskT3.set(addItem(20100, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
@@ -211,6 +211,102 @@ public class itemIT extends MultiItemRandom {
         ItemList.CircuitPartWaferT4Checked.set(addItem(20151, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
         ItemList.CircuitPartWaferT5Checked.set(addItem(20152, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
         ItemList.CircuitPartWaferT6Checked.set(addItem(20153, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+
+
+//RAM
+        ItemList.RAMPhotomask200um.set(addItem(30000, "RAM Photo Mask (200um)", "RAM Ex"));
+        ItemList.RAMPhotomask72um.set(addItem(30001, "RAM Photo Mask (72um)", "RAM Ex"));
+        ItemList.RAMPhotomask40um.set(addItem(30002, "RAM Photo Mask (40um)", "RAM Ex"));
+        ItemList.RAMPhotomask8um.set(addItem(30003, "RAM Photo Mask (8um)", "RAM Ex"));
+        ItemList.RAMPhotomask400nm.set(addItem(30004, "RAM Photo Mask (400nm)", "RAM Ex"));
+        ItemList.RAMPhotomask80nm.set(addItem(30005, "RAM Photo Mask (80nm)", "RAM Ex"));
+        ItemList.RAMPhotomask32nm.set(addItem(30006, "RAM Photo Mask (32nm)", "RAM Ex"));
+        ItemList.RAMPhotomask14nm.set(addItem(30007, "RAM Photo Mask (14nm)", "RAM Ex"));
+
+
+        ItemList.RAMWafer200um.set(addItem(30050, "RAM Wafer (200um)", "RAM Ex"));
+        ItemList.RAMWafer72um.set(addItem(30051, "RAM Wafer (72um)", "RAM Ex"));
+        ItemList.RAMWafer40um.set(addItem(30052, "RAM Wafer (40um)", "RAM Ex"));
+        ItemList.RAMWafer8um.set(addItem(30053, "RAM Wafer (8um)", "RAM Ex"));
+        ItemList.RAMWafer400nm.set(addItem(30054, "RAM Wafer (400nm)", "RAM Ex"));
+        ItemList.RAMWafer80nm.set(addItem(30055, "RAM Wafer (80nm)", "RAM Ex"));
+        ItemList.RAMWafer32nm.set(addItem(30056, "RAM Wafer (32nm)", "RAM Ex"));
+        ItemList.RAMWafer14nm.set(addItem(30057, "RAM Wafer (14nm)", "RAM Ex"));
+
+        ItemList.RAMWafer200umDeveloped.set(addItem(30100, "RAM Wafer200umDeveloped", "RAM Wafer200umDeveloped"));
+        ItemList.RAMWafer72umDeveloped.set(addItem(30101, "RAM Wafer72umDeveloped", "RAM Wafer72umDeveloped"));
+        ItemList.RAMWafer40umDeveloped.set(addItem(30102, "RAM Wafer40umDeveloped", "RAM Wafer40umDeveloped"));
+        ItemList.RAMWafer8umDeveloped.set(addItem(30103, "RAM Wafer8umDeveloped", "RAM Wafer8umDeveloped"));
+        ItemList.RAMWafer400nmDeveloped.set(addItem(30104, "RAM Wafer400nmDeveloped", "RAM Wafer400nmDeveloped"));
+        ItemList.RAMWafer80nmDeveloped.set(addItem(30105, "RAM Wafer80nmDeveloped", "RAM Wafer80nmDeveloped"));
+        ItemList.RAMWafer32nmDeveloped.set(addItem(30106, "RAM Wafer32nmDeveloped", "RAM Wafer32nmDeveloped"));
+        ItemList.RAMWafer14nmDeveloped.set(addItem(30107, "RAM Wafer14nmDeveloped", "RAM Wafer14nmDeveloped"));
+
+        ItemList.RAMWafer200umHardBaked.set(addItem(30150, "RAM Wafer200umHardBaked", "RAM Wafer200umHardBaked"));
+        ItemList.RAMWafer72umHardBaked.set(addItem(30151, "RAM Wafer72umHardBaked", "RAM Wafer72umHardBaked"));
+        ItemList.RAMWafer40umHardBaked.set(addItem(30152, "RAM Wafer40umHardBaked", "RAM Wafer40umHardBaked"));
+        ItemList.RAMWafer8umHardBaked.set(addItem(30153, "RAM Wafer8umHardBaked", "RAM Wafer8umHardBaked"));
+        ItemList.RAMWafer400nmHardBaked.set(addItem(30154, "RAM Wafer400nmHardBaked", "RAM Wafer400nmHardBaked"));
+        ItemList.RAMWafer80nmHardBaked.set(addItem(30155, "RAM Wafer80nmHardBaked", "RAM Wafer80nmHardBaked"));
+        ItemList.RAMWafer32nmHardBaked.set(addItem(30156, "RAM Wafer32nmHardBaked", "RAM Wafer32nmHardBaked"));
+        ItemList.RAMWafer14nmHardBaked.set(addItem(30157, "RAM Wafer14nmHardBaked", "RAM Wafer14nmHardBaked"));
+
+        ItemList.RAMWafer200umDoped.set(addItem(30200, "RAM Wafer200umDoped", "RAM Wafer200umDoped"));
+        ItemList.RAMWafer72umDoped.set(addItem(30201, "RAM Wafer72umDoped", "RAM Wafer72umDoped"));
+        ItemList.RAMWafer40umDoped.set(addItem(30202, "RAM Wafer40umDoped", "RAM Wafer40umDoped"));
+        ItemList.RAMWafer8umDoped.set(addItem(30203, "RAM Wafer8umDoped", "RAM Wafer8umDoped"));
+        ItemList.RAMWafer400nmDoped.set(addItem(30204, "RAM Wafer400nmDoped", "RAM Wafer400nmDoped"));
+        ItemList.RAMWafer80nmDoped.set(addItem(30205, "RAM Wafer80nmDoped", "RAM Wafer80nmDoped"));
+        ItemList.RAMWafer32nmDoped.set(addItem(30206, "RAM Wafer32nmDoped", "RAM Wafer32nmDoped"));
+        ItemList.RAMWafer14nmDoped.set(addItem(30207, "RAM Wafer14nmDoped", "RAM Wafer14nmDoped"));
+
+        ItemList.RAMWafer200umChecked.set(addItem(30250, "RAM Wafer200umChecked", "RAM Wafer200umChecked"));
+        ItemList.RAMWafer72umChecked.set(addItem(30251, "RAM Wafer72umChecked", "RAM Wafer72umChecked"));
+        ItemList.RAMWafer40umChecked.set(addItem(30252, "RAM Wafer40umChecked", "RAM Wafer40umChecked"));
+        ItemList.RAMWafer8umChecked.set(addItem(30253, "RAM Wafer8umChecked", "RAM Wafer8umChecked"));
+        ItemList.RAMWafer400nmChecked.set(addItem(30254, "RAM Wafer400nmChecked", "RAM Wafer400nmChecked"));
+        ItemList.RAMWafer80nmChecked.set(addItem(30255, "RAM Wafer80nmChecked", "RAM Wafer80nmChecked"));
+        ItemList.RAMWafer32nmChecked.set(addItem(30256, "RAM Wafer32nmChecked", "RAM Wafer32nmChecked"));
+        ItemList.RAMWafer14nmChecked.set(addItem(30257, "RAM Wafer14nmChecked", "RAM Wafer14nmChecked"));
+
+        ItemList.RAMDie2K.set(addItem(30300, "RAMDie2K", "Wafer200umChecked"));
+        ItemList.RAMDie24K.set(addItem(30301, "RAMDie24K", "Wafer72umChecked"));
+        ItemList.RAMDie256K.set(addItem(30302, "RAMDie256K", "Wafer40umChecked"));
+        ItemList.RAMDie2M.set(addItem(30303, "RAMDie2M", "Wafer8umChecked"));
+        ItemList.RAMDie16M.set(addItem(30304, "RAMDie16M", "Wafer400nmChecked"));
+        ItemList.RAMDie128M.set(addItem(30305, "RAMDie128M", "Wafer80nmChecked"));
+        ItemList.RAMDie768M.set(addItem(30306, "RAMDie768M", "Wafer32nmChecked"));
+        ItemList.RAMDie2G.set(addItem(30307, "RAMDie2G", "Wafer14nmChecked"));
+        
+        ItemList.RAMBar2K4.set(addItem(30350, "RAMBar8K", "Composed by 4* 2K RAM Die")).registerOre("ktfruRAM8K");
+        ItemList.RAMBar24K4.set(addItem(30351, "RAMBar96K", "Composed by 4* 24K RAM Die")).registerOre("ktfruRAM96K");
+        ItemList.RAMBar256K4.set(addItem(30352, "RAMBar1M", "Composed by 4* 256K RAM Die")).registerOre("ktfruRAM1M");
+        ItemList.RAMBar2M4.set(addItem(30353, "RAMBar8M", "Composed by 4* 2M RAM Die")).registerOre("ktfruRAM8M");
+        ItemList.RAMBar16M4.set(addItem(30354, "RAMBar64M", "Composed by 4* 16M RAM Die")).registerOre("ktfruRAM64M");
+        ItemList.RAMBar128M4.set(addItem(30355, "RAMBar512M", "Composed by 4* 128M RAM Die")).registerOre("ktfruRAM512M");
+        ItemList.RAMBar768M4.set(addItem(30356, "RAMBar3G", "Composed by 4* 768M RAM Die")).registerOre("ktfruRAM3G");
+        ItemList.RAMBar2G4.set(addItem(30357, "RAMBar8G", "Composed by 4* 2G RAM Die")).registerOre("ktfruRAM8G");
+
+        ItemList.RAMBar2K8.set(addItem(30400, "RAMBar16K", "Composed by 8* 2K RAM Die")).registerOre("ktfruRAM16K");
+        ItemList.RAMBar24K8.set(addItem(30401, "RAMBar192K", "Composed by 8* 24K RAM Die")).registerOre("ktfruRAM192K");
+        ItemList.RAMBar256K8.set(addItem(30402, "RAMBar2M", "Composed by 8* 256K RAM Die")).registerOre("ktfruRAM2M");
+        ItemList.RAMBar2M8.set(addItem(30403, "RAMBar16M", "Composed by 8* 2M RAM Die")).registerOre("ktfruRAM16M");
+        ItemList.RAMBar16M8.set(addItem(30404, "RAMBar128M", "Composed by 8* 16M RAM Die")).registerOre("ktfruRAM128M");
+        ItemList.RAMBar128M8.set(addItem(30405, "RAMBar1G", "Composed by 8* 128M RAM Die")).registerOre("ktfruRAM1G");
+        ItemList.RAMBar768M8.set(addItem(30406, "RAMBar6G", "Composed by 8* 768M RAM Die")).registerOre("ktfruRAM6G");
+        ItemList.RAMBar2G8.set(addItem(30407, "RAMBar16G", "Composed by 8* 2G RAM Die")).registerOre("ktfruRAM16G");
+        
+        ItemList.RAMBar256K16.set(addItem(30452, "RAMBar4M", "Composed by 16* 256K RAM Die")).registerOre("ktfruRAM4M");
+        ItemList.RAMBar2M16.set(addItem(30453, "RAMBar32M", "Composed by 16* 2M RAM Die")).registerOre("ktfruRAM32M");
+        ItemList.RAMBar16M16.set(addItem(30454, "RAMBar256M", "Composed by 16* 16M RAM Die")).registerOre("ktfruRAM256M");
+        ItemList.RAMBar128M16.set(addItem(30455, "RAMBar2G", "Composed by 16* 128M RAM Die")).registerOre("ktfruRAM2G");
+        ItemList.RAMBar768M16.set(addItem(30456, "RAMBar12G", "Composed by 16* 768M RAM Die")).registerOre("ktfruRAM12G");
+        ItemList.RAMBar2G16.set(addItem(30457, "RAMBar32G", "Composed by 16* 2G RAM Die")).registerOre("ktfruRAM32G");
+        
+        ItemList.RAMBar16M32.set(addItem(30504, "RAMBar512M", "Composed by 32* 16M RAM Die")).registerOre("ktfruRAM512M");
+        ItemList.RAMBar128M32.set(addItem(30505, "RAMBar4G", "Composed by 32* 128M RAM Die")).registerOre("ktfruRAM4G");
+        ItemList.RAMBar768M32.set(addItem(30506, "RAMBar24G", "Composed by 32* 768M RAM Die")).registerOre("ktfruRAM24G");
+        ItemList.RAMBar2G32.set(addItem(30507, "RAMBar64G", "Composed by 32* 2G RAM Die")).registerOre("ktfruRAM64G");
 
 
     }

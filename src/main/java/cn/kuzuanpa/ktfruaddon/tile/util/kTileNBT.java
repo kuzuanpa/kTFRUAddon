@@ -8,7 +8,8 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile;
+
+package cn.kuzuanpa.ktfruaddon.tile.util;
 
 public class kTileNBT {
     public static class Generator {

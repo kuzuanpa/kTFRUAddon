@@ -42,9 +42,12 @@ public enum flList {
     ,/**冰醋酸**/GlacialAceticAcid,/**双酚钠盐溶液**/ SolutionBPASodium,/**四氟乙烯**/Tetrafluoroethylene
     ,/**硅橡胶液**/LiquidSiliconeRubber,/**甲基氯化镁**/MethylmagnesiumChloride,/**一甲三氯硅烷**/Methyltrichlorosilane,/**二甲二氯硅烷**/Dichlorodimethylsilane,/**二氯乙烷**/DichloroEthane,/**二氯丙烷**/DichloroPropane,/**氯乙烯**/VinylChloride,/**乙苯**/Ethylbenzene,/**一氯乙苯**/ChloroPhenylethane,/**乙烯苯**/Styrene,/**丁苯橡胶液**/SBR,/**异戊二烯**/Isoprene,/**氯乙醇**/Chloroethanol,/**乙二醇**/EthyleneGlycol
     ,/**乙酸乙烯酯**/VinylAcetate,/**丁二烯**/Butadiene
-    ,/**六氟丙烯**/HexaFluoroPropylene,/**四氟磺内酯**/TFES,/**全氟环氧丙烷**/HFPO,/**聚甲基丙烯酸甲酯**/PolymethylMethacrylate,/**全氟磺酸单体前体**/PrecursorPSVE,/**全氟磺酸单体**/PSVE,/**八氟环丁烷**/Perfluorocyclobutane,/**四氯化硅**/Tetrachorosilane,/**氢溴酸**/HydrobromicAcid
+    ,/**六氟丙烯**/HexaFluoroPropylene,/**四氟磺内酯**/TFES,/**全氟环氧丙烷**/HFPO,/**全氟磺酸单体前体**/PrecursorPSVE,/**全氟磺酸单体**/PSVE,/**八氟环丁烷**/Perfluorocyclobutane,/**四氯化硅**/Tetrachorosilane,/**氢溴酸**/HydrobromicAcid
+    ,/**丙二醇甲醚**/MethoxyPropanol,/**丙二醇甲醚醋酸酯**/PGMEA,/**重氮系光刻胶**/DNQPhotoresist,/**环己酮**/Cyclohexanone,/**PMMA系光刻胶**/PMMAPhotoresist
     ,CoalTar, WoodTar
-    ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,
+    ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,/**蚀刻液**/EtchingSolution
+
+    ,MoltenTeflon
     ;
     public Fluid fluid;
     public String name;
@@ -55,6 +58,11 @@ public enum flList {
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(FL.make(fluid,AmountPerUnit)),FL.array(FL.DistW.make(800)), OM.dust(material,U));
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);
+    }
+    /**Register a liquid which is a molten form of an material,notice 2 name args will add molten prefix automatically**/
+    public void registerMolten(String name, String localizedName, @NotNull OreDictMaterial material) {
+        fluid = FL.create("molten."+name, "Molten "+localizedName,material,1,material.mLiquidUnit,material.mMeltingPoint);
+        this.name=name;
     }
     public void register(String name, String localizedName, @Nullable OreDictMaterial material, int state) {
         fluid = FL.create(name,localizedName,material,state);

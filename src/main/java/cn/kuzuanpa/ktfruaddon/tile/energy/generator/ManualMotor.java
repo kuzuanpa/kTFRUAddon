@@ -41,7 +41,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import java.util.Collection;
 import java.util.List;
 
-import static cn.kuzuanpa.ktfruaddon.tile.kTileNBT.Generator.ManualMotorNBT;
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Generator.ManualMotorNBT;
 import static gregapi.data.CS.*;
 
 public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
