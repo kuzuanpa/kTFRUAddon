@@ -118,8 +118,6 @@ public class fluidPreInit {
         flList.TFES.register("TFES","TFES",matList.TFES.get(), LIQUID);
         //全氟环氧丙烷
         flList.HFPO.register("HFPO","HFPO",matList.HFPO.get(), GAS);
-        //聚甲基丙烯酸甲酯
-        flList.PolymethylMethacrylate.register("PolymethylMethacrylate","Polymethyl Methacrylate",matList.PolymethylMethacrylate.get(), LIQUID);
         //全氟磺酸单体前体
         flList.PrecursorPSVE.register("PrecursorPSVE","PrecursorPSVE",matList.PrecursorPSVE.get(), LIQUID);
         //全氟磺酸单体
@@ -155,6 +153,16 @@ public class fluidPreInit {
         flList.InitalBottomOil.register("initalbottomoil","Inital Bottom Oil",null, LIQUID,1000,277,500);
         //石脑油
         flList.Naphtha.register("naphtha","Naphtha",null,LIQUID);
+        //丙二醇甲醚
+        flList.MethoxyPropanol.register("MethoxyPropanol","MethoxyPropanol",matList.MethoxyPropanol.get(), LIQUID);
+        //丙二醇甲醚醋酸酯
+        flList.PGMEA.register("PGMEA","PGMEA",matList.PGMEA.get(), LIQUID);
+        //重氮系光刻胶
+        flList.DNQPhotoresist.register("DNQPhotoresist","DNQPhotoresist",matList.DNQPhotoresist.get(), LIQUID,1000,213);
+        //环己酮
+        flList.Cyclohexanone.register("Cyclohexanone","Cyclohexanone",matList.Cyclohexanone.get(), LIQUID);
+        //PMMA系光刻胶
+        flList.PMMAPhotoresist.register("PMMAPhotoresist","PMMAPhotoresist",matList.PMMAPhotoresist.get(), LIQUID,1000,228);
 
 
         //木煤气
@@ -175,5 +183,8 @@ public class fluidPreInit {
         flList.BlendedFuel5.register("blendedfuel5","Blended Fuel 5",null, LIQUID);
         flList.BioFuel1.register("biofuel1","Bio Fuel 1",null, LIQUID);
         flList.BioFuel2.register("biofuel2","Bio Fuel 2",null, LIQUID);
+        flList.EtchingSolution.register("etchingsolution","Etching Solution",null, LIQUID);
+
+        flList.MoltenTeflon.registerMolten("teflon","Teflon",MT.Teflon);
     }
 }

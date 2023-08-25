@@ -37,6 +37,20 @@ public enum ItemList implements IItemContainer{
     CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer40umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked,
     CPUWafer200umDoped, CPUWafer72umDoped, CPUWafer40umDoped, CPUWafer8umDoped, CPUWafer400nmDoped, CPUWafer80nmDoped, CPUWafer32nmDoped, CPUWafer14nmDoped,
     CPUWafer200umChecked, CPUWafer72umChecked, CPUWafer40umChecked, CPUWafer8umChecked, CPUWafer400nmChecked, CPUWafer80nmChecked, CPUWafer32nmChecked, CPUWafer14nmChecked,
+    CPUBoardT1,CPUBoardT2,CPUBoardT3,
+    RAMPhotomask200um, RAMPhotomask72um, RAMPhotomask40um, RAMPhotomask8um, RAMPhotomask400nm, RAMPhotomask80nm, RAMPhotomask32nm, RAMPhotomask14nm,
+    RAMWafer200um, RAMWafer72um, RAMWafer40um, RAMWafer8um, RAMWafer400nm, RAMWafer80nm, RAMWafer32nm, RAMWafer14nm,
+    RAMWafer200umDeveloped, RAMWafer72umDeveloped, RAMWafer40umDeveloped, RAMWafer8umDeveloped, RAMWafer400nmDeveloped, RAMWafer80nmDeveloped, RAMWafer32nmDeveloped, RAMWafer14nmDeveloped,
+    RAMWafer200umHardBaked, RAMWafer72umHardBaked, RAMWafer40umHardBaked, RAMWafer8umHardBaked, RAMWafer400nmHardBaked, RAMWafer80nmHardBaked, RAMWafer32nmHardBaked, RAMWafer14nmHardBaked,
+    RAMWafer200umDoped, RAMWafer72umDoped, RAMWafer40umDoped, RAMWafer8umDoped, RAMWafer400nmDoped, RAMWafer80nmDoped, RAMWafer32nmDoped, RAMWafer14nmDoped,
+    RAMWafer200umChecked, RAMWafer72umChecked, RAMWafer40umChecked, RAMWafer8umChecked, RAMWafer400nmChecked, RAMWafer80nmChecked, RAMWafer32nmChecked, RAMWafer14nmChecked,
+    RAMBoardT1,RAMBoardT2,RAMBoardT3,
+    RAMDie2K,   RAMDie24K,   RAMDie256K,   RAMDie2M,   RAMDie16M,   RAMDie128M,   RAMDie768M,   RAMDie2G,
+
+    RAMBar2K4,  RAMBar24K4,  RAMBar256K4,  RAMBar2M4,  RAMBar16M4,  RAMBar128M4,  RAMBar768M4,  RAMBar2G4,
+    RAMBar2K8,  RAMBar24K8,  RAMBar256K8,  RAMBar2M8,  RAMBar16M8,  RAMBar128M8,  RAMBar768M8,  RAMBar2G8,
+                             RAMBar256K16, RAMBar2M16, RAMBar16M16, RAMBar128M16, RAMBar768M16, RAMBar2G16,
+                                                       RAMBar16M32, RAMBar128M32, RAMBar768M32, RAMBar2G32,
 
     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4, CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4, CPUDieGT3699, CPUDieGT3699v2, CPUDieGT3699v3, CPUDieGT3699v4, CPUDieGT3680v3E, CPUDieGT3680v4E, CPUDieGT3699v3E, CPUDieGT3699v4E,
     
@@ -52,23 +66,15 @@ public enum ItemList implements IItemContainer{
 
     //Circuits
     //These Tier NOT corresponding the Tier of GT Circuits
+    DiodePartPhotomaskT2,DiodePartPhotomaskT3,
+    CircuitBoardEmptyT2,CircuitBoardEmptyT3,
     ResistanceT1, CapacitorT1, CoilT1,DiodeT1,
-    ResistanceT2, CapacitorT2, CoilT2,DiodeT2,
-    ResistanceT3, CapacitorT3, CoilT3,DiodeT3,
-    ResistanceT4, CapacitorT4, CoilT4,DiodeT4,
+    ResistanceT2, CapacitorT2, CoilT2,DiodeT2,DiodeT2Part,
+    ResistanceT3, CapacitorT3, CoilT3,DiodeT3,DiodeT3Part,
+    ResistanceT4,              CoilT4,
 //Compact
     //AdvancedRockery 1000-1999
     ArmorAirSealant,SpaceSuitCloth,
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -81,6 +87,7 @@ public enum ItemList implements IItemContainer{
 
     //itemComputer
     ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT3660,ComputerGT3680,ComputerGT3699,ComputerGT3660v2,ComputerGT3680v2,ComputerGT3699v2,ComputerGT3660v3,ComputerGT3680v3,ComputerGT3699v3,ComputerGT3660v4,ComputerGT3680v4,ComputerGT3699v4,ComputerGT3680v3e,ComputerGT3699v3e,ComputerGT3680v4e,ComputerGT3699v4e,
+    ComputerBasicCircuits,ComputerGoodCircuits,ComputerAdvancedCircuits,ComputerEliteCircuits,ComputerMasterCircuits,ComputerUltimateCircuits,
     //itemParticle
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
     //itemBatteryPole

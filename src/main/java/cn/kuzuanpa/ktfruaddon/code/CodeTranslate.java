@@ -57,13 +57,13 @@ public class CodeTranslate {
                     final Map<String, OreDictPrefix> sPrefixes = OreDictPrefix.sPrefixes;
                     try (BufferedWriter out = new BufferedWriter(new PrintWriter(new BufferedOutputStream(new FileOutputStream(output, true))))) {
                         for (OreDictPrefix prefix : sPrefixes.values()) for (short i = 0; i < 32767; i++) if (OreDictMaterial.get(i) != null && prefix.mat(OreDictMaterial.get(i), 1) != null) {
-                                 if(output.getName().contains("WithName"))out.write("OP." + prefix.mNameInternal + ".mat(" + materialIDToCode(i) + ",<StackSize>) <--> gregtech:" + prefix.mat(OreDictMaterial.get(i), 1).getItem().getUnlocalizedName() + ":" + i + "\n");
+                            out.write("OP." + prefix.mNameInternal + ".mat(" + materialIDToCode(i) + ",<StackSize>) <--> gregtech:" + prefix.mat(OreDictMaterial.get(i), 1).getItem().getUnlocalizedName() + ":" + i + "\n");
                         }
                         for (IL gItem : IL.values()) if (gItem != null && gItem.exists() && gItem.get(1) != null)
-                            if(output.getName().contains("WithName"))out.write("IL." + gItem.toString() + ".get(stackSize>) <--> gregtech:" + gItem.get(1).getItem().getUnlocalizedName() + ":" + gItem.get(1).getItemDamage() + "\n");
+                            out.write("IL." + gItem.toString() + ".get(stackSize>) <--> gregtech:" + gItem.get(1).getItem().getUnlocalizedName() + ":" + gItem.get(1).getItemDamage() + "\n");
 
                         for (ItemList kItem : ItemList.values()) if (kItem != null && kItem.get(1) != null)
-                            if(output.getName().contains("WithName"))out.write("ItemList." + kItem.toString() + ".get(stackSize>) <-->  ktfruaddon:" + kItem.get(1).getItem().getUnlocalizedName() + ":" + kItem.get(1).getItemDamage() + "\n");
+                            out.write("ItemList." + kItem.toString() + ".get(stackSize>) <-->  ktfruaddon:" + kItem.get(1).getItem().getUnlocalizedName() + ":" + kItem.get(1).getItemDamage() + "\n");
                     }
                     return;
                 }

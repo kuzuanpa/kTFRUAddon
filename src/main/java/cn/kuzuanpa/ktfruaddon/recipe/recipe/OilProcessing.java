@@ -100,7 +100,7 @@ public class OilProcessing {
         RM.Mixer.addRecipe0(false,64,20,FL.array(FL.BioEthanol.make(100),MT.H2SO4.liquid(2000,false)),FL.array(FL.Ethylene.make(100),MT.H2SO4.liquid(1000,false)));
 
         //Coal Boiling
-        RM.Centrifuge.addRecipe0(false,64,200,flList.CoalTar.make(100),FL.array(flList.Benzene.make(30),FL.Hydrogen.make(20),FL.Nitrogen.make(10),flList.CarbonMonoxide.make(70)));
+        RM.Centrifuge.addRecipe0(false,64,200,FL.array(flList.CoalTar.make(100)),FL.array(flList.Benzene.make(30),FL.Hydrogen.make(20),FL.Nitrogen.make(10),flList.CarbonMonoxide.make(70)),matList.Naphthalene.getDustTiny(1),matList.Naphthalene.getDustTiny(1));
 
         RM.Centrifuge.addRecipe0(false,64,100,flList.WoodTar.make(100),FL.array(FL.Methane.make(10),FL.CarbonDioxide.make(55),flList.CarbonMonoxide.make(20),FL.Hydrogen.make(5),FL.Ethylene.make(10),FL.Oil_Olive.make(60)));
 
@@ -112,9 +112,9 @@ public class OilProcessing {
 
         RM.Mixer.addRecipe0(false,32,40,FL.array(flList.OilGas.make(100),flList.Benzene.make(20),FL.Hydrogen.make(80)),FL.array(FL.Diesel.make(60),flList.CrackedOilGas.make(100)),ZL_IS);
 
-        recipeManager.DistillTower.addRecipe0(false,256,44,FL.array(flList.OilGas.make(1000)),FL.array(FL.Methane.make(372),flList.Ethane.make(262),FL.Propane.make(188),FL.Butane.make(128),FL.CarbonDioxide.make(38),FL.Nitrogen.make(12)),ZL_IS);
+        recipeManager.DistillTower.addRecipe0(false,256,44,FL.array(flList.OilGas.make(1000)),FL.array(FL.Methane.make(372),flList.Ethane.make(262),FL.Propane.make(188),FL.Butane.make(138),FL.CarbonDioxide.make(40)),ZL_IS);
 
-        recipeManager.DistillTower.addRecipe0(false,256,44,FL.array(flList.CrackedOilGas.make(1000)),FL.array(FL.Methane.make(183),flList.Ethane.make(152),FL.Propane.make(133),FL.Butane.make(128),FL.CarbonDioxide.make(102),FL.Nitrogen.make(42),flList.Butadiene.make(124),flList.Benzene.make(92),flList.Toluene.make(23),flList.Phenol.make(21)),ZL_IS);
+        recipeManager.DistillTower.addRecipe0(false,256,44,FL.array(flList.CrackedOilGas.make(1000)),FL.array(FL.Methane.make(183),flList.Ethane.make(152),FL.Propane.make(133),FL.Butane.make(128),FL.CarbonDioxide.make(134),flList.Butadiene.make(134),flList.Benzene.make(92),flList.Toluene.make(23),flList.Phenol.make(21)),ZL_IS);
 
         FM.Burn         .addRecipe0(T, - 64,  5, flList.Naphtha.make(1), FL.CarbonDioxide.make(1), ZL_IS);
         FM.Engine       .addRecipe0(T, - 64,  7, flList.Naphtha.make(1), FL.CarbonDioxide.make(1), ZL_IS);
