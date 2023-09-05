@@ -19,7 +19,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class itemComputer extends MultiItemRandom {
     public itemComputer() {
     super(MOD_ID, "ktfru.item.it.computer");
-    setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Computers", this, (short) 10));
+    setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Computers", this, (short) 17));
 }
     public static long getComputePowerFromID(int id){
         if (id > ComputePower.length||id<0) return 0;

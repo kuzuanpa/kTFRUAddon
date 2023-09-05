@@ -21,5 +21,6 @@ public class recipeInit {
         ComputerBuilding.init();
         OilProcessing.init();
         Plastic.init();
+        CompactItem.init();
     }
 }

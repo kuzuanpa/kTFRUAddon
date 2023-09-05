@@ -13,6 +13,8 @@ public class kMessages {
     public static final String
              FUEL_BATTERY_0="ktfru.tooltip.msg.energy.fuelbattery.0"
             ,FUEL_BATTERY_1="ktfru.tooltip.msg.energy.fuelbattery.1"
+            ,BASIN_MODEL_0 ="ktfru.tooltip.msg.machine.basinmodel.0"
+            ,BASIN_MODEL_1 ="ktfru.tooltip.msg.machine.basinmodel.1"
                     ;
 
 }

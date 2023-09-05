@@ -21,6 +21,6 @@ public class Chemistry {
         recipeManager.FuelBattery.addRecipe2(F,-64,4, ItemList.BatteryGoldPole.get(0),ItemList.BatteryCopperPole.get(0),FL.array(FL.Hydrogen.make(20),FL.Oxygen.make(10),FL.DistW.make(0)),FL.array(FL.DistW.make(5)),ZL_IS);
 
         RM.Mixer.addRecipeX(F,64,20,ST.array(OP.dust.mat(MT.Ge,1),OP.dust.mat(MT.In,1),OP.dust.mat(MT.Nb,1),OP.dust.mat(MT.Ti,1),OP.dust.mat(MT.Mg,1)),ZL_FS,ZL_FS,matList.JustForHensSoPretty.getDust(5));
-        RM.ImplosionCompressor.addRecipe1(F,64,1,matList.JustForHensSoPretty.getDust(9),ZL_FS,ZL_FS, ST.make(MD.MC,"spawn_egg",1,93));
+        RM.ImplosionCompressor.addRecipeX(F,64,1,ST.array(matList.JustForHensSoPretty.getDust(9),ST.make(MD.MC,"tnt",16),ST.tag(0)),ZL_FS,ZL_FS, ST.make(MD.MC,"spawn_egg",1,93));
     }
 }

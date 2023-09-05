@@ -17,7 +17,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class itemIT extends MultiItemRandom {
     public itemIT() {
         super(MOD_ID, "ktfru.item.it");
-        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: IT", this, (short) 9999));
+        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: IT", this, (short) 9951));
 
     }
 
@@ -27,119 +27,106 @@ public class itemIT extends MultiItemRandom {
         ItemList.MoO2Boule.set(addItem(9702, "MoO2 Boule", "Ready to Cut into Plates"));
         ItemList.MoO2BoulePure.set(addItem(9703, "Pure MoO2 Boule", "Ready to Cut into Plates"));
 
-        ItemList.SiliconPlate8inchT1.set(addItem(9800, "SiliconPlate8inchT1", "SiliconPlate8inchT1"));
-        ItemList.SiliconPlate8inchT2.set(addItem(9801, "SiliconPlate8inchT2", "SiliconPlate8inchT2"));
-        ItemList.MoO2Plate8inchT1.set(addItem(9802, "MoO2Plate8inchT1", "MoO2Plate8inchT1"));
-        ItemList.MoO2Plate8inchT2.set(addItem(9803, "MoO2Plate8inchT2", "MoO2Plate8inchT2"));
-        ItemList.GraphitePlate8inch.set(addItem(9804, "GraphitePlate8inchT1", "GraphitePlate8inchT1"));
+        ItemList.SiliconPlate8inchT1.set(addItem(9800, "SiliconPlate8inchT1", "Next Step: Coat"));
+        ItemList.SiliconPlate8inchT2.set(addItem(9801, "SiliconPlate8inchT2", "Next Step: Clean"));
+        ItemList.MoO2Plate8inchT1.set(addItem(9802, "MoO2Plate8inchT1", "Next Step: Clean"));
+        ItemList.MoO2Plate8inchT2.set(addItem(9803, "MoO2Plate8inchT2", "Next Step: Clean"));
 
-        ItemList.SiliconPlate8inchCleanedT1.set(addItem(9810, "SiliconPlate8inchCleanedT1", "SiliconPlate8inchCleanedT1"));
-        ItemList.SiliconPlate8inchCleanedT2.set(addItem(9811, "SiliconPlate8inchCleanedT2", "SiliconPlate8inchCleanedT2"));
-        ItemList.MoO2Plate8inchCleanedT1.set(addItem(9812, "MoO2Plate8inchCleanedT1", "MoO2Plate8inchCleanedT1"));
-        ItemList.MoO2Plate8inchCleanedT2.set(addItem(9813, "MoO2Plate8inchCleanedT2", "MoO2Plate8inchCleanedT2"));
-        ItemList.GraphitePlate8inchCleaned.set(addItem(9814, "GraphitePlate8inchCleanedT1", "GraphitePlate8inchCleanedT1"));
+        ItemList.SiliconPlate8inchCleanedT1.set(addItem(9810, "SiliconPlate8inchCleanedT1", "Not used"));
+        ItemList.SiliconPlate8inchCleanedT2.set(addItem(9811, "SiliconPlate8inchCleanedT2", "Next Step: Oxidize"));
+        ItemList.MoO2Plate8inchCleanedT1.set(addItem(9812, "MoO2Plate8inchCleanedT1", "Next Step: Oxidize"));
+        ItemList.MoO2Plate8inchCleanedT2.set(addItem(9813, "MoO2Plate8inchCleanedT2", "Next Step: Oxidize"));
 
-        ItemList.SiliconPlate8inchOxidizedT1.set(addItem(9820, "SiliconPlate8inchOxidizedT1", "SiliconPlate8inchOxidizedT1"));
-        ItemList.SiliconPlate8inchOxidizedT2.set(addItem(9821, "SiliconPlate8inchOxidizedT2", "SiliconPlate8inchOxidizedT2"));
-        ItemList.MoO2Plate8inchOxidizedT1.set(addItem(9822, "MoO2Plate8inchOxidizedT1", "MoO2Plate8inchOxidizedT1"));
-        ItemList.MoO2Plate8inchOxidizedT2.set(addItem(9823, "MoO2Plate8inchOxidizedT2", "MoO2Plate8inchOxidizedT2"));
-        ItemList.GraphitePlate8inchOxidized.set(addItem(9824, "GraphitePlate8inchOxidizedT1", "GraphitePlate8inchOxidizedT1"));
+        ItemList.SiliconPlate8inchOxidizedT1.set(addItem(9820, "SiliconPlate8inchOxidizedT1", "Not used"));
+        ItemList.SiliconPlate8inchOxidizedT2.set(addItem(9821, "SiliconPlate8inchOxidizedT2", "Next Step: Coat"));
+        ItemList.MoO2Plate8inchOxidizedT1.set(addItem(9822, "MoO2Plate8inchOxidizedT1", "Next Step: Coat"));
+        ItemList.MoO2Plate8inchOxidizedT2.set(addItem(9823, "MoO2Plate8inchOxidizedT2", "Next Step: Coat"));
 
-        ItemList.SiliconPlate8inchCoatedT1.set(addItem(9830, "SiliconPlate8inchCoatedT1", "SiliconPlate8inchCoatedT1"));
-        ItemList.SiliconPlate8inchCoatedT2.set(addItem(9831, "SiliconPlate8inchCoatedT2", "SiliconPlate8inchCoatedT2"));
-        ItemList.MoO2Plate8inchCoatedT1.set(addItem(9832, "MoO2Plate8inchCoatedT1", "MoO2Plate8inchCoatedT1"));
-        ItemList.MoO2Plate8inchCoatedT2.set(addItem(9833, "MoO2Plate8inchCoatedT2", "MoO2Plate8inchCoatedT2"));
-        ItemList.GraphitePlate8inchCoated.set(addItem(9834, "GraphitePlate8inchCoatedT1", "GraphitePlate8inchCoatedT1"));
+        ItemList.SiliconPlate8inchCoatedT1.set(addItem(9830, "SiliconPlate8inchCoatedT1", "Next Step: Photo Align"));
+        ItemList.SiliconPlate8inchCoatedT2.set(addItem(9831, "SiliconPlate8inchCoatedT2", "Next Step: Soft Bake"));
+        ItemList.MoO2Plate8inchCoatedT1.set(addItem(9832, "MoO2Plate8inchCoatedT1", "Next Step: Soft Bake"));
+        ItemList.MoO2Plate8inchCoatedT2.set(addItem(9833, "MoO2Plate8inchCoatedT2", "Next Step: Soft Bake"));
 
-        ItemList.SiliconPlate8inchSoftBakedT1.set(addItem(9840, "SiliconPlate8inchSoftBakedT1", "SiliconPlate8inchSoftBakedT1"));
-        ItemList.SiliconPlate8inchSoftBakedT2.set(addItem(9841, "SiliconPlate8inchSoftBakedT2", "SiliconPlate8inchSoftBakedT2"));
-        ItemList.MoO2Plate8inchSoftBakedT1.set(addItem(9842, "MoO2Plate8inchSoftBakedT1", "MoO2Plate8inchSoftBakedT1"));
-        ItemList.MoO2Plate8inchSoftBakedT2.set(addItem(9843, "MoO2Plate8inchSoftBakedT2", "MoO2Plate8inchSoftBakedT2"));
-        ItemList.GraphitePlate8inchSoftBaked.set(addItem(9844, "GraphitePlate8inchSoftBakedT1", "GraphitePlate8inchSoftBakedT1"));
+        ItemList.SiliconPlate8inchSoftBakedT1.set(addItem(9840, "SiliconPlate8inchSoftBakedT1", "Not used"));
+        ItemList.SiliconPlate8inchSoftBakedT2.set(addItem(9841, "SiliconPlate8inchSoftBakedT2", "Next Step: Photo Align"));
+        ItemList.MoO2Plate8inchSoftBakedT1.set(addItem(9842, "MoO2Plate8inchSoftBakedT1", "Next Step: Photo Align"));
+        ItemList.MoO2Plate8inchSoftBakedT2.set(addItem(9843, "MoO2Plate8inchSoftBakedT2", "Next Step: Photo Align"));
 
-        ItemList.CPUPhotomask200um.set(addItem(9900, "CPU Photo Mask (200um)", "CPU Ex"));
-        ItemList.CPUPhotomask72um.set(addItem(9901, "CPU Photo Mask (72um)", "CPU Ex"));
-        ItemList.CPUPhotomask40um.set(addItem(9902, "CPU Photo Mask (40um)", "CPU Ex"));
-        ItemList.CPUPhotomask8um.set(addItem(9903, "CPU Photo Mask (8um)", "CPU Ex"));
-        ItemList.CPUPhotomask400nm.set(addItem(9904, "CPU Photo Mask (400nm)", "CPU Ex"));
-        ItemList.CPUPhotomask80nm.set(addItem(9905, "CPU Photo Mask (80nm)", "CPU Ex"));
-        ItemList.CPUPhotomask32nm.set(addItem(9906, "CPU Photo Mask (32nm)", "CPU Ex"));
-        ItemList.CPUPhotomask14nm.set(addItem(9907, "CPU Photo Mask (14nm)", "CPU Ex"));
+        ItemList.CPUPhotomask200um.set(addItem(9900, "CPU Photo Mask (200um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask72um.set(addItem(9901, "CPU Photo Mask (72um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask40um.set(addItem(9902, "CPU Photo Mask (40um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask8um.set(addItem(9903, "CPU Photo Mask (8um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask400nm.set(addItem(9904, "CPU Photo Mask (400nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask80nm.set(addItem(9905, "CPU Photo Mask (80nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask32nm.set(addItem(9906, "CPU Photo Mask (32nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask14nm.set(addItem(9907, "CPU Photo Mask (14nm)", "A plate with complex images, used to craft CPUs"));
 
 
-        ItemList.CPUWafer200um.set(addItem(9950, "CPU Wafer (200um)", "CPU Ex"));
-        ItemList.CPUWafer72um.set(addItem(9951, "CPU Wafer (72um)", "CPU Ex"));
-        ItemList.CPUWafer40um.set(addItem(9952, "CPU Wafer (40um)", "CPU Ex"));
-        ItemList.CPUWafer8um.set(addItem(9953, "CPU Wafer (8um)", "CPU Ex"));
-        ItemList.CPUWafer400nm.set(addItem(9954, "CPU Wafer (400nm)", "CPU Ex"));
-        ItemList.CPUWafer80nm.set(addItem(9955, "CPU Wafer (80nm)", "CPU Ex"));
-        ItemList.CPUWafer32nm.set(addItem(9956, "CPU Wafer (32nm)", "CPU Ex"));
-        ItemList.CPUWafer14nm.set(addItem(9957, "CPU Wafer (14nm)", "CPU Ex"));
+        ItemList.CPUWafer200um.set(addItem(9950, "CPU Wafer (200um)", "Next Step: Develop"));
+        ItemList.CPUWafer72um.set(addItem(9951, "CPU Wafer (72um)", "Next Step: Develop"));
+        ItemList.CPUWafer40um.set(addItem(9952, "CPU Wafer (40um)", "Next Step: Develop"));
+        ItemList.CPUWafer8um.set(addItem(9953, "CPU Wafer (8um)", "Next Step: Develop"));
+        ItemList.CPUWafer400nm.set(addItem(9954, "CPU Wafer (400nm)", "Next Step: Develop"));
+        ItemList.CPUWafer80nm.set(addItem(9955, "CPU Wafer (80nm)", "Next Step: Develop"));
+        ItemList.CPUWafer32nm.set(addItem(9956, "CPU Wafer (32nm)", "Next Step: Develop"));
+        ItemList.CPUWafer14nm.set(addItem(9957, "CPU Wafer (14nm)", "Next Step: Develop"));
 
-        ItemList.CPUWafer200umDeveloped.set(addItem(10000, "CPU Wafer200umDeveloped", "CPU Wafer200umDeveloped"));
-        ItemList.CPUWafer72umDeveloped.set(addItem(10001, "CPU Wafer72umDeveloped", "CPU Wafer72umDeveloped"));
-        ItemList.CPUWafer40umDeveloped.set(addItem(10002, "CPU Wafer40umDeveloped", "CPU Wafer40umDeveloped"));
-        ItemList.CPUWafer8umDeveloped.set(addItem(10003, "CPU Wafer8umDeveloped", "CPU Wafer8umDeveloped"));
-        ItemList.CPUWafer400nmDeveloped.set(addItem(10004, "CPU Wafer400nmDeveloped", "CPU Wafer400nmDeveloped"));
-        ItemList.CPUWafer80nmDeveloped.set(addItem(10005, "CPU Wafer80nmDeveloped", "CPU Wafer80nmDeveloped"));
-        ItemList.CPUWafer32nmDeveloped.set(addItem(10006, "CPU Wafer32nmDeveloped", "CPU Wafer32nmDeveloped"));
-        ItemList.CPUWafer14nmDeveloped.set(addItem(10007, "CPU Wafer14nmDeveloped", "CPU Wafer14nmDeveloped"));
+        ItemList.CPUWafer200umDeveloped.set(addItem(10000, "CPU Wafer200umDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer72umDeveloped.set(addItem(10001, "CPU Wafer72umDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer40umDeveloped.set(addItem(10002, "CPU Wafer40umDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer8umDeveloped.set(addItem(10003, "CPU Wafer8umDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer400nmDeveloped.set(addItem(10004, "CPU Wafer400nmDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer80nmDeveloped.set(addItem(10005, "CPU Wafer80nmDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer32nmDeveloped.set(addItem(10006, "CPU Wafer32nmDeveloped", "Next Step: Hard Bake"));
+        ItemList.CPUWafer14nmDeveloped.set(addItem(10007, "CPU Wafer14nmDeveloped", "Next Step: Hard Bake"));
 
-        ItemList.CPUWafer200umHardBaked.set(addItem(10050, "CPU Wafer200umHardBaked", "CPU Wafer200umHardBaked"));
-        ItemList.CPUWafer72umHardBaked.set(addItem(10051, "CPU Wafer72umHardBaked", "CPU Wafer72umHardBaked"));
-        ItemList.CPUWafer40umHardBaked.set(addItem(10052, "CPU Wafer40umHardBaked", "CPU Wafer40umHardBaked"));
-        ItemList.CPUWafer8umHardBaked.set(addItem(10053, "CPU Wafer8umHardBaked", "CPU Wafer8umHardBaked"));
-        ItemList.CPUWafer400nmHardBaked.set(addItem(10054, "CPU Wafer400nmHardBaked", "CPU Wafer400nmHardBaked"));
-        ItemList.CPUWafer80nmHardBaked.set(addItem(10055, "CPU Wafer80nmHardBaked", "CPU Wafer80nmHardBaked"));
-        ItemList.CPUWafer32nmHardBaked.set(addItem(10056, "CPU Wafer32nmHardBaked", "CPU Wafer32nmHardBaked"));
-        ItemList.CPUWafer14nmHardBaked.set(addItem(10057, "CPU Wafer14nmHardBaked", "CPU Wafer14nmHardBaked"));
+        ItemList.CPUWafer200umHardBaked.set(addItem(10050, "CPU Wafer200umHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer72umHardBaked.set(addItem(10051, "CPU Wafer72umHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer40umHardBaked.set(addItem(10052, "CPU Wafer40umHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer8umHardBaked.set(addItem(10053, "CPU Wafer8umHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer400nmHardBaked.set(addItem(10054, "CPU Wafer400nmHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer80nmHardBaked.set(addItem(10055, "CPU Wafer80nmHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer32nmHardBaked.set(addItem(10056, "CPU Wafer32nmHardBaked", "Next Step: Dope"));
+        ItemList.CPUWafer14nmHardBaked.set(addItem(10057, "CPU Wafer14nmHardBaked", "Next Step: Dope"));
 
-        ItemList.CPUWafer200umDoped.set(addItem(10100, "CPU Wafer200umDoped", "CPU Wafer200umDoped"));
-        ItemList.CPUWafer72umDoped.set(addItem(10101, "CPU Wafer72umDoped", "CPU Wafer72umDoped"));
-        ItemList.CPUWafer40umDoped.set(addItem(10102, "CPU Wafer40umDoped", "CPU Wafer40umDoped"));
-        ItemList.CPUWafer8umDoped.set(addItem(10103, "CPU Wafer8umDoped", "CPU Wafer8umDoped"));
-        ItemList.CPUWafer400nmDoped.set(addItem(10104, "CPU Wafer400nmDoped", "CPU Wafer400nmDoped"));
-        ItemList.CPUWafer80nmDoped.set(addItem(10105, "CPU Wafer80nmDoped", "CPU Wafer80nmDoped"));
-        ItemList.CPUWafer32nmDoped.set(addItem(10106, "CPU Wafer32nmDoped", "CPU Wafer32nmDoped"));
-        ItemList.CPUWafer14nmDoped.set(addItem(10107, "CPU Wafer14nmDoped", "CPU Wafer14nmDoped"));
+        ItemList.CPUWafer200umDoped.set(addItem(10100, "CPU Wafer200umDoped", "Next Step: Check"));
+        ItemList.CPUWafer72umDoped.set(addItem(10101, "CPU Wafer72umDoped", "Next Step: Check"));
+        ItemList.CPUWafer40umDoped.set(addItem(10102, "CPU Wafer40umDoped", "Next Step: Check"));
+        ItemList.CPUWafer8umDoped.set(addItem(10103, "CPU Wafer8umDoped", "Next Step: Check"));
+        ItemList.CPUWafer400nmDoped.set(addItem(10104, "CPU Wafer400nmDoped", "Next Step: Check"));
+        ItemList.CPUWafer80nmDoped.set(addItem(10105, "CPU Wafer80nmDoped", "Next Step: Check"));
+        ItemList.CPUWafer32nmDoped.set(addItem(10106, "CPU Wafer32nmDoped", "Next Step: Check"));
+        ItemList.CPUWafer14nmDoped.set(addItem(10107, "CPU Wafer14nmDoped", "Next Step: Check"));
 
-        ItemList.CPUWafer200umChecked.set(addItem(10150, "CPU Wafer200umChecked", "CPU Wafer200umChecked"));
-        ItemList.CPUWafer72umChecked.set(addItem(10151, "CPU Wafer72umChecked", "CPU Wafer72umChecked"));
-        ItemList.CPUWafer40umChecked.set(addItem(10152, "CPU Wafer40umChecked", "CPU Wafer40umChecked"));
-        ItemList.CPUWafer8umChecked.set(addItem(10153, "CPU Wafer8umChecked", "CPU Wafer8umChecked"));
-        ItemList.CPUWafer400nmChecked.set(addItem(10154, "CPU Wafer400nmChecked", "CPU Wafer400nmChecked"));
-        ItemList.CPUWafer80nmChecked.set(addItem(10155, "CPU Wafer80nmChecked", "CPU Wafer80nmChecked"));
-        ItemList.CPUWafer32nmChecked.set(addItem(10156, "CPU Wafer32nmChecked", "CPU Wafer32nmChecked"));
-        ItemList.CPUWafer14nmChecked.set(addItem(10157, "CPU Wafer14nmChecked", "CPU Wafer14nmChecked"));
+        ItemList.CPUWafer200umChecked.set(addItem(10150, "CPU Wafer200umChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer72umChecked.set(addItem(10151, "CPU Wafer72umChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer40umChecked.set(addItem(10152, "CPU Wafer40umChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer8umChecked.set(addItem(10153, "CPU Wafer8umChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer400nmChecked.set(addItem(10154, "CPU Wafer400nmChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer80nmChecked.set(addItem(10155, "CPU Wafer80nmChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer32nmChecked.set(addItem(10156, "CPU Wafer32nmChecked", "Next Step: Laser Cut"));
+        ItemList.CPUWafer14nmChecked.set(addItem(10157, "CPU Wafer14nmChecked", "Next Step: Laser Cut"));
 
-        ItemList.CPUDieTF3386.set(addItem(10200, "CPUDieTF3386", "CPUDieTF3386"));
-        ItemList.CPUDieTF3586.set(addItem(10201, "CPUDieTF3586", "CPUDieTF3586"));
-        ItemList.CPUDieGT1000.set(addItem(10202, "CPUDieGT1000", "CPUDieGT1000"));
-        ItemList.CPUDieGT2000.set(addItem(10203, "CPUDieGT2000", "CPUDieGT2000"));
-        ItemList.CPUDieGT3660.set(addItem(10204, "CPUDieGT3660", "CPUDieGT3660"));
-        ItemList.CPUDieGT3660v2.set(addItem(10205, "CPUDieGT3660v2", "CPUDieGT3660v2"));
-        ItemList.CPUDieGT3660v3.set(addItem(10206, "CPUDieGT3660v3", "CPUDieGT3660v3"));
-        ItemList.CPUDieGT3660v4.set(addItem(10207, "CPUDieGT3660v4", "CPUDieGT3660v4"));
-        ItemList.CPUDieTF3386S.set(addItem(10208, "CPUDieTF3386S", "CPUDieTF3386S"));
-        ItemList.CPUDieTF3586S.set(addItem(10209, "CPUDieTF3586S", "CPUDieTF3586S"));
-        ItemList.CPUDieGT1090.set(addItem(10210, "CPUDieGT1090", "CPUDieGT1090"));
-        ItemList.CPUDieGT2090.set(addItem(10211, "CPUDieGT2090", "CPUDieGT2090"));
-        ItemList.CPUDieGT3680.set(addItem(10212, "CPUDieGT3680", "CPUDieGT3680"));
-        ItemList.CPUDieGT3680v2.set(addItem(10213, "CPUDieGT3680v2", "CPUDieGT3680v2"));
-        ItemList.CPUDieGT3680v3.set(addItem(10214, "CPUDieGT3680v3", "CPUDieGT3680v3"));
-        ItemList.CPUDieGT3680v4.set(addItem(10215, "CPUDieGT3680v4", "CPUDieGT3680v4"));
-        ItemList.CPUDieGT3699.set(addItem(10216, "CPUDieGT3699", "CPUDieGT3699"));
-        ItemList.CPUDieGT3699v2.set(addItem(10217, "CPUDieGT3699v2", "CPUDieGT3699v2"));
-        ItemList.CPUDieGT3699v3.set(addItem(10218, "CPUDieGT3699v3", "CPUDieGT3699v3"));
-        ItemList.CPUDieGT3699v4.set(addItem(10219, "CPUDieGT3699v4", "CPUDieGT3699v4"));
-        ItemList.CPUDieGT3680v3E.set(addItem(10220, "CPUDieGT3680v3E", "CPUDieGT3680v3E"));
-        ItemList.CPUDieGT3680v4E.set(addItem(10221, "CPUDieGT3680v4E", "CPUDieGT3680v4E"));
-        ItemList.CPUDieGT3699v3E.set(addItem(10222, "CPUDieGT3699v3E", "CPUDieGT3699v3E"));
-        ItemList.CPUDieGT3699v4E.set(addItem(10223, "CPUDieGT3699v4E", "CPUDieGT3699v4E"));
+        ItemList.CPUDieTF3386.set(addItem(10200, "CPUDieTF3386", "Next Step: Compose"));
+        ItemList.CPUDieTF3586.set(addItem(10201, "CPUDieTF3586", "Next Step: Compose"));
+        ItemList.CPUDieGT1000.set(addItem(10202, "CPUDieGT1000", "Next Step: Compose"));
+        ItemList.CPUDieGT2000.set(addItem(10203, "CPUDieGT2000", "Next Step: Compose"));
+        ItemList.CPUDieGT3660.set(addItem(10204, "CPUDieGT3660", "Next Step: Compose"));
+        ItemList.CPUDieGT3660v2.set(addItem(10205, "CPUDieGT3660v2", "Next Step: Compose"));
+        ItemList.CPUDieGT3660v3.set(addItem(10206, "CPUDieGT3660v3", "Next Step: Compose"));
+        ItemList.CPUDieGT3660v4.set(addItem(10207, "CPUDieGT3660v4", "Next Step: Compose"));
+        ItemList.CPUDieTF3386S.set(addItem(10208, "CPUDieTF3386S", "Next Step: Compose"));
+        ItemList.CPUDieTF3586S.set(addItem(10209, "CPUDieTF3586S", "Next Step: Compose"));
+        ItemList.CPUDieGT1090.set(addItem(10210, "CPUDieGT1090", "Next Step: Compose"));
+        ItemList.CPUDieGT2090.set(addItem(10211, "CPUDieGT2090", "Next Step: Compose"));
+        ItemList.CPUDieGT3680.set(addItem(10212, "CPUDieGT3680", "Next Step: Compose"));
+        ItemList.CPUDieGT3680v2.set(addItem(10213, "CPUDieGT3680v2", "Next Step: Compose"));
+        ItemList.CPUDieGT3680v3.set(addItem(10214, "CPUDieGT3680v3", "Next Step: Compose"));
+        ItemList.CPUDieGT3680v4.set(addItem(10215, "CPUDieGT3680v4", "Next Step: Compose"));
 
-        ItemList.CPUTF3386.set(addItem(10300, "CPUTF3386", "CPUTF3386"));
-        ItemList.CPUTF3586.set(addItem(10301, "CPUTF3586", "CPUTF3586"));
-        ItemList.CPUGT1000.set(addItem(10302, "CPUGT1000", "CPUGT1000"));
+        ItemList.CPUTF3386.set(addItem(10300, "CPUTF3386", "A basic CPU,controls simple machine"));
+        ItemList.CPUTF3586.set(addItem(10301, "CPUTF3586", "A CPU that changes the world"));
+        ItemList.CPUGT1000.set(addItem(10302, "CPUGT1000", "Brand new CPU! Upgrade to 1MHz!"));
         ItemList.CPUGT2000.set(addItem(10303, "CPUGT2000", "CPUGT2000"));
         ItemList.CPUGT3660.set(addItem(10304, "CPUGT3660", "CPUGT3660"));
         ItemList.CPUGT3660v2.set(addItem(10305, "CPUGT3660v2", "CPUGT3660v2"));
@@ -164,110 +151,113 @@ public class itemIT extends MultiItemRandom {
         
 
 //Circuits
-        int i=20000;
-        ItemList.CircuitBoardEmptyT2.set(addItem(i++, "Plastic Circuit Board",""));
-        ItemList.CircuitBoardEmptyT3.set(addItem(i++, "Epoxy Resin Circuit Board",""));
-        ItemList.ResistanceT1.set(addItem(i++, "Resistance (T1)",""));
-        ItemList.DiodeT1     .set(addItem(i++, "Diode (T1)",""));
-        ItemList.CapacitorT1 .set(addItem(i++, "Capacitor (T1)",""));
-        ItemList.CoilT1      .set(addItem(i++, "Coil (T1)",""));
-        ItemList.ResistanceT2.set(addItem(i++, "Resistance (T2)",""));
-        ItemList.DiodeT2     .set(addItem(i++, "Diode (T2)",""));
-        ItemList.CapacitorT2 .set(addItem(i++, "Capacitor (T2)",""));
-        ItemList.CoilT2      .set(addItem(i++, "Coil (T2)",""));
-        ItemList.ResistanceT3.set(addItem(i++, "Resistance (T3)",""));
-        ItemList.DiodeT3     .set(addItem(i++, "Diode (T3)",""));
-        ItemList.CapacitorT3 .set(addItem(i++, "Capacitor (T3)",""));
-        ItemList.CoilT3      .set(addItem(i++, "Coil (T3)",""));
-        ItemList.ResistanceT4.set(addItem(i++, "Resistance (T4)",""));
-        ItemList.CoilT4      .set(addItem(i++, "Coil (T4)",""));
+        int i=0;
+        ItemList.CircuitBoardEmptyT2.set(addItem(20000, "Plastic Circuit Board","Basic circuit board"));
+        ItemList.CircuitBoardEmptyT3.set(addItem(20001, "Epoxy Resin Circuit Board","Advanced circuit board"));
 
-        ItemList.CircuitPartPhotomaskT3.set(addItem(20100, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartPhotomaskT4.set(addItem(20101, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartPhotomaskT5.set(addItem(20102, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartPhotomaskT6.set(addItem(20103, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+        ItemList.ResistanceT1.set(addItem(20002, "Resistance (T1)",""));
+        ItemList.DiodeT1     .set(addItem(20003, "Diode (T1)",""));
+        ItemList.CapacitorT1 .set(addItem(20004, "Capacitor (T1)",""));
+        ItemList.CoilT1      .set(addItem(20005, "Coil (T1)",""));
 
-        ItemList.CircuitPartWaferT3.set(addItem(20110, "CircuitPart Wafer (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT4.set(addItem(20111, "CircuitPart Wafer (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT5.set(addItem(20112, "CircuitPart Wafer (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT6.set(addItem(20113, "CircuitPart Wafer (8um)", "CircuitPart Ex"));
+        ItemList.ResistanceT2.set(addItem(20006, "Resistance (T2)",""));
+        ItemList.DiodeT2     .set(addItem(20007, "Diode (T2)",""));
+        ItemList.CapacitorT2 .set(addItem(20008, "Capacitor (T2)",""));
+        ItemList.CoilT2      .set(addItem(20009, "Coil (T2)",""));
 
-        ItemList.CircuitPartWaferT3Developed.set(addItem(20120, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT4Developed.set(addItem(20121, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT5Developed.set(addItem(20122, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT6Developed.set(addItem(20123, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+        ItemList.ResistanceT3.set(addItem(20010, "Resistance (T3)",""));
+        ItemList.DiodeT3     .set(addItem(20011, "Diode (T3)",""));
+        ItemList.CapacitorT3 .set(addItem(20012, "Capacitor (T3)",""));
+        ItemList.CoilT3      .set(addItem(20013, "Coil (T3)",""));
 
-        ItemList.CircuitPartWaferT3HardBaked.set(addItem(20130, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT4HardBaked.set(addItem(20131, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT5HardBaked.set(addItem(20132, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT6HardBaked.set(addItem(20133, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+        ItemList.ResistanceT4.set(addItem(20014, "Resistance (T4)",""));
+        ItemList.CoilT4      .set(addItem(20015, "Coil (T4)",""));
 
-        ItemList.CircuitPartWaferT3Doped.set(addItem(20140, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT4Doped.set(addItem(20141, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT5Doped.set(addItem(20142, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT6Doped.set(addItem(20143, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+        ItemList.CircuitPartPhotomaskT3.set(addItem(20100, "CircuitPart Photo Mask (200um)", "A plate with complex images"));
+        ItemList.CircuitPartPhotomaskT4.set(addItem(20101, "CircuitPart Photo Mask (72um)", "A plate with complex images"));
+        ItemList.CircuitPartPhotomaskT5.set(addItem(20102, "CircuitPart Photo Mask (40um)", "A plate with complex images"));
+        ItemList.CircuitPartPhotomaskT6.set(addItem(20103, "CircuitPart Photo Mask (8um)", "A plate with complex images"));
 
-        ItemList.CircuitPartWaferT3Checked.set(addItem(20150, "CircuitPart Photo Mask (200um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT4Checked.set(addItem(20151, "CircuitPart Photo Mask (72um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT5Checked.set(addItem(20152, "CircuitPart Photo Mask (40um)", "CircuitPart Ex"));
-        ItemList.CircuitPartWaferT6Checked.set(addItem(20153, "CircuitPart Photo Mask (8um)", "CircuitPart Ex"));
+        ItemList.CircuitPartWaferT3.set(addItem(20104, "CircuitPart Wafer (200um)", "Next Step: Develop"));
+        ItemList.CircuitPartWaferT4.set(addItem(20105, "CircuitPart Wafer (72um)", "Next Step: Develop"));
+        ItemList.CircuitPartWaferT5.set(addItem(20106, "CircuitPart Wafer (40um)", "Next Step: Develop"));
+        ItemList.CircuitPartWaferT6.set(addItem(20107, "CircuitPart Wafer (8um)", "Next Step: Develop"));
 
+        ItemList.CircuitPartWaferT3Developed.set(addItem(20108, "Circuit Part Wafer Developed (200um)", "Next Step: Hard Bake"));
+        ItemList.CircuitPartWaferT4Developed.set(addItem(20109, "Circuit Part Wafer Developed (72um)", "Next Step: Hard Bake"));
+        ItemList.CircuitPartWaferT5Developed.set(addItem(20110, "Circuit Part Wafer Developed (40um)", "Next Step: Hard Bake"));
+        ItemList.CircuitPartWaferT6Developed.set(addItem(20111, "Circuit Part Wafer Developed (8um)", "Next Step: Hard Bake"));
+
+        ItemList.CircuitPartWaferT3HardBaked.set(addItem(20112, "Circuit Part Wafer HardBaked (200um)", "Next Step: Dope"));
+        ItemList.CircuitPartWaferT4HardBaked.set(addItem(20113, "Circuit Part Wafer HardBaked (72um)", "Next Step: Dope"));
+        ItemList.CircuitPartWaferT5HardBaked.set(addItem(20114, "Circuit Part Wafer HardBaked (40um)", "Next Step: Dope"));
+        ItemList.CircuitPartWaferT6HardBaked.set(addItem(20115, "Circuit Part Wafer HardBaked (8um)", "Next Step: Dope"));
+
+        ItemList.CircuitPartWaferT3Doped.set(addItem(20116, "Circuit Part Wafer Doped (200um)", "Next Step: Check"));
+        ItemList.CircuitPartWaferT4Doped.set(addItem(20117, "Circuit Part Wafer Doped (72um)", "Next Step: Check"));
+        ItemList.CircuitPartWaferT5Doped.set(addItem(20118, "Circuit Part Wafer Doped (40um)", "Next Step: Check"));
+        ItemList.CircuitPartWaferT6Doped.set(addItem(20119, "Circuit Part Wafer Doped (8um)", "Next Step: Check"));
+
+        ItemList.CircuitPartWaferT3Checked.set(addItem(20120, "Circuit Part Wafer Checked (200um)", "Next Step: Laser Cut"));
+        ItemList.CircuitPartWaferT4Checked.set(addItem(20121, "Circuit Part Wafer Checked (72um)", "Next Step: Laser Cut"));
+        ItemList.CircuitPartWaferT5Checked.set(addItem(20122, "Circuit Part Wafer Checked (40um)", "Next Step: Laser Cut"));
+        ItemList.CircuitPartWaferT6Checked.set(addItem(20123, "Circuit Part Wafer Checked (8um)", "Next Step: Laser Cut"));
 
 //RAM
-        ItemList.RAMPhotomask200um.set(addItem(30000, "RAM Photo Mask (200um)", "RAM Ex"));
-        ItemList.RAMPhotomask72um.set(addItem(30001, "RAM Photo Mask (72um)", "RAM Ex"));
-        ItemList.RAMPhotomask40um.set(addItem(30002, "RAM Photo Mask (40um)", "RAM Ex"));
-        ItemList.RAMPhotomask8um.set(addItem(30003, "RAM Photo Mask (8um)", "RAM Ex"));
-        ItemList.RAMPhotomask400nm.set(addItem(30004, "RAM Photo Mask (400nm)", "RAM Ex"));
-        ItemList.RAMPhotomask80nm.set(addItem(30005, "RAM Photo Mask (80nm)", "RAM Ex"));
-        ItemList.RAMPhotomask32nm.set(addItem(30006, "RAM Photo Mask (32nm)", "RAM Ex"));
-        ItemList.RAMPhotomask14nm.set(addItem(30007, "RAM Photo Mask (14nm)", "RAM Ex"));
+        ItemList.RAMPhotomask200um.set(addItem(30000, "RAM Photo Mask (200um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask72um.set(addItem(30001, "RAM Photo Mask (72um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask40um.set(addItem(30002, "RAM Photo Mask (40um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask8um.set(addItem(30003, "RAM Photo Mask (8um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask400nm.set(addItem(30004, "RAM Photo Mask (400nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask80nm.set(addItem(30005, "RAM Photo Mask (80nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask32nm.set(addItem(30006, "RAM Photo Mask (32nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask14nm.set(addItem(30007, "RAM Photo Mask (14nm)", "A plate with complex images, used to craft RAM"));
 
 
-        ItemList.RAMWafer200um.set(addItem(30050, "RAM Wafer (200um)", "RAM Ex"));
-        ItemList.RAMWafer72um.set(addItem(30051, "RAM Wafer (72um)", "RAM Ex"));
-        ItemList.RAMWafer40um.set(addItem(30052, "RAM Wafer (40um)", "RAM Ex"));
-        ItemList.RAMWafer8um.set(addItem(30053, "RAM Wafer (8um)", "RAM Ex"));
-        ItemList.RAMWafer400nm.set(addItem(30054, "RAM Wafer (400nm)", "RAM Ex"));
-        ItemList.RAMWafer80nm.set(addItem(30055, "RAM Wafer (80nm)", "RAM Ex"));
-        ItemList.RAMWafer32nm.set(addItem(30056, "RAM Wafer (32nm)", "RAM Ex"));
-        ItemList.RAMWafer14nm.set(addItem(30057, "RAM Wafer (14nm)", "RAM Ex"));
+        ItemList.RAMWafer200um.set(addItem(30050, "RAM Wafer (200um)", "Next Step: Develop"));
+        ItemList.RAMWafer72um.set(addItem(30051, "RAM Wafer (72um)", "Next Step: Develop"));
+        ItemList.RAMWafer40um.set(addItem(30052, "RAM Wafer (40um)", "Next Step: Develop"));
+        ItemList.RAMWafer8um.set(addItem(30053, "RAM Wafer (8um)", "Next Step: Develop"));
+        ItemList.RAMWafer400nm.set(addItem(30054, "RAM Wafer (400nm)", "Next Step: Develop"));
+        ItemList.RAMWafer80nm.set(addItem(30055, "RAM Wafer (80nm)", "Next Step: Develop"));
+        ItemList.RAMWafer32nm.set(addItem(30056, "RAM Wafer (32nm)", "Next Step: Develop"));
+        ItemList.RAMWafer14nm.set(addItem(30057, "RAM Wafer (14nm)", "Next Step: Develop"));
 
-        ItemList.RAMWafer200umDeveloped.set(addItem(30100, "RAM Wafer200umDeveloped", "RAM Wafer200umDeveloped"));
-        ItemList.RAMWafer72umDeveloped.set(addItem(30101, "RAM Wafer72umDeveloped", "RAM Wafer72umDeveloped"));
-        ItemList.RAMWafer40umDeveloped.set(addItem(30102, "RAM Wafer40umDeveloped", "RAM Wafer40umDeveloped"));
-        ItemList.RAMWafer8umDeveloped.set(addItem(30103, "RAM Wafer8umDeveloped", "RAM Wafer8umDeveloped"));
-        ItemList.RAMWafer400nmDeveloped.set(addItem(30104, "RAM Wafer400nmDeveloped", "RAM Wafer400nmDeveloped"));
-        ItemList.RAMWafer80nmDeveloped.set(addItem(30105, "RAM Wafer80nmDeveloped", "RAM Wafer80nmDeveloped"));
-        ItemList.RAMWafer32nmDeveloped.set(addItem(30106, "RAM Wafer32nmDeveloped", "RAM Wafer32nmDeveloped"));
-        ItemList.RAMWafer14nmDeveloped.set(addItem(30107, "RAM Wafer14nmDeveloped", "RAM Wafer14nmDeveloped"));
+        ItemList.RAMWafer200umDeveloped.set(addItem(30100, "Wafer200umDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer72umDeveloped.set(addItem(30101, "Wafer72umDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer40umDeveloped.set(addItem(30102, "Wafer40umDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer8umDeveloped.set(addItem(30103, "Wafer8umDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer400nmDeveloped.set(addItem(30104, "Wafer400nmDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer80nmDeveloped.set(addItem(30105, "Wafer80nmDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer32nmDeveloped.set(addItem(30106, "Wafer32nmDeveloped", "Next Step: Hard Bake"));
+        ItemList.RAMWafer14nmDeveloped.set(addItem(30107, "Wafer14nmDeveloped", "Next Step: Hard Bake"));
 
-        ItemList.RAMWafer200umHardBaked.set(addItem(30150, "RAM Wafer200umHardBaked", "RAM Wafer200umHardBaked"));
-        ItemList.RAMWafer72umHardBaked.set(addItem(30151, "RAM Wafer72umHardBaked", "RAM Wafer72umHardBaked"));
-        ItemList.RAMWafer40umHardBaked.set(addItem(30152, "RAM Wafer40umHardBaked", "RAM Wafer40umHardBaked"));
-        ItemList.RAMWafer8umHardBaked.set(addItem(30153, "RAM Wafer8umHardBaked", "RAM Wafer8umHardBaked"));
-        ItemList.RAMWafer400nmHardBaked.set(addItem(30154, "RAM Wafer400nmHardBaked", "RAM Wafer400nmHardBaked"));
-        ItemList.RAMWafer80nmHardBaked.set(addItem(30155, "RAM Wafer80nmHardBaked", "RAM Wafer80nmHardBaked"));
-        ItemList.RAMWafer32nmHardBaked.set(addItem(30156, "RAM Wafer32nmHardBaked", "RAM Wafer32nmHardBaked"));
-        ItemList.RAMWafer14nmHardBaked.set(addItem(30157, "RAM Wafer14nmHardBaked", "RAM Wafer14nmHardBaked"));
+        ItemList.RAMWafer200umHardBaked.set(addItem(30150, "Wafer200umHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer72umHardBaked.set(addItem(30151, "Wafer72umHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer40umHardBaked.set(addItem(30152, "Wafer40umHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer8umHardBaked.set(addItem(30153, "Wafer8umHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer400nmHardBaked.set(addItem(30154, "Wafer400nmHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer80nmHardBaked.set(addItem(30155, "Wafer80nmHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer32nmHardBaked.set(addItem(30156, "Wafer32nmHardBaked", "Next Step: Dope"));
+        ItemList.RAMWafer14nmHardBaked.set(addItem(30157, "Wafer14nmHardBaked", "Next Step: Dope"));
 
-        ItemList.RAMWafer200umDoped.set(addItem(30200, "RAM Wafer200umDoped", "RAM Wafer200umDoped"));
-        ItemList.RAMWafer72umDoped.set(addItem(30201, "RAM Wafer72umDoped", "RAM Wafer72umDoped"));
-        ItemList.RAMWafer40umDoped.set(addItem(30202, "RAM Wafer40umDoped", "RAM Wafer40umDoped"));
-        ItemList.RAMWafer8umDoped.set(addItem(30203, "RAM Wafer8umDoped", "RAM Wafer8umDoped"));
-        ItemList.RAMWafer400nmDoped.set(addItem(30204, "RAM Wafer400nmDoped", "RAM Wafer400nmDoped"));
-        ItemList.RAMWafer80nmDoped.set(addItem(30205, "RAM Wafer80nmDoped", "RAM Wafer80nmDoped"));
-        ItemList.RAMWafer32nmDoped.set(addItem(30206, "RAM Wafer32nmDoped", "RAM Wafer32nmDoped"));
-        ItemList.RAMWafer14nmDoped.set(addItem(30207, "RAM Wafer14nmDoped", "RAM Wafer14nmDoped"));
+        ItemList.RAMWafer200umDoped.set(addItem(30200, "Wafer200umDoped", "Next Step: Check"));
+        ItemList.RAMWafer72umDoped.set(addItem(30201, "Wafer72umDoped", "Next Step: Check"));
+        ItemList.RAMWafer40umDoped.set(addItem(30202, "Wafer40umDoped", "Next Step: Check"));
+        ItemList.RAMWafer8umDoped.set(addItem(30203, "Wafer8umDoped", "Next Step: Check"));
+        ItemList.RAMWafer400nmDoped.set(addItem(30204, "Wafer400nmDoped", "Next Step: Check"));
+        ItemList.RAMWafer80nmDoped.set(addItem(30205, "Wafer80nmDoped", "Next Step: Check"));
+        ItemList.RAMWafer32nmDoped.set(addItem(30206, "Wafer32nmDoped", "Next Step: Check"));
+        ItemList.RAMWafer14nmDoped.set(addItem(30207, "Wafer14nmDoped", "Next Step: Check"));
 
-        ItemList.RAMWafer200umChecked.set(addItem(30250, "RAM Wafer200umChecked", "RAM Wafer200umChecked"));
-        ItemList.RAMWafer72umChecked.set(addItem(30251, "RAM Wafer72umChecked", "RAM Wafer72umChecked"));
-        ItemList.RAMWafer40umChecked.set(addItem(30252, "RAM Wafer40umChecked", "RAM Wafer40umChecked"));
-        ItemList.RAMWafer8umChecked.set(addItem(30253, "RAM Wafer8umChecked", "RAM Wafer8umChecked"));
-        ItemList.RAMWafer400nmChecked.set(addItem(30254, "RAM Wafer400nmChecked", "RAM Wafer400nmChecked"));
-        ItemList.RAMWafer80nmChecked.set(addItem(30255, "RAM Wafer80nmChecked", "RAM Wafer80nmChecked"));
-        ItemList.RAMWafer32nmChecked.set(addItem(30256, "RAM Wafer32nmChecked", "RAM Wafer32nmChecked"));
-        ItemList.RAMWafer14nmChecked.set(addItem(30257, "RAM Wafer14nmChecked", "RAM Wafer14nmChecked"));
+        ItemList.RAMWafer200umChecked.set(addItem(30250, "Wafer200umChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer72umChecked.set(addItem(30251, "Wafer72umChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer40umChecked.set(addItem(30252, "Wafer40umChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer8umChecked.set(addItem(30253, "Wafer8umChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer400nmChecked.set(addItem(30254, "Wafer400nmChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer80nmChecked.set(addItem(30255, "Wafer80nmChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer32nmChecked.set(addItem(30256, "Wafer32nmChecked", "Next Step: Laser Cut"));
+        ItemList.RAMWafer14nmChecked.set(addItem(30257, "Wafer14nmChecked", "Next Step: Laser Cut"));
 
         ItemList.RAMDie2K.set(addItem(30300, "RAMDie2K", "Wafer200umChecked"));
         ItemList.RAMDie24K.set(addItem(30301, "RAMDie24K", "Wafer72umChecked"));

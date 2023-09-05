@@ -25,9 +25,12 @@ public class itemCompact extends MultiItemRandom {
 
     @Override
     public void addItems() {
+        ItemList.BasinModelInnerLayer.set(addItem(0, "Basin Model Inner Layer", ""));
+        ItemList.IntelligentCore .set(addItem(100, "Intelligent Core", ""));
 
         ItemList.ArmorAirSealant.set(addItem(1000, "Armor Sealant", ""));
         ItemList.SpaceSuitCloth .set(addItem(1001, "Space Suit Inner Cloth", ""));
+
 
     }
 }

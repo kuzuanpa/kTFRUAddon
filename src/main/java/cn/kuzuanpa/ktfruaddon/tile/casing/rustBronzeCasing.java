@@ -61,7 +61,7 @@ public class rustBronzeCasing extends TileEntityBase03MultiTileEntities implemen
         deRustedSides=aData;
         return T;
     }
-@Override
+    @Override
     public boolean onBlockActivated2(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (aPlayer.getCurrentEquippedItem().getUnlocalizedName().contains("gt.metatool") && aPlayer.getCurrentEquippedItem().getItemDamage() == 18) {
         deRustedSides[aSide] = 1;
