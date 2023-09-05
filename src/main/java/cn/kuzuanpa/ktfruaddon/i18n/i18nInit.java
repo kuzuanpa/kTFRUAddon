@@ -29,5 +29,7 @@ public class i18nInit {
 
         LH.add(kMessages.FUEL_BATTERY_0,"Changing Contents");
         LH.add(kMessages.FUEL_BATTERY_1,"Done Changing Contents");
+        LH.add(kMessages.BASIN_MODEL_0,"Still need ");
+        LH.add(kMessages.BASIN_MODEL_1," clay ball.");
     }
 }
