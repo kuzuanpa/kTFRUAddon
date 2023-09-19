@@ -72,7 +72,8 @@ public enum ItemList implements IItemContainer{
     ResistanceT2, CapacitorT2, CoilT2,DiodeT2,DiodeT2Part,
     ResistanceT3, CapacitorT3, CoilT3,DiodeT3,DiodeT3Part,
     ResistanceT4,              CoilT4,
-//Compact
+    CircuitBoardBasicUncompleted,CircuitBoardGoodUncompleted1,CircuitBoardGoodUncompleted2,
+    //Compact
     //AdvancedRockery 1000-1999
     ArmorAirSealant,SpaceSuitCloth,IntelligentCore, BasinModelInnerLayer,
 

@@ -12,7 +12,7 @@ import cn.kuzuanpa.ktfruaddon.item.items.*;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class itemPreInit {
-    public itemPreInit(FMLPreInitializationEvent aEvent){
+    public static void init(FMLPreInitializationEvent aEvent){
         new itemParticle();
         new itemIT();
         new itemComputer();

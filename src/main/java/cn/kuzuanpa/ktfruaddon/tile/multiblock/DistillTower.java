@@ -23,7 +23,6 @@ import gregapi.tileentity.machines.ITileEntityAdjacentOnOff;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import gregapi.util.ST;
 import gregapi.util.WD;
-import gregtech.tileentity.multiblocks.MultiTileEntityDistillationTower;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +32,6 @@ import net.minecraftforge.fluids.IFluidHandler;
 import java.util.List;
 
 import static gregapi.data.CS.*;
-import static gregapi.data.CS.F;
 
 public class DistillTower extends TileEntityBase10MultiBlockMachine {
     public DistillTower() {
@@ -165,12 +163,12 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
 
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get("gt.lang.structure") + ":");
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.3"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.4"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.5"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.6"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.4"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.5"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.6"));
         super.addToolTips(aList, aStack, aF3_H);
     }
     public void doOutputFluids() {
@@ -207,12 +205,12 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
     }
 
     static {
-        LH.add("ktfru.tooltip.multiblock.distillationtower.1", "3x3 Base of Heat Transmitters");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.2", "3x3x8 of Distillation Tower Parts");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.3", "Main centered on Side-Bottom of Tower facing outwards");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.4", "Outputs automatically to the Holes on the Backside");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.5", "Bottom Hole is for outputting all Items");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.6", "Input only possible at Bottom Layer of Tower");
+        LH.add("ktfru.tooltip.multiblock.distilltower.1", "3x3 Base of Heat Transmitters");
+        LH.add("ktfru.tooltip.multiblock.distilltower.2", "3x3x8 of Distillation Tower Parts");
+        LH.add("ktfru.tooltip.multiblock.distilltower.3", "Main centered on Side-Bottom of Tower facing outwards");
+        LH.add("ktfru.tooltip.multiblock.distilltower.4", "Outputs automatically to the Holes on the Backside");
+        LH.add("ktfru.tooltip.multiblock.distilltower.5", "Bottom Hole is for outputting all Items");
+        LH.add("ktfru.tooltip.multiblock.distilltower.6", "Input only possible at Bottom Layer of Tower");
     }
 
     @Override

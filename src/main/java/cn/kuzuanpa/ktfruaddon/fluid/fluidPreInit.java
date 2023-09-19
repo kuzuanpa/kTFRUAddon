@@ -15,10 +15,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.data.MT;
 
 public class fluidPreInit {
-    private final int PlASMA=3;
-    private final int GAS=2;
-    private final int LIQUID=1;
-    public fluidPreInit(FMLPreInitializationEvent e){
+
+
+
+    public static void init(FMLPreInitializationEvent e){
+        final int PlASMA=3;
+        final int GAS=2;
+        final int LIQUID=1;
         flList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide",null,LIQUID);
         flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",MT.NaAlO2,1000);
         flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", MT.KAlO2,1000);

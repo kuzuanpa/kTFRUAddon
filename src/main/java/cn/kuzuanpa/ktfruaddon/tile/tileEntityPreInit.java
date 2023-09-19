@@ -30,8 +30,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 import static gregapi.data.CS.*;
 
 public class tileEntityPreInit {
-    public tileEntityPreInit(FMLPreInitializationEvent aEvent) {
-        // This gives you your very own 32767 Machine IDs.
+    public static void init(FMLPreInitializationEvent aEvent) {
         new MultiTileEntityRegistry("ktfru.multitileentity");
         MultiTileEntityBlock.getOrCreate(MOD_ID, "iron"         , Material.iron             , Block.soundTypeMetal, TOOL_pickaxe, 0, 0, 15, F, F);
         MultiTileEntityBlock.getOrCreate(MOD_ID, "iron"         , Material.iron             , Block.soundTypeMetal, TOOL_shovel , 0, 0, 15, F, F);

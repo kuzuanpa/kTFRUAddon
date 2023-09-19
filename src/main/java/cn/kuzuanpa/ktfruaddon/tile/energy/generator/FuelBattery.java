@@ -97,11 +97,10 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         if (aNBT.hasKey(NBT_ENERGY_EMITTED)) mEnergyTypeEmitted = TagData.createTagData(aNBT.getString(NBT_ENERGY_EMITTED));
         if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
         if (aNBT.hasKey(NBT_FACING)) mFacing = aNBT.getByte(NBT_FACING);
-        //todo: set these values to mRate*N
-        mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(2000);
-        mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(2000);
-        mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(200 * 15);
-        mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(200 * 15);
+        mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(8000);
+        mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(8000);
+        mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(8000);
+        mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(8000);
         mTanks[4].readFromNBT(aNBT, NBT_TANK+".4").setCapacity(1000);
     }
 

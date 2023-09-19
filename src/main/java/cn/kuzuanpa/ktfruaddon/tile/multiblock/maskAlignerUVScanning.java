@@ -13,6 +13,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachi
 import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
 import gregapi.old.Textures;
@@ -126,23 +127,23 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         //这是设置主方块的物品提示
         //controls tooltip of controller block
         static {
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.1", "2 set of 2x2x1 Al Wall. A 1m gap between them.");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.2", "Main Block facing outwards, in side-bottom of the gap");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.3", "Light Module is in top of Main Block, Energy Module is behind the Main Block.");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.4", "The left 1 block space is IO Manager.");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
-            LH.add("gt.tooltip.multiblock.maskaligner.uv.6", "Item and fluid inputs from anyblock in upside, output from MainBlock in bottom.");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.1", "2 set of 2x2x1 Al Wall. 1 Block gap between them.");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.2", "Main Block facing outwards, in side-bottom of the gap");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.3", "Light Module is in top of Main Block, Energy Module is behind the Main Block.");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.4", "The left 1 block space is IO Manager.");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Item and fluid inputs from anyblock in upside, output from MainBlock in bottom.");
         }
 
         @Override
         public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
             aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.1"));
-            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.2"));
-            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.3"));
-            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.4"));
-            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.5"));
-            aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.maskaligner.uv.6"));
+            aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.1"));
+            aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.2"));
+            aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.3"));
+            aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.4"));
+            aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.5"));
+            aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.6"));
             super.addToolTips(aList, aStack, aF3_H);
         }
         //这里设置该机器的内部区域
@@ -241,6 +242,8 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         return super.breakBlock();
     }
     @Override
+    public boolean allowCover(byte aSide, ICover aCover) {return false;}
+    @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (mStructureOkay) {
             switch (aRenderPass) {
@@ -270,6 +273,6 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
     }
     @Override
         public String getTileEntityName() {
-            return "ktfru.multitileentity.multiblock.maskaligner.uv";
+            return "ktfru.multitileentity.multiblock.maskaligner.0";
         }
     }

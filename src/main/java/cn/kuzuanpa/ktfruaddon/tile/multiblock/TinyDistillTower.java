@@ -23,7 +23,6 @@ import gregapi.tileentity.machines.ITileEntityAdjacentOnOff;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import gregapi.util.ST;
 import gregapi.util.WD;
-import gregtech.tileentity.multiblocks.MultiTileEntityDistillationTower;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -164,12 +163,12 @@ public class TinyDistillTower extends TileEntityBase10MultiBlockMachine {
 
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get("gt.lang.structure") + ":");
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.3"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.4"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.5"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.tinydistilltower.6"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.4"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.5"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.6"));
         super.addToolTips(aList, aStack, aF3_H);
     }
     public void doOutputFluids() {
@@ -198,12 +197,12 @@ public class TinyDistillTower extends TileEntityBase10MultiBlockMachine {
     }
 
     static {
-        LH.add("ktfru.tooltip.multiblock.distillationtower.tiny.1", "3x3 Base of Heat Transmitters");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.tiny.2", "3x3x4 of Distillation Tower Parts");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.tiny.3", "Main centered on Side-Bottom of Tower facing outwards");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.tiny.4", "Outputs automatically to the Holes on the Backside");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.tiny.5", "Bottom Hole is for outputting all Items");
-        LH.add("ktfru.tooltip.multiblock.distillationtower.tiny.6", "Input only possible at Bottom Layer of Tower");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.1", "3x3 Base of Heat Transmitters");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.2", "3x3x4 of Distillation Tower Parts");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.3", "Main centered on Side-Bottom of Tower facing outwards");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.4", "Outputs automatically to the Holes on the Backside");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.5", "Bottom Hole is for outputting all Items");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.6", "Input only possible at Bottom Layer of Tower");
     }
 
     @Override

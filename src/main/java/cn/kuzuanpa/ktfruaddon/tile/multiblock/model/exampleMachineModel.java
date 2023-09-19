@@ -80,11 +80,6 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public short[][][] registryIDMap = {{
-            {k, k, k, k},
-    },{
-            {k, k, k, k},
-    },};
     //T是忽略此位置的方块 ,F是正常检测
     //T = ignore ,F = normally check
     public static boolean[][][] ignoreMap = {{
@@ -107,6 +102,7 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
 
     public  boolean isIgnored(int checkX, int checkY, int checkZ){ return ignoreMap[checkY][checkZ][checkX];}
     //Special Model Machines need to set every part to transparent, so we need to use parts in our own registry.
+    //使用模型渲染的机器需要将每个组成方块设为透明，所以我们需要使用来自自己注册库的部件方块。
     public short getRegistryID(int x,int y,int z){return k;}
 
     @Override

@@ -10,6 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.energy.generator;
 
+import cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -41,7 +42,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import java.util.Collection;
 import java.util.List;
 
-import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Generator.ManualMotorNBT;
 import static gregapi.data.CS.*;
 
 public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
@@ -63,8 +63,8 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
         if (aNBT.hasKey(NBT_OUTPUT_MAX)) mOutputMax = aNBT.getLong(NBT_OUTPUT_MAX);
         if (aNBT.hasKey(NBT_EFFICIENCY)) mEfficiency = (short) UT.Code.bind_(0, 10000, aNBT.getShort(NBT_EFFICIENCY));
         if (aNBT.hasKey(NBT_ENERGY_EMITTED)) mEnergyTypeEmitted = TagData.createTagData(aNBT.getString(NBT_ENERGY_EMITTED));
-        if (aNBT.hasKey(ManualMotorNBT.MAX_TIME)) maxTime = aNBT.getLong(ManualMotorNBT.MAX_TIME);
-        if (aNBT.hasKey(ManualMotorNBT.TIME_GAIN_EACH_PRESS)) timeGainRate = aNBT.getLong(ManualMotorNBT.TIME_GAIN_EACH_PRESS);
+        if (aNBT.hasKey(kTileNBT.Generator.MAX_TIME)) maxTime = aNBT.getLong(kTileNBT.Generator.MAX_TIME);
+        if (aNBT.hasKey(kTileNBT.Generator.TIME_GAIN_EACH_PRESS)) timeGainRate = aNBT.getLong(kTileNBT.Generator.TIME_GAIN_EACH_PRESS);
     }
 
     @Override

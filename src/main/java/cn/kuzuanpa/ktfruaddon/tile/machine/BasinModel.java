@@ -15,7 +15,6 @@ import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import com.bioxx.tfc.Core.TFC_Climate;
 import com.bioxx.tfc.TileEntities.TEForge;
 import com.bioxx.tfc.api.TFCBlocks;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.data.MD;
@@ -36,17 +35,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Machine.BASIN_MODEL_TIMER;
 import static gregapi.data.CS.*;
 
 public class BasinModel extends TileEntityBase07Paintable{
     //0=nothing,1=placed clay,2=full clay,3=composed,4=completed
     public byte mState=0;
     public short mTimer=0;
-    public short mTemperature =30;
+    public long mTemperature =30;
     public final short REQUIRED_TIME=400;
 
     public static IIconContainer
@@ -55,16 +54,16 @@ public class BasinModel extends TileEntityBase07Paintable{
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey("ktfru.machine.basinmodel.state")) mState = aNBT.getByte("ktfru.machine.basinmodel.state");
-        if (aNBT.hasKey("ktfru.machine.basinmodel.timer")) mTimer = aNBT.getByte("ktfru.machine.basinmodel.timer");
-        if (aNBT.hasKey("ktfru.machine.basinmodel.temperature")) mTemperature = aNBT.getByte("ktfru.machine.basinmodel.temperature");
+        if (aNBT.hasKey(NBT_STATE)) mState = aNBT.getByte(NBT_STATE);
+        if (aNBT.hasKey(BASIN_MODEL_TIMER)) mTimer = aNBT.getByte(BASIN_MODEL_TIMER);
+        if (aNBT.hasKey(NBT_TEMPERATURE)) mTemperature = aNBT.getLong(NBT_TEMPERATURE);
     }
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        if (mState>0) aNBT.setByte("ktfru.machine.basinmodel.state",mState);
+        if (mState>0) aNBT.setByte(NBT_STATE,mState);
         if (mTimer>0) aNBT.setShort("ktfru.machine.basinmodel.timer",mTimer);
-        if (mTemperature>50) aNBT.setShort("ktfru.machine.basinmodel.temperature",mTemperature);
+        if (mTemperature>50) aNBT.setLong(NBT_TEMPERATURE,mTemperature);
 
     }
     @Override
@@ -158,8 +157,6 @@ public class BasinModel extends TileEntityBase07Paintable{
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
        if (isServerSide()){
-           FMLLog.log(Level.FATAL,mState+"/"+ mTemperature +"/"+mTimer);
-
            if(mTimer>REQUIRED_TIME) {
                mState=4;
                ST.set(slot(0),MultiTileEntityRegistry.getRegistry("gt.multitileentity").getItem(1755));
@@ -172,7 +169,6 @@ public class BasinModel extends TileEntityBase07Paintable{
                    if (te.fireTemp > mTemperature)
                        mTemperature +=2;
                    if(mState==3&&mTemperature >1400)mTimer++;
-                   FMLLog.log(Level.FATAL,"/"+ mTemperature +"/"+mTimer);
                }
                if(mTemperature > TFC_Climate.getHeightAdjustedTemp(worldObj, xCoord, yCoord, zCoord))
                    mTemperature--;
@@ -196,7 +192,6 @@ public class BasinModel extends TileEntityBase07Paintable{
     }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        FMLLog.log(Level.FATAL,"/"+ (aPlayer.inventory.getCurrentItem().getItem() == Items.clay_ball)+"/"+mState+"/"+slot(0));
         if(isServerSide()&&aPlayer.inventory.getCurrentItem().getItem()==Items.clay_ball&&(slot(0)==null||slot(0).stackSize<7)&&mState<2&&ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, 0,1) > 0){
             mState=1;
             if (slot(0).stackSize>5)mState=2;
