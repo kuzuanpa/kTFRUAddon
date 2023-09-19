@@ -12,7 +12,7 @@ import cn.kuzuanpa.ktfruaddon.recipe.recipe.*;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class recipeInit {
-    public recipeInit(FMLInitializationEvent aEvent){
+    public static void init(FMLInitializationEvent aEvent){
         HeatMixer.init();
         ParticleCollinder.init();
         OreProcessing.init();

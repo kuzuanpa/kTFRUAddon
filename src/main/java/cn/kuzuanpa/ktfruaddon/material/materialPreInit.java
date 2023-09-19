@@ -14,10 +14,9 @@ import gregapi.data.TD;
 import static cn.kuzuanpa.ktfruaddon.code.Variables.Symbols;
 import static gregapi.data.CS.NUM_SUB;
 /**Register materials when PreInit
- * Notice: Don't change the order of codes and always append newline
  **/
 public class materialPreInit {
-    public materialPreInit(FMLPreInitializationEvent aEvent) {
+    public static void init(FMLPreInitializationEvent aEvent) {
         int i=21999;
         matList.AmmoniumDichromate.registerWithDust(22000, "AmmoniumDichromate", "Ammonium Dichromate",456, 460, 255, 160, 51, 0,  "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2]);
         matList.AmmoniumChromicSulfate.registerWithDust(22001, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate",456, 460, 72, 0, 161, 0,  "NH"+NUM_SUB[4]+"Cr(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
@@ -28,7 +27,7 @@ public class materialPreInit {
         matList.BauxiteRedMud.registerWithDust(22006, "BauxiteRedMud", "Bauxite Red Mud", 1790, 3234, 148, 0, 12, 0,null);
         matList.LithiumCarbonate.registerWithDust(22007, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
         matList.MetatitanicAcid.registerWithDust(22008, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
-        //石油底
+        //石油底渣
         matList.OilScarp.registerC(22009,"OilScarp","Oil Scarp",90,231,12,9,2,0,null)
                 .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
         //甲醇
@@ -97,7 +96,7 @@ public class materialPreInit {
         matList.CalciumHydroxide.registerC(22030,"CalciumHydroxide","CalciumHydroxide",580,2850,255,255,255,130,"Ca(OH)"+NUM_SUB[2])
                 .put(TD.ItemGenerator.DUSTS);
         //一氯甲烷
-        matList.Chloromethane.registerC(22031,"Chloromethane","Chloromethane",-97,-24,255,255,255,255,"CH"+NUM_SUB[3])
+        matList.Chloromethane.registerC(22031,"Chloromethane","Chloromethane",-97,-24,255,255,255,255,"CH"+NUM_SUB[3]+"Cl")
                 .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
         //二氯甲烷
         matList.Dichloromethane.registerC(22032,"Dichloromethane","Dichloromethane",-97,39,255,255,255,255,"CH"+NUM_SUB[2]+"Cl"+NUM_SUB[2])
@@ -137,7 +136,7 @@ public class materialPreInit {
                 .put();
         //聚乙酸乙烯
         matList.PolyVinylAcetate.registerC(22044,"PolyVinylAcetate","PolyVinylAcetate",60,143,255,255,255,130,"(C"+NUM_SUB[4]+"H"+NUM_SUB[6]+"O"+NUM_SUB[2]+")")
-                .put();
+                .put(TD.ItemGenerator.DUSTS);
         //丁二烯
         matList.Butadiene.registerC(22045,"Butadiene","Butadiene",-109,-4,255,255,255,130,"CH"+NUM_SUB[2]+"=CHCH=CH2"+NUM_SUB[2])
                 .put();

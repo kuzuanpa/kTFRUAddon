@@ -20,6 +20,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.tankGasCompressed;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -29,6 +30,7 @@ import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.UT;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,7 +47,7 @@ public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         addToolTipsSided(aList, aStack, aF3_H);
-
+        aList.add(LH.Chat.CYAN    + LH.get(kTooltips.TANK_GAS_COMPRESSED_INPUTER));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_TOGGLE_SCREWDRIVER));
         if (SIDES_VALID[mFluidAutoInput])
             aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_TOGGLE_AUTO_INPUTS_MONKEY_WRENCH));
@@ -53,7 +55,6 @@ public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
             aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_TOGGLE_AUTO_OUTPUTS_MONKEY_WRENCH));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_RESET_SOFT_HAMMER));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
-
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
@@ -79,7 +80,6 @@ public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
     public void doOutputFluids() {
         DelegatorTileEntity<IFluidHandler> aTo = getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput], mTanksOutput[0].fluid());
         if (aTo == null)return;
-        long aMaxMoved = Long.MAX_VALUE;
         FluidStack tDrained = mTanksOutput[0].drain(UT.Code.bindInt(Long.MAX_VALUE), F);
         if (tDrained == null || tDrained.amount <= 0) return;
         tankGasCompressed target = null;
@@ -177,7 +177,12 @@ public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
     }
 
     @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        return false;
+    }
+    @Override
     public IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
+        if (!FL.gas(aFluidToFill)) return null;
         if (!mDisabledFluidOutput && SIDES_VALID[mFluidAutoOutput] && FACING_TO_SIDE[mFacing][mFluidAutoOutput] == aSide) return null;
         if (!FACE_CONNECTED[FACING_ROTATIONS[mFacing][aSide]][mFluidInputs]) return null;
         for (gregapi.fluid.FluidTankGT fluidTankGT : mTanksInput) if (fluidTankGT.contains(aFluidToFill)) return fluidTankGT;
@@ -185,5 +190,5 @@ public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
         return null;
     }
 
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.machine.inputer.tankgascompressed";}
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.machine.compressedgasinputer";}
 }

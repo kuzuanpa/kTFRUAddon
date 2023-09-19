@@ -69,7 +69,7 @@ public class tankGasCompressed extends MultiTileEntityTank {
             FluidStack tFluid = mTank.getFluid();
             if (tFluid != null && tFluid.amount > 0) {
                 if (FL.temperature(mTank) >= mMaterial.mMeltingPoint && meltdown()) return;
-                if (allowFluid(tFluid)&& SIDES_HORIZONTAL[mFacing] || FL.gas(mTank) || (FL.lighter(tFluid)?SIDES_TOP:SIDES_BOTTOM)[mFacing]) {
+                if (FL.gas(mTank)) {
                     if (FL.move(mTank, getAdjacentTileEntity(mFacing)) > 0) updateInventory();
                 }
             }

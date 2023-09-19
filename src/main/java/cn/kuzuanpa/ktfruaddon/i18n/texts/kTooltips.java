@@ -42,5 +42,6 @@ public class kTooltips {
             ,TANK_GAS_COMPRESSED_0="ktfru.tooltip.multiblock.tank.gas.compressed.0"
             ,TANK_GAS_COMPRESSED_1="ktfru.tooltip.multiblock.tank.gas.compressed.1"
             ,TANK_GAS_COMPRESSED_2="ktfru.tooltip.multiblock.tank.gas.compressed.2"
+            ,TANK_GAS_COMPRESSED_INPUTER="ktfru.tooltip.machine.compressedgasinputer"
     ;
 }

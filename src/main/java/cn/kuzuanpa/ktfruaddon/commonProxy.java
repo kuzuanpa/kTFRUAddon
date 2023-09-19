@@ -12,6 +12,7 @@ import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.i18n.i18nInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
+import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit;
@@ -28,17 +29,17 @@ public class commonProxy extends Abstract_Proxy {
     }
     public void preInit(FMLPreInitializationEvent aEvent) {
       //  new prefixPreInit(aEvent);
-        new materialPreInit(aEvent);
-        new tileEntityPreInit(aEvent);
-        new itemPreInit(aEvent);
-        new fluidPreInit(aEvent);
+        materialPreInit.init(aEvent);
+        tileEntityPreInit.init(aEvent);
+        itemPreInit.init(aEvent);
+        fluidPreInit.init(aEvent);
     }
 
 
 
     public void init(FMLInitializationEvent aEvent) {
-        new tileEntityInit(aEvent);
-        new recipeInit(aEvent);
+        tileEntityInit.init(aEvent);
+        recipeInit.init(aEvent);
         new enchantInit();
         PROXY.registerRenderers();
 
@@ -46,6 +47,8 @@ public class commonProxy extends Abstract_Proxy {
 
     public void postInit(FMLPostInitializationEvent aEvent) {
         new i18nInit(aEvent);
+        lootPostInit.init(aEvent);
+
     }
 
     public void serverStarting(FMLServerStartingEvent aEvent) {

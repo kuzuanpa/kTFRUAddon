@@ -85,24 +85,35 @@ public class Circuits {
 
         recipeManager.Assembler.addRecipe1(F,16,80,OP.foil.mat(matList.EpoxyResin.mat,6),FL.array(FL.Glass.make(576)),ZL_FS,ItemList.CircuitBoardEmptyT3.get(1));
 
+        recipeManager.Assembler.addRecipe2(F,16,80,IL.Circuit_Plate_Empty.get(1),OP.foil.mat(MT.Cu,2),FL.array(flList.EtchingSolution.make(20)),ZL_FS,IL.Circuit_Plate_Copper.get(1));
+        RM.           Press    .addRecipe2(F,16,80,IL.Circuit_Plate_Empty.get(1),IL.Circuit_Wire_Copper.get(2),ZL_FS,ZL_FS,IL.Circuit_Plate_Copper.get(1));
+
         recipeManager.Assembler.addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT2.get(1),OP.foil.mat(MT.Au,7),FL.array(flList.EtchingSolution.make(70)),ZL_FS,IL.Circuit_Plate_Gold.get(1));
         RM.           Press    .addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT2.get(1),IL.Circuit_Wire_Gold.get(4),ZL_FS,ZL_FS,IL.Circuit_Plate_Gold.get(1));
 
         recipeManager.Assembler.addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT3.get(1),OP.foil.mat(MT.Pt,11),FL.array(flList.EtchingSolution.make(110)),ZL_FS,IL.Circuit_Plate_Platinum.get(1));
         RM.           Press    .addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT3.get(1),IL.Circuit_Wire_Platinum.get(8),ZL_FS,ZL_FS,IL.Circuit_Plate_Platinum.get(1));
 
+        CR.shapeless(ItemList.CircuitBoardBasicUncompleted.get(1),new Object[]{IL.Circuit_Part_Basic.get(1),IL.Circuit_Part_Basic.get(1),IL.Circuit_Plate_Copper.get(1),ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1)});
+        CR.shapeless(IL.Circuit_Board_Basic.get(1),new Object[]{ItemList.CircuitBoardBasicUncompleted.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1)});
 
-        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(4),   IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
+        CR.shapeless(ItemList.CircuitBoardGoodUncompleted1.get(1),new Object[]{IL.Circuit_Part_Good.get(1),IL.Circuit_Part_Good.get(1),IL.Circuit_Plate_Copper.get(1),ItemList.CoilT1.get(1),ItemList.CoilT1.get(1)});
+        CR.shapeless(ItemList.CircuitBoardGoodUncompleted2.get(1),new Object[]{ItemList.CircuitBoardGoodUncompleted1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1)});
+        CR.shapeless(IL.Circuit_Board_Good.get(1),new Object[]{ItemList.CircuitBoardGoodUncompleted2.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1),ItemList.ResistanceT1.get(1)});
 
-        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(4),    IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
+        recipeManager.Assembler.addRecipeX(F,16  ,120,ST.array(IL.Circuit_Part_Basic.get(2),   IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), ZL_FS,ZL_FS, IL.Circuit_Board_Basic.get(1));
+        recipeManager.Assembler.addRecipeX(F,64  ,120,ST.array(IL.Circuit_Part_Good.get(2),    IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), ZL_FS,ZL_FS, IL.Circuit_Board_Good.get(1));
+        recipeManager.Assembler.addRecipeX(F,256 ,120,ST.array(IL.Circuit_Part_Advanced.get(4),IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12),ItemList.DiodeT1.get(2)), ZL_FS,ZL_FS, IL.Circuit_Board_Advanced.get(1));
+        recipeManager.Assembler.addRecipeX(F,512 ,120,ST.array(IL.Circuit_Part_Elite.get(4),   IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(4),ItemList.CapacitorT2.get(8),ItemList.ResistanceT2.get(20),ItemList.DiodeT1.get(2)), ZL_FS,ZL_FS, IL.Circuit_Board_Elite.get(1));
+        recipeManager.Assembler.addRecipeX(F,2048,120,ST.array(IL.Circuit_Part_Master.get(6),  IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT3.get(8),ItemList.CapacitorT3.get(24),ItemList.ResistanceT3.get(64),ItemList.DiodeT2.get(8)), ZL_FS,ZL_FS, IL.Circuit_Board_Master.get(1));
+        recipeManager.Assembler.addRecipeX(F,8192,120,ST.array(IL.Circuit_Part_Ultimate.get(8),IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT4.get(8),ItemList.CapacitorT3.get(64),ItemList.ResistanceT4.get(128),ItemList.DiodeT3.get(16)), ZL_FS,ZL_FS, IL.Circuit_Board_Ultimate.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,256 ,160,ST.array(IL.Circuit_Part_Advanced.get(6),IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Advanced.get(1));
-
-        recipeManager.Assembler.addRecipeX(F,512 ,160,ST.array(IL.Circuit_Part_Elite.get(8),   IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(4),ItemList.CapacitorT2.get(8),ItemList.ResistanceT2.get(20),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Elite.get(1));
-
-        recipeManager.Assembler.addRecipeX(F,2048,160,ST.array(IL.Circuit_Part_Master.get(10),  IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT3.get(8),ItemList.CapacitorT3.get(24),ItemList.ResistanceT3.get(64),ItemList.DiodeT2.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Master.get(1));
-
-        recipeManager.Assembler.addRecipeX(F,8192,160,ST.array(IL.Circuit_Part_Ultimate.get(14),IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT4.get(8),ItemList.CapacitorT3.get(64),ItemList.ResistanceT4.get(128),ItemList.DiodeT3.get(16)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Ultimate.get(1));
+        recipeManager.Assembler.addRecipeX(F,16  ,160,ST.array(IL.Circuit_Part_Basic.get(2),   IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Basic.get(1));
+        recipeManager.Assembler.addRecipeX(F,64  ,160,ST.array(IL.Circuit_Part_Good.get(2),    IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Good.get(1));
+        recipeManager.Assembler.addRecipeX(F,256 ,160,ST.array(IL.Circuit_Part_Advanced.get(4),IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Advanced.get(1));
+        recipeManager.Assembler.addRecipeX(F,512 ,160,ST.array(IL.Circuit_Part_Elite.get(4),   IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(4),ItemList.CapacitorT2.get(8),ItemList.ResistanceT2.get(20),ItemList.DiodeT1.get(2)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Elite.get(1));
+        recipeManager.Assembler.addRecipeX(F,2048,160,ST.array(IL.Circuit_Part_Master.get(6),  IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT3.get(8),ItemList.CapacitorT3.get(24),ItemList.ResistanceT3.get(64),ItemList.DiodeT2.get(8)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Master.get(1));
+        recipeManager.Assembler.addRecipeX(F,8192,160,ST.array(IL.Circuit_Part_Ultimate.get(8),IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT4.get(8),ItemList.CapacitorT3.get(64),ItemList.ResistanceT4.get(128),ItemList.DiodeT3.get(16)), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS, IL.Circuit_Ultimate.get(1));
 
         //downgrading parts
         CR.shapeless(ItemList.CapacitorT1.get(1),new Object[]{ItemList.CapacitorT2.get(1)});
@@ -112,6 +123,12 @@ public class Circuits {
         CR.shapeless(ItemList.CoilT3.get(1),new Object[]{ItemList.CoilT4.get(1)});
         CR.shapeless(ItemList.DiodeT1.get(1),new Object[]{ItemList.DiodeT2.get(1)});
         CR.shapeless(ItemList.DiodeT2.get(1),new Object[]{ItemList.DiodeT3.get(1)});
+
+        CR.shapeless(IL.Circuit_Part_Basic.get(1), new Object[]{IL.Circuit_Part_Good.get(1)});
+        CR.shapeless(IL.Circuit_Part_Good.get(1), new Object[]{IL.Circuit_Part_Advanced.get(1)});
+        CR.shapeless(IL.Circuit_Part_Advanced.get(1), new Object[]{IL.Circuit_Part_Elite.get(1)});
+        CR.shapeless(IL.Circuit_Part_Elite.get(1), new Object[]{IL.Circuit_Part_Master.get(1)});
+        CR.shapeless(IL.Circuit_Part_Master.get(1), new Object[]{IL.Circuit_Part_Ultimate.get(1)});
 
 
     }
