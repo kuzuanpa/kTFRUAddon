@@ -117,7 +117,7 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, cX, cZ), tY + cY, utils.getCheckZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
+                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
                             tSuccess = F;
                             //FMLLog.log(Level.FATAL, "failed");
                         }
@@ -140,7 +140,7 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
                     for (cX = 0; cX < machineX; cX++) {
-                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getCheckX(mFacing, tX, cX, cZ), tY + cY, utils.getCheckZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
+                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
                     }
                 }
             }
@@ -168,7 +168,7 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
     //controls areas inside the machine
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),yCoord,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
     //下面四个是设置输入输出的地方,return null是任意面
     //controls where to I/O, return null=any side
     @Override

@@ -119,7 +119,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
             for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
                 for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
                     for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getCheckX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getCheckZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
+                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
                             tSuccess = F;
                             //FMLLog.log(Level.FATAL, "failed");
                         }

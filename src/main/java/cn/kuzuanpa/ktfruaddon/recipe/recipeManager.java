@@ -40,7 +40,9 @@ public class recipeManager {
     , TinyDistillTower        = new Recipe.RecipeMap(null, "ktfru.recipe.tinydistilltower"       , "Tiny Distillation Tower"   , "Tiny Distillation Tower",     0, 1, RES_PATH_GUI + "machines/TinyDistillationTower",    1, 3, 0, 1, 3, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
     , CVD                     = new Recipe.RecipeMap(null, "ktfru.recipe.cvd"                    , "Chemical Vapor Depositor"  , "Chemical Vapor Depositor",    0, 1, RES_PATH_GUI + "machines/ChemicalVaporDepositor",   6, 3, 0, 1, 6, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
     , Code                    = new Recipe.RecipeMap(null, "ktfru.recipe.code"                   , "Code(Internal)"            , "Code (Internal)",             0, 1, RES_PATH_GUI + "machines/code",                     9, 3, 0, 1, 1, 0,  1,  1, "", 1, "", T, T, T, T, F, F, F)
-    , FuelBattery             = new Recipe.RecipeMap(null, "ktfru.recipe.fuelbattery"            , "Gas Battery"               , "Gas Battery",                 0, 1, RES_PATH_GUI + "machines/ChemicalVaporDepositor",   2, 0, 2, 3, 2, 2,  4,  1, "", 1, "", T, T, T, T, F, F, F)
+    , FuelBattery             = new Recipe.RecipeMap(null, "ktfru.recipe.fuelbattery"            , "Gas Battery"               , "Gas Battery",                 0, 1, RES_PATH_GUI + "machines/GasBattery",               2, 0, 2, 3, 2, 2,  4,  1, "", 1, "", T, T, T, T, F, F, F)
+    , CNCMachine              = new Recipe.RecipeMap(null, "ktfru.recipe.cncmachine"             , "CNC Machine"               , "CNC Machine"         ,        0, 1, RES_PATH_GUI + "machines/CNCMachine",               3, 3, 1, 3, 0, 1,  1,  1, "", 1, "", T, T, T, T, F, F, F)
+    , CNCMachineAdvanced      = new Recipe.RecipeMap(null, "ktfru.recipe.cncmachineadvanced"     , "Advanced CNC Machine"      , "Advanced CNC Machine",        0, 1, RES_PATH_GUI + "machines/CNCMachineAdvanced",       3, 3, 1, 3, 0, 1,  1,  1, "", 1, "", T, T, T, T, F, F, F)
 
     ;
     @Deprecated

@@ -141,7 +141,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     @Override
     public FluidStack tapDrain(byte aSide, int aMaxDrain, boolean aDoDrain) {
         updateInventory();
-        return getOutputTankHasFluid().drain(aMaxDrain, aDoDrain);
+        return getFluidTankDrainable2(aSide,null).drain(aMaxDrain, aDoDrain);
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
@@ -171,7 +171,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
                             mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
                             if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
                             if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
-                            while (mEnergy < mRate * 2 && (tRecipe.mFluidOutputs.length < 1 || mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])&&mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1])) && tRecipe.isRecipeInputEqual(T, F, mTanksInput, ZL_IS)) {
+                            while (mEnergy < mRate * 2 && (tRecipe.mFluidOutputs.length < 1 || tRecipe.mFluidOutputs.length == 1&&mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])||tRecipe.mFluidOutputs.length == 2&&mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])&&mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1])) && tRecipe.isRecipeInputEqual(T, F, mTanksInput, ZL_IS)) {
                                 mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
                                 if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
                                 if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
@@ -229,7 +229,9 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
 
     @Override
     protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
-        return getOutputTankHasFluid();
+        if (changingStaticTank && !mTankStatic.isEmpty()) return mTankStatic;
+        else for (FluidTankGT tank:mTanks) if (!tank.isEmpty()) return tank;
+        return null;
     }
 
     @Override

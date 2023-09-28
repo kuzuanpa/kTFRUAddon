@@ -23,10 +23,10 @@ public class fluidPreInit {
         final int GAS=2;
         final int LIQUID=1;
         flList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide",null,LIQUID);
-        flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",MT.NaAlO2,1000);
-        flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", MT.KAlO2,1000);
-        flList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",MT.Na2CO3,LIQUID);
-        flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",MT.K2CO3,LIQUID);
+        flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",null,1000);
+        flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", null,1000);
+        flList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",null,LIQUID);
+        flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",null,LIQUID);
         flList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,LIQUID);
         flList.AmmoniumTungstate.register("ammoniumtungstate","Ammonium Tungstate",null,LIQUID);
 
@@ -131,8 +131,6 @@ public class fluidPreInit {
         flList.VinylAcetate.register("VinylAcetate","VinylAcetate",matList.VinylAcetate.get(), LIQUID);
         //丁二烯
         flList.Butadiene.register("Butadiene","Butadiene",matList.Butadiene.get(), GAS);
-        //双酚钠盐溶液
-        flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
         //四氟乙烯
         flList.Tetrafluoroethylene.register("tetrafluoroethylene","Tetrafluoroethylene",null,GAS);
         //四氯化硅
@@ -188,6 +186,9 @@ public class fluidPreInit {
         flList.BioFuel2.register("biofuel2","Bio Fuel 2",null, LIQUID);
         flList.EtchingSolution.register("etchingsolution","Etching Solution",null, LIQUID);
 
+        //双酚钠盐溶液
+        flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
+        flList.SolutionPotassiumHydroxide.registerSolution("solutionpotassiumhydroxide","Potassium Hydroxide Solution",MT.KOH,1000);
         flList.MoltenTeflon.registerMolten("teflon","Teflon",MT.Teflon);
     }
 }

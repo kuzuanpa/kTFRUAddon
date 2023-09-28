@@ -27,8 +27,8 @@ import java.util.Map;
 public class CodeTranslate {
         public static String itemToCode(ItemStack stack){
             if(stack==null)return null;
-            if(stack.getUnlocalizedName().startsWith("gt.multiitem.")) for (IL gItem: IL.values()) if (gItem!=null&&gItem.exists()&&gItem.get(1)!=null&& gItem.get(1).getItem()==stack.getItem()&&gItem.get(1).getItemDamage()==stack.getItemDamage()) return "IL."+gItem.toString()+".get("+stack.stackSize+")";
-            if(stack.getUnlocalizedName().startsWith("ktfru.item.")) for (ItemList kItem:ItemList.values())if (kItem!=null&&kItem.get(1)!=null&&kItem.get(1).getItem()==stack.getItem()&&kItem.get(1).getItemDamage()==stack.getItemDamage()) return "ItemList."+kItem.toString()+".get("+stack.stackSize+")";
+            if(stack.getUnlocalizedName().startsWith("gt.")) for (IL gItem: IL.values()) if (gItem!=null&&gItem.exists()&&gItem.get(1)!=null&& gItem.get(1).getItem()==stack.getItem()&&gItem.get(1).getItemDamage()==stack.getItemDamage()) return "IL."+gItem.toString()+".get("+stack.stackSize+")";
+            if(stack.getUnlocalizedName().startsWith("ktfru.")) for (ItemList kItem:ItemList.values())if (kItem!=null&&kItem.get(1)!=null&&kItem.get(1).getItem()==stack.getItem()&&kItem.get(1).getItemDamage()==stack.getItemDamage()) return "ItemList."+kItem.toString()+".get("+stack.stackSize+")";
             if(stack.getItem().getUnlocalizedName().startsWith("gt.")) {
             String tmp= OreDictPrefixToCode(stack);
             if (tmp!=null)return tmp;

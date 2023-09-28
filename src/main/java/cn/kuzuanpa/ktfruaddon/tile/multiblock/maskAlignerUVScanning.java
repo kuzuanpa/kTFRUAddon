@@ -118,7 +118,7 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
                     for (cX = 0; cX < machineX; cX++) {
-                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getCheckX(mFacing, tX, cX, cZ), tY + cY, utils.getCheckZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
+                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
                     }
                 }
             }

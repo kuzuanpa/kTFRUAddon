@@ -10,8 +10,10 @@ package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderCircuitAssembler;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderExampleMultiBlock;
+import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderSunBoilerMirror;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
+import cn.kuzuanpa.ktfruaddon.tile.parts.SunBoilerMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -37,5 +39,6 @@ public class clientProxy extends commonProxy {
     public void registerRenderers(){
         ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TileEntityRenderExampleMultiBlock());
         ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TileEntityRenderCircuitAssembler());
+        ClientRegistry.bindTileEntitySpecialRenderer(SunBoilerMirror.class, new TileEntityRenderSunBoilerMirror());
     }
 }
