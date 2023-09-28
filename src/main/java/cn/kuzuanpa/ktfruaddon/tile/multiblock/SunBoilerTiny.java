@@ -27,9 +27,9 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class SunBoiler extends TileEntityBase11MultiBlockConverter {
+public class SunBoilerTiny extends TileEntityBase11MultiBlockConverter {
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.sunboiler";
+        return "ktfru.multitileentity.multiblock.sunboiler.tiny";
     }
 
     @Override
@@ -41,11 +41,11 @@ public class SunBoiler extends TileEntityBase11MultiBlockConverter {
 
     //决定机器大小
     //this controls the size of machine.
-    public final short machineX = 5, machineYmax = 16, machineZ = 5;
+    public final short machineX = 3, machineYmax = 8, machineZ = 3;
     public short machineY=0;
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
-    public final short xMapOffset = -2, zMapOffset = 0;
+    public final short xMapOffset = -1, zMapOffset = 0;
     //映射表方向:
     //                 |
     //                 |
@@ -72,102 +72,72 @@ public class SunBoiler extends TileEntityBase11MultiBlockConverter {
     //这里决定每个参与构成本机器的方块的子id
     //Controls every block needed to build the machine
     public static int[][][] blockIDMap = {{
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
+            {18002, 18002, 18002},
+            {18002, 18002, 18002},
+            {18002, 18002, 18002},
     },{
-            {18002, 18002,   0  , 18002, 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002, 18002, 18002, 18002, 18002},
+            {18002,   0  , 18002},
+            {18002,   0  , 18002},
+            {18002, 18002, 18002},
     },{
-            {18002, 18002, 18002, 18002, 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002, 18002, 18002, 18002, 18002},
+            {18002, 18002, 18002},
+            {18002,   0  , 18002},
+            {18002, 18002, 18002},
     },{
-            {31131, 31131, 31131, 31131, 31131},
-            {31131, 31132, 31132, 31132, 31131},
-            {31131, 31132,   0  , 31132, 31131},
-            {31131, 31132, 31132, 31132, 31131},
-            {31131, 31131, 31131, 31131, 31131},
+            {31131, 31131, 31131},
+            {31131, 31132, 31131},
+            {31131, 31131, 31131},
     },{
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
+            {31133, 31133, 31133},
+            {31133, 31133, 31133},
+            {31133, 31133, 31133},
     },};
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public short[][][] registryIDMap = {{
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
+            {g, g, g},
+            {g, g, g},
+            {g, g, g},
     },{
-            {g, g, k, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
+            {g, k, g},
+            {g, g, g},
+            {g, g, g},
     },{
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
+            {g, g, g},
+            {g, g, g},
+            {g, g, g},
     },{
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
+            {k, k, k},
+            {k, k, k},
+            {k, k, k},
     },{
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
+            {k, k, k},
+            {k, k, k},
+            {k, k, k},
     }};
     //T是忽略此位置的方块 ,F是正常检测
     //T = ignore ,F = normally check
     public static boolean[][][] ignoreMap = {{
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
+            {F, F, F},
+            {F, F, F},
+            {F, F, F},
     }, {
-            {F, F, T, F, F},
-            {F, T, T, T, F},
-            {F, T, T, T, F},
-            {F, T, T, T, F},
-            {F, F, F, F, F},
+            {F, T, F},
+            {F, T, F},
+            {F, F, F},
     },{
-            {F, F, F, F, F},
-            {F, T, T, T, F},
-            {F, T, T, T, F},
-            {F, T, T, T, F},
-            {F, F, F, F, F},
+            {F, F, F},
+            {F, T, F},
+            {F, F, F},
     },{
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, T, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
+            {F, F, F},
+            {F, F, F},
+            {F, F, F},
     },{
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
+            {F, F, F},
+            {F, F, F},
+            {F, F, F},
     }};
 
     //change value there to set usage of every block.
