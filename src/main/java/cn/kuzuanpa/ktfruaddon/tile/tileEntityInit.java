@@ -28,10 +28,7 @@ import cn.kuzuanpa.ktfruaddon.tile.machine.BasinModel;
 import cn.kuzuanpa.ktfruaddon.tile.machine.MachineCodeUtil;
 import cn.kuzuanpa.ktfruaddon.tile.machine.tankGasCompressedInputer;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.*;
-import cn.kuzuanpa.ktfruaddon.tile.parts.CommonPart;
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartComputeCluster;
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartComputeClusterSimple;
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.parts.*;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregapi.block.multitileentity.MultiTileEntityBlock;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -100,6 +97,8 @@ public class tileEntityInit {
         MultiTileEntityPipeFluid.addFluidPipes(0, 26142, 800, true, true, false, true, false, false, true, false,aRegistry, aMachine, gregapi.tileentity.connectors.MultiTileEntityPipeFluid.class, (long) (MT.Teflon.mMeltingPoint * 1.25), MT.Teflon);
         MultiTileEntityPipeItem.addItemPipes(26, 25202, 8192, 4, true, false,aRegistry, aMachine, gregapi.tileentity.connectors.MultiTileEntityPipeItem.class,  MT.PVC);
         //gregapi.tileentity.connectors.MultiTileEntityWireElectric.addElectricWires(50, 0, gregapi.data.CS.VMAX[4], 1, 0, 0, true, false, true, aRegistry, tWireBlock, gregapi.tileentity.connectors.MultiTileEntityWireElectric.class, tExamplium);
+
+        //10000-19999,Single Block Generators
         i=10000;
         //Small Gas Turbine
         aClass = MultiTileEntityGasMotor.class;
@@ -113,9 +112,8 @@ public class tileEntityInit {
 
 
         //Gas Battery
-        i=10010;
-        aMat = MT.StainlessSteel;      aRegistry.add("Gas Battery"                                             , "ktfruaddon: Energy"                 ,  i++, 1304, FuelBattery.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_FUELMAP ,recipeManager.FuelBattery,NBT_WASTE_ENERGY,false, NBT_OUTPUT, 32, NBT_OUTPUT_MIN,    16, NBT_OUTPUT_MAX,   32 ,NBT_ENERGY_EMITTED, TD.Energy.EU),"WGW","PMP","wCh",'C',OP.casingMachine.mat(aMat,1),'M', ItemList.ProtonExchangeMembrane.get(1),'P',aRegistry.getItem(2)/*Teflon Pipe*/,'W',gRegistry.getItem(29251)/*2x Pt Wire*/,'G',OD.blockGlass);
-        aMat = MT.Bronze;              aRegistry.add("Manual Motor"                                            , "ktfruaddon: Energy"                 ,  i++, 1304, ManualMotor.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_OUTPUT_MIN,8 ,NBT_OUTPUT,14 ,NBT_OUTPUT_MAX,20, NBT_ENERGY_EMITTED, TD.Energy.RU,"ktfru.nbt.energy.manualmotor.maxtime",600),"PLP","SMS","GhC",'M',OP.casingMachine.mat(aMat,1),'L',OD.itemLubricant,'P', OD.itemLeather,'S',OP.stickLong.mat(aMat,1),'G', OP.gearGt.dat(aMat), 'C', OP.gearGtSmall.dat(aMat));
+        aMat = MT.StainlessSteel;      aRegistry.add("Gas Battery"                                             , "ktfruaddon: Energy"                 ,  10010, 1304, FuelBattery.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_FUELMAP ,recipeManager.FuelBattery, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));RM.Welder.addRecipeX(F,64,20,ST.array(OP.casingMachine.mat(aMat,1),ItemList.ProtonExchangeMembrane.get(8),aRegistry.getItem(2)/*Teflon Pipe*/,gRegistry.getItem(29251,2)/*2x Pt Wire*/,OP.plate.mat(MT.Glass,4),OP.plate.mat(MT.Teflon,24)),ZL_FS,ZL_FS,aRegistry.getItem(10010));
+        aMat = MT.Bronze;              aRegistry.add("Manual Motor"                                            , "ktfruaddon: Energy"                 ,  10011, 1304, ManualMotor.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  12.5F, NBT_RESISTANCE,  12.5F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_OUTPUT_MIN,8 ,NBT_OUTPUT,14 ,NBT_OUTPUT_MAX,20, NBT_ENERGY_EMITTED, TD.Energy.RU,"ktfru.nbt.energy.manualmotor.maxtime",600),"PLP","SMS","GhC",'M',OP.casingMachine.mat(aMat,1),'L',OD.itemLubricant,'P', OD.itemLeather,'S',OP.stickLong.mat(aMat,1),'G', OP.gearGt.dat(aMat), 'C', OP.gearGtSmall.dat(aMat));
 
 
         //20000-29999,Single block machines
@@ -172,10 +170,11 @@ public class tileEntityInit {
         aMat = MT.DATA.Electric_T[4];   aRegistry.add("Heat Mixer ("+VN[4]+")"          , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 2048, NBT_TEXTURE, "heatmixer"  ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.HeatMixer        , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T), "PMP", "XRX", "hSw", 'M', OP.casingMachine.dat(aMat), 'S', IL.MOTORS[4], 'R', OP.rotor.dat(MT.StainlessSteel), 'X', OP.wireGt08.dat(MT.Nichrome),'P', OP.plateQuadruple.dat(MT.StainlessSteel));
         aMat = MT.DATA.Electric_T[5];   aRegistry.add("Heat Mixer ("+VN[5]+")"          , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 8192, NBT_TEXTURE, "heatmixer"  ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.HeatMixer        , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T), "PMP", "XRX", "hSw", 'M', OP.casingMachine.dat(aMat), 'S', IL.MOTORS[5], 'R', OP.rotor.dat(MT.StainlessSteel), 'X', OP.wireGt12.dat(MT.Nichrome),'P', OP.plateQuadruple.dat(MT.StainlessSteel));
 
-        i=27010;
+        i=7010;
         ////CVD Machine  TODO:Recipe
         //i=27020;
-        //aMat = MT.DATA.Electric_T[1];   aRegistry.add("CVD Machine ("+VN[1]+")"         , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 32  , NBT_TEXTURE, "cvdmachine" ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.CVD              , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
+        //aClass= testGuiMachine.class;
+        //aMat = MT.DATA.Electric_T[1];   aRegistry.add("Test Gui Machine ("+VN[1]+")"         , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 32  , NBT_TEXTURE, "cvdmachine" ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.CVD              , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
         //aMat = MT.DATA.Electric_T[2];   aRegistry.add("CVD Machine ("+VN[2]+")"         , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 128 , NBT_TEXTURE, "cvdmachine" ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.CVD              , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
         //aMat = MT.DATA.Electric_T[3];   aRegistry.add("CVD Machine ("+VN[3]+")"         , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 512 , NBT_TEXTURE, "cvdmachine" ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.CVD              , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
         //aMat = MT.DATA.Electric_T[4];   aRegistry.add("CVD Machine ("+VN[4]+")"         , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 2048, NBT_TEXTURE, "cvdmachine" ,       NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.CVD              , NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
@@ -281,7 +280,9 @@ i=31120;
         //aMat = ;     aRegistry.add("Mask Aligner IO Manager (DUV)"     , "kTFRUAddon: Multiblock", 30121, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "iomanager"   , NBT_DESIGNS, 2));
 
         //aMat = ;     aRegistry.add("Mask Aligner IO Manager (EUV)"     , "kTFRUAddon: Multiblock", 30122, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "iomanager"   , NBT_DESIGNS, 2));
-
+i=31130;
+aClass= SunBoilerMirror.class;
+        aMat = MT.Al;              aRegistry.add("Sun Boiler Mirror"     , "kTFRUAddon: Multiblock", i++, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "iomanager"   , NBT_DESIGNS, 2));
 
 i=31200;
         //special part
@@ -302,6 +303,6 @@ i=31200;
         aMat = MT.Bronze;              aRegistry.add("Rust Bronze Machine Casing"     , "kTFRUAddon: Casing", 32761, 1230, rustBronzeCasing.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F));
         aMat = MT.Bronze;              aRegistry.add("DeRust Bronze Machine Casing"     , "kTFRUAddon: Casing", 32762, 1230, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F,NBT_TEXTURE, "wall"));RM.Welder.addRecipe1(F,16,200,aRegistry.getItem(32762,1),ZL_FS,ZL_FS,OP.casingMachine.mat(MT.Bronze,1));
         aMat = MT.RedSteel;              aRegistry.add("Red Steel Basin Model"     , "kTFRUAddon: Machines", 32763, 20001, BasinModel.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.RedSteel,1));
-        aMat = MT.BlueSteel;              aRegistry.add("Blue Steel Basin Model"     , "kTFRUAddon: Machines", 32764, 20001, BasinModel.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.BlueSteel,1));
+        aMat = MT.BlueSteel;              aRegistry.add("Blue Steel Basin Model"     , "kTFRUAddon: Machines", 32764, 20001, BasinModel.class , aMat.mToolQuality, 16, tMetalBlock   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.BlueSteel,1));
     }
 }

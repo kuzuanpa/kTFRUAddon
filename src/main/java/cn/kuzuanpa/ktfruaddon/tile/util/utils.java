@@ -117,17 +117,7 @@ public class utils {
             return tile.getClass().getName();
         }
     }
-    //todo: allow getCheckX&Z can be used in controller blocks that facing up and down
-@SuppressWarnings("currently can't be used in controller blocks that facing up and down")
-    public static int getCheckX(int Facing, int tX, int addX, int addZ) {
-        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
-        return result[Facing];
-    }
-    @SuppressWarnings("currently can't be used in controller blocks that facing up and down")
-    public static int getCheckZ(int Facing, int tZ, int addX, int addZ) {
-        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
-        return result[Facing];
-    }
+
     /**
      * @author kuzuanpa
      * <pre></pre>
@@ -178,11 +168,11 @@ public class utils {
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return Vec3.createVectorHelper(resultX[Facing],oY +addY,resultZ[Facing]);
     }
-    public static double getRealXDouble(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ){
+    public static double getRealXDouble(byte Facing, double oX, double oZ, double addX, double addZ){
         double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         return resultX[Facing];
     }
-    public static double getRealZDouble(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ){
+    public static double getRealZDouble(byte Facing, double oX, double oZ, double addX, double addZ){
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }
@@ -193,6 +183,22 @@ public class utils {
     }
     public static int offsetZ(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
         int[] resultZ = {0, 0, tZ + offsetZ, tZ - offsetZ, tZ + offsetX, tZ - offsetX, 0, 0};
+        return resultZ[Facing];
+    }
+    public static int getXOffset(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
+        int[] resultX = {0, 0,  - offsetX,  + offsetX,  + offsetZ,  - offsetZ, 0, 0};
+        return resultX[Facing];
+    }
+    public static double getXOffset(byte Facing, double tX,double tZ,double offsetX,double offsetZ){
+        double[] resultX = {0, 0,  - offsetX,  + offsetX,  + offsetZ,  - offsetZ, 0, 0};
+        return resultX[Facing];
+    }
+    public static int getZOffset(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
+        int[] resultZ = {0, 0, + offsetZ, - offsetZ, + offsetX, - offsetX, 0, 0};
+        return resultZ[Facing];
+    }
+    public static double getZOffset(byte Facing, double tX,double tZ,double offsetX,double offsetZ){
+        double[] resultZ = {0, 0, + offsetZ, - offsetZ, + offsetX, - offsetX, 0, 0};
         return resultZ[Facing];
     }
 

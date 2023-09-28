@@ -92,7 +92,7 @@ public enum ItemList implements IItemContainer{
     //itemParticle
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
     //itemBatteryPole
-    BatteryGoldPole, BatteryCopperPole,
+    BatteryPoleGold, BatteryPolePlatinum,BatteryPoleCarbon,BatteryPoleGraphene,
 
     //fakeItemGuiI18n
     fakeItemPhotomask,fakeItemBoule,fakeItemLaserCutting,fakeItemSiliconPlateCleaned,fakeItemSiliconPlateOxidized,fakeItemSiliconPlateCoated,fakeItemSiliconPlateSoftBaked,fakeItemWafer,fakeItemSiliconWaferDeveloped,fakeItemSiliconWaferHardBaked,fakeItemSiliconWaferDoped,fakeItemSiliconWaferChecked,fakeItemDie

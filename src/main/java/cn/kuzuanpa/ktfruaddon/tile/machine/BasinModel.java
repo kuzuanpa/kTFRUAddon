@@ -113,10 +113,10 @@ public class BasinModel extends TileEntityBase07Paintable{
     public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
         switch (aRenderPass){
             case  0: return box(aBlock, PX_P[ 0]+0.001, PX_P[ 0], PX_P[ 0]+0.001, PX_P[16]-0.001, PX_P[ 1], PX_P[ 16]-0.001);
-            case  1: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 1 ]);
-            case  2: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[1 ], PX_P[16], PX_P[ 16]);
-            case  3: return box(aBlock, PX_P[15], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 16]);
-            case  4: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[15], PX_P[16], PX_P[16], PX_P[ 16]);
+            case  1: return box(aBlock, PX_P[ 0]+0.0001, PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 1 ]);
+            case  2: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[ 0]+0.0001, PX_P[1 ], PX_P[16]+0.0001, PX_P[ 16]);
+            case  3: return box(aBlock, PX_P[15], PX_P[ 0], PX_P[ 0], PX_P[16]+0.0001, PX_P[16]+0.0002, PX_P[ 16]);
+            case  4: return box(aBlock, PX_P[ 0], PX_P[ 0], PX_P[15], PX_P[16], PX_P[16]+0.0003, PX_P[ 16]+0.0001);
 
             case  5: return box(aBlock, PX_P[ 1], PX_P[ 2], PX_P[ 1], PX_P[15], PX_P[7 ], PX_P[ 15]);
 
@@ -126,10 +126,10 @@ public class BasinModel extends TileEntityBase07Paintable{
             case  9: return box(aBlock, PX_P[ 1], PX_P[16]-0.02, PX_P[14], PX_P[15], PX_P[16]-0.0103, PX_P[ 15]);
 
             case 10: return box(aBlock, PX_P[ 2], PX_P[ 3], PX_P[ 2], PX_P[14], PX_P[ 4], PX_P[ 14]);
-            case 11: return box(aBlock, PX_P[ 2], PX_P[ 3], PX_P[ 2], PX_P[14], PX_P[16], PX_P[ 4 ]);
-            case 12: return box(aBlock, PX_P[ 2], PX_P[ 3], PX_P[ 2], PX_P[4 ], PX_P[16], PX_P[ 14]);
-            case 13: return box(aBlock, PX_P[12], PX_P[ 3], PX_P[ 3], PX_P[14], PX_P[16], PX_P[ 14]);
-            case 14: return box(aBlock, PX_P[ 3], PX_P[ 3], PX_P[12], PX_P[14], PX_P[16], PX_P[ 14]);
+            case 11: return box(aBlock, PX_P[ 2]+0.0001, PX_P[ 3], PX_P[ 2], PX_P[14], PX_P[16], PX_P[ 4 ]);
+            case 12: return box(aBlock, PX_P[ 2], PX_P[ 3], PX_P[ 2]+0.0001, PX_P[4 ], PX_P[16]+0.0001, PX_P[ 14]);
+            case 13: return box(aBlock, PX_P[12], PX_P[ 3], PX_P[ 3], PX_P[14]+0.0001, PX_P[16]+0.0002, PX_P[ 14]);
+            case 14: return box(aBlock, PX_P[ 3], PX_P[ 3], PX_P[12], PX_P[14], PX_P[16]+0.0003, PX_P[ 14]+0.0001);
 
         }
         return false;
