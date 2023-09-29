@@ -68,8 +68,7 @@ public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
             model.renderPart("base");
 
         GL11.glPushMatrix();
-            if (tile.rotateVertical >70) tile.rotateVertical =70;
-            if (tile.rotateVertical <0) tile.rotateVertical =0;
+
 
             GL11.glRotatef(-tile.rotateHorizontal, 0, 1, 0);
 
