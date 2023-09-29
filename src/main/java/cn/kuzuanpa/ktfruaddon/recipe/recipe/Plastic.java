@@ -107,7 +107,7 @@ public class Plastic {
 
         recipeManager.HeatMixer          .addRecipe0(F,210,100,FL.array(flList.PSVE.make(100),flList.HexaFluoroPropylene.make(100),flList.Tetrafluoroethylene.make(100)),ZL_FS,OP.dust.mat(matList.PSVE.get(), 1));
 
-        RM.           Electrolyzer       .addRecipe0(F,16,72000,FL.array(flList.PSVE.make(36),flList.Acetone.make(0)),ZL_FS,ItemList.ProtonExchangeMembrane.get(1));
+        RM.           Electrolyzer       .addRecipe0(F,16,18000,FL.array(flList.PSVE.make(36),flList.Acetone.make(0)),ZL_FS,ItemList.ProtonExchangeMembrane.get(1));
 
         RM.           Mixer              .addRecipe0(F,512,120,FL.array(flList.MethacrylicAcid.make(100),flList.Methanol.make(100)),FL.array(FL.Water.make(100)),OP.dust.mat(matList.PolymethylMethacrylate.get(),1));
 

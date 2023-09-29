@@ -20,11 +20,10 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
+import cn.kuzuanpa.ktfruaddon.code.CodeTranslate;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
 import org.apache.logging.log4j.Level;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine {
@@ -34,36 +33,14 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
         //openGUI(aPlayer, aSide);
 
         try {
-            //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+CodeTranslate.itemToCode(slot(i)));
-            //if(aPlayer.isSneaking())CodeTranslate.genItemListAll();
-            getRotates(this,new ChunkCoordinates(-300,22,500));
-
+            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+CodeTranslate.itemToCode(slot(i)));
+            if(aPlayer.isSneaking()) CodeTranslate.genItemListAll();
         }catch (Throwable ignored) {}
     }
     return false;
 }
-    public void getRotates(TileEntity tile, ChunkCoordinates targetTilePos){
-        float ti =  tile.getWorldObj().getWorldTime();
-        while (ti>=24000) {ti-=24000;}
-        float t =24000;
-        float alpha = (ti -(t/4))/t*2*3.141592653589793f;
-        double theta;
-        float phi=-100;
-        theta=Math.acos((tile.yCoord-targetTilePos.posY)/Math.cos(alpha));
-
-        double targetA=(tile.yCoord-targetTilePos.posY)/Math.cos(alpha);
-        double targetB=(tile.zCoord-targetTilePos.posZ)/Math.cos(alpha);
-        FMLLog.log(Level.FATAL,ti+"/"+t+"/"+tile.xCoord+"/"+targetTilePos.posX+"/"+tile.yCoord+"/"+targetTilePos.posY+"/"+tile.zCoord+"/"+targetTilePos.posZ);
-        getResolve( phi,theta,alpha,targetA,targetB);
-
-    }
-    public void getResolve(double phi,double theta,float alpha,double tA,double tB){
-        double A = (Math.cos(phi)*Math.sin(theta)-Math.tan(alpha)*Math.sin(phi));
-        double B = (Math.sin(phi)*Math.sin(theta)+Math.tan(alpha)*Math.cos(phi));
-        phi+=1;
-        FMLLog.log(Level.FATAL,"/"+(tA-A)+"/"+(tB-B)+"/"+alpha+"/"+theta+"/"+phi);
-        if (phi>100)return;
-        getResolve(phi,theta,alpha,tA,tB);
+    public void onTick2(long aTimer, boolean isServerside){
+        this.getWorld().setWorldTime(this.getWorld().getWorldTime()+10);
     }
 @Override
     public String getTileEntityName() {
