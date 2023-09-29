@@ -13,6 +13,7 @@ package cn.kuzuanpa.ktfruaddon.tile.parts;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
@@ -78,16 +79,18 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle {
     }
     @SideOnly(Side.CLIENT)
 public void updateRotates(){
-        targetSunBoilerPos=new ChunkCoordinates(-425,151,671);
-        long Ti=getWorldObj().getWorldTime()+6000;
+        targetSunBoilerPos=new ChunkCoordinates(0,190,0);
+        long Ti=getWorldObj().getWorldTime()+1800;
         double Xn=0,Yn=0,Zn=0,T=24000;
-        while (Ti>24000) Ti-=24000;
+        Ti = Ti % 24000;
+
+        Ti = Ti>15600?7800:Ti;
 
         int X2A = targetSunBoilerPos.posX - xCoord, Y2A = targetSunBoilerPos.posY - yCoord, Z2A = targetSunBoilerPos.posZ - zCoord;
 
         double L = Math.sqrt(X2A * X2A + Y2A * Y2A + Z2A * Z2A);
         double X2 = X2A / L, Y2 = Y2A / L, Z2 = Z2A / L;
-        double alpha = ((4 * Ti - T) / (4 * T)) * 6.28, theta = 0, phi = 0;
+        double alpha = Ti / 15600.0 * 3.14159, theta = 0, phi = 0;
         double X1 = Math.cos(alpha), Y1 = Math.sin(alpha);
         double[][] coefficient = {
                 {Y1 * Z2, -X1 * Z2, (-Y1 * X2 + X1 * Y2)},
@@ -117,18 +120,27 @@ public void updateRotates(){
         Yn = mV.get(1, index);
         Zn = mV.get(2, index);
 
+/*        Xn = X1;
+        Yn = Y1;
+        Zn = 0;*/
+
         L = Math.sqrt((Xn * Xn + Yn * Yn + Zn * Zn));
+
         if (Yn < 0) L = -L;
         Xn = Xn / L;
         Yn = Yn / L;
         Zn = Zn / L;
 
-        phi = Math.acos(Yn);
-        rotateVerticalToMove = (float) (phi / 3.1415 * 180);
+        phi = Math.acos(Yn) * 180/3.14159 ;
+        theta = Math.asin(Math.abs(Zn) / Math.sqrt(1 - Yn * Yn)) * 180/3.14159 ;
 
-        theta = Math.asin(Zn / Math.sqrt(1 - Yn * Yn));
-        if (Xn < 0) theta = -3.1415 - theta;
-        rotateHorizontalToMove = (float) (theta / 3.1415 * 180);
+        if(Xn < 0) theta = 180 - theta;
+        if(Zn < 0) theta = -theta;
+
+        rotateVerticalToMove = (float) (phi);
+        rotateHorizontalToMove = (float) (theta);
+/*        rotateVerticalToMove = 45;
+        rotateHorizontalToMove = 90;*/
 }
     @Override
     public boolean onTickCheck(long aTimer) {
