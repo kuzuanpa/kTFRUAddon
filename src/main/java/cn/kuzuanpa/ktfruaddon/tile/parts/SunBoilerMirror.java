@@ -13,7 +13,6 @@ package cn.kuzuanpa.ktfruaddon.tile.parts;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
@@ -66,20 +65,23 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle {
     public boolean[] getValidSides() {return SIDES_BACK;}
     @Override
     public void onTick2(long aTimer, boolean isServerside){
-        if (!isServerside&&getTimer()%2==0){
-            updateRotates();
-        //this.getWorld().setWorldTime(this.getWorld().getWorldTime()+1);
-        //if (rotateVertical-rotateVerticalToMove>1)rotateVertical-=1;
-        //if (rotateVertical-rotateVerticalToMove<-1)rotateVertical+=1;
-        //if (rotateHorizontal-rotateHorizontalToMove>1)rotateHorizontal-=1;
-        //if (rotateHorizontal-rotateHorizontalToMove<-1)rotateHorizontal+=1;
-            rotateVertical=rotateVerticalToMove;
-            rotateHorizontal=rotateHorizontalToMove;
+        if (!isServerside&&getTimer()%10==0) {
+            if (this.getWorld().getWorldTime() % 24000 < 13800) updateRotates();
+            else rotateVerticalToMove=0;
+        }
+        if(!isServerside) {
+            float f1 =rotateVertical - rotateVerticalToMove;
+            float f2 =rotateHorizontal - rotateHorizontalToMove;
+
+            if(f1>0.01)rotateVertical-=f1>10?1:(f1/10);
+            if(f1<0.01)rotateVertical-=f1<-10?-1:(f1/10);
+            if(f2>0.01)rotateHorizontal-=f2>10?1:(f2/10);
+            if(f2<0.01)rotateHorizontal-=f2<-10?-1:(f2/10);
         }
     }
     @SideOnly(Side.CLIENT)
 public void updateRotates(){
-        targetSunBoilerPos=new ChunkCoordinates(0,190,0);
+        targetSunBoilerPos=new ChunkCoordinates(-425,121,671);
         long Ti=getWorldObj().getWorldTime()+1800;
         double Xn=0,Yn=0,Zn=0,T=24000;
         Ti = Ti % 24000;
