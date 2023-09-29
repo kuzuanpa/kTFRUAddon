@@ -205,14 +205,11 @@ public class SunBoiler extends TileEntityBase11MultiBlockConverter {
                     for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
                         if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY -1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
                             tSuccess = ignoreMap[checkY][checkZ][checkX];
-                            if(!ignoreMap[checkY][checkZ][checkX])FMLLog.log(Level.FATAL, "failed");
                         }
-                        FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + utils.getRealX(mFacing, tX, checkX, checkZ) + "/" + (tY + checkY -1)  + "/" +  utils.getRealZ(mFacing, tZ, checkX, checkZ)  + "/" + ignoreMap[checkY][checkZ][checkX]);
                     }
                 }
             }
             if(!tSuccess)return false;
-            FMLLog.log(Level.FATAL, "Checkpos");
 
             for (checkY  = 3; checkY < machineYmax &&tSuccess; checkY++) {
 
@@ -220,9 +217,7 @@ public class SunBoiler extends TileEntityBase11MultiBlockConverter {
                     for (checkX = 0; checkX < machineX && tSuccess; checkX++) {
                         if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX]))) {
                             tSuccess = ignoreMap[3][checkZ][checkX];
-                            if (!ignoreMap[3][checkZ][checkX]) FMLLog.log(Level.FATAL, "failed");
                         }
-                        FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + utils.getRealX(mFacing, tX, checkX, checkZ) + "/" + (tY + checkY - 1) + "/" + utils.getRealZ(mFacing, tZ, checkX, checkZ) + "/" + ignoreMap[3][checkZ][checkX]);
                     }
                 }
             }
@@ -234,9 +229,7 @@ public class SunBoiler extends TileEntityBase11MultiBlockConverter {
                 for (checkX = 0; checkX < machineX && tSuccess; checkX++) {
                     if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[4][checkZ][checkX], registryIDMap[4][checkZ][checkX], 0, getUsage(blockIDMap[4][checkZ][checkX], registryIDMap[4][checkZ][checkX]))) {
                         tSuccess = ignoreMap[4][checkZ][checkX];
-                        if (!ignoreMap[4][checkZ][checkX]) FMLLog.log(Level.FATAL, "failed");
                     }
-                    FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + utils.getRealX(mFacing, tX, checkX, checkZ) + "/" + (tY + checkY - 1) + "/" + utils.getRealZ(mFacing, tZ, checkX, checkZ) + "/" + ignoreMap[4][checkZ][checkX]);
                 }
             }
             return tSuccess;
