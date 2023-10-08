@@ -11,7 +11,7 @@ package cn.kuzuanpa.ktfruaddon;
 import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.i18n.i18nInit;
-import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
+import cn.kuzuanpa.ktfruaddon.item.itemsPreInit.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;

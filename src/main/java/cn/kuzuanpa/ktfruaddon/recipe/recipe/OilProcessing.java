@@ -127,11 +127,15 @@ public class OilProcessing {
         FM.Burn         .addRecipe0(T, - 64,  9 ,flList.CarbonMonoxide.make(5), FL.CarbonDioxide.make(5), ZL_IS);
         FM.Gas          .addRecipe0(T, - 64,  13,flList.CarbonMonoxide.make(5), FL.CarbonDioxide.make(5), ZL_IS);
 
-        FM.Burn         .addRecipe0(T, - 16, 48, flList.DesaltOilExtraHeavy.make(1)                   , FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Burn         .addRecipe0(T, - 16, 36, flList.DesaltOilHeavy.make(1)                        , FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Burn         .addRecipe0(T, - 16, 24, flList.DesaltOilMedium.make(1)                       , FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Burn         .addRecipe0(T, - 16, 18, flList.DesaltOilLight.make(1)                        , FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Burn         .addRecipe0(T, - 16, 24, flList.DesaltOilNormal.make(1)                       , FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 16, 48, flList.DesaltOilExtraHeavy.make(1)                   , FL.CarbonDioxide.make(1), dustTiny.mat(MT.DarkAsh,1));
+        FM.Burn         .addRecipe0(T, - 16, 36, flList.DesaltOilHeavy.make(1)                        , FL.CarbonDioxide.make(1), dustTiny.mat(MT.DarkAsh,1));
+        FM.Burn         .addRecipe0(T, - 16, 24, flList.DesaltOilMedium.make(1)                       , FL.CarbonDioxide.make(1), dustTiny.mat(MT.DarkAsh,1));
+        FM.Burn         .addRecipe0(T, - 16, 18, flList.DesaltOilLight.make(1)                        , FL.CarbonDioxide.make(1), dustTiny.mat(MT.DarkAsh,1));
+        FM.Burn         .addRecipe0(T, - 16, 24, flList.DesaltOilNormal.make(1)                       , FL.CarbonDioxide.make(1), dustTiny.mat(MT.DarkAsh,1));
+
+        FM.Burn         .addRecipe0(T, - 16, 8, flList.WoodTar.make(1)                       , FL.CarbonDioxide.make(1), dustDiv72.mat(MT.DarkAsh,1));
+        FM.Burn         .addRecipe0(T, - 16, 8, flList.CoalTar.make(1)                       , FL.CarbonDioxide.make(1), dustDiv72.mat(MT.DarkAsh,1));
+
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(1),FL.array(FL.Petrol.make(80),FL.Diesel.make(20)),FL.array(flList.BlendedFuel1.make(100)),ZL_IS);
         FM.Burn         .addRecipe0(T, - 120,  5, flList.BlendedFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);

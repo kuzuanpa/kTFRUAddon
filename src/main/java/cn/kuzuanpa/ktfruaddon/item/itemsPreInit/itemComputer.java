@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.item.items;
+package cn.kuzuanpa.ktfruaddon.item.itemsPreInit;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.item.CreativeTab;

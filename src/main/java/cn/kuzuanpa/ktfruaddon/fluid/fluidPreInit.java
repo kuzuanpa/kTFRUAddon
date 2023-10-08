@@ -185,6 +185,8 @@ public class fluidPreInit {
         flList.BioFuel1.register("biofuel1","Bio Fuel 1",null, LIQUID);
         flList.BioFuel2.register("biofuel2","Bio Fuel 2",null, LIQUID);
         flList.EtchingSolution.register("etchingsolution","Etching Solution",null, LIQUID);
+        flList.NegativeColloid.register("negativecolloid","Negative Colloid",null, LIQUID);
+        flList.PositiveColloid.register("positivecolloid","Positive Colloid",null, LIQUID);
 
         //双酚钠盐溶液
         flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
