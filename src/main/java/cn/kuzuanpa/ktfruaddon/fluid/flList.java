@@ -46,7 +46,7 @@ public enum flList {
     ,/**丙二醇甲醚**/MethoxyPropanol,/**丙二醇甲醚醋酸酯**/PGMEA,/**重氮系光刻胶**/DNQPhotoresist,/**环己酮**/Cyclohexanone,/**PMMA系光刻胶**/PMMAPhotoresist
     ,CoalTar, WoodTar
     ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,/**蚀刻液**/EtchingSolution
-
+    ,NegativeColloid,PositiveColloid
     ,/**氢氧化钾溶液**/SolutionPotassiumHydroxide,/**双酚钠盐溶液**/ SolutionBPASodium
     ,MoltenTeflon
     ;

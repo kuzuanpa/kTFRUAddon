@@ -2,6 +2,26 @@
  * This class was created by <kuzuanpa>. It is distributed as
  * part of the kTFRUAddon Mod. Get the Source Code in github:
  * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
  * 
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
@@ -31,19 +51,19 @@ public enum ItemList implements IItemContainer{
     SiliconPlate8inchOxidizedT1,SiliconPlate8inchOxidizedT2, MoO2Plate8inchOxidizedT1,MoO2Plate8inchOxidizedT2,
     SiliconPlate8inchCoatedT1,SiliconPlate8inchCoatedT2, MoO2Plate8inchCoatedT1,MoO2Plate8inchCoatedT2,
     SiliconPlate8inchSoftBakedT1,SiliconPlate8inchSoftBakedT2, MoO2Plate8inchSoftBakedT1,MoO2Plate8inchSoftBakedT2,
-    CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask40um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm,
-    CPUWafer200um, CPUWafer72um, CPUWafer40um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, 
-    CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer40umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, 
-    CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer40umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked,
-    CPUWafer200umDoped, CPUWafer72umDoped, CPUWafer40umDoped, CPUWafer8umDoped, CPUWafer400nmDoped, CPUWafer80nmDoped, CPUWafer32nmDoped, CPUWafer14nmDoped,
-    CPUWafer200umChecked, CPUWafer72umChecked, CPUWafer40umChecked, CPUWafer8umChecked, CPUWafer400nmChecked, CPUWafer80nmChecked, CPUWafer32nmChecked, CPUWafer14nmChecked,
+    CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask28um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm,
+    CPUWafer200um, CPUWafer72um, CPUWafer28um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, 
+    CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer28umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, 
+    CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer28umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked,
+    CPUWafer200umDoped, CPUWafer72umDoped, CPUWafer28umDoped, CPUWafer8umDoped, CPUWafer400nmDoped, CPUWafer80nmDoped, CPUWafer32nmDoped, CPUWafer14nmDoped,
+    CPUWafer200umChecked, CPUWafer72umChecked, CPUWafer28umChecked, CPUWafer8umChecked, CPUWafer400nmChecked, CPUWafer80nmChecked, CPUWafer32nmChecked, CPUWafer14nmChecked,
     CPUBoardT1,CPUBoardT2,CPUBoardT3,
-    RAMPhotomask200um, RAMPhotomask72um, RAMPhotomask40um, RAMPhotomask8um, RAMPhotomask400nm, RAMPhotomask80nm, RAMPhotomask32nm, RAMPhotomask14nm,
-    RAMWafer200um, RAMWafer72um, RAMWafer40um, RAMWafer8um, RAMWafer400nm, RAMWafer80nm, RAMWafer32nm, RAMWafer14nm,
-    RAMWafer200umDeveloped, RAMWafer72umDeveloped, RAMWafer40umDeveloped, RAMWafer8umDeveloped, RAMWafer400nmDeveloped, RAMWafer80nmDeveloped, RAMWafer32nmDeveloped, RAMWafer14nmDeveloped,
-    RAMWafer200umHardBaked, RAMWafer72umHardBaked, RAMWafer40umHardBaked, RAMWafer8umHardBaked, RAMWafer400nmHardBaked, RAMWafer80nmHardBaked, RAMWafer32nmHardBaked, RAMWafer14nmHardBaked,
-    RAMWafer200umDoped, RAMWafer72umDoped, RAMWafer40umDoped, RAMWafer8umDoped, RAMWafer400nmDoped, RAMWafer80nmDoped, RAMWafer32nmDoped, RAMWafer14nmDoped,
-    RAMWafer200umChecked, RAMWafer72umChecked, RAMWafer40umChecked, RAMWafer8umChecked, RAMWafer400nmChecked, RAMWafer80nmChecked, RAMWafer32nmChecked, RAMWafer14nmChecked,
+    RAMPhotomask200um, RAMPhotomask72um, RAMPhotomask28um, RAMPhotomask8um, RAMPhotomask400nm, RAMPhotomask80nm, RAMPhotomask32nm, RAMPhotomask14nm,
+    RAMWafer200um, RAMWafer72um, RAMWafer28um, RAMWafer8um, RAMWafer400nm, RAMWafer80nm, RAMWafer32nm, RAMWafer14nm,
+    RAMWafer200umDeveloped, RAMWafer72umDeveloped, RAMWafer28umDeveloped, RAMWafer8umDeveloped, RAMWafer400nmDeveloped, RAMWafer80nmDeveloped, RAMWafer32nmDeveloped, RAMWafer14nmDeveloped,
+    RAMWafer200umHardBaked, RAMWafer72umHardBaked, RAMWafer28umHardBaked, RAMWafer8umHardBaked, RAMWafer400nmHardBaked, RAMWafer80nmHardBaked, RAMWafer32nmHardBaked, RAMWafer14nmHardBaked,
+    RAMWafer200umDoped, RAMWafer72umDoped, RAMWafer28umDoped, RAMWafer8umDoped, RAMWafer400nmDoped, RAMWafer80nmDoped, RAMWafer32nmDoped, RAMWafer14nmDoped,
+    RAMWafer200umChecked, RAMWafer72umChecked, RAMWafer28umChecked, RAMWafer8umChecked, RAMWafer400nmChecked, RAMWafer80nmChecked, RAMWafer32nmChecked, RAMWafer14nmChecked,
     RAMBoardT1,RAMBoardT2,RAMBoardT3,
     RAMDie2K,   RAMDie24K,   RAMDie256K,   RAMDie2M,   RAMDie16M,   RAMDie128M,   RAMDie768M,   RAMDie2G,
 

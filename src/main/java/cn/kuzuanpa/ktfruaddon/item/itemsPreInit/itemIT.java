@@ -6,7 +6,7 @@
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
-package cn.kuzuanpa.ktfruaddon.item.items;
+package cn.kuzuanpa.ktfruaddon.item.itemsPreInit;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.data.LH;
@@ -55,7 +55,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CPUPhotomask200um.set(addItem(9900, "CPU Photo Mask (200um)", "A plate with complex images, used to craft CPUs"));
         ItemList.CPUPhotomask72um.set(addItem(9901, "CPU Photo Mask (72um)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask40um.set(addItem(9902, "CPU Photo Mask (40um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomask28um.set(addItem(9902, "CPU Photo Mask (28um)", "A plate with complex images, used to craft CPUs"));
         ItemList.CPUPhotomask8um.set(addItem(9903, "CPU Photo Mask (8um)", "A plate with complex images, used to craft CPUs"));
         ItemList.CPUPhotomask400nm.set(addItem(9904, "CPU Photo Mask (400nm)", "A plate with complex images, used to craft CPUs"));
         ItemList.CPUPhotomask80nm.set(addItem(9905, "CPU Photo Mask (80nm)", "A plate with complex images, used to craft CPUs"));
@@ -65,7 +65,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CPUWafer200um.set(addItem(9950, "CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.CPUWafer72um.set(addItem(9951, "CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer40um.set(addItem(9952, "CPU Wafer (40um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWafer28um.set(addItem(9952, "CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.CPUWafer8um.set(addItem(9953, "CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.CPUWafer400nm.set(addItem(9954, "CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.CPUWafer80nm.set(addItem(9955, "CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
@@ -74,7 +74,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CPUWafer200umDeveloped.set(addItem(10000, "CPU Wafer200umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.CPUWafer72umDeveloped.set(addItem(10001, "CPU Wafer72umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer40umDeveloped.set(addItem(10002, "CPU Wafer40umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWafer28umDeveloped.set(addItem(10002, "CPU Wafer28umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.CPUWafer8umDeveloped.set(addItem(10003, "CPU Wafer8umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.CPUWafer400nmDeveloped.set(addItem(10004, "CPU Wafer400nmDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.CPUWafer80nmDeveloped.set(addItem(10005, "CPU Wafer80nmDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
@@ -83,7 +83,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CPUWafer200umHardBaked.set(addItem(10050, "CPU Wafer200umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.CPUWafer72umHardBaked.set(addItem(10051, "CPU Wafer72umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer40umHardBaked.set(addItem(10052, "CPU Wafer40umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWafer28umHardBaked.set(addItem(10052, "CPU Wafer28umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.CPUWafer8umHardBaked.set(addItem(10053, "CPU Wafer8umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.CPUWafer400nmHardBaked.set(addItem(10054, "CPU Wafer400nmHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.CPUWafer80nmHardBaked.set(addItem(10055, "CPU Wafer80nmHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
@@ -92,7 +92,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CPUWafer200umDoped.set(addItem(10100, "CPU Wafer200umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.CPUWafer72umDoped.set(addItem(10101, "CPU Wafer72umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer40umDoped.set(addItem(10102, "CPU Wafer40umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWafer28umDoped.set(addItem(10102, "CPU Wafer28umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.CPUWafer8umDoped.set(addItem(10103, "CPU Wafer8umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.CPUWafer400nmDoped.set(addItem(10104, "CPU Wafer400nmDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.CPUWafer80nmDoped.set(addItem(10105, "CPU Wafer80nmDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
@@ -101,7 +101,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CPUWafer200umChecked.set(addItem(10150, "CPU Wafer200umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.CPUWafer72umChecked.set(addItem(10151, "CPU Wafer72umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer40umChecked.set(addItem(10152, "CPU Wafer40umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWafer28umChecked.set(addItem(10152, "CPU Wafer28umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.CPUWafer8umChecked.set(addItem(10153, "CPU Wafer8umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.CPUWafer400nmChecked.set(addItem(10154, "CPU Wafer400nmChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.CPUWafer80nmChecked.set(addItem(10155, "CPU Wafer80nmChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
@@ -186,38 +186,38 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.CircuitPartPhotomaskT3.set(addItem(20100, "CircuitPart Photo Mask (200um)", "A plate with complex images"));
         ItemList.CircuitPartPhotomaskT4.set(addItem(20101, "CircuitPart Photo Mask (72um)", "A plate with complex images"));
-        ItemList.CircuitPartPhotomaskT5.set(addItem(20102, "CircuitPart Photo Mask (40um)", "A plate with complex images"));
+        ItemList.CircuitPartPhotomaskT5.set(addItem(20102, "CircuitPart Photo Mask (28um)", "A plate with complex images"));
         ItemList.CircuitPartPhotomaskT6.set(addItem(20103, "CircuitPart Photo Mask (8um)", "A plate with complex images"));
 
         ItemList.CircuitPartWaferT3.set(addItem(20104, "CircuitPart Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.CircuitPartWaferT4.set(addItem(20105, "CircuitPart Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CircuitPartWaferT5.set(addItem(20106, "CircuitPart Wafer (40um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CircuitPartWaferT5.set(addItem(20106, "CircuitPart Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.CircuitPartWaferT6.set(addItem(20107, "CircuitPart Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
 
         ItemList.CircuitPartWaferT3Developed.set(addItem(20108, "Circuit Part Wafer Developed (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.CircuitPartWaferT4Developed.set(addItem(20109, "Circuit Part Wafer Developed (72um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CircuitPartWaferT5Developed.set(addItem(20110, "Circuit Part Wafer Developed (40um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CircuitPartWaferT5Developed.set(addItem(20110, "Circuit Part Wafer Developed (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.CircuitPartWaferT6Developed.set(addItem(20111, "Circuit Part Wafer Developed (8um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
 
         ItemList.CircuitPartWaferT3HardBaked.set(addItem(20112, "Circuit Part Wafer HardBaked (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.CircuitPartWaferT4HardBaked.set(addItem(20113, "Circuit Part Wafer HardBaked (72um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CircuitPartWaferT5HardBaked.set(addItem(20114, "Circuit Part Wafer HardBaked (40um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CircuitPartWaferT5HardBaked.set(addItem(20114, "Circuit Part Wafer HardBaked (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.CircuitPartWaferT6HardBaked.set(addItem(20115, "Circuit Part Wafer HardBaked (8um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
 
         ItemList.CircuitPartWaferT3Doped.set(addItem(20116, "Circuit Part Wafer Doped (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.CircuitPartWaferT4Doped.set(addItem(20117, "Circuit Part Wafer Doped (72um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CircuitPartWaferT5Doped.set(addItem(20118, "Circuit Part Wafer Doped (40um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CircuitPartWaferT5Doped.set(addItem(20118, "Circuit Part Wafer Doped (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.CircuitPartWaferT6Doped.set(addItem(20119, "Circuit Part Wafer Doped (8um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
 
         ItemList.CircuitPartWaferT3Checked.set(addItem(20120, "Circuit Part Wafer Checked (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.CircuitPartWaferT4Checked.set(addItem(20121, "Circuit Part Wafer Checked (72um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CircuitPartWaferT5Checked.set(addItem(20122, "Circuit Part Wafer Checked (40um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CircuitPartWaferT5Checked.set(addItem(20122, "Circuit Part Wafer Checked (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.CircuitPartWaferT6Checked.set(addItem(20123, "Circuit Part Wafer Checked (8um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
 
 //RAM
         ItemList.RAMPhotomask200um.set(addItem(30000, "RAM Photo Mask (200um)", "A plate with complex images, used to craft RAM"));
         ItemList.RAMPhotomask72um.set(addItem(30001, "RAM Photo Mask (72um)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask40um.set(addItem(30002, "RAM Photo Mask (40um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomask28um.set(addItem(30002, "RAM Photo Mask (28um)", "A plate with complex images, used to craft RAM"));
         ItemList.RAMPhotomask8um.set(addItem(30003, "RAM Photo Mask (8um)", "A plate with complex images, used to craft RAM"));
         ItemList.RAMPhotomask400nm.set(addItem(30004, "RAM Photo Mask (400nm)", "A plate with complex images, used to craft RAM"));
         ItemList.RAMPhotomask80nm.set(addItem(30005, "RAM Photo Mask (80nm)", "A plate with complex images, used to craft RAM"));
@@ -227,7 +227,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.RAMWafer200um.set(addItem(30050, "RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.RAMWafer72um.set(addItem(30051, "RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer40um.set(addItem(30052, "RAM Wafer (40um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWafer28um.set(addItem(30052, "RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.RAMWafer8um.set(addItem(30053, "RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.RAMWafer400nm.set(addItem(30054, "RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
         ItemList.RAMWafer80nm.set(addItem(30055, "RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
@@ -236,7 +236,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.RAMWafer200umDeveloped.set(addItem(30100, "Wafer200umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.RAMWafer72umDeveloped.set(addItem(30101, "Wafer72umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer40umDeveloped.set(addItem(30102, "Wafer40umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWafer28umDeveloped.set(addItem(30102, "Wafer28umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.RAMWafer8umDeveloped.set(addItem(30103, "Wafer8umDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.RAMWafer400nmDeveloped.set(addItem(30104, "Wafer400nmDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
         ItemList.RAMWafer80nmDeveloped.set(addItem(30105, "Wafer80nmDeveloped", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
@@ -245,7 +245,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.RAMWafer200umHardBaked.set(addItem(30150, "Wafer200umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.RAMWafer72umHardBaked.set(addItem(30151, "Wafer72umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer40umHardBaked.set(addItem(30152, "Wafer40umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWafer28umHardBaked.set(addItem(30152, "Wafer28umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.RAMWafer8umHardBaked.set(addItem(30153, "Wafer8umHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.RAMWafer400nmHardBaked.set(addItem(30154, "Wafer400nmHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
         ItemList.RAMWafer80nmHardBaked.set(addItem(30155, "Wafer80nmHardBaked", "Next Step:"+ LH.Chat._CYAN+"Dope"));
@@ -254,7 +254,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.RAMWafer200umDoped.set(addItem(30200, "Wafer200umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.RAMWafer72umDoped.set(addItem(30201, "Wafer72umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer40umDoped.set(addItem(30202, "Wafer40umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWafer28umDoped.set(addItem(30202, "Wafer28umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.RAMWafer8umDoped.set(addItem(30203, "Wafer8umDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.RAMWafer400nmDoped.set(addItem(30204, "Wafer400nmDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
         ItemList.RAMWafer80nmDoped.set(addItem(30205, "Wafer80nmDoped", "Next Step:"+ LH.Chat._CYAN+"Check"));
@@ -263,7 +263,7 @@ public class itemIT extends MultiItemRandom {
 
         ItemList.RAMWafer200umChecked.set(addItem(30250, "Wafer200umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.RAMWafer72umChecked.set(addItem(30251, "Wafer72umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer40umChecked.set(addItem(30252, "Wafer40umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWafer28umChecked.set(addItem(30252, "Wafer28umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.RAMWafer8umChecked.set(addItem(30253, "Wafer8umChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.RAMWafer400nmChecked.set(addItem(30254, "Wafer400nmChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
         ItemList.RAMWafer80nmChecked.set(addItem(30255, "Wafer80nmChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));

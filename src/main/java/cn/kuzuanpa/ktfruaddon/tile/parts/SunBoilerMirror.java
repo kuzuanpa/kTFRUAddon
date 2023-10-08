@@ -122,10 +122,6 @@ public void updateRotates(){
         Yn = mV.get(1, index);
         Zn = mV.get(2, index);
 
-/*        Xn = X1;
-        Yn = Y1;
-        Zn = 0;*/
-
         L = Math.sqrt((Xn * Xn + Yn * Yn + Zn * Zn));
 
         if (Yn < 0) L = -L;
@@ -141,8 +137,6 @@ public void updateRotates(){
 
         rotateVerticalToMove = (float) (phi);
         rotateHorizontalToMove = (float) (theta);
-/*        rotateVerticalToMove = 45;
-        rotateHorizontalToMove = 90;*/
 }
     @Override
     public boolean onTickCheck(long aTimer) {

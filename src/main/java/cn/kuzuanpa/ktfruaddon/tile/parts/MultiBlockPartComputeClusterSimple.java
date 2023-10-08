@@ -11,7 +11,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.parts;
 
-import cn.kuzuanpa.ktfruaddon.item.items.itemComputer;
+import cn.kuzuanpa.ktfruaddon.item.itemsPreInit.itemComputer;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
