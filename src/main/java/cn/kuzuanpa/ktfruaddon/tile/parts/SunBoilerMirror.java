@@ -94,7 +94,6 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle implements IMu
     }
     @SideOnly(Side.CLIENT)
 public void updateRotates(){
-        targetSunBoilerPos=new ChunkCoordinates(-425,121,671);
         long Ti=getWorldObj().getWorldTime()+1800;
         double Xn=0,Yn=0,Zn=0,T=24000;
         Ti = Ti % 24000;
@@ -174,7 +173,7 @@ public void updateRotates(){
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
         if(targetSunBoilerPos==null)return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getVisualData(),getDirectionData());
-        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getVisualData(),getDirectionData(),UT.Code.toByteI(targetSunBoilerPos.posX,0),UT.Code.toByteI(targetSunBoilerPos.posX,1),UT.Code.toByteI(targetSunBoilerPos.posY,0),UT.Code.toByteI(targetSunBoilerPos.posY,1),UT.Code.toByteI(targetSunBoilerPos.posZ,0),UT.Code.toByteI(targetSunBoilerPos.posZ,0));
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getVisualData(),getDirectionData(),UT.Code.toByteI(targetSunBoilerPos.posX,0),UT.Code.toByteI(targetSunBoilerPos.posX,1),UT.Code.toByteI(targetSunBoilerPos.posY,0),UT.Code.toByteI(targetSunBoilerPos.posY,1),UT.Code.toByteI(targetSunBoilerPos.posZ,0),UT.Code.toByteI(targetSunBoilerPos.posZ,1));
     }
 @Override
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler){
