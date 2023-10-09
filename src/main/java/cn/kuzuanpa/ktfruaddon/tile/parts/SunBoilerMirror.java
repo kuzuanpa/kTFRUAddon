@@ -13,30 +13,34 @@ package cn.kuzuanpa.ktfruaddon.tile.parts;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.SunBoiler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregapi.block.multitileentity.MultiTileEntityContainer;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.data.LH;
+import gregapi.network.INetworkHandler;
+import gregapi.network.IPacket;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.World;
 
 import static gregapi.data.CS.*;
 
-public class SunBoilerMirror extends TileEntityBase09FacingSingle {
+public class SunBoilerMirror extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray {
     public String getTileEntityName() {
         return "ktfru.multitileentity.multiblock.sunboiler.mirror";
     }
-    public ChunkCoordinates targetSunBoilerPos;
+    public ChunkCoordinates targetSunBoilerPos=null;
     public float rotateHorizontal,rotateVertical,rotateHorizontalToMove,rotateVerticalToMove;
+    public boolean isValid=true;
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -54,11 +58,20 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle {
             UT.NBT.setNumber(aNBT, NBT_TARGET_Z, targetSunBoilerPos.posZ);
         }
     }
-    @Override
-    public boolean onPlaced(ItemStack aStack, EntityPlayer aPlayer, MultiTileEntityContainer aMTEContainer, World aWorld, int aX, int aY, int aZ, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        super.onPlaced(aStack, aPlayer, aMTEContainer, aWorld, aX, aY, aZ, aSide, aHitX, aHitY, aHitZ);
-
-        return T;
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide()) {
+            ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
+            if (equippedItem.hasTagCompound() && equippedItem.getTagCompound().hasKey(NBT_USB_DATA)) {
+                NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
+                targetSunBoilerPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
+                if (worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ) instanceof SunBoiler) {
+                    updateClientData();
+                    aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.SUN_BOILER_MIRROR) + targetSunBoilerPos.posX + "," + targetSunBoilerPos.posY + "," + targetSunBoilerPos.posZ));
+                }else targetSunBoilerPos=null;
+                return true;
+            }
+            return false;
+        }else return true;
     }
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {return null;}
@@ -66,7 +79,7 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle {
     @Override
     public void onTick2(long aTimer, boolean isServerside){
         if (!isServerside&&getTimer()%10==0) {
-            if (this.getWorld().getWorldTime() % 24000 < 13800) updateRotates();
+            if (this.getWorld().getWorldTime() % 24000 < 13800&&targetSunBoilerPos!=null) updateRotates();
             else rotateVerticalToMove=0;
         }
         if(!isServerside) {
@@ -141,7 +154,10 @@ public void updateRotates(){
     @Override
     public boolean onTickCheck(long aTimer) {
         super.onTickCheck(aTimer);
-
+        isValid=true;
+        for (int i = yCoord+1; i < 256; i++) {
+            if (!(worldObj.getBlock(xCoord,i,zCoord)== Blocks.air))isValid=false;
+        }
         if (!(worldObj.getBlock(xCoord,yCoord+1,zCoord)== Blocks.air)
                 ||!(worldObj.getBlock(xCoord+1,yCoord,zCoord+1)== Blocks.air)
                 ||!(worldObj.getBlock(xCoord+1,yCoord,zCoord)== Blocks.air)
@@ -151,10 +167,21 @@ public void updateRotates(){
                 ||!(worldObj.getBlock(xCoord-1,yCoord,zCoord+1)== Blocks.air)
                 ||!(worldObj.getBlock(xCoord-1,yCoord,zCoord)== Blocks.air)
                 ||!(worldObj.getBlock(xCoord-1,yCoord,zCoord-1)== Blocks.air)) {
-            worldObj.setBlockToAir(xCoord,yCoord,zCoord);
-            worldObj.spawnEntityInWorld(new EntityItem(worldObj,xCoord,yCoord,zCoord, MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").getItem(31130)));
-            return false;
+            isValid=false;
         }
+        return isValid;
+    }
+    @Override
+    public IPacket getClientDataPacket(boolean aSendAll) {
+        if(targetSunBoilerPos==null)return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getVisualData(),getDirectionData());
+        return getClientDataPacketByteArray(aSendAll,(byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getVisualData(),getDirectionData(),UT.Code.toByteI(targetSunBoilerPos.posX,0),UT.Code.toByteI(targetSunBoilerPos.posX,1),UT.Code.toByteI(targetSunBoilerPos.posY,0),UT.Code.toByteI(targetSunBoilerPos.posY,1),UT.Code.toByteI(targetSunBoilerPos.posZ,0),UT.Code.toByteI(targetSunBoilerPos.posZ,0));
+    }
+@Override
+    public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler){
+        mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
+        setVisualData(aData[3]);
+        setDirectionData(aData[4]);
+        if(aData.length>5)targetSunBoilerPos=new ChunkCoordinates(UT.Code.combine(aData[5],aData[6]),UT.Code.combine(aData[7],aData[8]),UT.Code.combine(aData[9],aData[10]));
         return true;
     }
     @Override

@@ -6,8 +6,8 @@ ktfru.tooltip.common.side.top=顶端
 ktfru.tooltip.common.side.bottom=底端
 ktfru.tooltip.common.auto=(自动)
 ktfru.tooltip.energy.fuelbattery.0=使用 活动扳手 切换电池结构调整模式
-ktfru.tooltip.msg.energy.fuelbattery.0=开始调整电池结构
-ktfru.tooltip.msg.energy.fuelbattery.1=电池结构调整完成
+ktfru.msg.energy.fuelbattery.0=开始调整电池结构
+ktfru.msg.energy.fuelbattery.1=电池结构调整完成
 
 itemGroup.ktfru.item.battery.pole=kTFRUAddon: 电池电极
 itemGroup.ktfru.item.chemistry=kTFRUAddon: 化学
