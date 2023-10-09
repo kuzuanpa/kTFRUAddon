@@ -63,7 +63,7 @@ public class ComputerBuilding {
         recipeManager.EDA.addRecipeX(T,16,18000, ST.array(IL.Circuit_Advanced.get(0),IL.Circuit_Part_Advanced.get(0),ItemList.ResistanceT2.get(1),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.CircuitPartPhotomaskT4.get(1));
         recipeManager.EDA.addRecipeX(T,16,27000, ST.array(IL.Circuit_Advanced.get(0),gRegistry.getItem(11,0),gRegistry.getItem(6019,0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(400,F)),FL.array(ZL_FS),ItemList.RAMPhotomask72um.get(1));
 
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Si,1),FL.array(ZL_FS),FL.array(ZL_FS),ItemList.SiliconBoulePure.get(1));
+        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Helium.make(80000),MT.Si.liquid(U*4,false)),FL.array(ZL_FS),ItemList.SiliconBoulePure.get(1));
         //Cut Boule to plate 切割单晶硅 LU
         recipeManager.LaserCutter.addRecipeX(T,96,2000, ST.array(OP.bouleGt.mat(MT.Si, 1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchT1.get(12));
         recipeManager.LaserCutter.addRecipeX(T,512,2000, ST.array(ItemList.SiliconBoulePure.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchT2.get(12));
