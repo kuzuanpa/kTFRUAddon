@@ -44,12 +44,11 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
+public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
     public boolean mStopped = F;
-    public short mEfficiency = 10000;
     public byte vProgressLevel;
-    public long mEnergy = 0, mOutput= 32, mOutputMin = 16, mOutputMax = 64,timeRemaining=0,timeGainRate=8,maxTime=800;
-    public TagData mEnergyTypeEmitted = TD.Energy.RU;
+    public long mEnergy = 0, mOutputMin = 16, mOutputMax = 64,timeRemaining=0,timeGainRate=8,maxTime=800;
+    public static TagData mEnergyTypeEmitted = TD.Energy.KU;
     public TE_Behavior_Active_Trinary mActivity = null;
 
     @Override
@@ -59,12 +58,11 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
         mActivity = new TE_Behavior_Active_Trinary(this, aNBT);
         if (aNBT.hasKey(NBT_STOPPED)) mStopped = aNBT.getBoolean(NBT_STOPPED);
         if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
-        if (aNBT.hasKey(NBT_OUTPUT)) mOutput = aNBT.getLong(NBT_OUTPUT);
         if (aNBT.hasKey(NBT_OUTPUT_MAX)) mOutputMax = aNBT.getLong(NBT_OUTPUT_MAX);
-        if (aNBT.hasKey(NBT_EFFICIENCY)) mEfficiency = (short) UT.Code.bind_(0, 10000, aNBT.getShort(NBT_EFFICIENCY));
         if (aNBT.hasKey(NBT_ENERGY_EMITTED)) mEnergyTypeEmitted = TagData.createTagData(aNBT.getString(NBT_ENERGY_EMITTED));
         if (aNBT.hasKey(kTileNBT.Generator.MAX_TIME)) maxTime = aNBT.getLong(kTileNBT.Generator.MAX_TIME);
-        if (aNBT.hasKey(kTileNBT.Generator.TIME_GAIN_EACH_PRESS)) timeGainRate = aNBT.getLong(kTileNBT.Generator.TIME_GAIN_EACH_PRESS);
+        if (aNBT.hasKey(kTileNBT.Generator.TIME_GAIN_RATE)) timeGainRate = aNBT.getLong(kTileNBT.Generator.TIME_GAIN_RATE);
+        if (aNBT.hasKey(kTileNBT.Generator.TIME_REMAINING)) timeRemaining = aNBT.getLong(kTileNBT.Generator.TIME_REMAINING);
     }
 
     @Override
@@ -72,6 +70,9 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
         super.writeToNBT2(aNBT);
         UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
         UT.NBT.setBoolean(aNBT, NBT_STOPPED, mStopped);
+        UT.NBT.setNumber(aNBT,NBT_OUTPUT_MIN, mOutputMin);
+        UT.NBT.setNumber(aNBT,NBT_OUTPUT_MAX, mOutputMax);
+        UT.NBT.setNumber(aNBT,kTileNBT.Generator.TIME_REMAINING,timeRemaining);
         mActivity.save(aNBT);
     }
 
@@ -106,7 +107,7 @@ public class ManualMotor extends TileEntityBase09FacingSingle implements IFluidH
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
             if (mEnergy >= getRate()) {
-                ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeEmitted, getRate(), 1, this);
+                Util.emitEnergyToNetwork(mEnergyTypeEmitted, getRate(), 1, this);
                 mEnergy -= getRate();
             }
             if (timeRemaining>0) {
@@ -208,7 +209,7 @@ return 0;
 
     @Override
     public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {
-        return mOutput;
+        return mOutputMin;
     }
 
     @Override
@@ -260,33 +261,33 @@ return 0;
 
     // Icons
     public static IIconContainer[] sColoreds = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/colored/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/colored/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/colored/sides"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/colored/front"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/colored/back"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/colored/sides"),
     }, sOverlays = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay/sides"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay/front"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay/back"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay/sides"),
     }, sOverlaysActive = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active/back")
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active/back"),
+            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active/back")
     },
             sOverlaysActiveFrontSpeed =new IIconContainer[]{
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/full"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/fast"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/medium"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/slow"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_front/least"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/full"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/fast"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/medium"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/slow"),
+                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/least"),
             },   sOverlaysActiveSidesSpeed =new IIconContainer[]{
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/full"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/fast"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/medium"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/slow"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/overlay_active_sides/least"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/full"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/fast"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/medium"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/slow"),
+                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/least"),
     };
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.generator.manualmotor";
+        return "ktfru.multitileentity.generator.manual.ku";
     }
     @Override    public IPacket getClientDataPacket(boolean aSendAll) {
         return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mActivity.mState,getProgressLevel());

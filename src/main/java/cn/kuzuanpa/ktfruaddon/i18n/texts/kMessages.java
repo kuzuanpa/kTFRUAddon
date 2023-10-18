@@ -16,6 +16,7 @@ public class kMessages {
             ,BASIN_MODEL_0 ="ktfru.msg.machine.basinmodel.0"
             ,BASIN_MODEL_1 ="ktfru.msg.machine.basinmodel.1"
             ,SUN_BOILER_MIRROR="ktfru.tooltip.multiblock.sunboiler.mirror"
+            ,SUN_BOILER_MIRROR_ERR="ktfru.tooltip.multiblock.sunboiler.mirror.err"
             ,SUN_BOILER_0="ktfru.tooltip.multiblock.sunboiler.0"
             ,SUN_BOILER_1="ktfru.tooltip.multiblock.sunboiler.1"
                     ;

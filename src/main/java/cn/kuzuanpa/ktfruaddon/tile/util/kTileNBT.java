@@ -14,7 +14,8 @@ package cn.kuzuanpa.ktfruaddon.tile.util;
 public class kTileNBT {
     public static class Generator {
         public static String MAX_TIME = "ktfru.nbt.energy.manualmotor.maxtime";
-        public static String TIME_GAIN_EACH_PRESS = "ktfru.nbt.energy.manualmotor.timegainrate";
+        public static String TIME_GAIN_RATE = "ktfru.nbt.energy.manualmotor.timegainrate";
+        public static String TIME_REMAINING = "ktfru.nbt.energy.manualmotor.timeremaining";
     }
     public static class Machine {
         public static String BASIN_MODEL_TIMER="ktfru.nbt.machine.basinmodel.timer";
