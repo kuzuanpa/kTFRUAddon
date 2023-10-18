@@ -12,9 +12,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
-import cn.kuzuanpa.ktfruaddon.tile.parts.SunBoilerMirror;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.LH;
@@ -27,12 +25,12 @@ import gregapi.util.OM;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import org.apache.logging.log4j.Level;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,17 +41,17 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
         return "ktfru.multitileentity.multiblock.sunboiler";
     }
 
-    public List<sourceMirror> sourceMirrors=new ArrayList<>();
     //决定机器大小
     //this controls the size of machine.
     public final short machineX = 5, machineYmax = 16, machineZ = 5;
-    public int mRate=32,mEnergy=0;
+    public long mRate=32,mEnergy=0,maxEnergyStore=2000000,maxEmitRate=4096;
     private TagData mEnergyTypeEmitted=TD.Energy.HU;
     public boolean clickDoubleCheck=false;
     public short machineY=0;
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
+
     public static int[][][] blockIDMap = {{
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
@@ -155,6 +153,18 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     }
 
     @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        if (aNBT.hasKey(NBT_OUTPUT_MAX)) maxEmitRate= aNBT.getLong(NBT_OUTPUT_MAX);
+        if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
+
+    }
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+        UT.NBT.setNumber(aNBT, NBT_OUTPUT_MAX, maxEmitRate);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
+    }
+        @Override
     public boolean checkStructure2() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
@@ -199,7 +209,6 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
             machineY = (short) (checkY - (tSuccess ? 3 : 4));
             if (!tSuccess) checkY--;
             tSuccess=T;
-            FMLLog.log(Level.FATAL, "MachineY" + machineY);
             for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) {
                 for (checkX = 0; checkX < machineX && tSuccess; checkX++) {
                     if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[4][checkZ][checkX], registryIDMap[4][checkZ][checkX], 0, getUsage(blockIDMap[4][checkZ][checkX], registryIDMap[4][checkZ][checkX]))) {
@@ -207,7 +216,6 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
                     }
                 }
             }
-            sourceMirrors.removeIf(mirror -> !(worldObj.getTileEntity(mirror.posX, mirror.posY, mirror.posZ) instanceof SunBoilerMirror));
             return tSuccess;
         }
         return mStructureOkay;
@@ -250,19 +258,26 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer,aIsServerSide);
         if (aIsServerSide) {
-            //collectEnergy
-            sourceMirrors.forEach(mirror-> this.mEnergy+=mirror.tRate);
             //emitEnergy
-            if (mEnergy >= mRate) {
-                ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeEmitted, mRate, 1,  this);
-                mEnergy -= mRate;
+            if (mEnergy >= mRate*9) {
+                mRate=mEnergy>maxEnergyStore*0.1?maxEmitRate:(int)((mEnergy/(maxEnergyStore*0.1f))*maxEmitRate);
+                for (int x=-1;x<2;x++)for(int z=1;z<4;z++){
+                    TileEntity tileToEmit =worldObj.getTileEntity(utils.getRealX(mFacing,xCoord,x,z),yCoord+3+machineY,utils.getRealZ(mFacing,zCoord,x,z));
+                    if(tileToEmit instanceof ITileEntityEnergy) mEnergy-=mRate*ITileEntityEnergy.Util.insertEnergyInto(TD.Energy.HU,SIDE_BOTTOM,mRate,1,this,tileToEmit);
+                }
             }
             if (mEnergy < 0) mEnergy = 0;
+            if(mEnergy>maxEnergyStore){
+                overheat();
+                mEnergy=0;
+            }
         }
     }
     @Override
     public boolean onTickCheck(long aTimer) {
-        if (aTimer%100==0)clickDoubleCheck=false;
+        if (aTimer%100==0){
+            clickDoubleCheck=false;
+        }
         return super.onTickCheck(aTimer);
     }
         @Override
@@ -273,17 +288,25 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
         aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
+
+    public void overheat() {
+        for (int x = -2; x < machineX-2; x++)for(int z=0;z<machineZ;z++)for(int y=1;y<machineY+2;y++)worldObj.setBlock(utils.getRealX(mFacing,xCoord,x,z),yCoord+y,utils.getRealZ(mFacing,zCoord,x,z), Blocks.flowing_lava);
+    }
+
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX) &&
-                aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : machineYmax) &&
+                aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : machineY+2) &&
                 aZ >= zCoord - (SIDE_Z_NEG == mFacing ? 0 : SIDE_Z_POS == mFacing ? 3 : machineZ) &&
                 aX <= xCoord + (SIDE_X_POS == mFacing ? 0 : SIDE_X_NEG == mFacing ? 3 : machineX) &&
-                aY <= yCoord + (SIDE_Y_POS == mFacing ? 0 : SIDE_Y_NEG == mFacing ? 3 : machineX) &&
+                aY <= yCoord + (SIDE_Y_POS == mFacing ? 0 : SIDE_Y_NEG == mFacing ? 3 : machineY+2) &&
                 aZ <= zCoord + (SIDE_Z_POS == mFacing ? 0 : SIDE_Z_NEG == mFacing ? 3 : machineZ);
     }
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
         return aEmitting && aEnergyType == mEnergyTypeEmitted;}
+    public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aEnergyType==TD.Energy.HU&&aSide==SIDE_BOTTOM&&mStructureOkay;}
+    @Override public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {if (aDoInject) mEnergy += (aAmount * aSize); return aAmount;}
+
     @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {
         return aSide == SIDE_TOP && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);}
     @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {
@@ -293,14 +316,5 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     @Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {return mRate;}
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeEmitted.AS_LIST;}
 
-    public static class sourceMirror {
-        public sourceMirror(int posX,int posY,int posZ,int tRate) {
-            this.posX=posX;
-            this.posY=posY;
-            this.posZ=posZ;
-            this.tRate=tRate;
-        }
-        int posX,posY,posZ,tRate;
-    }
 
 }
