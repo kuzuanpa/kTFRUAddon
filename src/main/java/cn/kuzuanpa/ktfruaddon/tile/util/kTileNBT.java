@@ -18,7 +18,7 @@ public class kTileNBT {
         public static String TIME_REMAINING = "ktfru.nbt.energy.manualmotor.timeremaining";
     }
     public static class Machine {
-        public static String BASIN_MODEL_TIMER="ktfru.nbt.machine.basinmodel.timer";
+        public static String CRUCIBLE_MODEL_TIMER ="ktfru.nbt.machine.cruciblemodel.timer";
         public static String MINER_RANGE="ktfru.nbt.machine.miner.range";
         public static String MINER_SPEED="ktfru.nbt.machine.miner.speed";
     }

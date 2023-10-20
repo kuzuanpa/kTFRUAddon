@@ -24,8 +24,10 @@ import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.OM;
 import gregapi.util.ST;
 import gregapi.util.UT;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,16 +38,17 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy{
+public class SunHeater extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy{
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.sunboiler";
+        return "ktfru.multitileentity.multiblock.sunheater";
     }
 
     //决定机器大小
     //this controls the size of machine.
     public final short machineX = 5, machineYmax = 16, machineZ = 5;
-    public long mRate=32,mEnergy=0,maxEnergyStore=2000000,maxEmitRate=4096;
+    public long mRate=32,mEnergy=0, maxEnergyStorePerLayer =2000000, maxEmitRatePerLayer =455;
     private TagData mEnergyTypeEmitted=TD.Energy.HU;
+    public long mTemperature=DEFAULT_ENVIRONMENT_TEMPERATURE;
     public boolean clickDoubleCheck=false;
     public short machineY=0;
     //决定结构检测的起始位置，默认情况下是从主方块起始
@@ -155,14 +158,15 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey(NBT_OUTPUT_MAX)) maxEmitRate= aNBT.getLong(NBT_OUTPUT_MAX);
+        if (aNBT.hasKey(NBT_OUTPUT_MAX)) maxEmitRatePerLayer = aNBT.getLong(NBT_OUTPUT_MAX);
         if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
 
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        UT.NBT.setNumber(aNBT, NBT_OUTPUT_MAX, maxEmitRate);
+        UT.NBT.setNumber(aNBT, NBT_OUTPUT_MAX, maxEmitRatePerLayer);
         UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
+        UT.NBT.setNumber(aNBT, NBT_TEMPERATURE, mTemperature);
     }
         @Override
     public boolean checkStructure2() {
@@ -228,6 +232,7 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     }
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (isServerSide()){
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(kMessages.SUN_BOILER_ERR)));
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
         if (!(OM.is(OD_USB_STICKS[0],equippedItem))) return false;
         NBTTagCompound aNBT = UT.NBT.make();
@@ -239,10 +244,10 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
             if (clickDoubleCheck) {
                 equippedItem.getTagCompound().setTag(NBT_USB_DATA, aNBT);
                 equippedItem.getTagCompound().setByte(NBT_USB_TIER, (byte)1);
-                aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.SUN_BOILER_0)));
+                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(kMessages.SUN_BOILER_0)));
                 clickDoubleCheck=false;
             } else {
-                aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.SUN_BOILER_1)));
+                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(kMessages.SUN_BOILER_1)));
                 clickDoubleCheck=true;
             }
         }
@@ -250,24 +255,24 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
             equippedItem.setTagCompound(UT.NBT.make());
             equippedItem.getTagCompound().setTag(NBT_USB_DATA, aNBT);
             equippedItem.getTagCompound().setByte(NBT_USB_TIER, (byte)1);
-            aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.SUN_BOILER_0)));
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(kMessages.SUN_BOILER_0)));
         }
         }
         return true;
     }
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer,aIsServerSide);
-        if (aIsServerSide) {
+        if (aIsServerSide&&mStructureOkay) {
             //emitEnergy
             if (mEnergy >= mRate*9) {
-                mRate=mEnergy>maxEnergyStore*0.1?maxEmitRate:(int)((mEnergy/(maxEnergyStore*0.1f))*maxEmitRate);
+                mRate=mEnergy> getMaxEnergyStore() *0.1? getEmitRate() :(int)((mEnergy/(getMaxEnergyStore() *0.1f))* getEmitRate());
                 for (int x=-1;x<2;x++)for(int z=1;z<4;z++){
                     TileEntity tileToEmit =worldObj.getTileEntity(utils.getRealX(mFacing,xCoord,x,z),yCoord+3+machineY,utils.getRealZ(mFacing,zCoord,x,z));
                     if(tileToEmit instanceof ITileEntityEnergy) mEnergy-=mRate*ITileEntityEnergy.Util.insertEnergyInto(TD.Energy.HU,SIDE_BOTTOM,mRate,1,this,tileToEmit);
                 }
             }
             if (mEnergy < 0) mEnergy = 0;
-            if(mEnergy>maxEnergyStore){
+            if(mEnergy> getMaxEnergyStore()){
                 overheat();
                 mEnergy=0;
             }
@@ -275,8 +280,9 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     }
     @Override
     public boolean onTickCheck(long aTimer) {
-        if (aTimer%100==0){
+        if (aTimer%60==0){
             clickDoubleCheck=false;
+            mTemperature= (int) getTemperature();
         }
         return super.onTickCheck(aTimer);
     }
@@ -292,7 +298,19 @@ public class SunBoiler extends TileEntityBase10MultiBlockBase implements ITileEn
     public void overheat() {
         for (int x = -2; x < machineX-2; x++)for(int z=0;z<machineZ;z++)for(int y=1;y<machineY+2;y++)worldObj.setBlock(utils.getRealX(mFacing,xCoord,x,z),yCoord+y,utils.getRealZ(mFacing,zCoord,x,z), Blocks.flowing_lava);
     }
+    public int getEmitRate(){
+        return mStructureOkay?0: (int) (maxEmitRatePerLayer * machineY);
+    }
+    public long getMaxEnergyStore(){
+        return mStructureOkay?4000000: maxEnergyStorePerLayer * machineY +4000000;
+    }
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (aTool.equals(TOOL_thermometer)) aChatReturn.add("Temperature: " + getTemperature()+"/"+(961+DEFAULT_ENVIRONMENT_TEMPERATURE)+"K");
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
 
+    public float getTemperature(){return ((float)mEnergy/(float)getMaxEnergyStore() *961)+DEFAULT_ENVIRONMENT_TEMPERATURE;}
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX) &&

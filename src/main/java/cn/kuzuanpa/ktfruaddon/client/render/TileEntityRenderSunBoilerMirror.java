@@ -20,7 +20,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.parts.SunBoilerMirror;
+import cn.kuzuanpa.ktfruaddon.tile.parts.SunHeaterMirror;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -48,8 +48,8 @@ public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity til, double x,
                                    double y, double z, float f) {
-        if (! (til instanceof SunBoilerMirror)) return;
-        SunBoilerMirror tile = (SunBoilerMirror)til;
+        if (! (til instanceof SunHeaterMirror)) return;
+        SunHeaterMirror tile = (SunHeaterMirror)til;
         GL11.glPushMatrix();
         //Initial setup
         int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);

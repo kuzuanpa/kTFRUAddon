@@ -271,7 +271,7 @@ public class itemIT extends MultiItemRandom {
         ItemList.RAMWafer14nmChecked.set(addItem(30257, "Wafer14nmChecked", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
 
         ItemList.RAMDie2K.set(addItem(30300, "RAMDie2K", "A RAM Die, can storage 2K data"));
-        ItemList.RAMDie24K.set(addItem(30301, "RAMDie24K", "A RAM Die, can storage 24K data"));
+        ItemList.RAMDie32K.set(addItem(30301, "RAMDie32K", "A RAM Die, can storage 32K data"));
         ItemList.RAMDie256K.set(addItem(30302, "RAMDie256K", "A RAM Die, can storage 256K data"));
         ItemList.RAMDie2M.set(addItem(30303, "RAMDie2M", "A RAM Die, can storage 2M data"));
         ItemList.RAMDie16M.set(addItem(30304, "RAMDie16M", "A RAM Die, can storage 16M data"));
@@ -280,7 +280,7 @@ public class itemIT extends MultiItemRandom {
         ItemList.RAMDie2G.set(addItem(30307, "RAMDie2G", "A RAM Die, can storage 2G data"));
         
         ItemList.RAMBar2K4.set(addItem(30350, "RAMBar8K", "Composed by 4* 2K RAM Die")).registerOre("ktfruRAM8K");
-        ItemList.RAMBar24K4.set(addItem(30351, "RAMBar96K", "Composed by 4* 24K RAM Die")).registerOre("ktfruRAM96K");
+        ItemList.RAMBar32K4.set(addItem(30351, "RAMBar96K", "Composed by 4* 32K RAM Die")).registerOre("ktfruRAM128K");
         ItemList.RAMBar256K4.set(addItem(30352, "RAMBar1M", "Composed by 4* 256K RAM Die")).registerOre("ktfruRAM1M");
         ItemList.RAMBar2M4.set(addItem(30353, "RAMBar8M", "Composed by 4* 2M RAM Die")).registerOre("ktfruRAM8M");
         ItemList.RAMBar16M4.set(addItem(30354, "RAMBar64M", "Composed by 4* 16M RAM Die")).registerOre("ktfruRAM64M");
@@ -289,7 +289,7 @@ public class itemIT extends MultiItemRandom {
         ItemList.RAMBar2G4.set(addItem(30357, "RAMBar8G", "Composed by 4* 2G RAM Die")).registerOre("ktfruRAM8G");
 
         ItemList.RAMBar2K8.set(addItem(30400, "RAMBar16K", "Composed by 8* 2K RAM Die")).registerOre("ktfruRAM16K");
-        ItemList.RAMBar24K8.set(addItem(30401, "RAMBar192K", "Composed by 8* 24K RAM Die")).registerOre("ktfruRAM192K");
+        ItemList.RAMBar32K8.set(addItem(30401, "RAMBar192K", "Composed by 8* 32K RAM Die")).registerOre("ktfruRAM256K");
         ItemList.RAMBar256K8.set(addItem(30402, "RAMBar2M", "Composed by 8* 256K RAM Die")).registerOre("ktfruRAM2M");
         ItemList.RAMBar2M8.set(addItem(30403, "RAMBar16M", "Composed by 8* 2M RAM Die")).registerOre("ktfruRAM16M");
         ItemList.RAMBar16M8.set(addItem(30404, "RAMBar128M", "Composed by 8* 16M RAM Die")).registerOre("ktfruRAM128M");

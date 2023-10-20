@@ -8,18 +8,20 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
+import cn.kuzuanpa.ktfruaddon.client.render.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderCircuitAssembler;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderExampleMultiBlock;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderSunBoilerMirror;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
-import cn.kuzuanpa.ktfruaddon.tile.parts.SunBoilerMirror;
+import cn.kuzuanpa.ktfruaddon.tile.parts.SunHeaterMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.common.MinecraftForge;
 
 public class clientProxy extends commonProxy {
     public void preInit(FMLPreInitializationEvent event) {
@@ -39,6 +41,7 @@ public class clientProxy extends commonProxy {
     public void registerRenderers(){
         ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TileEntityRenderExampleMultiBlock());
         ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TileEntityRenderCircuitAssembler());
-        ClientRegistry.bindTileEntitySpecialRenderer(SunBoilerMirror.class, new TileEntityRenderSunBoilerMirror());
+        ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirror.class, new TileEntityRenderSunBoilerMirror());
+        MinecraftForge.EVENT_BUS.register(new FxRenderBlockOutline());
     }
 }

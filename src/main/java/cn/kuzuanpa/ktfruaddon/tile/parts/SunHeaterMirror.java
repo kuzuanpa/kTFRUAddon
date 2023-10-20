@@ -14,7 +14,7 @@ package cn.kuzuanpa.ktfruaddon.tile.parts;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.SunBoiler;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.SunHeater;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -35,12 +35,12 @@ import net.minecraft.util.ChunkCoordinates;
 
 import static gregapi.data.CS.*;
 
-public class SunBoilerMirror extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray {
+public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray {
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.sunboiler.mirror";
+        return "ktfru.multitileentity.multiblock.sunheater.mirror";
     }
     public ChunkCoordinates targetSunBoilerPos=null;
-    public SunBoiler target;
+    public SunHeater target;
     public float rotateHorizontal,rotateVertical,rotateHorizontalToMove,rotateVerticalToMove;
     public long generateRate=0;
     public boolean isValid=true;
@@ -70,8 +70,8 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle implements IMu
                 if (equippedItem.hasTagCompound() && equippedItem.getTagCompound().hasKey(NBT_USB_DATA)) {
                     NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
                     targetSunBoilerPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
-                    if (worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ) instanceof SunBoiler) {
-                        target= (SunBoiler) worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ);
+                    if (worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ) instanceof SunHeater) {
+                        target= (SunHeater) worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ);
                         updateClientData();
                         aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.SUN_BOILER_MIRROR) + targetSunBoilerPos.posX + "," + targetSunBoilerPos.posY + "," + targetSunBoilerPos.posZ));
                     } else targetSunBoilerPos = null;
@@ -167,7 +167,7 @@ public class SunBoilerMirror extends TileEntityBase09FacingSingle implements IMu
     public boolean onTickCheck(long aTimer) {
         super.onTickCheck(aTimer);
         if(aTimer%50==0&&isServerSide()){
-            if(targetSunBoilerPos!=null&&worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ)instanceof SunBoiler)target= (SunBoiler) worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ);
+            if(targetSunBoilerPos!=null&&worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ)instanceof SunHeater)target= (SunHeater) worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ);
             else {
                 targetSunBoilerPos=null;
                 return false;

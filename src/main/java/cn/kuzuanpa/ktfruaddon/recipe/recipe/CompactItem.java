@@ -21,8 +21,8 @@ import static gregapi.data.CS.*;
 
 public class CompactItem {
     public static void init(){
-        CR.shaped(ItemList.BasinModelInnerLayer.get(1),CR.DEF," I "," I "," f ",'I', OP.ingot.mat(MT.RedSteel,1));
-        CR.shaped(ItemList.BasinModelInnerLayer.get(1),CR.DEF," I "," I "," f ",'I', OP.ingot.mat(MT.BlueSteel,1));
+        CR.shaped(ItemList.CrucibleModelInnerLayer.get(1),CR.DEF," I "," I "," f ",'I', OP.ingot.mat(MT.RedSteel,1));
+        CR.shaped(ItemList.CrucibleModelInnerLayer.get(1),CR.DEF," I "," I "," f ",'I', OP.ingot.mat(MT.BlueSteel,1));
 
         recipeManager.Assembler.addRecipe1(false,6400,80,ItemList.CPUGT3660.get(1), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.IntelligentCore.get(2));
     }
