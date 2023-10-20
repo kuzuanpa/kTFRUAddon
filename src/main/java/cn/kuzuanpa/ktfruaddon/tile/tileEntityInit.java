@@ -25,7 +25,7 @@ import cn.kuzuanpa.ktfruaddon.tile.casing.rustBronzeCasing;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.FuelBattery;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.ManualGeneratorKU;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.ManualGeneratorRU;
-import cn.kuzuanpa.ktfruaddon.tile.machine.BasinModel;
+import cn.kuzuanpa.ktfruaddon.tile.machine.CrucibleModel;
 import cn.kuzuanpa.ktfruaddon.tile.machine.MachineCodeUtil;
 import cn.kuzuanpa.ktfruaddon.tile.machine.tankGasCompressedInputer;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.*;
@@ -250,7 +250,7 @@ public class tileEntityInit {
 
         aMat = MT.StainlessSteel;  aRegistry.add("Distillation Tower" , "kTFRUAddon: Multiblock", 30006, 17200, DistillTower.class   , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "distillationtower" , NBT_INPUT,  512, NBT_INPUT_MIN, 1, NBT_INPUT_MAX, 4096, NBT_ENERGY_ACCEPTED, TD.Energy.HU, NBT_RECIPEMAP, recipeManager.DistillTower    , NBT_INV_SIDE_AUTO_OUT, SIDE_BACK  , NBT_TANK_SIDE_AUTO_OUT, SIDE_BACK  , NBT_CHEAP_OVERCLOCKING, T  ),
                 "PPP", "PMP", "PPP", 'M', gRegistry.getItem(18102), 'P', OP.pipeNonuple.dat(aMat));
-        aMat = MT.StainlessSteel;       aRegistry.add("Sun Boiler"               , "Multiblock Machines", 30007, 17200, SunBoiler.class      , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)
+        aMat = MT.StainlessSteel;       aRegistry.add("Sun Heater"               , "Multiblock Machines", 30007, 17200, SunHeater.class      , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)
                 , " R ", "hMs", " R ", 'M', aRegistry.getItem(18029), 'R', OP.ring.dat(aMat));
         //modelTestMachine
         //aRegistry.add("ktest Model Bathing Vat" , "Example Mod", i++, 0, exampleMachineModel.class , MT.StainlessSteel.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.StainlessSteel, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "klargebath"               , NBT_INPUT,    1                      , NBT_ENERGY_ACCEPTED, TD.Energy.TU, NBT_RECIPEMAP, RM.Bath     , NBT_INV_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM                           , NBT_PARALLEL,  64                          , NBT_NO_CONSTANT_POWER, T), "CRC", "PMP", "APA", 'M', aRegistry.getItem(12000), 'R', IL.Processor_Crystal_Ruby, 'C', OD_CIRCUITS[6], 'P', OP.plateDense.dat(MT.StainlessSteel), 'A', IL.ROBOT_ARMS[2]);
@@ -290,12 +290,12 @@ i=31120;
         //aMat = ;     aRegistry.add("Mask Aligner IO Manager (DUV)"     , "kTFRUAddon: Multiblock", 30121, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "iomanager"   , NBT_DESIGNS, 2));
 
         //aMat = ;     aRegistry.add("Mask Aligner IO Manager (EUV)"     , "kTFRUAddon: Multiblock", 30122, 17200, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "iomanager"   , NBT_DESIGNS, 2));
-        aClass= SunBoilerMirror.class;
-        aMat = MT.Al;              aRegistry.add("Sun Boiler Mirror"     , "kTFRUAddon: Multiblock", 31130, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F));
+        aClass= SunHeaterMirror.class;
+        aMat = MT.Al;              aRegistry.add("Sun Heater Mirror"     , "kTFRUAddon: Multiblock", 31130, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F));
         aClass=CommonPart.class;
         aMat = MT.Ag;              aRegistry.add("Sunlight Absorber"     , "kTFRUAddon: Multiblock", 31131, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "sunlightabsorber"   , NBT_DESIGNS, 2));
         aMat = MT.Ag;              aRegistry.add("Heat Transmitter"      , "kTFRUAddon: Multiblock", 31132, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "heattransmitter"   , NBT_DESIGNS, 2));
-        aMat = MT.Al;              aRegistry.add("Sun Boiler Top Layer"  , "kTFRUAddon: Multiblock", 31133, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "sunboilertoplayer"   , NBT_DESIGNS, 2));
+        aMat = MT.Ag;              aRegistry.add("Sun Heater Top Layer"  , "kTFRUAddon: Multiblock", 31133, 17200, aClass , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "sunheatertoplayer"   , NBT_DESIGNS, 2));
 
 i=31200;
         //special part
@@ -315,7 +315,7 @@ i=31200;
         aMat = MT.StainlessSteel;              aRegistry.add("Code Util Machine"     , "kTFRUAddon: Multiblock", 32760, 17200, MachineCodeUtil.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F, NBT_TEXTURE, "computercluster", NBT_INPUT, 3072, NBT_INPUT_MIN,    2048, NBT_INPUT_MAX,   4096  ,NBT_RECIPEMAP, recipeManager.Code , NBT_ENERGY_ACCEPTED, TD.Energy.EU));
         aMat = MT.Bronze;              aRegistry.add("Rust Bronze Machine Casing"     , "kTFRUAddon: Casing", 32761, 1230, rustBronzeCasing.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F));
         aMat = MT.Bronze;              aRegistry.add("DeRust Bronze Machine Casing"     , "kTFRUAddon: Casing", 32762, 1230, MultiTileEntityMultiBlockPart.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F,NBT_TEXTURE, "wall"));RM.Welder.addRecipe1(F,16,200,aRegistry.getItem(32762,1),ZL_FS,ZL_FS,OP.casingMachine.mat(MT.Bronze,1));
-        aMat = MT.RedSteel;              aRegistry.add("Red Steel Basin Model"     , "kTFRUAddon: Machines", 32763, 20001, BasinModel.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.RedSteel,1));
-        aMat = MT.BlueSteel;              aRegistry.add("Blue Steel Basin Model"     , "kTFRUAddon: Machines", 32764, 20001, BasinModel.class , aMat.mToolQuality, 16, tMetalBlock   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   6.0F, NBT_RESISTANCE,   6.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.BlueSteel,1));
+        aMat = MT.RedSteel;              aRegistry.add("Red Steel Crucible Model"     , "kTFRUAddon: Machines", 32763, 20001, CrucibleModel.class , aMat.mToolQuality, 16, tMetalBlock   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   2.0F, NBT_RESISTANCE,   2.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.RedSteel,1));
+        aMat = MT.BlueSteel;              aRegistry.add("Blue Steel Crucible Model"     , "kTFRUAddon: Machines", 32764, 20001, CrucibleModel.class , aMat.mToolQuality, 16, tMetalBlock   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid),NBT_HARDNESS,   2.0F, NBT_RESISTANCE,  2.0F)," h ","PfP"," P ",'P',OP.plate.mat(MT.BlueSteel,1));
     }
 }

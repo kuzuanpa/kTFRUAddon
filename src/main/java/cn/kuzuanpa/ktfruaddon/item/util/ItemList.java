@@ -65,16 +65,20 @@ public enum ItemList implements IItemContainer{
     RAMWafer200umDoped, RAMWafer72umDoped, RAMWafer28umDoped, RAMWafer8umDoped, RAMWafer400nmDoped, RAMWafer80nmDoped, RAMWafer32nmDoped, RAMWafer14nmDoped,
     RAMWafer200umChecked, RAMWafer72umChecked, RAMWafer28umChecked, RAMWafer8umChecked, RAMWafer400nmChecked, RAMWafer80nmChecked, RAMWafer32nmChecked, RAMWafer14nmChecked,
     RAMBoardT1,RAMBoardT2,RAMBoardT3,
-    RAMDie2K,   RAMDie24K,   RAMDie256K,   RAMDie2M,   RAMDie16M,   RAMDie128M,   RAMDie768M,   RAMDie2G,
+    RAMDie2K, RAMDie32K,   RAMDie256K,   RAMDie2M,   RAMDie16M,   RAMDie128M,   RAMDie768M,   RAMDie2G,
 
-    RAMBar2K4,  RAMBar24K4,  RAMBar256K4,  RAMBar2M4,  RAMBar16M4,  RAMBar128M4,  RAMBar768M4,  RAMBar2G4,
-    RAMBar2K8,  RAMBar24K8,  RAMBar256K8,  RAMBar2M8,  RAMBar16M8,  RAMBar128M8,  RAMBar768M8,  RAMBar2G8,
+    RAMBar2K4, RAMBar32K4,  RAMBar256K4,  RAMBar2M4,  RAMBar16M4,  RAMBar128M4,  RAMBar768M4,  RAMBar2G4,
+    RAMBar2K8, RAMBar32K8,  RAMBar256K8,  RAMBar2M8,  RAMBar16M8,  RAMBar128M8,  RAMBar768M8,  RAMBar2G8,
                              RAMBar256K16, RAMBar2M16, RAMBar16M16, RAMBar128M16, RAMBar768M16, RAMBar2G16,
                                                        RAMBar16M32, RAMBar128M32, RAMBar768M32, RAMBar2G32,
 
-    CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4, CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4,
+     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4,
+    CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4,
     
-    CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4, CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4, CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4, CPUGT3680v3E, CPUGT3680v4E, CPUGT3699v3E, CPUGT3699v4E,
+    CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4,
+    CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4,
+                                                  CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4,
+                                                CPUGT3680v3E, CPUGT3680v4E, CPUGT3699v3E, CPUGT3699v4E,
 
     CircuitPartPhotomaskT3, CircuitPartPhotomaskT4, CircuitPartPhotomaskT5, CircuitPartPhotomaskT6,
     CircuitPartWaferT3, CircuitPartWaferT4, CircuitPartWaferT5, CircuitPartWaferT6,
@@ -95,7 +99,7 @@ public enum ItemList implements IItemContainer{
     CircuitBoardBasicUncompleted,CircuitBoardGoodUncompleted1,CircuitBoardGoodUncompleted2,
     //Compact
     //AdvancedRockery 1000-1999
-    ArmorAirSealant,SpaceSuitCloth,IntelligentCore, BasinModelInnerLayer,
+    ArmorAirSealant,SpaceSuitCloth,IntelligentCore, CrucibleModelInnerLayer,
 
 
 
@@ -109,6 +113,7 @@ public enum ItemList implements IItemContainer{
     //itemComputer
     ComputerTF3386,ComputerTF3386S,ComputerTF3586,ComputerTF3586S,ComputerGT1000,ComputerGT1090,ComputerGT2000,ComputerGT2090,ComputerGT3660,ComputerGT3680,ComputerGT3699,ComputerGT3660v2,ComputerGT3680v2,ComputerGT3699v2,ComputerGT3660v3,ComputerGT3680v3,ComputerGT3699v3,ComputerGT3660v4,ComputerGT3680v4,ComputerGT3699v4,ComputerGT3680v3e,ComputerGT3699v3e,ComputerGT3680v4e,ComputerGT3699v4e,
     ComputerBasicCircuits,ComputerGoodCircuits,ComputerAdvancedCircuits,ComputerEliteCircuits,ComputerMasterCircuits,ComputerUltimateCircuits,
+    UnderClockedNoviceComputer,UnderClockedModerateComputer,UnderClockedAdvancedComputer,UnderClockedEliteComputer,UnderClockedMasterComputer,UnderClockedUltimateComputer,
     //itemParticle
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
     //itemBatteryPole

@@ -20,18 +20,16 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
-import cn.kuzuanpa.ktfruaddon.code.oreScanner.OreVeinScanner;
-import cpw.mods.fml.common.FMLLog;
+import cn.kuzuanpa.ktfruaddon.code.OreScanner;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import org.apache.logging.log4j.Level;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine {
-    public OreVeinScanner oreVeinScanner;
+    public OreScanner oreVeinScanner;
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        oreVeinScanner = new OreVeinScanner(3,xCoord,yCoord,zCoord,worldObj);
+        oreVeinScanner = new OreScanner(1,xCoord,yCoord,zCoord,worldObj,true,true);
     }
 @Override
 public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
@@ -39,22 +37,20 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
         //openGUI(aPlayer, aSide);
 
         try {
-            oreVeinScanner.discoveredOres.forEach((ore) ->FMLLog.log(Level.FATAL,ore.firstDiscoveredX+","+ore.firstDiscoveredY+","+ore.firstDiscoveredZ+","+ore.materialID));
             //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+CodeTranslate.itemToCode(slot(i)));
-            //if(aPlayer.isSneaking()) CodeTranslate.genItemListAll();
+            if(aPlayer.isSneaking()) oreVeinScanner.resetScanOres();
            // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
 
         }catch (Throwable ignored) {}
     }
+    oreVeinScanner.rendOres();
     return false;
 }
     public void onTick2(long aTimer, boolean isServerside){
-        if (isServerside&&aTimer%20==1) oreVeinScanner.startOrContinueScanOres();
+        if(isServerside&&worldObj!=null)oreVeinScanner.startOrContinueScanOres();
     }
 @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.machine.code";
     }
-
-
 }

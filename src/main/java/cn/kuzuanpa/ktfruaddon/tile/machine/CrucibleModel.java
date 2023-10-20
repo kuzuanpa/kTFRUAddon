@@ -38,10 +38,10 @@ import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
 
-import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Machine.BASIN_MODEL_TIMER;
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Machine.CRUCIBLE_MODEL_TIMER;
 import static gregapi.data.CS.*;
 
-public class BasinModel extends TileEntityBase07Paintable{
+public class CrucibleModel extends TileEntityBase07Paintable{
     //0=nothing,1=placed clay,2=full clay,3=composed,4=completed
     public byte mState=0;
     public short mTimer=0;
@@ -49,20 +49,20 @@ public class BasinModel extends TileEntityBase07Paintable{
     public final short REQUIRED_TIME=400;
 
     public static IIconContainer
-            sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/basinmodel/common"),
-            sTextureClay= new Textures.BlockIcons.CustomIcon("machines/basinmodel/clay");
+            sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/common"),
+            sTextureClay= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/clay");
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         if (aNBT.hasKey(NBT_STATE)) mState = aNBT.getByte(NBT_STATE);
-        if (aNBT.hasKey(BASIN_MODEL_TIMER)) mTimer = aNBT.getByte(BASIN_MODEL_TIMER);
+        if (aNBT.hasKey(CRUCIBLE_MODEL_TIMER)) mTimer = aNBT.getByte(CRUCIBLE_MODEL_TIMER);
         if (aNBT.hasKey(NBT_TEMPERATURE)) mTemperature = aNBT.getLong(NBT_TEMPERATURE);
     }
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         if (mState>0) aNBT.setByte(NBT_STATE,mState);
-        if (mTimer>0) aNBT.setShort("ktfru.machine.basinmodel.timer",mTimer);
+        if (mTimer>0) aNBT.setShort("ktfru.machine.cruciblemodel.timer",mTimer);
         if (mTemperature>50) aNBT.setLong(NBT_TEMPERATURE,mTemperature);
 
     }
@@ -140,13 +140,13 @@ public class BasinModel extends TileEntityBase07Paintable{
         if(mState==0) {
             box(aAABB, aList, PX_P[ 0]+0.001, PX_P[ 0], PX_P[ 0]+0.001, PX_P[16]-0.001, PX_P[ 1], PX_P[ 16]-0.001);
             box(aAABB, aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 1 ]);
-            box(aAABB, aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[1 ], PX_P[16], PX_P[ 16]);
+            box(aAABB, aList, PX_P[ 0]-0.001, PX_P[ 0], PX_P[ 0]-0.001, PX_P[1 ], PX_P[16], PX_P[ 16]);
             box(aAABB, aList, PX_P[15], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 16]);
             box(aAABB, aList, PX_P[ 0], PX_P[ 0], PX_P[15], PX_P[16], PX_P[16], PX_P[ 16]);
         }else if(mState==1||mState==2){
             box(aAABB, aList, PX_P[ 0]+0.001, PX_P[ 0], PX_P[ 0]+0.001, PX_P[16]-0.001, PX_P[ 7], PX_P[ 16]-0.001);
             box(aAABB, aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 1 ]);
-            box(aAABB, aList, PX_P[ 0], PX_P[ 0], PX_P[ 0], PX_P[1 ], PX_P[16], PX_P[ 16]);
+            box(aAABB, aList, PX_P[ 0]-0.001, PX_P[ 0], PX_P[ 0]-0.001, PX_P[1 ], PX_P[16], PX_P[ 16]);
             box(aAABB, aList, PX_P[15], PX_P[ 0], PX_P[ 0], PX_P[16], PX_P[16], PX_P[ 16]);
             box(aAABB, aList, PX_P[ 0], PX_P[ 0], PX_P[15], PX_P[16], PX_P[16], PX_P[ 16]);
         }else {
@@ -159,7 +159,7 @@ public class BasinModel extends TileEntityBase07Paintable{
        if (isServerSide()){
            if(mTimer>REQUIRED_TIME) {
                mState=4;
-               ST.set(slot(0),MultiTileEntityRegistry.getRegistry("gt.multitileentity").getItem(1755));
+               ST.set(slot(0),MultiTileEntityRegistry.getRegistry("gt.multitileentity").getItem(1005));
                updateClientData();
            }
            if (MD.TFC.mLoaded){
@@ -192,13 +192,13 @@ public class BasinModel extends TileEntityBase07Paintable{
     }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if(isServerSide()&&aPlayer.inventory.getCurrentItem().getItem()==Items.clay_ball&&(slot(0)==null||slot(0).stackSize<7)&&mState<2&&ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, 0,1) > 0){
+        if(isServerSide()&&aPlayer.inventory.getCurrentItem().getItem()==Items.clay_ball&&(slot(0)==null||slot(0).stackSize<8)&&mState<2&&ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, 0,1) > 0){
             mState=1;
-            if (slot(0).stackSize>5)mState=2;
+            if (slot(0).stackSize>6)mState=2;
         }
-        if(isServerSide()&&aPlayer.inventory.getCurrentItem().getItem()==ItemList.BasinModelInnerLayer.getItem()){
+        if(isServerSide()&&aPlayer.inventory.getCurrentItem().getItem()==ItemList.CrucibleModelInnerLayer.getItem()){
             if(mState==2&&ST.move(aPlayer.inventory, this, aPlayer.inventory.currentItem, 1,1) > 0)mState=3;
-            else if(mState<2)aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.BASIN_MODEL_0)+(6-slot(0).stackSize)+LH.get(kMessages.BASIN_MODEL_1)));
+            else if(mState<2)aPlayer.addChatMessage(new ChatComponentText(LH.get(kMessages.CRUCIBLE_MODEL_0)+(7-slot(0).stackSize)+LH.get(kMessages.CRUCIBLE_MODEL_1)));
         }
         updateClientData();
         return T;
@@ -213,6 +213,6 @@ public class BasinModel extends TileEntityBase07Paintable{
 
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.basinmodel";
+        return "ktfru.multitileentity.cruciblemodel";
     }
 }

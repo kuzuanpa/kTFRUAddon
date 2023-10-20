@@ -29,11 +29,12 @@ public class i18nInit {
 
         LH.add(kMessages.FUEL_BATTERY_0,"Changing Contents");
         LH.add(kMessages.FUEL_BATTERY_1,"Done Changing Contents");
-        LH.add(kMessages.BASIN_MODEL_0,"Still need ");
-        LH.add(kMessages.BASIN_MODEL_1," clay ball.");
+        LH.add(kMessages.CRUCIBLE_MODEL_0,"Still need ");
+        LH.add(kMessages.CRUCIBLE_MODEL_1," clay ball.");
         LH.add(kMessages.SUN_BOILER_MIRROR,"Successfully binding Sun Boiler target:");
         LH.add(kMessages.SUN_BOILER_MIRROR_ERR,"Some block above or around the mirror blocked the sunlight");
         LH.add(kMessages.SUN_BOILER_0,"The Position of this block wrote to USB stick.");
         LH.add(kMessages.SUN_BOILER_1,"There already have some data in USB stick, click again to overwrite it.");
+        LH.add(kMessages.SUN_BOILER_ERR,"There are some errors in structure.");
     }
 }
