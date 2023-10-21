@@ -25,7 +25,7 @@ MultiBlock Machine in IV or later
 
 **Current development Focusing**
 ![](libs/readme1.png)
-We shouldn't generates electric only by some rotating thing, use chemicals directly will be more effective.
+A Large and Powerful Heat Source use SunLight. THE POWER OF SUN!
 
 **Internationalization && Localization**
 
@@ -60,4 +60,4 @@ zh_CN:
 **当前开发重点：**
 
 ![](libs/readme1.png)
-人们不能只依靠那些转来转去的东西发电, 使用化学物质直接发电会更加高效.
+由阳光驱动的大型热源，使用太阳之力!
