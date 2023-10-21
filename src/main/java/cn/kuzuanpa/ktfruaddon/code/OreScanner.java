@@ -49,9 +49,9 @@ import java.util.List;
 public class OreScanner {
     public int range, xPos, yPos, zPos, timer, xChunkPos = 0, zChunkPos = 0, xChunkStart = 0, zChunkStart = 0;
     public World world;
-    public boolean includeSmallOre = false, finished = false, willRend = false, includeBedRockOre = true;
+    public boolean includeSmallOre = false, finished = false, includeBedRockOre = true;
     public List<discoveredOres> discoveredOres = new ArrayList<>();
-    public OreScanner(int range, int xPos, int yPos, int zPos, World world, boolean includeSmallOre, boolean willRend) {
+    public OreScanner(int range, int xPos, int yPos, int zPos, World world, boolean includeSmallOre) {
         this.range = range;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -59,13 +59,12 @@ public class OreScanner {
         this.world = world;
         this.timer = 0;
         this.includeSmallOre = includeSmallOre;
-        this.willRend = willRend;
         if (world != null) xChunkPos = xChunkStart = world.getChunkFromBlockCoords(xPos, zPos).xPosition - range;
         if (world != null) zChunkPos = zChunkStart = world.getChunkFromBlockCoords(xPos, zPos).zPosition - range;
         includeBedRockOre = true;
     }
 
-    public OreScanner(int range, int xPos, int yPos, int zPos, World world, boolean includeSmallOre, boolean willRend, boolean includeBedRockOre) {
+    public OreScanner(int range, int xPos, int yPos, int zPos, World world, boolean includeSmallOre, boolean includeBedRockOre) {
         this.range = range;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -73,7 +72,6 @@ public class OreScanner {
         this.world = world;
         this.timer = 0;
         this.includeSmallOre = includeSmallOre;
-        this.willRend = willRend;
         if (world != null) xChunkPos = xChunkStart = world.getChunkFromBlockCoords(xPos, zPos).xPosition - range;
         if (world != null) zChunkPos = zChunkStart = world.getChunkFromBlockCoords(xPos, zPos).zPosition - range;
         this.includeBedRockOre = includeBedRockOre;
