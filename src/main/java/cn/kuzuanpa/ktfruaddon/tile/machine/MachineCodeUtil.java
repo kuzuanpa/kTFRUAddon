@@ -29,25 +29,26 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine {
     public OreScanner oreVeinScanner;
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        oreVeinScanner = new OreScanner(1,xCoord,yCoord,zCoord,worldObj,true,true);
+        oreVeinScanner = new OreScanner(0,xCoord,yCoord,zCoord,worldObj,true,true);
     }
 @Override
 public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (isServerSide()) {
-        //openGUI(aPlayer, aSide);
+       // openGUI(aPlayer, aSide);
 
         try {
-            //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+CodeTranslate.itemToCode(slot(i)));
+            //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
             if(aPlayer.isSneaking()) oreVeinScanner.resetScanOres();
            // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
 
         }catch (Throwable ignored) {}
     }
-    oreVeinScanner.rendOres();
     return false;
 }
     public void onTick2(long aTimer, boolean isServerside){
         if(isServerside&&worldObj!=null)oreVeinScanner.startOrContinueScanOres();
+        if(isServerSide()&&aTimer%100==0)oreVeinScanner.rendOres();
+
     }
 @Override
     public String getTileEntityName() {
