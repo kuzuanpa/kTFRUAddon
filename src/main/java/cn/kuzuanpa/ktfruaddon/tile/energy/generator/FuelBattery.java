@@ -183,10 +183,8 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
             }
             if (mEnergy < 0) mEnergy = 0;
             //AutoOutput
-            if (getOutputTankHasFluid()!=null) {
-                FL.move(getOutputTankHasFluid(), getAdjacentTank(mFacing));
-                FL.move(getOutputTankHasFluid(), getAdjacentTank(OPOS[mFacing]));
-            }
+            if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(mFacing));
+            if (mTanks[3]!=null) FL.move(mTanks[3], getAdjacentTank(OPOS[mFacing]));
         }
     }
 
@@ -227,12 +225,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         return getAvailInputTank(aFluidToFill.getFluid());
     }
 
-    @Override
-    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
-        if (changingStaticTank && !mTankStatic.isEmpty()) return mTankStatic;
-        else for (FluidTankGT tank:mTanks) if (!tank.isEmpty()) return tank;
-        return null;
-    }
+
 
     @Override
     protected IFluidTank[] getFluidTanks2(byte aSide) {
@@ -319,9 +312,10 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         }
         return null;
     }
-    public FluidTankGT getOutputTankHasFluid() {
+    @Override
+    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
         if (changingStaticTank && !mTankStatic.isEmpty()) return mTankStatic;
-        else for (FluidTankGT tank:mTanksOutput) if (!tank.isEmpty()) return tank;
+        else for (FluidTankGT tank:mTanks) if (!tank.isEmpty()) return tank;
         return null;
     }
     //Visuals

@@ -35,12 +35,10 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine {
 public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (isServerSide()) {
        // openGUI(aPlayer, aSide);
-
         try {
             //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
             if(aPlayer.isSneaking()) oreVeinScanner.resetScanOres();
            // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
-
         }catch (Throwable ignored) {}
     }
     return false;
