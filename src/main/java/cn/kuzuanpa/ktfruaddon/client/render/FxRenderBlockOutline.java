@@ -19,6 +19,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -41,14 +42,14 @@ public class FxRenderBlockOutline {
     public static ArrayList<blockOutlineToRender> blockOutlineToRenderArrayList = new ArrayList<blockOutlineToRender>();
 
     /**return: true when added,false when duplicated**/
-    public static boolean addBlockOutlineToRender(ChunkCoordinates pos, int color, float thickness){
+    public static boolean addBlockOutlineToRender(@NotNull ChunkCoordinates pos, int color, float thickness){
         for (blockOutlineToRender blockOutline : blockOutlineToRenderArrayList)if (Objects.equals(blockOutline, new blockOutlineToRender(pos, color, thickness))||blockOutline.pos.equals(pos))return false;
         blockOutlineToRenderArrayList.add(new blockOutlineToRender(pos,color,thickness));
         return true;
     }
 
-    public static void removeBlockOutlineToRender(ChunkCoordinates pos){
-        blockOutlineToRenderArrayList.removeIf(blockOutline -> blockOutline.pos==pos);
+    public static void removeBlockOutlineToRender(@NotNull ChunkCoordinates pos){
+        blockOutlineToRenderArrayList.removeIf(blockOutline -> blockOutline.pos.equals(pos));
     }
 
     @SubscribeEvent

@@ -48,7 +48,7 @@ public enum flList {
     ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,/**蚀刻液**/EtchingSolution
     ,NegativeColloid,PositiveColloid
     ,/**氢氧化钾溶液**/SolutionPotassiumHydroxide,/**双酚钠盐溶液**/ SolutionBPASodium
-    ,MoltenTeflon
+    ,MoltenTeflon,MoltenNaK,VaporNaK
     ;
     public Fluid fluid;
     public String name;
@@ -60,9 +60,18 @@ public enum flList {
         RM.Mixer.addRecipeX(T,16,10, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);
         RM.Bath.addRecipeX(T,0,20, ST.array(OM.dust(material,U)),FL.array(MT.H2O.liquid(U , T)),FL.array(FL.make(fluid,AmountPerUnit)),ZL_IS);
     }
-    /**Register a liquid which is a molten form of an material,notice 2 name args will add molten prefix automatically**/
+    /**Register a liquid which is a molten form of a material,notice 2 name args will add molten prefix automatically**/
     public void registerMolten(String name, String localizedName, @NotNull OreDictMaterial material) {
         fluid = FL.create("molten."+name, "Molten "+localizedName,material,1,144,material.mMeltingPoint);
+        this.name=name;
+    }
+    public void registerMolten(String name, String localizedName, @NotNull OreDictMaterial material,int offsetTemp) {
+        fluid = FL.create("molten."+name, "Molten "+localizedName,material,1,144,material.mMeltingPoint+offsetTemp);
+        this.name=name;
+    }
+    /**Register a liquid which is a Vapor form of a material,notice 2 name args will add vapor prefix automatically**/
+    public void registerBoiled(String name, String localizedName, @NotNull OreDictMaterial material) {
+        fluid = FL.create("Vapor."+name, "Vapor "+localizedName,material,2,144,material.mBoilingPoint);
         this.name=name;
     }
     public void register(String name, String localizedName, @Nullable OreDictMaterial material, int state) {

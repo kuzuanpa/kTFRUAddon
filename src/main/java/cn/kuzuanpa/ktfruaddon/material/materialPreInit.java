@@ -258,7 +258,11 @@ public class materialPreInit {
         matList.AmmoniumNitrate.registerC(22084,"AmmoniumNitrate","AmmoniumNitrate",169,210,255,255,255,130,"NH4NO3")
                 .put(TD.ItemGenerator.DUSTS);
         //?
-        matList.JustForHensSoPretty.registerC(22085,"JustForHenSoPretty","Just For Hen So Pretty",2333,23333,0,0,0,0,"GeInNbTiMg")
+        matList.HensSoPretty.registerC(22085,"HenSoPretty","HenSoPretty",2333,23333,0,0,0,0,"GeInNbTiMg")
                 .put(TD.ItemGenerator.DUSTS);
+        //钠钾合金
+        matList.PotassiumSodium.registerC(22086,"PotassiumSodium","PotassiumSodium",7,813,180,230,34,30,"NaK")
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.LIQUID);
+
     }
 }
