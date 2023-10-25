@@ -13,9 +13,11 @@ package cn.kuzuanpa.ktfruaddon.tile.util;
 
 public class kTileNBT {
     public static class Generator {
-        public static String MAX_TIME = "ktfru.nbt.energy.manualmotor.maxtime";
-        public static String TIME_GAIN_RATE = "ktfru.nbt.energy.manualmotor.timegainrate";
-        public static String TIME_REMAINING = "ktfru.nbt.energy.manualmotor.timeremaining";
+        public static String MAX_TIME = "ktfru.nbt.energy.maxtime";
+        public static String TIME_GAIN_RATE = "ktfru.nbt.energy.timegainrate";
+        public static String TIME_REMAINING = "ktfru.nbt.energy.timeremaining";
+        public static String WORKING_MODE = "ktfru.nbt.energy.working_mode";
+
     }
     public static class Machine {
         public static String CRUCIBLE_MODEL_TIMER ="ktfru.nbt.machine.cruciblemodel.timer";

@@ -11,10 +11,10 @@
 package cn.kuzuanpa.ktfruaddon.i18n.texts;
 public class kMessages {
     public static final String
-             FUEL_BATTERY_0="ktfru.msg.energy.fuelbattery.0"
-            ,FUEL_BATTERY_1="ktfru.msg.energy.fuelbattery.1"
+             DONE_CHANGING_STRUCTURE ="ktfru.msg.common.tools.done_changing_structure"
+            ,CHANGING_STRUCTURE ="ktfru.msg.common.tools.changing_structure"
             ,CRUCIBLE_MODEL_0 ="ktfru.msg.machine.cruciblemodel.0"
-            , CRUCIBLE_MODEL_1 ="ktfru.msg.machine.cruciblemodel.1"
+            ,CRUCIBLE_MODEL_1 ="ktfru.msg.machine.cruciblemodel.1"
             ,SUN_BOILER_MIRROR="ktfru.tooltip.multiblock.sunboiler.mirror"
             ,SUN_BOILER_MIRROR_ERR="ktfru.tooltip.multiblock.sunboiler.mirror.err"
             ,SUN_BOILER_0="ktfru.tooltip.multiblock.sunboiler.0"

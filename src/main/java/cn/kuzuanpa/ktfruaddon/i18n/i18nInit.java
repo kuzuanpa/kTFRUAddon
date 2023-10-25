@@ -25,10 +25,10 @@ public class i18nInit {
         LH.add(kTooltips.SIDE_LEFT,"left");
         LH.add(kTooltips.SIDE_RIGHT,"right");
         LH.add(kTooltips.AUTO,"(auto)");
-        LH.add(kTooltips.FUEL_BATTERY_0,"Use Monkey Wrench to Change Contents.");
+        LH.add(kTooltips.USE_MONKEY_WRENCH_CHANGE_STRUCTURE,"Use Monkey Wrench to Change Contents.");
 
-        LH.add(kMessages.FUEL_BATTERY_0,"Changing Contents");
-        LH.add(kMessages.FUEL_BATTERY_1,"Done Changing Contents");
+        LH.add(kMessages.DONE_CHANGING_STRUCTURE,"Changing Contents");
+        LH.add(kMessages.CHANGING_STRUCTURE,"Done Changing Contents");
         LH.add(kMessages.CRUCIBLE_MODEL_0,"Still need ");
         LH.add(kMessages.CRUCIBLE_MODEL_1," clay ball.");
         LH.add(kMessages.SUN_BOILER_MIRROR,"Successfully binding Sun Boiler target:");

@@ -23,8 +23,8 @@ public class fluidPreInit {
         final int GAS=2;
         final int LIQUID=1;
         flList.AcidPickledBauxide.register("acidpickledbauxide", "Acid Pickled Bauxide",null,LIQUID);
-        flList.SodiumAluminate.registerSolution("sodiumaluminate","Sodium Aluminate",null,1000);
-        flList.PotassiumAluminate.registerSolution("potassiumaluminate","Potassium Aluminate", null,1000);
+        flList.SodiumAluminate.register("sodiumaluminate","Sodium Aluminate",null,LIQUID);
+        flList.PotassiumAluminate.register("potassiumaluminate","Potassium Aluminate", null,LIQUID);
         flList.SodiumCarbonate.register("sodiumcarbonate","Sodium Carbonate",null,LIQUID);
         flList.PotassiumCarbonate.register("potassiumcarbonate","Potassium Carbonate",null,LIQUID);
         flList.SodiumHeterotungstate.register("sodiumheterotungstate","Sodium Heterotungstate",null,LIQUID);
@@ -192,5 +192,7 @@ public class fluidPreInit {
         flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
         flList.SolutionPotassiumHydroxide.registerSolution("solutionpotassiumhydroxide","Potassium Hydroxide Solution",MT.KOH,1000);
         flList.MoltenTeflon.registerMolten("teflon","Teflon",MT.Teflon);
+        flList.MoltenNaK.registerMolten("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
+        flList.VaporNaK.registerBoiled("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
     }
 }

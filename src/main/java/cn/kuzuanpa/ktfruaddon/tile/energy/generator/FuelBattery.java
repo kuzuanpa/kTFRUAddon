@@ -67,7 +67,7 @@ import static gregapi.data.CS.*;
 /**
  * @author kuzuanpa
  */
-public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray {
+public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityTapAccessible, ITileEntityFunnelAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray {
     public boolean mStopped = F;
     public short mEfficiency = 10000;
     public long mEnergy = 0, mRate = 32;
@@ -127,7 +127,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         LH.addEnergyToolTips(this, aList, null, mEnergyTypeEmitted, null, LH.get(LH.FACE_FRONT));
         aList.add(Chat.ORANGE   + LH.get(LH.NO_GUI_FUNNEL_TAP_TO_TANK));
         aList.add(Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
-        aList.add(Chat.DGRAY    + LH.get(kTooltips.FUEL_BATTERY_0));
+        aList.add(Chat.DGRAY    + LH.get(kTooltips.USE_MONKEY_WRENCH_CHANGE_STRUCTURE));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
@@ -204,8 +204,8 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
             return 1;
         }
         if(aTool.equals(TOOL_monkeywrench)){
-            if (changingStaticTank) aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_1));
-            else aChatReturn.add(LH.get(kMessages.FUEL_BATTERY_0));
+            if (changingStaticTank) aChatReturn.add(LH.get(kMessages.CHANGING_STRUCTURE));
+            else aChatReturn.add(LH.get(kMessages.DONE_CHANGING_STRUCTURE));
             changingStaticTank = !changingStaticTank;
             updateClientData();
         }
@@ -225,7 +225,12 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         return getAvailInputTank(aFluidToFill.getFluid());
     }
 
-
+    @Override
+    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
+        if (changingStaticTank && !mTankStatic.isEmpty()) return mTankStatic;
+        else for (FluidTankGT tank:mTanks) if (!tank.isEmpty()) return tank;
+        return null;
+    }
 
     @Override
     protected IFluidTank[] getFluidTanks2(byte aSide) {
@@ -312,12 +317,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         }
         return null;
     }
-    @Override
-    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
-        if (changingStaticTank && !mTankStatic.isEmpty()) return mTankStatic;
-        else for (FluidTankGT tank:mTanks) if (!tank.isEmpty()) return tank;
-        return null;
-    }
+
     //Visuals
 
     public short getSlotItemMaterial(int slot){
