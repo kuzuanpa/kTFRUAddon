@@ -20,6 +20,7 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.notick.TileEntityBase03MultiTileEntities;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Arrays;
@@ -68,8 +69,8 @@ public class rustBronzeCasing extends TileEntityBase03MultiTileEntities implemen
         updateClientData();
         aPlayer.getCurrentEquippedItem().damageItem(1, aPlayer);
         if (Arrays.equals(deRustedSides, new byte[]{1, 1, 1, 1, 1, 1})){
+            if(isServerSide())aPlayer.worldObj.spawnEntityInWorld(new EntityItem(aPlayer.worldObj, this.xCoord, this.yCoord, this.zCoord, MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").getItem(32762)));
             aPlayer.worldObj.setBlockToAir(this.xCoord,this.yCoord,this.zCoord);
-            aPlayer.inventory.addItemStackToInventory(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").getItem(32762));
         }
         return T;
     }

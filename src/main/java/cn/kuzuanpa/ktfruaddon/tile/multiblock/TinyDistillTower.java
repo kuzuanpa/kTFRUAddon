@@ -10,7 +10,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.tile.util.DistillationTowerUtil;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
@@ -174,13 +173,13 @@ public class TinyDistillTower extends TileEntityBase10MultiBlockMachine {
     public void doOutputFluids() {
         for (FluidTankGT tTank : this.mTanksOutput) {
             Fluid tFluid = tTank.fluid();
-            if (tFluid != null && tTank.has()) {
+            if (tFluid != null && tTank.has()&&mLastRecipe!=null) {
                 DelegatorTileEntity<TileEntity> tDelegator = null;
-                if (FL.is(tFluid, DistillationTowerUtil.TinyOutputFluidsLayer3)) {
+                if (mLastRecipe.mFluidOutputs.length>0&&FL.is(tFluid, mLastRecipe.mFluidOutputs[2].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 3, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.TinyOutputFluidsLayer2)) {
+                } else if (mLastRecipe.mFluidOutputs.length>1&&FL.is(tFluid, mLastRecipe.mFluidOutputs[1].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 2, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.TinyOutputFluidsLayer1)) {
+                } else if (mLastRecipe.mFluidOutputs.length>0&&FL.is(tFluid, mLastRecipe.mFluidOutputs[0].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 1, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 } else {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord , this.getOffsetZN(this.mFacing, 3), this.mFacing, false);

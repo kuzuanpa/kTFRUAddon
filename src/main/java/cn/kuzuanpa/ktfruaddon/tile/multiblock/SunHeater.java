@@ -71,7 +71,7 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
-    public FluidTankGT[] mTanks = {new FluidTankGT(8000),new FluidTankGT(8000)};
+    public FluidTankGT[] mTanks = {new FluidTankGT(80000),new FluidTankGT(80000)};
     public static int[][][] blockIDMap = {{
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
@@ -181,8 +181,8 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
         if (aNBT.hasKey(NBT_OUTPUT_MAX)) maxEmitRatePerLayer = aNBT.getLong(NBT_OUTPUT_MAX);
         if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
         if (aNBT.hasKey(WORKING_MODE)) workingMode = aNBT.getShort(WORKING_MODE);
-        mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(8000);
-        mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(8000);
+        mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(80000);
+        mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(80000);
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);

@@ -18,39 +18,22 @@ public class ComputerBuilding {
         MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
 
         //Photoresist
-        RM.           Mixer    .addRecipeX(F,324,120, ST.array(OP.dust.mat(matList.Naphthalene.get(), 1)),FL.array(MT.Cl.gas(U5,false),FL.Water.make(200)),FL.array(MT.HCl.gas(U5,false)), matList.Naphthalenol.getDust(1));
-        RM.           Mixer    .addRecipeX(F,196,80, ST.array(OP.dust.mat(matList.Naphthalenol.get(), 1),OP.dust.mat(MT.NaNO3,1)),FL.array(MT.HCl.gas(U5,false)),ZL_FS, matList.NaphthalenolAminoHydrochloride.getDust(1));
-        RM.           Mixer    .addRecipe2(F,256,40,matList.NaphthalenolAminoHydrochloride.getDust(1),OP.dust.mat(MT.NaNO3,1),FL.array(MT.HCl.gas(0,false)),ZL_FS,matList.DiazoNaphthol.getDust(1));
+        recipeManager.HeatMixer.addRecipeX(F,32 ,120, ST.array(OP.dust.mat(matList.Naphthalene.get(), 1)),FL.array(MT.Cl.gas(U5,false),FL.Water.make(200)),FL.array(MT.HCl.gas(U5,false)), matList.Naphthalenol.getDust(1));
+        RM.           Mixer    .addRecipeX(F,100,80, ST.array(OP.dust.mat(matList.Naphthalenol.get(), 1),OP.dust.mat(MT.NaNO3,1)),FL.array(MT.HCl.gas(U5,false)),ZL_FS, matList.DiazoNaphthol.getDust(1));
 
-        RM.           Mixer    .addRecipe0(F,430,120,FL.array(flList.Propanediol.make(100),flList.Methanol.make(100)),FL.array(flList.MethoxyPropanol.make(100)),ZL_IS);
-        recipeManager.HeatMixer.addRecipe0(F,630,120,FL.array(flList.MethoxyPropanol.make(100),flList.GlacialAceticAcid.make(100)),FL.array(flList.PGMEA.make(100)),ZL_IS);
+        RM.           Mixer    .addRecipe0(F,130,120,FL.array(flList.Propanediol.make(100),flList.Methanol.make(100)),FL.array(flList.MethoxyPropanol.make(100)),ZL_IS);
+        recipeManager.HeatMixer.addRecipe0(F,130,120,FL.array(flList.MethoxyPropanol.make(100),flList.GlacialAceticAcid.make(100)),FL.array(flList.PGMEA.make(100)),ZL_IS);
 
-        recipeManager.HeatMixer.addRecipe2(F,1440,80,OP.dust.mat(MT.Bakelite,8),matList.DiazoNaphthol.getDust(8),FL.array(flList.PGMEA.make(1000)),FL.array(flList.DNQPhotoresist.make(1000)),ZL_IS);
+        recipeManager.HeatMixer.addRecipe2(F,256,80,OP.dust.mat(MT.Bakelite,8),matList.DiazoNaphthol.getDust(8),FL.array(flList.PGMEA.make(1000)),FL.array(flList.DNQPhotoresist.make(1000)),ZL_IS);
 
         recipeManager.HeatMixer.addRecipe1(F,240,120,OP.dust.mat(MT.Pd,0),FL.array(flList.Phenol.make(100),FL.Hydrogen.make(100)),ZL_FS,matList.Cyclohexanol.getDust(1));
         recipeManager.HeatMixer.addRecipe2(F,240,120,OP.dust.mat(MT.Ag,0),matList.Cyclohexanone.getDust(1),FL.array(FL.Oxygen.make(100)),ZL_FS,matList.Cyclohexanol.getDust(1));
 
         RM.           Mixer    .addRecipe2(F,230,120,OP.dust.mat(matList.Acenaphthylene.mat, 1),OP.dust.mat(matList.AmmoniumNitrate.mat, 1),FL.array(flList.GlacialAceticAcid.make(0)),FL.array(MT.NH3.gas(U10,false),FL.Water.make(100)),matList.Nitroacenaphthene.getDust(1));
 
-        recipeManager.HeatMixer.addRecipe2(F,256,120,matList.Nitroacenaphthene.getDust(8),matList.PolymethylMethacrylate.getDust(6),FL.array(flList.Cyclohexanone.make(1000)),FL.array(flList.PMMAPhotoresist.make(1000)),ZL_IS);
+        recipeManager.HeatMixer.addRecipe2(F,1440,120,matList.Nitroacenaphthene.getDust(8),matList.PolymethylMethacrylate.getDust(6),FL.array(flList.Cyclohexanone.make(1000)),FL.array(flList.PMMAPhotoresist.make(1000)),ZL_IS);
 //Colloid
         RM.           Mixer    .addRecipe2(F,120,120,OP.dust.mat(MT.NaOH, 1),OP.ingot.mat(MT.Butter, 4),FL.array(FL.DistW.make(100),flList.Toluene.make(1000)),FL.array(flList.NegativeColloid.make(1000)),ZL_IS);
-
-        RM.DidYouKnow.addFakeRecipe(F, ST.array(
-                ItemList.fakeItemPhotomask.get(1)
-                , ItemList.fakeItemLaserCutting.get(1)
-                , ItemList.fakeItemSiliconPlateCleaned.get(1)
-                , ItemList.fakeItemSiliconPlateOxidized.get(1)
-                , ItemList.fakeItemSiliconPlateCoated.get(1)
-                , ItemList.fakeItemSiliconPlateSoftBaked.get(1)
-        ), ST.array(
-                ItemList.fakeItemWafer.get(1)
-                , ItemList.fakeItemSiliconWaferDeveloped.get(1)
-                , ItemList.fakeItemSiliconWaferHardBaked.get(1)
-                , ItemList.fakeItemSiliconWaferDoped.get(1)
-                , ItemList.fakeItemSiliconWaferChecked.get(1)
-                , ItemList.fakeItemDie.get(1)
-        ), null, ZL_LONG, FL.array(flList.PMMAPhotoresist.make(0)),ZL_FS, 0, 0, 0);
 
 
         //EDA 设计电路 EU
@@ -70,19 +53,19 @@ public class ComputerBuilding {
 
         //Clean 清洗 TU
         //T1 skip clean
-        RM.Bath.addRecipeX(T,0,800, ST.array( ItemList.SiliconPlate8inchT2.get(1)),FL.array(/*TODO*/),FL.array(ZL_FS), ItemList.SiliconPlate8inchCleanedT2.get(1));
+        RM.Bath.addRecipeX(T,0,800, ST.array( ItemList.SiliconPlate8inchT2.get(1)),FL.array(FL.DistW.make(100)/*TODO*/),FL.array(ZL_FS), ItemList.SiliconPlate8inchCleanedT2.get(1));
 
         //Oxidize 氧化 HU
         //T1 skip oxidize
-        RM.Furnace.addRecipeX(T,512,1200, ST.array(ItemList.SiliconPlate8inchCleanedT2.get(1)),FL.array(FL.Steam.make(40000),FL.Oxygen.make(1000)),FL.array(ZL_FS), ItemList.SiliconPlate8inchOxidizedT2.get(1));
+        RM.Autoclave.addRecipeX(T,512,1200, ST.array(ItemList.SiliconPlate8inchCleanedT2.get(1)),FL.array(FL.Steam.make(40000)),FL.array(ZL_FS), ItemList.SiliconPlate8inchOxidizedT2.get(1));
 
         //Coat 涂胶 EU
-        recipeManager.WaferCoater.addRecipeX(T,64,200, ST.array(ItemList.SiliconPlate8inchT1.get(1)),FL.array(flList.DNQPhotoresist.make(100)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT1.get(1));
-        recipeManager.WaferCoater.addRecipeX(T,512,200, ST.array(ItemList.SiliconPlate8inchT2.get(1)),FL.array(flList.DNQPhotoresist.make(100)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT2.get(1));
+        recipeManager.WaferCoater.addRecipeX(T,30,200, ST.array(ItemList.SiliconPlate8inchT1.get(1)),FL.array(flList.DNQPhotoresist.make(100)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT1.get(1));
+        recipeManager.WaferCoater.addRecipeX(T,240,200, ST.array(ItemList.SiliconPlate8inchOxidizedT2.get(1)),FL.array(flList.DNQPhotoresist.make(100)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT2.get(1));
 
         //SoftBake 固化光刻胶 HU
         //T1 skip softbake
-        RM.Drying.addRecipeX(T,0,400, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchSoftBakedT1.get(1));
+        RM.Drying.addRecipeX(T,0,400, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.SiliconPlate8inchSoftBakedT2.get(1));
 
         //MaskAlign 光刻 EU+LU
         recipeManager.MaskAligner.addRecipeX(T, 128, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CPUPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer200um.get(1));
@@ -186,10 +169,10 @@ public class ComputerBuilding {
         recipeManager.Assembler.addRecipeX(F,320,80,ST.array(ItemList.CPUBoardT1.get(1),ItemList.CPUDieTF3586.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUTF3586.get(1));
         recipeManager.Assembler.addRecipeX(F,350,80,ST.array(ItemList.CPUBoardT1.get(1),ItemList.CPUDieTF3586S.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUTF3586S.get(1));
 
-        recipeManager.Assembler.addRecipeX(F,60,80,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K.get(4)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.RAMBar2K4.get(1));
-        recipeManager.Assembler.addRecipeX(F,64,160,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.RAMBar2K8.get(1));
-        recipeManager.Assembler.addRecipeX(F,120,80,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie32K.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.RAMBar32K4.get(1));
-        recipeManager.Assembler.addRecipeX(F,128,160,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie32K.get(8)),FL.array(MT.SolderingAlloy.liquid(U,F)),ZL_FS,ItemList.RAMBar32K8.get(1));
+        recipeManager.Assembler.addRecipeX(F,42,80,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K.get(4)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.RAMBar2K4.get(1));
+        recipeManager.Assembler.addRecipeX(F,50,160,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.RAMBar2K8.get(1));
+        recipeManager.Assembler.addRecipeX(F,128,80,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie32K.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.RAMBar32K4.get(1));
+        recipeManager.Assembler.addRecipeX(F,150,160,ST.array(ItemList.RAMBoardT1.get(1),ItemList.RAMDie32K.get(8)),FL.array(MT.SolderingAlloy.liquid(U,F)),ZL_FS,ItemList.RAMBar32K8.get(1));
 
         //Assemble to computer 组装电脑 EU
         //TF3386

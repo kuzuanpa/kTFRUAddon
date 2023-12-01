@@ -18,6 +18,6 @@ import net.minecraftforge.common.ChestGenHooks;
 public class lootPostInit {
     private static final MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
     public static void init(FMLPostInitializationEvent aEvent){
-    ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(kRegistry.getItem(32761,8),2,8,50));
+    ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(kRegistry.getItem(32761,4),2,8,50));
     }
 }

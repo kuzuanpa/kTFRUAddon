@@ -22,7 +22,6 @@ public class HeatMixer {
         HeatMixer.addRecipe1(T, 16, 48, OM.dust(MT.Blaze, U9), MT.H.gas(U * 2, T), MT.H2S.gas(U * 3, F), ZL_IS);
         HeatMixer.addRecipe1(T, 16, 160, OM.dust(MT.WO3, U * 4), MT.H.gas(U * 6, T), MT.H2O.liquid(U * 9, F), OM.dust(MT.W, U));
         HeatMixer.addRecipe0(T, 16, 48, FL.array(MT.H2S.gas(U * 2, T), MT.SO2.gas(U, T)), MT.H2O.liquid(U * 2, F), OM.dust(MT.S, U));
-        HeatMixer.addRecipe1(T, 16, 186, OM.dust(MT.OREMATS.Uraninite, U), MT.HF.gas(U * 8, T), MT.H2O.liquid(U * 6, F), OM.dust(MT.UF4, U * 5));
 
 
     }

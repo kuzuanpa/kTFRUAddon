@@ -19,11 +19,25 @@ import static gregapi.data.CS.*;
 
 public class Chemistry {
     public static void init(){
+        recipeManager.FluidHeating.addRecipe0(F,800,100,FL.array(FL.DistW.make(100)),FL.array(FL.Steam.make(16000)));
+
+        recipeManager.FluidHeating.addRecipe0(F,20,10,FL.array(FL.Coolant_IC2.make(10)),FL.array(FL.Coolant_IC2_Hot.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,36,10,FL.array(flList.MoltenNaK.make(10)),FL.array(flList.HotMoltenNaK.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,30,10,FL.array(MT.Na.liquid(10*U144,false)),FL.array(FL.Hot_Molten_Sodium.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,40,10,FL.array(MT.Sn.liquid(10*U144,false)),FL.array(FL.Hot_Molten_Tin.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,15,10,FL.array(MT.LiCl.liquid(10*U144,false)),FL.array(FL.Hot_Molten_LiCl.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,50,10,FL.array(MT.D2O.liquid(10*U144,false)),FL.array(FL.Hot_Heavy_Water.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,40,10,FL.array(MT.HDO.liquid(10*U144,false)),FL.array(FL.Hot_Semi_Heavy_Water.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,60,10,FL.array(MT.T2O.liquid(10*U144,false)),FL.array(FL.Hot_Tritiated_Water.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,15,10,FL.array(MT.CO2.gas(10*U144,false)),FL.array(FL.CarbonDioxide.make(10)));
+        recipeManager.FluidHeating.addRecipe0(F,15,10,FL.array(MT.He.gas(10*U144,false)),FL.array(FL.Hot_Helium.make(10)));
+
+        FM.Hot.addRecipe0(F,-180,2,FL.array(flList.HotMoltenNaK.make(10)),FL.array(flList.MoltenNaK.make(10)));
+
         recipeManager.HeatMixer.addRecipe1(F,32,20,OP.dust.mat(MT.C,0),FL.array(FL.Vinegar_Rice.make(100)),FL.array(flList.GlacialAceticAcid.make(30),FL.Water.make(60)),OP.dustTiny.mat(MT.Sugar,1));
         recipeManager.HeatMixer.addRecipe1(F,32,20,OP.dust.mat(MT.C,0),FL.array(FL.Vinegar_Apple.make(100)),FL.array(flList.GlacialAceticAcid.make(20),FL.Water.make(70)),OP.dustTiny.mat(MT.Sugar,1));
         recipeManager.HeatMixer.addRecipe1(F,32,20,OP.dust.mat(MT.C,0),FL.array(FL.Vinegar_Cane.make(100)),FL.array(flList.GlacialAceticAcid.make(20),FL.Water.make(70)),OP.dustTiny.mat(MT.Sugar,2));
         recipeManager.HeatMixer.addRecipe1(F,32,20,OP.dust.mat(MT.C,0),FL.array(FL.Vinegar_Grape.make(100)),FL.array(flList.GlacialAceticAcid.make(20),FL.Water.make(70)),OP.dustTiny.mat(MT.Sugar,1));
-        recipeManager.FluidHeating.addRecipe0(F,256,20,FL.array(FL.Water.make(1)),FL.array(FL.DistW.make(1)));
 
         RM.Mixer.addRecipeX(F,64,20,ST.array(OP.dust.mat(MT.Ge,1),OP.dust.mat(MT.In,1),OP.dust.mat(MT.Nb,1),OP.dust.mat(MT.Ti,1),OP.dust.mat(MT.Mg,1)),ZL_FS,ZL_FS,matList.HensSoPretty.getDust(5));
         RM.ImplosionCompressor.addRecipeX(F,64,1,ST.array(matList.HensSoPretty.getDust(9),ST.make(MD.MC,"tnt",16),ST.tag(0)),ZL_FS,ZL_FS, ST.make(MD.MC,"spawn_egg",1,93));

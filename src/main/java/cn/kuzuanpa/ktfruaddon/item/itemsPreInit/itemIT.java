@@ -180,6 +180,9 @@ public class itemIT extends MultiItemRandom {
         ItemList.ResistanceT4.set(addItem(20014, "Resistance (T4)",""));
         ItemList.CoilT4      .set(addItem(20015, "Coil (T4)",""));
 
+        ItemList.DiodeT2Part .set(addItem(20016, "Diode Part (T2)",""));
+        ItemList.DiodeT3Part .set(addItem(20017, "Diode Part (T3)",""));
+
         ItemList.CircuitBoardBasicUncompleted.set(addItem(20050, "Uncompleted Circuit Board (Basic)","Next Step:"+ LH.Chat._CYAN+"Install 4 Resistances"));
         ItemList.CircuitBoardGoodUncompleted1.set(addItem(20051, "Uncompleted Circuit Board (Good, Stage 1)","Next Step:"+ LH.Chat._CYAN+"Install 8 Capacitors"));
         ItemList.CircuitBoardGoodUncompleted2.set(addItem(20052, "Uncompleted Circuit Board (Good, Stage 2)","Next Step:"+ LH.Chat._CYAN+"Install 8 Resistances"));

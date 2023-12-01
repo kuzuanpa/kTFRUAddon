@@ -47,8 +47,10 @@ public enum flList {
     ,CoalTar, WoodTar
     ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,/**蚀刻液**/EtchingSolution
     ,NegativeColloid,PositiveColloid
+    ,/**磷酸三丁酯**/TributylPhosphate,/**丁醇**/Butanol,/**碳酸铀酰络合离子溶液**/UranylCarbonateSolution,/**甲基叔胺**/MethylTertiaryAmine,/**油酸乙酯**/EthylOleate,/**铀萃取剂**/UraniumExtractant,/**用过的铀萃取剂**/UsedUraniumExtractant,/**萃取的铀**/ExtractedUranium,/**萃取的铀**/ExtractedUranium2
     ,/**氢氧化钾溶液**/SolutionPotassiumHydroxide,/**双酚钠盐溶液**/ SolutionBPASodium
-    ,MoltenTeflon,MoltenNaK,VaporNaK
+    ,CrackedNaphthaLow,CrackedNaphthaMedium,CrackedNaphthaHigh,CrackedDieselLow,CrackedDieselMedium,CrackedDieselHigh
+    ,MoltenTeflon,MoltenNaK,HotMoltenNaK
     ;
     public Fluid fluid;
     public String name;
@@ -65,12 +67,13 @@ public enum flList {
         fluid = FL.create("molten."+name, "Molten "+localizedName,material,1,144,material.mMeltingPoint);
         this.name=name;
     }
+    /**Register a liquid which is a molten form of a material,notice 2 name args will add molten prefix automatically**/
     public void registerMolten(String name, String localizedName, @NotNull OreDictMaterial material,int offsetTemp) {
         fluid = FL.create("molten."+name, "Molten "+localizedName,material,1,144,material.mMeltingPoint+offsetTemp);
         this.name=name;
     }
     /**Register a liquid which is a Vapor form of a material,notice 2 name args will add vapor prefix automatically**/
-    public void registerBoiled(String name, String localizedName, @NotNull OreDictMaterial material) {
+    public void registerVapor(String name, String localizedName, @NotNull OreDictMaterial material) {
         fluid = FL.create("Vapor."+name, "Vapor "+localizedName,material,2,144,material.mBoilingPoint);
         this.name=name;
     }

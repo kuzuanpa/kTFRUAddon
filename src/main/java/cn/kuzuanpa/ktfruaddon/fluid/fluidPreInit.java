@@ -193,6 +193,31 @@ public class fluidPreInit {
         flList.SolutionPotassiumHydroxide.registerSolution("solutionpotassiumhydroxide","Potassium Hydroxide Solution",MT.KOH,1000);
         flList.MoltenTeflon.registerMolten("teflon","Teflon",MT.Teflon);
         flList.MoltenNaK.registerMolten("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
-        flList.VaporNaK.registerBoiled("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
+        flList.HotMoltenNaK.registerMolten("potassiumsodium_hot","Hot Potassium Sodium",matList.PotassiumSodium.mat,800);
+
+        //磷酸三丁酯
+        flList.TributylPhosphate.register("TributylPhosphate","TributylPhosphate",matList.TributylPhosphate.get(), LIQUID);
+        //丁醇
+        flList.Butanol.register("Butanol","Butanol",matList.Butanol.get(), LIQUID);
+        //碳酸铀酰络合离子溶液
+        flList.UranylCarbonateSolution.register("UranylCarbonateSolution","UranylCarbonateSolution",matList.UranylCarbonateSolution.get(), LIQUID);
+        //甲基叔胺
+        flList.MethylTertiaryAmine.register("MethylTertiaryAmine","MethylTertiaryAmine",matList.MethylTertiaryAmine.get(), LIQUID);
+        //油酸乙酯
+        flList.EthylOleate.register("EthylOleate","EthylOleate",matList.EthylOleate.get(), LIQUID);
+        //铀萃取剂
+        flList.UraniumExtractant.register("UraniumExtractant","Uranium Extractant",null, LIQUID);
+        //用过的铀萃取剂
+        flList.UsedUraniumExtractant.register("UsedUraniumExtractant","Used Uranium Extractant",null, LIQUID);
+        //萃取的铀
+        flList.ExtractedUranium.register("ExtractedUranium","Extracted Uranium",null, LIQUID);
+        flList.ExtractedUranium2.register("ExtractedUranium2","Extracted Uranium 2",null, LIQUID);
+
+        flList.CrackedNaphthaLow.register("CrackedNaphthaLow","Cracked Naphtha (Low Temperature)",null, LIQUID);
+        flList.CrackedNaphthaMedium.register("CrackedNaphthaMedium","Cracked Naphtha (Medium Temperature)",null, LIQUID);
+        flList.CrackedNaphthaHigh.register("CrackedNaphthaHigh","Cracked Naphtha (High Temperature)",null, LIQUID);
+        flList.CrackedDieselLow.register("CrackedDieselLow","Cracked Diesel (Low Temperature)",null, LIQUID);
+        flList.CrackedDieselMedium.register("CrackedDieselMedium","Cracked Diesel (Medium Temperature)",null, LIQUID);
+        flList.CrackedDieselHigh.register("CrackedDieselHigh","Cracked Diesel (High Temperature)",null, LIQUID);
     }
 }
