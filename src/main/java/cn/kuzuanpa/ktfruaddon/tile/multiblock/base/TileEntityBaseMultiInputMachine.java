@@ -11,10 +11,13 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
 import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
+import gregapi.data.FL;
+import gregapi.data.TD;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 
 import java.util.ArrayList;
 
+import static gregapi.data.CS.SIDES_VALID;
 import static gregapi.data.CS.T;
 
 public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10MultiBlockMachine {
@@ -34,18 +37,37 @@ public abstract class TileEntityBaseMultiInputMachine extends TileEntityBase10Mu
     }
 
     @Override
-    public boolean onTickCheck(long aTimer) {
-        if (refreshStructureOnActiveStateChange() && (mActive != oActive || mRunning != oRunning)) checkStructure(T);
-        if (this.mStructureOkay) {
-            subSourceRunning = true;
-            if (this.MultiInputSubBlocks.isEmpty()) {
-                this.setStateOnOff(false);
-                return false;
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        if (aIsServerSide) {
+            if (mBlockUpdated) updateAdjacentToggleableEnergySources();
+            if (!mStopped) {
+                if (mEnergyTypeAccepted == TD.Energy.TU) mEnergy++;
+                if (mChargeRequirement > 0 && mEnergyTypeCharged == TD.Energy.TU) mChargeRequirement--;
             }
-            this.MultiInputSubBlocks.forEach(this::isSubSourceRunning);
-            if (this.getStateOnOff() != subSourceRunning) this.setStateOnOff(subSourceRunning);
-            return subSourceRunning;
-        }else return super.onTickCheck(aTimer);
+
+            if (!mDisabledFluidOutput && SIDES_VALID[mFluidAutoOutput]) doOutputFluids();
+            if (this.mStructureOkay) {
+                subSourceRunning = true;
+                if (this.MultiInputSubBlocks.isEmpty()) {
+                    this.setStateOnOff(false);
+                    return;
+                }
+                this.MultiInputSubBlocks.forEach(this::isSubSourceRunning);
+                if (this.getStateOnOff() != subSourceRunning) {
+                    this.setStateOnOff(subSourceRunning);
+                    updateClientData();
+                    return;
+                }
+            }
+            doWork(aTimer);
+
+            if (mTimer % 600 == 5 && mRunning) doDefaultStructuralChecks();
+
+            for (int i = 0; i < mTanksInput.length; i++)
+                slot(mRecipes.mInputItemsCount + mRecipes.mOutputItemsCount + 1 + i, FL.display(mTanksInput[i], T, T));
+            for (int i = 0; i < mTanksOutput.length; i++)
+                slot(mRecipes.mInputItemsCount + mRecipes.mOutputItemsCount + 1 + i + mTanksInput.length, FL.display(mTanksOutput[i], T, T));
+        }
     }
 }
 

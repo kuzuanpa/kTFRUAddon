@@ -10,7 +10,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.tile.util.DistillationTowerUtil;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
@@ -117,7 +116,7 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
                 tSuccess = false;
             }
 
-            for(int i = 1; i < 8; ++i) {
+            for(int i = 1; i < 9; ++i) {
                 if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ - 1, 18102, gRegistry, 0, -5)) {
                     tSuccess = false;
                 }
@@ -174,21 +173,24 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
     public void doOutputFluids() {
         for (FluidTankGT tTank : this.mTanksOutput) {
             Fluid tFluid = tTank.fluid();
-            if (tFluid != null && tTank.has()) {
+            if (tFluid != null && tTank.has()&&mLastRecipe!=null) {
                 DelegatorTileEntity<TileEntity> tDelegator = null;
-                if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer7)) {
+                if (mLastRecipe.mFluidOutputs.length>7&&FL.is(tFluid, mLastRecipe.mFluidOutputs[7].getUnlocalizedName().replaceFirst("fluid.", ""))) {
+                    tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 8, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
+                }
+                  else if (mLastRecipe.mFluidOutputs.length>6&&FL.is(tFluid, mLastRecipe.mFluidOutputs[6].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 7, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer6)) {
+                } else if (mLastRecipe.mFluidOutputs.length>5&&FL.is(tFluid, mLastRecipe.mFluidOutputs[5].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 6, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer5)) {
+                } else if (mLastRecipe.mFluidOutputs.length>4&&FL.is(tFluid, mLastRecipe.mFluidOutputs[4].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 5, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer4)) {
+                } else if (mLastRecipe.mFluidOutputs.length>3&&FL.is(tFluid, mLastRecipe.mFluidOutputs[3].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 4, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer3)) {
+                } else if (mLastRecipe.mFluidOutputs.length>2&&FL.is(tFluid, mLastRecipe.mFluidOutputs[2].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 3, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer2)) {
+                } else if (mLastRecipe.mFluidOutputs.length>1&&FL.is(tFluid, mLastRecipe.mFluidOutputs[1].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 2, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.OutputFluidsLayer1)) {
+                } else if (mLastRecipe.mFluidOutputs.length>0&&FL.is(tFluid, mLastRecipe.mFluidOutputs[0].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 1, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 } else {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
@@ -206,7 +208,7 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
 
     static {
         LH.add("ktfru.tooltip.multiblock.distilltower.1", "3x3 Base of Heat Transmitters");
-        LH.add("ktfru.tooltip.multiblock.distilltower.2", "3x3x8 of Distillation Tower Parts");
+        LH.add("ktfru.tooltip.multiblock.distilltower.2", "3x3x9 of Distillation Tower Parts");
         LH.add("ktfru.tooltip.multiblock.distilltower.3", "Main centered on Side-Bottom of Tower facing outwards");
         LH.add("ktfru.tooltip.multiblock.distilltower.4", "Outputs automatically to the Holes on the Backside");
         LH.add("ktfru.tooltip.multiblock.distilltower.5", "Bottom Hole is for outputting all Items");

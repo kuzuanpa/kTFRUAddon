@@ -17,13 +17,12 @@ import static gregapi.data.CS.NUM_SUB;
  **/
 public class materialPreInit {
     public static void init(FMLPreInitializationEvent aEvent) {
-        int i=21999;
         matList.AmmoniumDichromate.registerWithDust(22000, "AmmoniumDichromate", "Ammonium Dichromate",456, 460, 255, 160, 51, 0,  "Cr"+NUM_SUB[2]+"O"+NUM_SUB[7]+"(NH3)"+NUM_SUB[2]);
         matList.AmmoniumChromicSulfate.registerWithDust(22001, "AmmoniumChromicSulfate", "Ammonium Chromic Sulfate",456, 460, 72, 0, 161, 0,  "NH"+NUM_SUB[4]+"Cr(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
         matList.AmmoniumIronIIISulfate.registerWithDust(22002, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate", 368, 524, 230, 220, 242, 0, "NH"+NUM_SUB[4]+"Fe(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
         matList.AmmoniumSulfate.registerWithDust(22003, "AmmoniumSulfate", "Ammonium Sulfate",509, 510, 251, 251, 216, 2, "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4]);
         matList.CookedBauxide .registerWithDust(22004, "CookedBauxide", "Cooked Bauxide", 2370, 3234, 229, 141, 0, 4, null);
-        matList.AcidPickledBauxide.registerWithDust(22005, "CookedBauxide", "Cooked Bauxide", 2370, 3234,200, 168, 0, 4, null);
+        matList.AcidPickledBauxide.registerWithDust(22005, "AcidPickledCookedBauxide", "Acid Pickled Cooked Bauxide", 2370, 3234,200, 168, 0, 4, null);
         matList.BauxiteRedMud.registerWithDust(22006, "BauxiteRedMud", "Bauxite Red Mud", 1790, 3234, 148, 0, 12, 0,null);
         matList.LithiumCarbonate.registerWithDust(22007, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
         matList.MetatitanicAcid.registerWithDust(22008, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
@@ -133,7 +132,7 @@ public class materialPreInit {
                 .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.FOILS,TD.Prefix.INGOT_BASED);
         //乙酸乙烯酯
         matList.VinylAcetate.registerC(22043,"VinylAcetate","VinylAcetate",-93,72,255,255,255,130,"CH"+NUM_SUB[3]+"CHOOCH=CH"+NUM_SUB[2])
-                .put();
+                .put(TD.ItemGenerator.DUSTS);
         //聚乙酸乙烯
         matList.PolyVinylAcetate.registerC(22044,"PolyVinylAcetate","PolyVinylAcetate",60,143,255,255,255,130,"(C"+NUM_SUB[4]+"H"+NUM_SUB[6]+"O"+NUM_SUB[2]+")")
                 .put(TD.ItemGenerator.DUSTS);
@@ -219,50 +218,76 @@ public class materialPreInit {
         matList.HydrobromicAcid.registerC(22071,"HydrobromicAcid","HydrobromicAcid",-97,-67,255,255,255,130,"HBr")
                 .put();
         //萘
-        matList.Naphthalene.registerC(22072,"Naphthalene","Naphthalene",81,218,255,255,255,130,"C10H8")
+        matList.Naphthalene.registerC(22072,"Naphthalene","Naphthalene",81,218,255,255,255,130,"C"+NUM_SUB[10]+"H"+NUM_SUB[8])
                 .put(TD.ItemGenerator.DUSTS);
         //1-萘酚
-        matList.Naphthalenol.registerC(22073,"Naphthalenol","1-naphthalenol",96,278,255,255,255,130,"C10H8O")
+        matList.Naphthalenol.registerC(22073,"Naphthalenol","1-naphthalenol",96,278,255,255,255,130,"C"+NUM_SUB[10]+"H"+NUM_SUB[8]+"O")
                 .put(TD.ItemGenerator.DUSTS);
         //2-氨基,1-萘酚盐酸盐
-        matList.NaphthalenolAminoHydrochloride.registerC(22074,"NaphthalenolAminoHydrochloride","1-Naphthalenol-2-amino-hydrochloride",143,343,255,255,255,130,"C10H10ClNO")
+        matList.NaphthalenolAminoHydrochloride.registerC(22074,"NaphthalenolAminoHydrochloride","1-Naphthalenol-2-amino-hydrochloride",143,343,255,255,255,130,"C"+NUM_SUB[10]+"H"+NUM_SUB[10]+"ClNO")
                 .put(TD.ItemGenerator.DUSTS);
         //2-重氮,1-萘酚
-        matList.DiazoNaphthol.registerC(22075,"DiazoNaphthol","DiazoNaphthol",143,343,255,255,255,130,"C10H5N2O")
+        matList.DiazoNaphthol.registerC(22075,"DiazoNaphthol","DiazoNaphthol",143,343,255,255,255,130,"C"+NUM_SUB[10]+"H"+NUM_SUB[5]+"N"+NUM_SUB[2]+"O")
                 .put(TD.ItemGenerator.DUSTS);
         //丙二醇甲醚
-        matList.MethoxyPropanol.registerC(22076,"MethoxyPropanol","MethoxyPropanol",-97,120,255,255,255,130,"C4H10O2")
+        matList.MethoxyPropanol.registerC(22076,"MethoxyPropanol","MethoxyPropanol",-97,120,255,255,255,130,"C"+NUM_SUB[4]+"H"+NUM_SUB[10]+"O"+NUM_SUB[2])
                 .put();
         //丙二醇甲醚醋酸酯
-        matList.PGMEA.registerC(22077,"PGMEA","PGMEA",-87,145,255,255,255,130,"C6H12O3")
+        matList.PGMEA.registerC(22077,"PGMEA","PGMEA",-87,145,255,255,255,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[12]+"O"+NUM_SUB[3])
                 .put();
         //重氮系光刻胶
         matList.DNQPhotoresist.registerC(22078,"DNQPhotoresist","DNQPhotoresist",213,341,255,255,255,130,"")
                 .put(TD.ItemGenerator.DUSTS);
         //环己醇
-        matList.Cyclohexanol.registerC(22079,"Cyclohexanol","Cyclohexanol",20,160,255,255,255,130,"C6H12O")
+        matList.Cyclohexanol.registerC(22079,"Cyclohexanol","Cyclohexanol",20,160,255,255,255,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[12]+"O")
                 .put(TD.ItemGenerator.DUSTS);
         //环己酮
-        matList.Cyclohexanone.registerC(22080,"Cyclohexanone","Cyclohexanone",-47,115,255,255,255,130,"C6H10O")
+        matList.Cyclohexanone.registerC(22080,"Cyclohexanone","Cyclohexanone",-47,115,255,255,255,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[10]+"O")
                 .put();
         //苊
-        matList.Acenaphthylene.registerC(22081,"Acenaphthylene","Acenaphthylene",78,280,255,255,255,130,"C12H8")
+        matList.Acenaphthylene.registerC(22081,"Acenaphthylene","Acenaphthylene",78,280,255,255,255,130,"C"+NUM_SUB[12]+"H"+NUM_SUB[8])
                 .put(TD.ItemGenerator.DUSTS);
         //5-硝基苊
-        matList.Nitroacenaphthene.registerC(22082,"Nitroacenaphthene","5-Nitroacenaphthene",100,279,255,255,255,130,"C12H9NO2")
+        matList.Nitroacenaphthene.registerC(22082,"Nitroacenaphthene","5-Nitroacenaphthene",100,279,255,255,255,130,"C"+NUM_SUB[12]+"H"+NUM_SUB[9]+"NO"+NUM_SUB[2])
                 .put(TD.ItemGenerator.DUSTS);
         //PMMA系光刻胶
         matList.PMMAPhotoresist.registerC(22083,"PMMAPhotoresist","PMMAPhotoresist",228,321,255,255,255,130,"")
                 .put(TD.ItemGenerator.DUSTS);
         //硝酸铵
-        matList.AmmoniumNitrate.registerC(22084,"AmmoniumNitrate","AmmoniumNitrate",169,210,255,255,255,130,"NH4NO3")
+        matList.AmmoniumNitrate.registerC(22084,"AmmoniumNitrate","AmmoniumNitrate",169,210,255,255,255,130,"NH4NO"+NUM_SUB[3])
                 .put(TD.ItemGenerator.DUSTS);
         //?
         matList.HensSoPretty.registerC(22085,"HenSoPretty","HenSoPretty",2333,23333,0,0,0,0,"GeInNbTiMg")
                 .put(TD.ItemGenerator.DUSTS);
         //钠钾合金
-        matList.PotassiumSodium.registerC(22086,"PotassiumSodium","PotassiumSodium",7,813,180,230,34,30,"NaK")
+        matList.PotassiumSodium.registerC(22086,"PotassiumSodium","Potassium Sodium",7,813,180,230,64,30,"NaK"+NUM_SUB[3])
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.LIQUID);
-
+        //水合硝酸铀
+        matList.UraniumNitrateHexahydrate.registerC(22087,"UraniumNitrateHexahydrate","UraniumNitrateHexahydrate",57,92,50, 240,  50,12,"H"+NUM_SUB[4]+"N"+NUM_SUB[2]+"O"+NUM_SUB[9]+"U")
+                .put(TD.ItemGenerator.DUSTS);
+        //磷酸三丁酯
+        matList.TributylPhosphate.registerC(22088,"TributylPhosphate","TributylPhosphate",-79,288,255,255,255,130,"C"+NUM_SUB[12]+"H"+NUM_SUB[27]+"O"+NUM_SUB[4]+"P")
+                .put(TD.ItemGenerator.LIQUID);
+        //丁醇
+        matList.Butanol.registerC(22089,"Butanol","Butanol",-90,116,255,255,255,130,"CH"+NUM_SUB[3]+"CH"+NUM_SUB[2]+"CH"+NUM_SUB[2]+"CH"+NUM_SUB[2]+"OH")
+                .put(TD.ItemGenerator.LIQUID);
+        //碳酸铀酰络合离子溶液
+        matList.UranylCarbonateSolution.registerC(22090,"UranylCarbonateSolution","UranylCarbonateSolution",-90,122,255,255,255,130,"")
+                .put(TD.ItemGenerator.LIQUID);
+        //甲基叔胺
+        matList.MethylTertiaryAmine.registerC(22091,"MethylTertiaryAmine","MethylTertiaryAmine",-70,150,255,255,255,130,"N(CH"+NUM_SUB[3]+")"+NUM_SUB[3]+"")
+                .put(TD.ItemGenerator.LIQUID);
+        //油酸乙酯
+        matList.EthylOleate.registerC(22092,"EthylOleate","EthylOleate",-32,216,255,255,255,130,"C"+NUM_SUB[20]+"H"+NUM_SUB[38]+"O"+NUM_SUB[2])
+                .put(TD.ItemGenerator.LIQUID);
+        //油酸
+        matList.OleicAcid.registerC(22093,"OleicAcid","OleicAcid",13,360,255,255,255,130,"C"+NUM_SUB[18]+"H"+NUM_SUB[34]+"O"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //晶质铀浸渣
+        matList.UraniniteCinder.registerC(22094,"UraniniteCinder","Uraninite Cinder",1505,3871,123,200,30,130,"")
+                .put(TD.ItemGenerator.DUSTS);
+        //沥青铀浸渣
+        matList.PitchblendeCinder.registerC(22095,"PitchblendeCinder","Pitchblende Cinder",1505,3871,145, 240,  50,160,"")
+                .put(TD.ItemGenerator.DUSTS);
     }
 }

@@ -104,25 +104,30 @@ public class OilProcessing {
 
         RM.Centrifuge.addRecipe0(false,64,100,flList.WoodTar.make(100),FL.array(FL.Methane.make(10),FL.CarbonDioxide.make(55),flList.CarbonMonoxide.make(20),FL.Hydrogen.make(5),FL.Ethylene.make(10),FL.Oil_Olive.make(60)));
 
-        RM.SteamCracking.addRecipe1(F, 16,  64, OP.dust.mat(MT.Kaolinite,0),FL.array(FL.Steam.make(1000), flList.Naphtha.make(100)), FL.array(FL.Hydrogen.make( 10), flList.OilGas.make(22), FL.Petrol.make(47), FL.Lubricant.make(19)), ZL_IS);
+        RM.SteamCracking.addRecipe1(F, 16,  64, OP.dust.mat(MT.Kaolinite,0),FL.array(FL.Steam.make(1000), flList.Naphtha.make(100)), FL.array(FL.Hydrogen.make( 10), flList.OilGas.make(22), FL.Petrol.make(47), FL.Lubricant.make(19), FL.Ethylene.make(80),FL.Methane.make(30),FL.Propylene.make(10)), ZL_IS);
 
-        RM.SteamCracking.addRecipe1(F, 16,  64, OP.dust.mat(MT.Kaolinite,0),FL.array(FL.Steam.make(1000), FL.Diesel.make(100)), FL.array(FL.Hydrogen.make( 2), flList.OilGas.make(18), FL.Petrol.make(65), FL.Lubricant.make(9)), ZL_IS);
+        RM.SteamCracking.addRecipe1(F, 16,  64, OP.dust.mat(MT.Kaolinite,0),FL.array(FL.Steam.make(1000), FL.Diesel.make(100)), FL.array(FL.Hydrogen.make( 2), flList.OilGas.make(18), FL.Petrol.make(65), FL.Lubricant.make(90), FL.Ethylene.make(20),FL.Methane.make(10),FL.Propylene.make(10)), ZL_IS);
 
         RM.Centrifuge.addRecipe0(false,256,200,flList.OilGas.make(100),FL.array(FL.Propane.make(40),FL.Butane.make(40),FL.Nitrogen.make(5),FL.CarbonDioxide.make(5)));
 
-        RM.Mixer.addRecipe0(false,32,40,FL.array(flList.OilGas.make(100),flList.Benzene.make(20),FL.Hydrogen.make(80)),FL.array(FL.Diesel.make(60),flList.CrackedOilGas.make(100)),ZL_IS);
+        recipeManager.HeatMixer.addRecipe0(false,32,40,FL.array(flList.OilGas.make(100),flList.Benzene.make(5),FL.Hydrogen.make(80)),FL.array(FL.Diesel.make(10),flList.CrackedOilGas.make(100)),ZL_IS);
 
-        recipeManager.DistillTower.addRecipe0(false,256,44,FL.array(flList.OilGas.make(1000)),FL.array(FL.Methane.make(372),flList.Ethane.make(262),FL.Propane.make(188),FL.Butane.make(138),FL.CarbonDioxide.make(40)),ZL_IS);
+        recipeManager.SmallDistillTower.addRecipe0(false,256,60,FL.array(flList.OilGas.make(1000)),FL.array(FL.Methane.make(372),flList.Ethane.make(262),FL.Propane.make(188),FL.Butane.make(138),FL.CarbonDioxide.make(40)),ZL_IS);
+        recipeManager.DistillTower.addRecipe0(false,256,40,FL.array(flList.OilGas.make(1000)),FL.array(FL.Methane.make(372),flList.Ethane.make(262),FL.Propane.make(188),FL.Butane.make(138),FL.CarbonDioxide.make(40)),ZL_IS);
 
-        recipeManager.DistillTower.addRecipe0(false,256,44,FL.array(flList.CrackedOilGas.make(1000)),FL.array(FL.Methane.make(183),flList.Ethane.make(152),FL.Propane.make(133),FL.Butane.make(128),FL.CarbonDioxide.make(134),flList.Butadiene.make(134),flList.Benzene.make(92),flList.Toluene.make(23),flList.Phenol.make(21)),ZL_IS);
+        recipeManager.DistillTower.addRecipe0(false,256,40,FL.array(flList.CrackedOilGas.make(1000)),FL.array(flList.Benzene.make(42),flList.Toluene.make(8),flList.Phenol.make(11),FL.Methane.make(183),flList.Ethane.make(152),FL.Propane.make(133),FL.Butane.make(128),flList.Butadiene.make(134),FL.CarbonDioxide.make(134)),ZL_IS);
 
         FM.Burn         .addRecipe0(T, - 64,  5, flList.Naphtha.make(1), FL.CarbonDioxide.make(1), ZL_IS);
         FM.Engine       .addRecipe0(T, - 64,  7, flList.Naphtha.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
-        FM.Burn         .addRecipe0(T, - 58,  5, flList.Toluene.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 64,  12, flList.Toluene.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Engine       .addRecipe0(T, - 64,  14, flList.Toluene.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
-        FM.Burn         .addRecipe0(T, - 64,  27, flList.OilGas.make(5), FL.Water.make(6), FL.CarbonDioxide.make(3));
-        FM.Gas          .addRecipe0(T, - 64,  32, flList.OilGas.make(5), FL.Water.make(6), FL.CarbonDioxide.make(3));
+        FM.Burn         .addRecipe0(T, - 64,  27, flList.OilGas.make(5), FL.Water.make(7), FL.CarbonDioxide.make(3));
+        FM.Gas          .addRecipe0(T, - 64,  32, flList.OilGas.make(5), FL.Water.make(7), FL.CarbonDioxide.make(3));
+
+        FM.Burn         .addRecipe0(T, - 110,  24, flList.Ethane.make(5), FL.Water.make(10), FL.CarbonDioxide.make(6));
+        FM.Gas          .addRecipe0(T, - 110,  30, flList.Ethane.make(5), FL.Water.make(10), FL.CarbonDioxide.make(6));
 
         FM.Burn         .addRecipe0(T, - 64,  9 ,flList.CarbonMonoxide.make(5), FL.CarbonDioxide.make(5), ZL_IS);
         FM.Gas          .addRecipe0(T, - 64,  13,flList.CarbonMonoxide.make(5), FL.CarbonDioxide.make(5), ZL_IS);
@@ -136,6 +141,27 @@ public class OilProcessing {
         FM.Burn         .addRecipe0(T, - 16, 8, flList.WoodTar.make(1)                       , FL.CarbonDioxide.make(1), dustDiv72.mat(MT.DarkAsh,1));
         FM.Burn         .addRecipe0(T, - 16, 8, flList.CoalTar.make(1)                       , FL.CarbonDioxide.make(1), dustDiv72.mat(MT.DarkAsh,1));
 
+        recipeManager.HeatMixer.addRecipe0(F,280,160,FL.array(FL.Oxygen.make(1000),FL.Propane.make(1000)),FL.array(flList.GlacialAceticAcid.make(500),flList.Acetone.make(500)));
+
+        recipeManager.HeatMixer.addRecipe2(F, 40,160,ST.tag(0),OP.dust.mat(MT.Pt,0),FL.array(flList.Naphtha.make(1000),FL.Hydrogen.make(800)),FL.array(flList.CrackedNaphthaLow   .make(1000)));
+        recipeManager.HeatMixer.addRecipe2(F,120,150,ST.tag(1),OP.dust.mat(MT.Pt,0),FL.array(flList.Naphtha.make(1000),FL.Hydrogen.make(800)),FL.array(flList.CrackedNaphthaMedium.make(1000)));
+        recipeManager.HeatMixer.addRecipe2(F,420,140,ST.tag(2),OP.dust.mat(MT.Pt,0),FL.array(flList.Naphtha.make(1000),FL.Hydrogen.make(800)),FL.array(flList.CrackedNaphthaHigh  .make(1000)));
+        recipeManager.SmallDistillTower.addRecipe0(F,120,20,FL.array(flList.CrackedNaphthaLow   .make(1000)),FL.array(flList.Benzene.make(121),flList.Toluene.make(30 ),FL.Petrol.make(600),FL.Methane.make(212),flList.Ethane.make(182), FL.Hydrogen.make(882)));
+        recipeManager.SmallDistillTower.addRecipe0(F,120,20,FL.array(flList.CrackedNaphthaMedium.make(1000)),FL.array(flList.Benzene.make(151),flList.Toluene.make(43),FL.Petrol.make(500),FL.Methane.make(342),flList.Ethane.make(282),FL.Hydrogen.make(1282)));
+        recipeManager.SmallDistillTower.addRecipe0(F,120,20,FL.array(flList.CrackedNaphthaHigh  .make(1000)),FL.array(flList.Benzene.make(191),flList.Toluene.make(50),FL.Petrol.make(300),FL.Methane.make(602),flList.Ethane.make(352),FL.Hydrogen.make(1682)));
+        recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedNaphthaLow   .make(1000)),FL.array(flList.Benzene.make(121),flList.Toluene.make(30 ),FL.Petrol.make(600),FL.Methane.make(212),flList.Ethane.make(182), FL.Hydrogen.make(882)));
+        recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedNaphthaMedium.make(1000)),FL.array(flList.Benzene.make(151),flList.Toluene.make(43),FL.Petrol.make(500),FL.Methane.make(342),flList.Ethane.make(282),FL.Hydrogen.make(1282)));
+        recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedNaphthaHigh  .make(1000)),FL.array(flList.Benzene.make(191),flList.Toluene.make(50),FL.Petrol.make(300),FL.Methane.make(602),flList.Ethane.make(352),FL.Hydrogen.make(1682)));
+
+        recipeManager.HeatMixer.addRecipe2(F, 40,160,ST.tag(0),OP.dust.mat(MT.Pt,0),FL.array(FL.Diesel.make(1000),FL.Hydrogen.make(800)),FL.array(flList.CrackedDieselLow   .make(1000)));
+        recipeManager.HeatMixer.addRecipe2(F,120,150,ST.tag(1),OP.dust.mat(MT.Pt,0),FL.array(FL.Diesel.make(1000),FL.Hydrogen.make(800)),FL.array(flList.CrackedDieselMedium.make(1000)));
+        recipeManager.HeatMixer.addRecipe2(F,420,140,ST.tag(2),OP.dust.mat(MT.Pt,0),FL.array(FL.Diesel.make(1000),FL.Hydrogen.make(800)),FL.array(flList.CrackedDieselHigh  .make(1000)));
+        recipeManager.SmallDistillTower.addRecipe0(F,120,20,FL.array(flList.CrackedDieselLow   .make(1000)),FL.array(FL.Lubricant.make(218),FL.Petrol.make(542),flList.OilGas.make(118),flList.CrackedOilGas.make(242)));
+        recipeManager.SmallDistillTower.addRecipe0(F,120,20,FL.array(flList.CrackedDieselMedium.make(1000)),FL.array(FL.Lubricant.make(162),FL.Petrol.make(423),flList.OilGas.make(247),flList.CrackedOilGas.make(392)));
+        recipeManager.SmallDistillTower.addRecipe0(F,120,20,FL.array(flList.CrackedDieselHigh  .make(1000)),FL.array(FL.Lubricant.make(92) ,FL.Petrol.make(321),flList.OilGas.make(301),flList.CrackedOilGas.make(542)));
+        recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedDieselLow   .make(1000)),FL.array(FL.Lubricant.make(218),FL.Petrol.make(542),flList.OilGas.make(118),flList.CrackedOilGas.make(242)));
+        recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedDieselMedium.make(1000)),FL.array(FL.Lubricant.make(162),FL.Petrol.make(423),flList.OilGas.make(247),flList.CrackedOilGas.make(392)));
+        recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedDieselHigh  .make(1000)),FL.array(FL.Lubricant.make(92) ,FL.Petrol.make(321),flList.OilGas.make(301),flList.CrackedOilGas.make(542)));
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(1),FL.array(FL.Petrol.make(80),FL.Diesel.make(20)),FL.array(flList.BlendedFuel1.make(100)),ZL_IS);
         FM.Burn         .addRecipe0(T, - 120,  5, flList.BlendedFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);
@@ -146,16 +172,16 @@ public class OilProcessing {
         FM.Engine       .addRecipe0(T, - 144,  6, flList.BlendedFuel2.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(3),FL.array(FL.Petrol.make(70),flList.Propanol.make(25),flList.Methanol.make(7)),FL.array(flList.BlendedFuel3.make(65)),ZL_IS);
-        FM.Burn         .addRecipe0(T, - 152,  5, flList.BlendedFuel3.make(1), FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Engine       .addRecipe0(T, - 152,  6, flList.BlendedFuel3.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 152,  6, flList.BlendedFuel3.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Engine       .addRecipe0(T, - 152,  8, flList.BlendedFuel3.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(4),FL.array(flList.Toluene.make(20),FL.Petrol.make(40),flList.Methanol.make(65),flList.Naphtha.make(15)),FL.array(flList.BlendedFuel4.make(70)),ZL_IS);
-        FM.Burn         .addRecipe0(T, - 164,  5, flList.BlendedFuel4.make(1), FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Engine       .addRecipe0(T, - 164,  6, flList.BlendedFuel4.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 164,  8, flList.BlendedFuel4.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Engine       .addRecipe0(T, - 164,  11, flList.BlendedFuel4.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(5),FL.array(flList.Toluene.make(20),FL.Petrol.make(40),flList.Methanol.make(65),MT.Glyceryl.fluid(U100, T),flList.Naphtha.make(20)),FL.array(flList.BlendedFuel5.make(55)),ZL_IS);
-        FM.Burn         .addRecipe0(T, - 208,  5, flList.BlendedFuel5.make(1), FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Engine       .addRecipe0(T, - 208,  6, flList.BlendedFuel5.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 208,  8, flList.BlendedFuel5.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Engine       .addRecipe0(T, - 208,  12, flList.BlendedFuel5.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(1),FL.array(FL.BioEthanol.make(80),FL.Petrol.make(50)),FL.array(flList.BioFuel1.make(100)),ZL_IS);
         FM.Burn         .addRecipe0(T, - 108,  5, flList.BioFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);

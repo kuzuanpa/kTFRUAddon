@@ -16,6 +16,9 @@ import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.util.CR;
+import gregapi.util.ST;
+import gregapi.util.UT;
+import net.minecraft.init.Items;
 
 import static gregapi.data.CS.*;
 
@@ -25,6 +28,8 @@ public class CompactItem {
         CR.shaped(ItemList.CrucibleModelInnerLayer.get(1),CR.DEF," I "," I "," f ",'I', OP.ingot.mat(MT.BlueSteel,1));
 
         recipeManager.Assembler.addRecipe1(false,6400,80,ItemList.CPUGT3660.get(1), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.IntelligentCore.get(2));
+
+        recipeManager.Assembler.addRecipeX(false,16384,16384, ST.array(OP.nugget.mat(MT.DraconiumAwakened,2),OP.plateTiny.mat(MT.Ad,2),OP.wireFine.mat(MT.Terrasteel,64),OP.plate.mat(MT.VibraniumSteel,1),OP.plateGem.mat(MT.NetherStar,1)), ZL_FS,ZL_FS,ST.make(Items.skull,1,3, UT.NBT.make("SkullOwner","kuzuanpa")));
     }
 }
 

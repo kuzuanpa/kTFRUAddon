@@ -24,7 +24,6 @@ import cn.kuzuanpa.ktfruaddon.code.OreScanner;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.WorldServer;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine {
     public OreScanner oreVeinScanner;
@@ -45,9 +44,9 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
     return false;
 }
     public void onTick2(long aTimer, boolean isServerside){
-        if(isServerside)oreVeinScanner.startOrContinueUpdateGTOre((WorldServer)worldObj);
-        if(!isServerside&&worldObj!=null)oreVeinScanner.startOrContinueScanOres();
-        if(!isServerSide()&&aTimer%100==0)oreVeinScanner.rendOres(-10);
+        //if(isServerside)oreVeinScanner.startOrContinueUpdateGTOre((WorldServer)worldObj);
+        //if(!isServerside&&worldObj!=null)oreVeinScanner.startOrContinueScanOres();
+        //if(!isServerSide()&&aTimer%100==0)oreVeinScanner.rendOres(-10);
 
     }
 @Override

@@ -10,7 +10,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.tile.util.DistillationTowerUtil;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
@@ -174,17 +173,17 @@ public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
     public void doOutputFluids() {
         for (FluidTankGT tTank : this.mTanksOutput) {
             Fluid tFluid = tTank.fluid();
-            if (tFluid != null && tTank.has()) {
+            if (tFluid != null && tTank.has()&&mLastRecipe!=null) {
                 DelegatorTileEntity<TileEntity> tDelegator = null;
-                if (FL.is(tFluid, DistillationTowerUtil.SmallOutputFluidsLayer5)) {
+                if (mLastRecipe.mFluidOutputs.length>4&&FL.is(tFluid, mLastRecipe.mFluidOutputs[4].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 5, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.SmallOutputFluidsLayer4)) {
+                } else if (mLastRecipe.mFluidOutputs.length>3&&FL.is(tFluid, mLastRecipe.mFluidOutputs[3].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 4, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.SmallOutputFluidsLayer3)) {
+                } else if (mLastRecipe.mFluidOutputs.length>2&&FL.is(tFluid, mLastRecipe.mFluidOutputs[2].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 3, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.SmallOutputFluidsLayer2)) {
+                } else if (mLastRecipe.mFluidOutputs.length>1&&FL.is(tFluid, mLastRecipe.mFluidOutputs[1].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 2, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (FL.is(tFluid, DistillationTowerUtil.SmallOutputFluidsLayer1)) {
+                } else if (mLastRecipe.mFluidOutputs.length>0&&FL.is(tFluid, mLastRecipe.mFluidOutputs[0].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 1, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 } else {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);

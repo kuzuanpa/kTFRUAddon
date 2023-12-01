@@ -98,7 +98,6 @@ public enum ItemList implements IItemContainer{
     ResistanceT4,              CoilT4,
     CircuitBoardBasicUncompleted,CircuitBoardGoodUncompleted1,CircuitBoardGoodUncompleted2,
     //Compact
-    //AdvancedRockery 1000-1999
     ArmorAirSealant,SpaceSuitCloth,IntelligentCore, CrucibleModelInnerLayer,
 
 
@@ -118,10 +117,6 @@ public enum ItemList implements IItemContainer{
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
     //itemBatteryPole
     BatteryPoleGold, BatteryPolePlatinum,BatteryPoleCarbon,BatteryPoleGraphene,
-
-    //fakeItemGuiI18n
-    fakeItemPhotomask,fakeItemBoule,fakeItemLaserCutting,fakeItemSiliconPlateCleaned,fakeItemSiliconPlateOxidized,fakeItemSiliconPlateCoated,fakeItemSiliconPlateSoftBaked,fakeItemWafer,fakeItemSiliconWaferDeveloped,fakeItemSiliconWaferHardBaked,fakeItemSiliconWaferDoped,fakeItemSiliconWaferChecked,fakeItemDie
-
     ;
 
     //Copied from gt6
