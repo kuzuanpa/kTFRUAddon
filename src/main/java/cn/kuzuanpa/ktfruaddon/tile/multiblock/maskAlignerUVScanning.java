@@ -24,6 +24,7 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
+import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -109,6 +110,9 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         }
         return mStructureOkay;
     }
+
+
+
     public void resetParts() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
@@ -132,7 +136,7 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
             LH.add("ktfru.tooltip.multiblock.maskaligner.0.3", "Light Module is in top of Main Block, Energy Module is behind the Main Block.");
             LH.add("ktfru.tooltip.multiblock.maskaligner.0.4", "The left 1 block space is IO Manager.");
             LH.add("ktfru.tooltip.multiblock.maskaligner.0.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
-            LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Item and fluid inputs from anyblock in upside, output from MainBlock in bottom.");
+            LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Fluid inputs from anyblock in upside, Item input from upside of IO manager, output from backside.");
         }
 
         @Override
@@ -162,22 +166,26 @@ public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
         //controls where to I/O, return null=any side
         @Override
         public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
-            return getAdjacentTank(SIDE_BOTTOM);
+            return null;
         }
 
         @Override
         public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-            return getAdjacentTileEntity(SIDE_BACK);
+            DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 2), this.yCoord+1 , this.getOffsetZN(this.mFacing, 2), this.mFacing, false);
+            if(te == null || te.mTileEntity == null) return this.delegator(SIDE_BOTTOM);
+            return new DelegatorTileEntity<>(te.mTileEntity,SIDE_BOTTOM);
         }
 
         @Override
         public DelegatorTileEntity<IInventory> getItemInputTarget(byte aSide) {
-            return getAdjacentInventory(SIDE_TOP);
+            TileEntity te = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 1), this.yCoord+2 , this.getOffsetZN(this.mFacing, 1),false);
+            if(!(te instanceof IInventory)) return new DelegatorTileEntity<>(this, SIDE_BOTTOM);
+            return new DelegatorTileEntity<>((IInventory) te,SIDE_BOTTOM);
         }
 
         @Override
         public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
-            return getAdjacentTank(SIDE_UP);
+            return null;
         }
 
 

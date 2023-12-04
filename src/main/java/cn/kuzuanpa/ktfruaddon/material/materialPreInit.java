@@ -289,5 +289,20 @@ public class materialPreInit {
         //沥青铀浸渣
         matList.PitchblendeCinder.registerC(22095,"PitchblendeCinder","Pitchblende Cinder",1505,3871,145, 240,  50,160,"")
                 .put(TD.ItemGenerator.DUSTS);
+        //硅烷
+        matList.Silane.registerC(22096,"Silane","Silane",-185,-112,255,255,255,130,"H4Si")
+                .put();
+        //硅化镁
+        matList.MagnesiumSilicide.registerC(22097,"MagnesiumSilicide","MagnesiumSilicide",1102,1200,255,255,255,130,"Mg2Si")
+                .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
+        //氯化铵
+        matList.AmmoniumChloride.registerC(22098,"AmmoniumChloride","AmmoniumChloride",340,653,255,255,255,130,"NH4Cl")
+                .put(TD.ItemGenerator.DUSTS);
+        //四氟化硅
+        matList.SiliconTetrafluoride.registerC(22099,"SiliconTetrafluoride","SiliconTetrafluoride",-90,-86,255,255,255,130,"SiF4")
+                .put(TD.ItemGenerator.GASES);
+        //四氢铝钠
+        matList.SodiumAluminiumHydride.registerC(22100,"SodiumAluminiumHydride","SodiumAluminiumHydride",178,231,255,255,255,130,"NaAlH4")
+                .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
     }
 }

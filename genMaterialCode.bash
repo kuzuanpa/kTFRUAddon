@@ -1,5 +1,5 @@
 a=0
-for i in $(cat newMatBash) 
+for i in $(cat genMaterialList)
  do
  
  if [ $a -eq 0 ] ;then

@@ -23,7 +23,7 @@ import static gregapi.data.CS.*;
 public class OreProcessing {
     public static void init(){
   //Cr processing
-        RM.Bath.addRecipeX(T,0, 512 , ST.array(OP.dust.mat(MT.OREMATS.Chromite, 2), OP.dust.mat(matList.AmmoniumSulfate.get(), U*9)), FL.array(MT.H2SO4.liquid(6,F)), FL.array(FL.Water.make(4000)), OP.dust.mat(matList.AmmoniumChromicSulfate.get(), 6), OP.dust.mat(matList.AmmoniumIronIIISulfate.mat, 3));
+        RM.Bath.addRecipeX(T,0, 512 , ST.array(OP.dust.mat(MT.OREMATS.Chromite, 2), OP.dust.mat(matList.AmmoniumSulfate.get(), 9)), FL.array(MT.H2SO4.liquid(6,F)), FL.array(FL.Water.make(4000)), OP.dust.mat(matList.AmmoniumChromicSulfate.get(), 6), OP.dust.mat(matList.AmmoniumIronIIISulfate.mat, 3));
         RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2*U,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OP.dust.mat(matList.AmmoniumSulfate.mat,9));
         RM.Electrolyzer.addRecipe2(F,120,360,matList.AmmoniumChromicSulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U+U2,T)),OP.dust.mat(MT.Cr,1),matList.AmmoniumDichromate.getDust(2));
         RM.Electrolyzer.addRecipe2(F,64,320,matList.AmmoniumIronIIISulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U*3,T)),OP.dust.mat(MT.Fe,2),matList.AmmoniumSulfate.getDust(4));
@@ -55,7 +55,7 @@ public class OreProcessing {
         RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(4000),MT.NH3.gas(4000,F)),FL.array(flList.AmmoniumTungstate.make(2000)),OP.dust.mat(MT.NaOH,4 ));
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(1000)),FL.array(FL.DistW.make(700)),OP.dust.mat(MT.WO3,1));
       //Ti Process
-        RM.Bath.addRecipeX(T,0,120,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2 )),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,4));
+        RM.Bath.addRecipeX(T,0,120,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,4));
         RM.Drying.addRecipeX(T,32,40, ST.array(OP.dust.mat(matList.MetatitanicAcid.mat,2)),FL.array(ZL_FS),FL.array(FL.DistW.make(200)),OP.dust.mat(MT.TiO2,1));
         recipeManager.HeatMixer.addRecipeX(T,128,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Mg.liquid(U*2,T)),FL.array(MT.Ti.liquid(6*U4,T)),OP.dust.mat(MT.MgCl2,6));
 
@@ -81,6 +81,8 @@ public class OreProcessing {
 
         recipeManager.HeatMixer.addRecipe1(F,468,20,OP.dust.mat(MT.PO4,1),FL.array(flList.Butanol.make(3000)),FL.array(flList.TributylPhosphate.make(1000),FL.Water.make(1000)),ZL_IS);
 
-        recipeManager.HeatMixer.addRecipe2(F,892,10,OP.dust.mat(MT.WaxParaffin,1),OP.dust.mat(MT.MnO2,0),FL.array(FL.Oxygen.make(1000)),ZL_FS,matList.OleicAcid.getDust(1));
+        recipeManager.HeatMixer.addRecipe2(F,465,10,OP.dust.mat(MT.WaxParaffin,1),OP.dust.mat(MT.MnO2,0),FL.array(FL.Oxygen.make(1000)),ZL_FS,matList.OleicAcid.getDust(1));
+        recipeManager.HeatMixer.addRecipe1(F,240,200,OP.ingot.mat(MT.Butter,2),FL.array(MT.HCl.gas(0,false)),ZL_FS,matList.OleicAcid.getDust(1));
+        recipeManager.HeatMixer.addRecipe1(F,240,200,OP.ingot.mat(MT.Butter,2),FL.array(MT.H2SO4.liquid(0,false)),ZL_FS,matList.OleicAcid.getDust(1));
     }
 }
