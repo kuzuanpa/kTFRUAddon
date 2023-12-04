@@ -167,9 +167,9 @@ public class fluidPreInit {
 
 
         //木煤气
-        flList.WoodTar.register("woodtar","Wood Tar",null,GAS,1000,277,-300,160);
+        flList.WoodTar.register("woodtar","Wood Tar",null,GAS,1000,277,300,160);
         //煤焦油
-        flList.CoalTar.register("coaltar","Coal Tar",null,GAS,1000,277,-600,120);
+        flList.CoalTar.register("coaltar","Coal Tar",null,GAS,1000,277,600,120);
 
         flList.CleanedOilExtraHeavy.register("cleanoilextraheavy","Cleaned Very Heavy Oil",null,LIQUID,1000,277,900,1000);
         flList.CleanedOilHeavy.register("cleanoilheavy","Cleaned Heavy Oil",null,LIQUID,1000,277,800,1000);
@@ -212,6 +212,10 @@ public class fluidPreInit {
         //萃取的铀
         flList.ExtractedUranium.register("ExtractedUranium","Extracted Uranium",null, LIQUID);
         flList.ExtractedUranium2.register("ExtractedUranium2","Extracted Uranium 2",null, LIQUID);
+        //硅烷
+        flList.Silane.register("Silane","Silane",matList.Silane.get(), GAS);
+        //四氟化硅
+        flList.SiliconTetrafluoride.register("SiliconTetrafluoride","SiliconTetrafluoride",matList.SiliconTetrafluoride.get(), GAS);
 
         flList.CrackedNaphthaLow.register("CrackedNaphthaLow","Cracked Naphtha (Low Temperature)",null, LIQUID);
         flList.CrackedNaphthaMedium.register("CrackedNaphthaMedium","Cracked Naphtha (Medium Temperature)",null, LIQUID);
