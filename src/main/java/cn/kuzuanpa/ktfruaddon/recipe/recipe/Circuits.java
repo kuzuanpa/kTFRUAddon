@@ -71,7 +71,7 @@ public class Circuits {
         recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Nb,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
         recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Ta,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
 
-        recipeManager.Assembler.addRecipeX(F,256,50,ST.array(OP.plateGem.mat(MT.Si,1),OP.dust.mat(MT.B,2),OP.dust.mat(MT.P,4),OP.foil.mat(MT.Ag,4),OP.dust.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.DiodeT1.get(8));
+        recipeManager.Assembler.addRecipeX(F,256,50,ST.array(OP.plateGem.mat(MT.Si,1),OP.dust.mat(MT.B,2),OP.dust.mat(MT.P,4),OP.foil.mat(MT.Ag,4),OP.dust.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.DiodeT1.get(32));
         recipeManager.Assembler.addRecipeX(F,1024,8,ST.array(ItemList.DiodeT2Part.get(1),OP.wireFine.mat(MT.Ag,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U10,F)),ZL_FS,ItemList.DiodeT2.get(1));
         recipeManager.Assembler.addRecipeX(F,4096,4,ST.array(ItemList.DiodeT3Part.get(1),OP.wireFine.mat(MT.Graphene,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U10,F)),ZL_FS,ItemList.DiodeT3.get(1));
 

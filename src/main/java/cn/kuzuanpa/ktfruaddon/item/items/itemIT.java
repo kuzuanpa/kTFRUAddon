@@ -6,7 +6,7 @@
  * kTFRUAddon is Open Source and distributed under the
  * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
  */
-package cn.kuzuanpa.ktfruaddon.item.itemsPreInit;
+package cn.kuzuanpa.ktfruaddon.item.items;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.data.LH;
