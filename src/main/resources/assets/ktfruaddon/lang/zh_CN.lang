@@ -736,7 +736,7 @@ ktfru.tooltip.multiblock.distilltower.tiny.6=只能从蒸馏塔的底层输入�
 ktfru.tooltip.multiblock.tank.gas.compressed.0=3x3x3 相应材料的致密壁板
 ktfru.tooltip.multiblock.tank.gas.compressed.1=这个阀门方块放在结构顶面/底面/侧面的中心, 正面朝外
 ktfru.tooltip.multiblock.tank.gas.compressed.2=只能输入气体且需要通过气体压缩机输入,气体从阀门自动输出
-ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,每tick传输(Input KU)*10 L气体
+ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速率:(输入KU)*10L/t
 
 
 fluid.acidpickledbauxide=酸浸铝土矿

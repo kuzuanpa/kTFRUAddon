@@ -164,11 +164,11 @@ public class OilProcessing {
         recipeManager.     DistillTower.addRecipe0(F,120,10,FL.array(flList.CrackedDieselHigh  .make(1000)),FL.array(FL.Lubricant.make(92) ,FL.Petrol.make(321),flList.OilGas.make(301),flList.CrackedOilGas.make(542)));
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(1),FL.array(FL.Petrol.make(80),FL.Diesel.make(20)),FL.array(flList.BlendedFuel1.make(100)),ZL_IS);
-        FM.Burn         .addRecipe0(T, - 120,  5, flList.BlendedFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);
-        FM.Engine       .addRecipe0(T, - 120,  6, flList.BlendedFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 128,  4, flList.BlendedFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Engine       .addRecipe0(T, - 128,  6, flList.BlendedFuel1.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(2),FL.array(flList.Methanol.make(60),FL.Petrol.make(30),flList.Naphtha.make(8)),FL.array(flList.BlendedFuel2.make(70)),ZL_IS);
-        FM.Burn         .addRecipe0(T, - 144,  5, flList.BlendedFuel2.make(1), FL.CarbonDioxide.make(1), ZL_IS);
+        FM.Burn         .addRecipe0(T, - 144,  4, flList.BlendedFuel2.make(1), FL.CarbonDioxide.make(1), ZL_IS);
         FM.Engine       .addRecipe0(T, - 144,  6, flList.BlendedFuel2.make(1), FL.CarbonDioxide.make(1), ZL_IS);
 
         RM.Mixer.addRecipe1(false,64,20,ST.tag(3),FL.array(FL.Petrol.make(70),flList.Propanol.make(25),flList.Methanol.make(7)),FL.array(flList.BlendedFuel3.make(65)),ZL_IS);

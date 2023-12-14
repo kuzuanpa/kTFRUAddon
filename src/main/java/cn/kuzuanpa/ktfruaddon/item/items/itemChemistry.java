@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.item.itemsPreInit;
+package cn.kuzuanpa.ktfruaddon.item.items;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.item.CreativeTab;
@@ -19,7 +19,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class itemChemistry extends MultiItemRandom {
     public itemChemistry() {
         super(MOD_ID, "ktfru.item.chemistry");
-        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Chemistry", this, (short) 1));
+        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Chemistry", this, (short) 0));
     }
 
 

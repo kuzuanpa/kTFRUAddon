@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.item.itemsPreInit;
+package cn.kuzuanpa.ktfruaddon.item.items;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.data.MT;
@@ -20,7 +20,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class itemBatteryPole  extends MultiItemRandom {
     public itemBatteryPole() {
         super(MOD_ID, "ktfru.item.battery.pole");
-        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Battery Pole", this, (short) 1));
+        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Battery Pole", this,  MT.Au.mID));
     }
 
 
