@@ -40,7 +40,7 @@ public class upgradeQuests {
             }catch (FileAlreadyExistsException e){
                 System.out.println("WARN: New Lang Dir already exists, Unexpected behavior may happen");
             }
-            oldLang.forEacBh(path -> {
+            oldLang.forEach(path -> {
                 try {
                     BufferedWriter writer = new BufferedWriter(new PrintWriter(Files.newOutputStream(new File(newDir.toString(), String.valueOf(path.getFileName())).toPath())));
                     HashMap<String,String> keyToLangMap = new HashMap<>();
