@@ -216,7 +216,7 @@ public class fluidPreInit {
         flList.Silane.register("Silane","Silane",matList.Silane.get(), GAS);
         //四氟化硅
         flList.SiliconTetrafluoride.register("SiliconTetrafluoride","SiliconTetrafluoride",matList.SiliconTetrafluoride.get(), GAS);
-
+        flList.HotDistW.register("hotdistilledwater","Hot Distilled Water",MT.DistWater,LIQUID,1000,368);
         flList.CrackedNaphthaLow.register("CrackedNaphthaLow","Cracked Naphtha (Low Temperature)",null, LIQUID);
         flList.CrackedNaphthaMedium.register("CrackedNaphthaMedium","Cracked Naphtha (Medium Temperature)",null, LIQUID);
         flList.CrackedNaphthaHigh.register("CrackedNaphthaHigh","Cracked Naphtha (High Temperature)",null, LIQUID);
