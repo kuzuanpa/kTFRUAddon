@@ -8,7 +8,6 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.enchant.enchantInit;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.i18n.i18nInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
@@ -40,7 +39,6 @@ public class commonProxy extends Abstract_Proxy {
     public void init(FMLInitializationEvent aEvent) {
         tileEntityInit.init(aEvent);
         recipeInit.init(aEvent);
-        new enchantInit();
         PROXY.registerRenderers();
 
     }
