@@ -114,7 +114,6 @@ public enum flList {
         return FL.make(fluid,amount);
     }
 
-
     public Fluid get() {
         return fluid;
     }

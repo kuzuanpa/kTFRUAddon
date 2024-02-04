@@ -12,9 +12,11 @@ import cn.kuzuanpa.ktfruaddon.client.render.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderCircuitAssembler;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderExampleMultiBlock;
 import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderSunBoilerMirror;
+import cn.kuzuanpa.ktfruaddon.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.parts.SunHeaterMirror;
+import codechicken.nei.api.API;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -43,5 +45,7 @@ public class clientProxy extends commonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TileEntityRenderCircuitAssembler());
         ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirror.class, new TileEntityRenderSunBoilerMirror());
         MinecraftForge.EVENT_BUS.register(new FxRenderBlockOutline());
+        API.registerNEIGuiHandler(new NeiHiddener());
+
     }
 }

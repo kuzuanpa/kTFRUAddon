@@ -14,6 +14,8 @@ import gregapi.code.ArrayListNoNulls;
 import gregapi.gui.ContainerClient;
 import gregapi.gui.ContainerCommon;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ import java.util.Arrays;
 
 public abstract class ContainerClientbase extends ContainerClient {
     ArrayList<requestedTooltip> requestedTooltipLists = new ArrayListNoNulls<requestedTooltip>();
+    protected GuiButton selectedButton;
+
     protected static class requestedTooltip {
         protected requestedTooltip(ArrayList<String> strings,boolean isVisable){this.strings=strings;this.isVisable=isVisable;}
         protected ArrayList<String> strings;
@@ -52,6 +56,32 @@ public abstract class ContainerClientbase extends ContainerClient {
         int i = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int j = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
         mouseMove(i,j);
+    }
+
+    @Override
+    protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_)
+    {
+        if (p_73864_3_ == 0)
+        {
+            for (int l = 0; l < this.buttonList.size(); ++l)
+            {
+                GuiButton guibutton = (GuiButton)this.buttonList.get(l);
+
+                if (guibutton.mousePressed(this.mc, p_73864_1_, p_73864_2_))
+                {
+                    boolean result=false;
+                    GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(this, guibutton, this.buttonList);
+                    if (MinecraftForge.EVENT_BUS.post(event))
+                        break;
+                    this.selectedButton = event.button;
+                    event.button.func_146113_a(this.mc.getSoundHandler());
+                    result=onButtonPressed(event.button);
+                    if (this.equals(this.mc.currentScreen))
+                        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.ActionPerformedEvent.Post(this, event.button, this.buttonList));
+                    if(result)return;
+                }
+            }
+        }
     }
 
     public abstract void mouseMove(int x, int y);

@@ -17,6 +17,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class testGuiMachine extends MultiTileEntityBasicMachineElectric {
     @Override public String getTileEntityName() {return "ktfru.multitileentity.machine.gui.electric";}
-    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientTest(aPlayer.inventory, this, mRecipes, aGUIID, mGUITexture);}
-    @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {return new ContainerCommonTest(aPlayer.inventory, this, aGUIID);}
+    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
+        return new ContainerClientTest(aPlayer.inventory, this, mRecipes, aGUIID, mGUITexture);
+    }
+    @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
+        return new ContainerCommonTest(aPlayer.inventory, this, aGUIID);
+    }
 }

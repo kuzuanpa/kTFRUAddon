@@ -18,6 +18,7 @@ import gregapi.data.RM;
 import gregapi.util.OM;
 import gregapi.util.ST;
 
+import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.HeatMixer;
 import static gregapi.data.CS.*;
 
 public class OreProcessing {
@@ -31,22 +32,23 @@ public class OreProcessing {
         recipeManager.HeatMixer.addRecipeX(T,256,160,ST.array(OP.dust.mat(matList.AmmoniumDichromate.get(),1)),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OP.dust.mat(MT.CrO2, 2));
 
    //Al processing
+        RM.Mixer.addRecipe0(F,16,40,FL.array(FL.DistW.make(1000),FL.CarbonDioxide.make(1000)),FL.array(FL.Soda.make(1000)));
         //Step1:Bauxide process
         recipeManager.HeatMixer.addRecipeX(T,120,80,ST.array(OP.dust.mat(MT.CaCO3,1),OP.dust.mat(MT.Na2CO3,2), OP.dust.mat(MT.OREMATS.Bauxite,1)),ZL_FS,FL.CarbonDioxide.make(3000),OP.dust.mat(matList.CookedBauxide.mat, 2));
         RM.Bath.addRecipeX(T, 0, 80, ST.array(OP.dust.mat(MT.OREMATS.Bauxite,1)),FL.array(MT.H2SO4.liquid(U *4 ,T)),FL.array(flList.AcidPickledBauxide.make(2000)),OP.dustSmall.mat(MT.SiO2,1));
         RM.Bath.addRecipeX(T, 0, 180, ST.array(OP.dust.mat(MT.OREMATS.Bauxite,1),OP.dust.mat(MT.NaOH,2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(flList.SodiumAluminate.make(2000)),OP.dustSmall.mat(MT.SiO2,1),OP.crushedCentrifugedTiny.mat(MT.OREMATS.Ilmenite,1));
         //Step2
-        RM.Bath.addRecipeX(T, 0, 180, ST.array(OP.dust.mat(matList.CookedBauxide.mat,2),OP.dust.mat(MT.NaOH,2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(flList.SodiumAluminate.make(2000)),OP.dustSmall.mat(MT.SiO2,1),OP.dust.mat(matList.CookedBauxide.mat,1));
+        RM.Bath.addRecipeX(T, 0, 180, ST.array(OP.dust.mat(matList.CookedBauxide.mat,2),OP.dust.mat(MT.NaOH,2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(flList.SodiumAluminate.make(2000)),OP.dustSmall.mat(MT.SiO2,1),OP.dust.mat(matList.BauxiteRedMud.mat,1));
         recipeManager.HeatMixer.addRecipeX(T,120,60,ST.array(OP.dust.mat(MT.NaOH, 4)),FL.array(flList.AcidPickledBauxide.make(2000)),FL.array(flList.SodiumAluminate.make(2000)),OP.dust.mat(MT.Na2SO4,4 ),OP.dust.mat(MT.Fe2O3,1));
         RM.Mixer.addRecipeX(T,0, 800,ST.array(ZL_IS),FL.array(flList.SodiumAluminate.make(1000),FL.Soda.make(1000)),FL.array(flList.SodiumCarbonate.make(2000)),OP.dust.mat(MT.AlO3H3,4));
         //Step3: Centrifuge for mixtures
-        RM.Centrifuge.addRecipeX(T, 64, 40,ST.array(OP.dust.mat(matList.CookedBauxide.mat,1)),FL.array(ZL_FS),FL.array(ZL_FS),OP.dust.mat(MT.Fe2O3,1),OM.crushedCentrifugedTiny(MT.TiO2,1),OP.dust.mat(MT.SiO2,U4));
-      //Use K for some recipe
+        RM.Centrifuge.addRecipeX(T, 64, 40,ST.array(OP.dust.mat(matList.BauxiteRedMud.mat,1)),FL.array(ZL_FS),FL.array(ZL_FS),OP.dust.mat(MT.Fe2O3,1),OM.crushedCentrifugedTiny(MT.TiO2,1),OP.dustSmall.mat(MT.SiO2,1));
+      //Use Potassium for some recipe
         //Step1
         RM.Bath.addRecipeX(T, 0, 180, ST.array(OP.dust.mat(MT.OREMATS.Bauxite,1),OP.dust.mat(MT.KOH,2)),FL.array(MT.H2O.liquid(1000 ,T)),FL.array(flList.PotassiumAluminate.make(2000)),OP.dustSmall.mat(MT.SiO2,U4),OM.crushedCentrifugedTiny(MT.OREMATS.Ilmenite,1));
         //Step2
         recipeManager.HeatMixer.addRecipeX(T,120,60,ST.array(OP.dust.mat(MT.KOH,  4)),FL.array(flList.AcidPickledBauxide.make(2000)),FL.array(flList.PotassiumAluminate.make(2000)),OP.dust.mat(MT.K2SO4,4 ),OP.dust.mat(MT.Fe2O3,1));
-        RM.Mixer.addRecipeX(T,0, 800,ST.array(ZL_IS),FL.array(flList.PotassiumAluminate.make(1000),FL.Soda.make(1000)),FL.array(flList.SodiumCarbonate.make(2000)),OP.dust.mat(MT.AlO3H3, 4));
+        RM.Mixer.addRecipeX(T,0, 800,ST.array(ZL_IS),FL.array(flList.PotassiumAluminate.make(1000),FL.Soda.make(1000)),FL.array(flList.PotassiumCarbonate.make(1000),flList.SodiumCarbonate.make(1000)),OP.dust.mat(MT.AlO3H3, 4));
      //W Process
         RM.Autoclave.addRecipe2(T, 0, 400,new long[] {10000} ,OP.dust.mat(MT.OREMATS.Wolframite,1),OP.dust.mat(MT.NaOH,4),FL.Steam.make(20000),flList.SodiumHeterotungstate.make(2000),OP.dust.mat(MT.MgCO3, 1));
         RM.Autoclave.addRecipe2(T, 0, 400,new long[]{10000},OP.dust.mat(MT.OREMATS.Huebnerite,1),OP.dust.mat(MT.NaOH,4),FL.Steam.make(20000),flList.SodiumHeterotungstate.make(2000),OP.dust.mat(MT.MnO2, 1));
@@ -54,11 +56,13 @@ public class OreProcessing {
         RM.Autoclave.addRecipe2(T, 0, 400,new long[]{10000},OP.dust.mat(MT.OREMATS.Tungstate,1),OP.dust.mat(MT.Na2CO3,2),FL.Steam.make(20000),flList.SodiumHeterotungstate.make(2000),OP.dust.mat(matList.LithiumCarbonate.mat,1));
         RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(4000),MT.HCl.fluid(4000,F)),FL.array(FL.Saltwater.make(8000)),OP.dust.mat(MT.H2WO4,3 ));
         RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(4000),MT.NH3.gas(4000,F)),FL.array(flList.AmmoniumTungstate.make(2000)),OP.dust.mat(MT.NaOH,4 ));
-        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(1000)),FL.array(FL.DistW.make(700)),OP.dust.mat(MT.WO3,1));
-      //Ti Process
+        RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.AmmoniumTungstate.make(1000)),FL.array(FL.DistW.make(700)),OP.dust.mat(MT.WO3,1));
+        HeatMixer.addRecipe1(T, 320, 160, OM.dust(MT.WO3, U * 4), MT.H.gas(U * 6, T), MT.H2O.liquid(U * 9, F), OM.dust(MT.W, U));
+
+        //Ti Process
         RM.Bath.addRecipeX(T,0,120,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,4));
         RM.Drying.addRecipeX(T,32,40, ST.array(OP.dust.mat(matList.MetatitanicAcid.mat,2)),FL.array(ZL_FS),FL.array(FL.DistW.make(200)),OP.dust.mat(MT.TiO2,1));
-        recipeManager.HeatMixer.addRecipeX(T,128,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Mg.liquid(U*2,T)),FL.array(MT.Ti.liquid(6*U4,T)),OP.dust.mat(MT.MgCl2,6));
+        recipeManager.HeatMixer.addRecipeX(T,128,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Mg.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
 
         //K2CO3
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.PotassiumCarbonate.make(1000)),FL.array(FL.DistW.make(750)),OP.dust.mat(MT.K2CO3,1));

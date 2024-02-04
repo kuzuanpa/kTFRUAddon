@@ -14,14 +14,25 @@ import cn.kuzuanpa.ktfruaddon.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import cn.kuzuanpa.ktfruaddon.material.matList;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
-import gregapi.data.FL;
-import gregapi.data.MT;
-import gregapi.data.OP;
-import gregapi.data.RM;
+import gregapi.data.*;
+import gregapi.oredict.OreDictMaterial;
+import gregapi.oredict.OreDictPrefix;
+import gregapi.util.UT;
 
 import static gregapi.data.CS.*;
 public class Plastic {
     public static void init(){
+        for(OreDictMaterial material:new OreDictMaterial[]{matList.EpoxyResin.mat,matList.SBR.mat,matList.SiliconeRubber.mat})for (OreDictPrefix prefix:new OreDictPrefix[]{OP.dust,OP.dustTiny,OP.dustSmall,OP.plate,OP.plateTiny,OP.plateCurved,OP.foil}) {
+            if(prefix!=OP.plate)      RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_Extruder_Plate.get(0), ZL_FS, ZL_FS, OP.plate.mat(material, 1));
+            if(prefix!=OP.plate)      RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_SimpleEx_Plate.get(0), ZL_FS, ZL_FS, OP.plate.mat(material, 1));
+            if(prefix!=OP.plateCurved)RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_Extruder_Plate_Curved.get(0), ZL_FS, ZL_FS, OP.plateCurved.mat(material, 1));
+            if(prefix!=OP.plateCurved)RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_SimpleEx_Plate_Curved.get(0), ZL_FS, ZL_FS, OP.plateCurved.mat(material, 1));
+            if(prefix!=OP.plateTiny)  RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_Extruder_Plate_Tiny.get(0), ZL_FS, ZL_FS, OP.plateTiny.mat(material, 9));
+            if(prefix!=OP.plateTiny)  RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_SimpleEx_Plate_Tiny.get(0), ZL_FS, ZL_FS, OP.plateTiny.mat(material, 9));
+            if(prefix!=OP.foil)       RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_Extruder_Foil.get(0), ZL_FS, ZL_FS, OP.foil.mat(material, 4));
+            if(prefix!=OP.foil)       RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_SimpleEx_Foil.get(0), ZL_FS, ZL_FS, OP.foil.mat(material, 4));
+        }
+
         recipeManager.LightMixer         .addRecipe0(F,32 ,120,FL.array(FL.Methane.make(300),MT.Cl.gas(6*U10,false)),FL.array(flList.Chloromethane.make(100),flList.Dichloromethane.make(100),flList.Chloroform.make(100),MT.HCl.gas(6*U10,false)),ZL_IS);
 
         recipeManager.HeatMixer          .addRecipe1(F,64 ,80, OP.dust.mat(MT.CaCO3,1), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.CalciumAcetate.getDust(1));
@@ -49,8 +60,9 @@ public class Plastic {
         RM           .Bath               .addRecipe2(F,0,80,OP.dust.mat(MT.NaOH,4),matList.BPA.getDust(4),FL.array(FL.Water.make(1000)),FL.array(flList.SolutionBPASodium.make(1000)),ZL_IS);
         recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.SolutionBPASodium.make(1000),flList.Phosgene.make(200),flList.Dichloromethane.make(200)),ZL_FS,matList.Polycarbonate.getDust(4));
 
-        recipeManager.HeatMixer          .addRecipe1(F,142,380,OP.dust.mat(MT.Zn,1),FL.array(MT.HF.gas(16*U10,false),flList.Chloroform.make(800)),FL.array(flList.Tetrafluoroethylene.make(400),MT.HCl.gas(2*U,false)),matList.ZincChloride.getDust(1));
+        recipeManager.HeatMixer          .addRecipe1(F,142,380,OP.dust.mat(MT.Zn,1),FL.array(MT.HF.gas(16*U10,false),flList.Chloroform.make(400)),FL.array(flList.Tetrafluoroethylene.make(400),MT.HCl.gas(2*U,false)),matList.ZincChloride.getDust(1));
 
+        RM.           Electrolyzer       .addRecipe1(F,26,80,matList.ZincChloride.getDust(1),ZL_FS,MT.Cl.gas(U*2,true),OP.dust.mat(MT.Sn,1));
         RM.           Mixer              .addRecipe1(F,256,120,OP.dust.mat(MT.K2S2O7,0),FL.array(flList.Tetrafluoroethylene.make(1000),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.Teflon,7));
 
         recipeManager.HeatMixer          .addRecipe2(F,320,120,matList.BPA.getDust(1),OP.dust.mat(MT.NaOH,2),FL.array(flList.Epichlorohydrin.make(1000)),FL.array(FL.Saltwater.make(800)),matList.EpoxyResin.getDust(6));
@@ -74,6 +86,8 @@ public class Plastic {
         RM.           Mixer              .addRecipe2(F,256,120,OP.dust.mat(MT.C,1),OP.dust.mat(MT.CaCO3,1),ZL_FS,FL.array(FL.CarbonDioxide.make(100)),matList.CalciumCarbide.getDust(1));
 
         RM.           Mixer              .addRecipe1(F,256,120,matList.CalciumCarbide.getDust(1),FL.array(FL.Water.make(200)),FL.array(flList.Acetylene.make(100)),matList.CalciumHydroxide.getDust(1));
+
+        recipeManager.HeatMixer          .addRecipe1(F,24,120,OP.dust.mat(MT.Hg,1),FL.array(MT.Cl.gas(U*2,false)),ZL_FS,matList.MercuryIIChloride.getDust(1));
 
         RM.           Mixer              .addRecipe1(F,256,120,matList.MercuryIIChloride.getDust(0),FL.array(MT.HCl.gas(U10,false),flList.Acetylene.make(100)),FL.array(flList.VinylChloride.make(100)),ZL_IS);
 
