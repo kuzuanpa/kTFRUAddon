@@ -8,17 +8,8 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.code.upgradeQuest;/*
- * This class was created by <kuzuanpa>. It is distributed as
- * part of the kTFRUAddon Mod. Get the Source Code in github:
- * https://github.com/kuzuanpa/kTFRUAddon
- *
- * kTFRUAddon is Open Source and distributed under the
- * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
- *
- */
+package cn.kuzuanpa.ktfruaddon.code.upgradeQuest;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,7 +33,7 @@ public class upgradeQuests {
             }
             oldLang.forEach(path -> {
                 try {
-                    BufferedWriter writer = new BufferedWriter(new PrintWriter(Files.newOutputStream(new File(newDir.toString(), String.valueOf(path.getFileName())).toPath())));
+                    PrintWriter writer = new PrintWriter(Files.newOutputStream(new File(newDir.toString(), String.valueOf(path.getFileName())).toPath()));
                     HashMap<String,String> keyToLangMap = new HashMap<>();
                     Files.readAllLines(path).forEach(line -> {
                         String[] tmp = line.split("=",2);
@@ -51,14 +42,15 @@ public class upgradeQuests {
                     });
                     Files.readAllLines(template).forEach(line->{
                         try {
-                            if (line.split("=").length != 2) return;
+                            if (line.split("=").length != 2) {writer.print(line+"\n");return;}
                             String key = line.split("=")[1];
                             String content=keyToLangMap.get(key);
                             if(content==null)content="";
                             String newline = line.replaceAll(key, content);
-                            writer.write(newline+"\n");
+                            writer.print(newline+"\n");
                         }catch (Throwable t){t.printStackTrace();}
                     });
+                    writer.flush();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

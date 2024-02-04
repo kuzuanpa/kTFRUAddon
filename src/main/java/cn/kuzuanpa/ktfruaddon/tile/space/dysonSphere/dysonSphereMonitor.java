@@ -8,19 +8,19 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.machine;
+package cn.kuzuanpa.ktfruaddon.tile.space.dysonSphere;
 
-import cn.kuzuanpa.ktfruaddon.gui.ContainerClientTest;
-import cn.kuzuanpa.ktfruaddon.gui.ContainerCommonTest;
+import cn.kuzuanpa.ktfruaddon.gui.ContainerClientDysonSphereMonitor;
+import cn.kuzuanpa.ktfruaddon.gui.ContainerCommonDysonSphereMonitor;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class testGuiMachine extends MultiTileEntityBasicMachineElectric {
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.machine.gui.electric";}
+public class dysonSphereMonitor extends MultiTileEntityBasicMachineElectric {
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.space.dysonSphere.monitor";}
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerClientTest(aPlayer.inventory, this, mRecipes, aGUIID, mGUITexture);
+        return new ContainerClientDysonSphereMonitor(aPlayer.inventory, this, mRecipes, aGUIID, mGUITexture);
     }
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerCommonTest(aPlayer.inventory, this, aGUIID);
+        return new ContainerCommonDysonSphereMonitor(aPlayer.inventory, this, aGUIID);
     }
 }

@@ -52,7 +52,7 @@ public class ComputerBuilding {
         RM           .Mixer    .addRecipe2(F,150,20,OP.dust.mat(matList.MagnesiumSilicide.mat, 3),matList.AmmoniumChloride.getDust(12),ZL_FS,FL.array(MT.NH3.gas(12*U,false),flList.Silane.make(3000)),OP.dust.mat(MT.MgCl2,6));
     //Method2
         recipeManager.HeatMixer.addRecipe0(F,290,10,FL.array(MT.H2SiF6.liquid(3*U,false)),FL.array(flList.SiliconTetrafluoride.make(1000),MT.HF.gas(2*U,false)),ZL_IS);
-        RM           .Mixer    .addRecipe2(F,380,20,OP.dust.mat(MT.Na,1),OP.dust.mat(MT.Al,1),FL.array(FL.Hydrogen.make(2000)),FL.array(flList.SodiumAluminate.make(2000)),OP.dust.mat(matList.SodiumAluminiumHydride.mat, 20));
+        RM           .Mixer    .addRecipe2(F,380,20,OP.dust.mat(MT.Na,1),OP.dust.mat(MT.Al,1),FL.array(FL.Hydrogen.make(2000)),FL.array(flList.SodiumAluminate.make(1000)),OP.dust.mat(matList.SodiumAluminiumHydride.mat, 1));
         recipeManager.HeatMixer.addRecipe1(F,410,40,matList.SodiumAluminiumHydride.getDust(1),FL.array(flList.SiliconTetrafluoride.make(1000)),FL.array(flList.Silane.make(1000)/*TODO:1*NaAlF4*/),ZL_IS);
 
 //Make Boule 制作单晶硅 HU
@@ -127,20 +127,20 @@ public class ComputerBuilding {
         RM.add_smelting(ItemList.CircuitPartWaferT6Developed.get(1), ItemList.CircuitPartWaferT6HardBaked.get(1),250);
 
 //Dope 掺杂 TU
-        RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer200umDoped.get(1));
-        RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer72umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer72umDoped.get(1));
-        RM.Bath.addRecipeX(T,0,320, ST.array(ItemList.CPUWafer28umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer28umDoped.get(1));
-        RM.Bath.addRecipeX(T,0,280, ST.array(ItemList.CPUWafer8umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer8umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer200umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer72umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer72umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,320, ST.array(ItemList.CPUWafer28umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer28umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,280, ST.array(ItemList.CPUWafer8umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer8umDoped.get(1));
 
-        RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.RAMWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer200umDoped.get(1));
-        RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.RAMWafer72umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer72umDoped.get(1));
-        RM.Bath.addRecipeX(T,0,320, ST.array(ItemList.RAMWafer28umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer28umDoped.get(1));
-        RM.Bath.addRecipeX(T,0,280, ST.array(ItemList.RAMWafer8umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer8umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,400, ST.array(ItemList.RAMWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer200umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,400, ST.array(ItemList.RAMWafer72umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer72umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,320, ST.array(ItemList.RAMWafer28umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer28umDoped.get(1));
+        RM.Lightning.addRecipeX(T,0,280, ST.array(ItemList.RAMWafer8umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.RAMWafer8umDoped.get(1));
 
-        RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.CircuitPartWaferT3HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT3Doped.get(1));
-        RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.CircuitPartWaferT4HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT4Doped.get(1));
-        RM.Bath.addRecipeX(T,0,320, ST.array(ItemList.CircuitPartWaferT5HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT5Doped.get(1));
-        RM.Bath.addRecipeX(T,0,280, ST.array(ItemList.CircuitPartWaferT6HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT6Doped.get(1));
+        RM.Lightning.addRecipeX(T,0,400, ST.array(ItemList.CircuitPartWaferT3HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT3Doped.get(1));
+        RM.Lightning.addRecipeX(T,0,400, ST.array(ItemList.CircuitPartWaferT4HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT4Doped.get(1));
+        RM.Lightning.addRecipeX(T,0,320, ST.array(ItemList.CircuitPartWaferT5HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT5Doped.get(1));
+        RM.Lightning.addRecipeX(T,0,280, ST.array(ItemList.CircuitPartWaferT6HardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CircuitPartWaferT6Doped.get(1));
 
 //Check 检测 EU
         recipeManager.WaferTester.addRecipeX(T,60  ,400, ST.array(ItemList.CPUWafer200umDoped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUWafer200umChecked.get(1));

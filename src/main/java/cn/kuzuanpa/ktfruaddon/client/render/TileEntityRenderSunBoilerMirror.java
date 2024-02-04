@@ -40,7 +40,6 @@ public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
 
     public TileEntityRenderSunBoilerMirror() {
         GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-        model.renderOnly("base");
         GL11.glEndList();
     }
 

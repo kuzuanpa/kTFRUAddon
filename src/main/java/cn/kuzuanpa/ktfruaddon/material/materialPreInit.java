@@ -148,9 +148,9 @@ public class materialPreInit {
         //二甲二氯硅烷
         matList.Dichlorodimethylsilane.registerC(22048,"Dichlorodimethylsilane","Dichlorodimethylsilane",-76,60,255,255,255,130,"(CH"+NUM_SUB[3]+")"+NUM_SUB[2]+"Cl"+NUM_SUB[2]+"Si")
                 .put(TD.ItemGenerator.LIQUID);
-        //硅橡胶液
-        matList.SiliconeRubber.registerC(22049,"SiliconeRubber","SiliconeRubber",-98,237,255,255,255,130,"")
-	            .put(TD.ItemGenerator.LIQUID);
+        //硅橡胶
+        matList.SiliconeRubber.registerC(22049,"SiliconeRubber","SiliconeRubber",98,237,255,255,255,130,"")
+	            .put(TD.ItemGenerator.LIQUID,TD.ItemGenerator.DUSTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES);
         //氯化汞
         matList.MercuryIIChloride.registerC(22050,"MercuryIIChloride","MercuryIIChloride",277,302,255,255,255,130,"Cl"+NUM_SUB[2]+"Hg"+NUM_SUB[2])
                 .put(TD.ItemGenerator.DUSTS);
@@ -172,9 +172,9 @@ public class materialPreInit {
         //乙烯苯
         matList.Styrene.registerC(22056,"Styrene","Styrene",-31,145,255,255,255,130,"PhCH=CH"+NUM_SUB[2])
                 .put(TD.ItemGenerator.LIQUID);
-        //丁苯橡胶液
-        matList.SBR.registerC(22057,"SBR","SBR",-59,390,255,255,255,130,"")
-                .put(TD.ItemGenerator.LIQUID);
+        //丁苯橡胶
+        matList.SBR.registerC(22057,"SBR","SBR",59,390,25,21,32,130,"")
+                .put(TD.ItemGenerator.LIQUID,TD.ItemGenerator.DUSTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES);
         //异戊二烯
         matList.Isoprene.registerC(22058,"Isoprene","Isoprene",-145,32,255,255,255,130,"CH"+NUM_SUB[2]+"=CCH"+NUM_SUB[3]+"CHCH"+NUM_SUB[2])
                 .put(TD.ItemGenerator.LIQUID);
@@ -256,7 +256,6 @@ public class materialPreInit {
         //硝酸铵
         matList.AmmoniumNitrate.registerC(22084,"AmmoniumNitrate","AmmoniumNitrate",169,210,255,255,255,130,"NH4NO"+NUM_SUB[3])
                 .put(TD.ItemGenerator.DUSTS);
-        //?
         matList.HensSoPretty.registerC(22085,"HenSoPretty","HenSoPretty",2333,23333,0,0,0,0,"GeInNbTiMg")
                 .put(TD.ItemGenerator.DUSTS);
         //钠钾合金

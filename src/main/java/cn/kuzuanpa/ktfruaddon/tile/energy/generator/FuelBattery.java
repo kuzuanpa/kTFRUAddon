@@ -238,7 +238,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     }
 
     // Icons
-    public static IIconContainer
+    public final static IIconContainer
             sTextureSides       = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/colored/sides"),
             sTextureTop         = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/colored/top"),
             sTextureBottom      = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/colored/bottom"),
@@ -248,7 +248,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
             sOverlayFrontActive = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/front_active"),
             sOverlayFrontPole   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/front_pole"),
 
-    sOverlaySidesPoleA   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides_pole_a"),
+            sOverlaySidesPoleA   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides_pole_a"),
             sOverlaySidesPoleB   = new Textures.BlockIcons.CustomIcon("machines/generators/fuel_battery/overlay/sides_pole_b")
                     ;
 
