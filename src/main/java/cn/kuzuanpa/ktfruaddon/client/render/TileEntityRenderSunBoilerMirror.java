@@ -36,10 +36,18 @@ public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/sunboiler/mirror.obj"));
     ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/sunboiler/mirror.png");
 
-    private static int bodyList;
+    private static int bodyLists;
 
     public TileEntityRenderSunBoilerMirror() {
-        GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
+        bodyLists = GL11.glGenLists(3);
+        GL11.glNewList(bodyLists, GL11.GL_COMPILE);
+        model.renderPart("base");
+        GL11.glEndList();
+        GL11.glNewList(bodyLists+1, GL11.GL_COMPILE);
+        model.renderPart("mirror");
+        GL11.glEndList();
+        GL11.glNewList(bodyLists+2, GL11.GL_COMPILE);
+        model.renderPart("rotate");
         GL11.glEndList();
     }
 
@@ -64,7 +72,8 @@ public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
             bindTexture(texture);
-            model.renderPart("base");
+            GL11.glCallList(bodyLists);
+
 
         GL11.glPushMatrix();
 
@@ -74,11 +83,11 @@ public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
             GL11.glTranslatef(0, 0.99f, 0);
             GL11.glRotatef(tile.rotateVertical, 0, 0, 1);
             GL11.glTranslatef(0, -1.02f, 0);
-            model.renderOnly("mirror");
+            GL11.glCallList(bodyLists+1);
         GL11.glPopMatrix();
         GL11.glPushMatrix();
             GL11.glRotatef(-tile.rotateHorizontal, 0, 1, 0);
-            model.renderOnly("rotate");
+            GL11.glCallList(bodyLists+2);
 
             int color;
 
