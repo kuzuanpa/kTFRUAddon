@@ -33,12 +33,14 @@ import gregapi.recipes.Recipe.RecipeMap;
 import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import zmaster587.advancedRocketry.api.stations.DysonSphere;
@@ -61,6 +63,11 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/DysonSphere/star.obj"));
 	ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/DysonSphere/star.png");
 	private int bodyList,glTextureId=-1;
+	public float rotateAngle=-1;
+	protected float rotateAngleReal=0;
+
+	/**Those values is used for the pointer to nodes**/
+	protected int nodePointerClock=-1,selectedNodeY=-1,selectedNodeYPre=-1;
 
 	public int selectedStarID =-1;
 	public boolean enableCopyPasteMode=false,drawNodesCoord=false;
@@ -68,6 +75,7 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	@Override
 	public void initGui() {
 		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
+		model.renderPart("Cube");
 		GL11.glEndList();
 		super.initGui();
 		mBackground = new ResourceLocation(MOD_ID,"textures/gui/DysonSphere/space.png");
@@ -101,11 +109,24 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	}
 	protected void drawGuiContainerForegroundLayer2(int par1, int par2) {
 		tickMouseOffset();
+		tickRotate();
+	}
+	protected void tickRotate(){
+		if(rotateAngle<0){
+			rotateAngleReal=(System.currentTimeMillis()%36000)/100F;
+		}
+		else {
+			if (Math.abs(rotateAngleReal-rotateAngle)<0.5F){
+				selectedNodeY=selectedNodeYPre;
+				return;
+			}
+			if (rotateAngleReal<rotateAngle)rotateAngleReal+=(rotateAngle-rotateAngleReal)/36F;
+			if (rotateAngleReal>rotateAngle)rotateAngleReal-=(rotateAngleReal-rotateAngle)/36F;
+		}
 	}
 	@Override
 	protected void drawGuiContainerBackgroundLayer2(float par1, int par2, int par3) {
 		GL11.glPushMatrix();
-		GL11.glColor4f(0.9F,0.9F, 1.0F, 0.3F);
 		this.drawTexturedModalRect(0,0, 0, 0, (int) (width*0.6), height);
 		GL11.glPopMatrix();
 
@@ -118,17 +139,18 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	public void drawStar(int x ,int y){
 		DysonSphere theDysonSphere =DimensionManager.getInstance().getStar(selectedStarID).dysonSphere;
 
-		if(theDysonSphere!=null)theDysonSphere.drawFrontLayer(x,y+2,50,300,0,0.12F,0.4F);
-		if(theDysonSphere!=null)theDysonSphere.drawBehindLayer(x,y+2,50,300,0,0.12F,0.4F);
+		if(theDysonSphere!=null)theDysonSphere.drawBehindLayer(x,y+1,50,300,0,0.12F,0.4F,rotateAngleReal);
+
+		if(theDysonSphere!=null)theDysonSphere.drawFrontLayer(x,y+1,50,300,0,0.12F,0.4F,rotateAngleReal);
 
 		GL11.glPushMatrix();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
-		GL11.glTranslatef(x,y,280);
+		GL11.glTranslatef(x,y,290);
 		float[] color = DimensionManager.getInstance().getStar(selectedStarID).getColor();
 		GL11.glColor4f(color[0],color[1], color[2], 1.0F);
 		GL11.glScalef(40,40,1);
-		GL11.glRotatef((System.currentTimeMillis()%36000)/100F, 0, 1, 0);
-		model.renderPart("Cube");
+		GL11.glRotatef(rotateAngleReal, 0, 1, 0);
+		GL11.glCallList(bodyList);
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
@@ -140,10 +162,34 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		GL11.glTranslatef(-128,-128,290);
 		this.drawTexturedModalRect(0,0, 0, 0, 256, 256);
 		GL11.glPopMatrix();
-
-
+		if(theDysonSphere!=null)drawDysonSphereNodePointer(x,y,theDysonSphere);
 	}
 
+	public void drawDysonSphereNodePointer(int x,int y,@NotNull DysonSphere theDysonSphere){
+		if(selectedNodeY>=0) {
+			if(nodePointerClock<height)nodePointerClock+=2;
+
+			float f2 = y - (1.4F * (70 + (theDysonSphere.size * 0.6F)) * (float) Math.cos(3.14 * (selectedNodeY + 11F) / (21 + DysonSphere.lengthYFromSize[theDysonSphere.size])));
+
+			GL11.glPushMatrix();
+			GL11.glColor4f(1,1,1,1);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			Tessellator tessellator = Tessellator.instance;
+			GL11.glLineWidth(1.3F);
+			tessellator.startDrawing(1);
+			tessellator.addVertex(x-Math.min(nodePointerClock,50), f2+Math.min(nodePointerClock,50), 420);
+			tessellator.addVertex(x, f2, 420);
+			if(nodePointerClock>50){
+				tessellator.addVertex(x-50, f2+50, 420);
+				tessellator.addVertex(x-50, f2+nodePointerClock, 420);
+			}
+			tessellator.draw();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glPopMatrix();
+
+		}
+
+	}
 
 	public void handleMouseInput(){
 		super.handleMouseInput();
@@ -154,23 +200,22 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		if(Mouse.isButtonDown(1)){
 			float dX=Mouse.getDX();
 			float dY=Mouse.getDY();
-			if(Math.abs(nodeButtonOffsetX+dX)>200||Math.abs(nodeButtonOffsetY-dY)>200)return;
-			nodeButtonOffsetX+=dX;
-			nodeButtonOffsetY-=dY;
+			if(Math.abs(nodeButtonOffsetX+dX)<300) nodeButtonOffsetX+=dX;
+			if(Math.abs(nodeButtonOffsetY-dY)<300)nodeButtonOffsetY-=dY;
 		}
 	}
 
 	public void tickMouseOffset(){
-		int deltaX= (int) ((nodeButtonOffsetX-nodeButtonOffsetXOld)/Math.sqrt(Math.abs(nodeButtonOffsetX-nodeButtonOffsetXOld)));
-		int deltaY= (int) ((nodeButtonOffsetY-nodeButtonOffsetYOld)/Math.sqrt(Math.abs(nodeButtonOffsetY-nodeButtonOffsetYOld)));
-		int deltaWheelY=(int) ((starButtonWheelOffset-starButtonWheelOffsetOld)/Math.sqrt(Math.abs(starButtonWheelOffset-starButtonWheelOffsetOld)));
+		int deltaX= (int) ((nodeButtonOffsetX-nodeButtonOffsetXOld)/6);
+		int deltaY= (int) ((nodeButtonOffsetY-nodeButtonOffsetYOld)/6);
+		int deltaWheelY=(int) ((starButtonWheelOffset-starButtonWheelOffsetOld)/10);
 
 		if(((StarButton) buttonList.get(0)).yPosition+deltaWheelY<5)for(int k=0;k<starButtonsEnd;k++)((StarButton) buttonList.get(k)).yPosition+= deltaWheelY;
 
 		buttonList.forEach(nodeButton->{if(nodeButton instanceof DysonNodeButton) {
 			((DysonNodeButton) nodeButton).xPosition+=deltaX;
 			((DysonNodeButton) nodeButton).yPosition+=deltaY;
-			if(((DysonNodeButton) nodeButton).yPosition+8>height*0.76)((DysonNodeButton) nodeButton).enabled=false;
+			if(((DysonNodeButton) nodeButton).yPosition+8>height*0.76||((DysonNodeButton) nodeButton).xPosition+8<width*0.6)((DysonNodeButton) nodeButton).enabled=false;
 			else ((DysonNodeButton) nodeButton).enabled=true;
 		}});
 		nodeButtonOffsetXOld+=deltaX;
@@ -191,7 +236,11 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		if(button instanceof DysonNodeButton){
 			buttonList.removeAll(nodeLevelChoosingButtons);
 			starButtons.removeAll(nodeLevelChoosingButtons);
+			nodePointerClock=selectedNodeYPre=selectedNodeY=-1;
+
 			nodeLevelChoosingButtons.clear();
+			rotateAngle=(360.0F / DysonSphere.getValidNodesInARow(DimensionManager.getInstance().getStar(selectedStarID).dysonSphere.size, ((DysonNodeButton) button).nodeY)) * ((DysonNodeButton) button).nodeX;
+			selectedNodeYPre=((DysonNodeButton) button).nodeY;
 			if(enableCopyPasteMode){
 
 				if(copiedNodeLevel==0){
@@ -247,6 +296,12 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		return true;
 	}
 
+	@Override
+	public boolean onNoButtonPressed() {
+		rotateAngle=selectedNodeYPre=selectedNodeY=nodePointerClock=-1;
+		return true;
+	}
+
 	public void updateNode(int nodeX,int nodeY,byte nodeLevel,byte nodeType) {
 		DimensionManager.getInstance().getStar(selectedStarID).dysonSphere.nodesLevel[nodeY][nodeX]= nodeLevel;
 		DimensionManager.getInstance().getStar(selectedStarID).dysonSphere.nodesType[nodeY][nodeX]= nodeType;
@@ -274,7 +329,7 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 				if(((DysonNodeButton) nodeButton).yPosition+8>height*0.76)((DysonNodeButton) nodeButton).enabled=false;
 				else ((DysonNodeButton) nodeButton).enabled=true;
 			}});
-			else {nodeButtonOffsetX=0;nodeButtonOffsetY=0;nodeButtonOffsetYOld=0;nodeButtonOffsetXOld=0;}
+			else {nodeButtonOffsetX=0;nodeButtonOffsetY=0;nodeButtonOffsetYOld=0;nodeButtonOffsetXOld=0;rotateAngle=selectedNodeYPre=selectedNodeY=nodePointerClock=-1;}
 	}
 
 	/**Buttons in this list will be removed when selected Star changed**/

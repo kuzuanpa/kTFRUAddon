@@ -34,15 +34,15 @@ import org.lwjgl.opengl.GL11;
 import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 
 public class TileEntityRenderExampleMultiBlock extends TileEntitySpecialRenderer {
-    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/test.obj"));
+    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/lathe.obj"));
 
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/models/lathe.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/lathe.png");
 
     private static int bodyList;
 
     public TileEntityRenderExampleMultiBlock() {
         GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-        model.renderPart("test");
+        model.renderAll();
         GL11.glEndList();
     }
 
@@ -64,7 +64,7 @@ public class TileEntityRenderExampleMultiBlock extends TileEntitySpecialRenderer
         GL11.glTranslated(x + .5f, y, z + 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[multiBlockTile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
-        GL11.glTranslated(-.5f, -60f, -2.5f);
+        GL11.glTranslated(-.5f, 5f, -2.5f);
 
         bindTexture(texture);
         GL11.glCallList(bodyList);

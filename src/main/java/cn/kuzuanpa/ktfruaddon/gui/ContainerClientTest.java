@@ -80,4 +80,9 @@ public class ContainerClientTest extends ContainerClientbase {
 			case 2:
 			default: return true;
 		}
-	}}
+	}
+	@Override
+	public boolean onNoButtonPressed() {
+		return true;
+	}
+}
