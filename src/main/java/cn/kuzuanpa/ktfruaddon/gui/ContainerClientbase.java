@@ -63,13 +63,14 @@ public abstract class ContainerClientbase extends ContainerClient {
     {
         if (p_73864_3_ == 0)
         {
+            boolean result=false;
             for (int l = 0; l < this.buttonList.size(); ++l)
             {
                 GuiButton guibutton = (GuiButton)this.buttonList.get(l);
 
                 if (guibutton.mousePressed(this.mc, p_73864_1_, p_73864_2_))
                 {
-                    boolean result=false;
+
                     GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(this, guibutton, this.buttonList);
                     if (MinecraftForge.EVENT_BUS.post(event))
                         break;
@@ -78,12 +79,14 @@ public abstract class ContainerClientbase extends ContainerClient {
                     result=onButtonPressed(event.button);
                     if (this.equals(this.mc.currentScreen))
                         MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.ActionPerformedEvent.Post(this, event.button, this.buttonList));
-                    if(result)return;
+                    if(result)break;
                 }
             }
+            if(!result)onNoButtonPressed();
         }
     }
 
     public abstract void mouseMove(int x, int y);
     public abstract boolean onButtonPressed(GuiButton button);
+    public abstract boolean onNoButtonPressed();
 }
