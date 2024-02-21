@@ -71,8 +71,8 @@ public class OreProcessing {
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.SodiumCarbonate.make(1000)),FL.array(FL.DistW.make(750)),OP.dust.mat(MT.Na2CO3,1));
         RM.Bath.addRecipeX(T,0,20, ST.array(OP.dust.mat(MT.Na2CO3,1)),FL.array(MT.H2O.liquid(U , T)),FL.array(flList.SodiumCarbonate.make(1000)),ZL_IS);
       //U Process
-        RM.Bath.addRecipeX(F,0,200,ST.array(OP.dust.mat(MT.OREMATS.Uraninite,1)),FL.array(flList.SodiumCarbonate.make(1000)),FL.array(flList.UranylCarbonateSolution.make(1000)),matList.UraniniteCinder.getDust(1));
-        RM.Bath.addRecipeX(F,0,200,ST.array(OP.dust.mat(MT.OREMATS.Pitchblende,1)),FL.array(flList.SodiumCarbonate.make(1000)),FL.array(flList.UranylCarbonateSolution.make(1000)),matList.PitchblendeCinder.getDust(1));
+        RM.Bath.addRecipeX(F,0,200,ST.array(OP.dust.mat(MT.OREMATS.Uraninite,2)),FL.array(flList.SodiumCarbonate.make(2000)),FL.array(flList.UranylCarbonateSolution.make(2000)),matList.UraniniteCinder.getDust(1));
+        RM.Bath.addRecipeX(F,0,200,ST.array(OP.dust.mat(MT.OREMATS.Pitchblende,2)),FL.array(flList.SodiumCarbonate.make(1000)),FL.array(flList.UranylCarbonateSolution.make(1000)),matList.PitchblendeCinder.getDust(2));
 
         RM.Mixer.addRecipe0(F,128,80,FL.array(MT.NH3.gas(U,false),flList.Methanol.make(1000)),FL.array(flList.MethylTertiaryAmine.make(1000),FL.Water.make(1000)),ZL_IS);
         RM.Mixer.addRecipe1(F,500,20,OP.dust.mat(matList.OleicAcid.get(),1),FL.array(FL.BioEthanol.make(1000),MT.H2SO4.liquid(0,false)),FL.array(flList.EthylOleate.make(1000)));
@@ -80,7 +80,7 @@ public class OreProcessing {
 
         RM.Mixer.addRecipe0(F,128,20,FL.array(flList.UranylCarbonateSolution.make(1000),flList.UraniumExtractant.make(1000)),FL.array(flList.ExtractedUranium.make(1000),MT.H2S.gas(U,false)),ZL_IS);
         RM.Mixer.addRecipe0(F,128,20,FL.array(flList.ExtractedUranium.make(1000),flList.TributylPhosphate.make(1000)),FL.array(flList.UraniumExtractant.make(1000),flList.ExtractedUranium2.make(1000)),ZL_IS);
-        RM.Mixer.addRecipe0(F,128,20,FL.array(flList.ExtractedUranium2.make(1000),MT.HNO3.liquid(U,false),MT.HCl.gas(U,false)),ZL_FS,matList.UraniumNitrateHexahydrate.getDust(3),OP.dust.mat(MT.NaCl,2));
+        RM.Mixer.addRecipe0(F,128,20,FL.array(flList.ExtractedUranium2.make(1000),MT.AquaRegia.liquid(2*U,false)),ZL_FS,matList.UraniumNitrateHexahydrate.getDust(3),OP.dust.mat(MT.NaCl,2));
 
         recipeManager.HeatMixer.addRecipe1(F,1428,20,matList.UraniumNitrateHexahydrate.getDust(1),FL.array(MT.HF.gas(4*U,false)),ZL_FS,OP.dust.mat(MT.UF4,1));
 
@@ -89,5 +89,9 @@ public class OreProcessing {
         recipeManager.HeatMixer.addRecipe2(F,465,100,OP.dust.mat(MT.WaxParaffin,1),OP.dust.mat(MT.MnO2,0),FL.array(FL.Oxygen.make(1000)),ZL_FS,matList.OleicAcid.getDust(1));
         recipeManager.HeatMixer.addRecipe1(F,240,600,OP.ingot.mat(MT.Butter,2),FL.array(MT.HCl.gas(0,false)),FL.array(MT.Glycerol.liquid(U,false)),matList.OleicAcid.getDust(3));
         recipeManager.HeatMixer.addRecipe1(F,240,600,OP.ingot.mat(MT.Butter,2),FL.array(MT.H2SO4.liquid(0,false)),FL.array(MT.Glycerol.liquid(U,false)),matList.OleicAcid.getDust(3));
+
+        RM.Centrifuge.addRecipe1(F,200,80,matList.PitchblendeCinder.getDust(2),ZL_FS,ZL_FS,OP.dust.mat(MT.Th,1),OP.dust.mat(MT.Pb,1),OP.dust.mat(MT.Na2SO4,2));
+        RM.Centrifuge.addRecipe1(F,200,80,matList.UraniniteCinder.getDust(1),ZL_FS,ZL_FS,OP.dustSmall.mat(MT.Th,1),OP.dustTiny.mat(MT.Pb,3));
+
     }
 }
