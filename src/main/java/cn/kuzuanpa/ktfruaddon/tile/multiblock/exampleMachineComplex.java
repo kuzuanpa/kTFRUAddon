@@ -47,6 +47,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
     //                 v
     //y轴为一张新的表格，代码中位于最上的表是最底下一层
     //默认情况(不改动偏移量)下主方块位于tX,tZ,如下所示
+    // ^^^^
     //{main,part},
     //{part,part}
     //Map direction:
@@ -58,6 +59,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
     //                 | axisZ
     //                 v
     //In default (didn't modify offset),main block is on tX,tZ.For example:
+    // ^^^^
     //{main,part},
     //{part,part}
     //这里决定每个参与构成本机器的方块的子id

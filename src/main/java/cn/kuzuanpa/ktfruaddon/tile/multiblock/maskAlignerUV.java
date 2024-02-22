@@ -35,7 +35,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import java.util.List;
 
 import static gregapi.data.CS.*;
-public class maskAlignerUVScanning extends TileEntityBaseMultiInputMachine {
+public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
         public final short machineX = 3, machineY = 2, machineZ = 2;
         public final short xMapOffset = -1;
     public IIconContainer[] mTexturesMaterial = null, mTexturesInactive = null, mTexturesActive = null, mTexturesRunning = null;

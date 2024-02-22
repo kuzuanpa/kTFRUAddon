@@ -29,6 +29,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.List;
+
 import static gregapi.data.CS.*;
 
 public class CommonMachinePart extends MultiTileEntityBasicMachine implements IMultiTileEntity.IMTE_BreakBlock {
@@ -217,6 +219,9 @@ public class CommonMachinePart extends MultiTileEntityBasicMachine implements IM
             tTarget.onStructureChange();
         }
         return false;
+    }
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        super.addToolTips(aList, aStack, aF3_H);
     }
     @Override
     public int getLightOpacity(){
