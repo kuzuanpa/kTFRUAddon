@@ -10,6 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.parts;
 
+import gregapi.data.LH;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
@@ -23,6 +24,7 @@ public class MultiBlockPartEnergyConsumer extends CommonMachinePart {
     }
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
     }
     @Override
     public boolean allowRightclick(Entity aEntity) {
