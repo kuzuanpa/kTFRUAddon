@@ -60,9 +60,9 @@ public class Plastic {
         RM           .Bath               .addRecipe2(F,0,80,OP.dust.mat(MT.NaOH,4),matList.BPA.getDust(4),FL.array(FL.Water.make(1000)),FL.array(flList.SolutionBPASodium.make(1000)),ZL_IS);
         recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.SolutionBPASodium.make(1000),flList.Phosgene.make(200),flList.Dichloromethane.make(200)),ZL_FS,matList.Polycarbonate.getDust(4));
 
-        recipeManager.HeatMixer          .addRecipe1(F,142,380,OP.dust.mat(MT.Zn,1),FL.array(MT.HF.gas(16*U10,false),flList.Chloroform.make(400)),FL.array(flList.Tetrafluoroethylene.make(400),MT.HCl.gas(2*U,false)),matList.ZincChloride.getDust(1));
+        recipeManager.HeatMixer          .addRecipe1(F,142,380,OP.dust.mat(MT.Zn,1),FL.array(MT.HF.gas(16*U10,false),flList.Chloroform.make(400)),FL.array(flList.Tetrafluoroethylene.make(400),MT.HCl.gas(2*U,false)),matList.ZincChloride.getDust(3));
 
-        RM.           Electrolyzer       .addRecipe1(F,26,80,matList.ZincChloride.getDust(1),ZL_FS,MT.Cl.gas(U*2,true),OP.dust.mat(MT.Sn,1));
+        RM.           Electrolyzer       .addRecipe1(F,26,80,matList.ZincChloride.getDust(3),ZL_FS,MT.Cl.gas(U*2,true),OP.dust.mat(MT.Zn,1));
         RM.           Mixer              .addRecipe1(F,256,120,OP.dust.mat(MT.K2S2O7,0),FL.array(flList.Tetrafluoroethylene.make(1000),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.Teflon,7));
 
         recipeManager.HeatMixer          .addRecipe2(F,320,120,matList.BPA.getDust(1),OP.dust.mat(MT.NaOH,2),FL.array(flList.Epichlorohydrin.make(1000)),FL.array(FL.Saltwater.make(800)),matList.EpoxyResin.getDust(6));

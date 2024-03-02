@@ -22,6 +22,7 @@ package cn.kuzuanpa.ktfruaddon.tile;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import cn.kuzuanpa.ktfruaddon.material.matList;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.tile.accelerator.exampleMachine;
 import cn.kuzuanpa.ktfruaddon.tile.casing.rustBronzeCasing;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.FuelBattery;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.ManualGeneratorKU;
@@ -175,7 +176,7 @@ public class tileEntityInit {
 
         //QU Machines,26000-26999
 
-        //EU Machines,27000-27999
+        //EU Machines,27000-28999
         aClass = MultiTileEntityBasicMachineElectric.class;
         i=27000;
         //Heat Mixer
@@ -232,8 +233,10 @@ public class tileEntityInit {
        //aMat = MT.DATA.Electric_T[4];   kRegistry.add("Furnace (Ultra Clean,"+VN[4]+")" , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 2048, NBT_TEXTURE, "ultracleanfurnace", NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.UltraCleanFurnace, NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
        //aMat = MT.DATA.Electric_T[5];   kRegistry.add("Furnace (Ultra Clean,"+VN[5]+")" , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 8192, NBT_TEXTURE, "ultracleanfurnace", NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeManager.UltraCleanFurnace, NBT_INV_SIDE_IN, SBIT_U|SBIT_L, NBT_INV_SIDE_AUTO_IN, SIDE_LEFT, NBT_INV_SIDE_OUT, SBIT_R|SBIT_D, NBT_INV_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_TANK_SIDE_IN, SBIT_U|SBIT_L, NBT_TANK_SIDE_AUTO_IN, SIDE_TOP, NBT_TANK_SIDE_OUT, SBIT_R|SBIT_D, NBT_TANK_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_ENERGY_ACCEPTED_SIDES, SBIT_B, NBT_USE_OUTPUT_TANK, T));
 
-
-        //RF Machines,28000-28999
+        i=28990;
+        aClass= exampleMachine.class;
+        aMat = MT.DATA.Electric_T[1];   kRegistry.add("Example Machine ("+VN[1]+")"        , "kTFRUAddon: Machines" , i++, 20001, aClass, aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   4.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_INPUT, 32,NBT_INPUT_MIN,16,NBT_INPUT_MAX,64 ,NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_INV_SIDE_AUTO_IN,SIDE_FRONT, /*Use this as another inv autoIn*/NBT_TANK_SIDE_AUTO_IN,SIDE_BACK,NBT_INV_SIDE_AUTO_OUT,SIDE_UP));
+        //RF Machines,29000-29999
 
     //Multiblock
 

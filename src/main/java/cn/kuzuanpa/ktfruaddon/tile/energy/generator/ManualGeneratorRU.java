@@ -21,8 +21,6 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.ITileEntityFunnelAccessible;
-import gregapi.tileentity.ITileEntityTapAccessible;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.behavior.TE_Behavior_Active_Trinary;
 import gregapi.tileentity.energy.ITileEntityEnergy;
@@ -36,7 +34,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
 import java.util.Collection;
@@ -44,7 +41,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class ManualGeneratorRU extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
+public class ManualGeneratorRU extends TileEntityBase09FacingSingle implements ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
     public boolean mStopped = F;
     public byte vProgressLevel;
     public long mEnergy = 0, mOutputMin = 16, mOutputMax = 64,timeRemaining=0,timeGainRate=8,maxTime=800;
