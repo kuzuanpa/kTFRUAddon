@@ -21,8 +21,6 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.ITileEntityFunnelAccessible;
-import gregapi.tileentity.ITileEntityTapAccessible;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.behavior.TE_Behavior_Active_Trinary;
 import gregapi.tileentity.energy.ITileEntityEnergy;
@@ -36,7 +34,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
 import java.util.Collection;
@@ -44,7 +41,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityFunnelAccessible, ITileEntityTapAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
+public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
     public boolean mStopped = F;
     public byte vProgressLevel;
     public long mEnergy = 0, mOutputMin = 16, mOutputMax = 64,timeRemaining=0,timeGainRate=8,maxTime=800;
@@ -191,73 +188,33 @@ return 0;
     public boolean canDrop(int aInventorySlot) {
         return T;
     }
-
-    @Override
-    public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
-        return aEmitting && aEnergyType == mEnergyTypeEmitted;
-    }
-
-    @Override
-    public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {
-        return aSide == mFacing && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);
-    }
-
-    @Override
-    public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {
-        return Math.min(getRate(), mEnergy);
-    }
-
-    @Override
-    public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {
+    @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {return aEmitting && aEnergyType == mEnergyTypeEmitted;}
+    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aSide == mFacing && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);}
+    @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {return Math.min(getRate(), mEnergy);}
+    @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {
         return mOutputMin;
     }
-
-    @Override
-    public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {
+    @Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {
         return mOutputMin;
     }
-
-    @Override
-    public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {
+    @Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {
         return mOutputMax;
     }
-
-    @Override
-    public Collection<TagData> getEnergyTypes(byte aSide) {
+    @Override public Collection<TagData> getEnergyTypes(byte aSide) {
         return mEnergyTypeEmitted.AS_LIST;
     }
-
-    @Override
-    public boolean getStateRunningPassively() {
+    @Override public boolean getStateRunningPassively() {
         return mActivity.mActive;
     }
-
-    @Override
-    public boolean getStateRunningPossible() {
+    @Override public boolean getStateRunningPossible() {
         return mActivity.mActive;
     }
-
-    @Override
-    public boolean getStateRunningActively() {
+    @Override public boolean getStateRunningActively() {
         return mActivity.mActive;
     }
-
-    @Override
-    public boolean setAdjacentOnOff(boolean aOnOff) {
-        mStopped = !aOnOff;
-        return !mStopped;
-    }
-
-    @Override
-    public boolean setStateOnOff(boolean aOnOff) {
-        mStopped = !aOnOff;
-        return !mStopped;
-    }
-
-    @Override
-    public boolean getStateOnOff() {
-        return !mStopped;
-    }
+    @Override public boolean setAdjacentOnOff(boolean aOnOff) {mStopped = !aOnOff;return !mStopped;}
+    @Override public boolean setStateOnOff(boolean aOnOff) {mStopped = !aOnOff;return !mStopped;}
+    @Override public boolean getStateOnOff() {return !mStopped;}
 
     // Icons
     public static IIconContainer[] sColoreds = new IIconContainer[]{
