@@ -34,6 +34,8 @@ public enum matList {
     ,/**钠钾合金**/PotassiumSodium
 
     ,/**CaiXuKunMeme**/ HensSoPretty
+
+    ,/**智金**/Ij
     ;
     public OreDictMaterial mat;
     public OreDictMaterial registerWithDust(int id, String OreDictName, String EnglishName, int meltTempK, int boilTempK, int colorR, int colorG, int colorB, int colorA, String formula) {
