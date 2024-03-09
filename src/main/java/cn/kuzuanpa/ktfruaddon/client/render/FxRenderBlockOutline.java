@@ -26,9 +26,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FxRenderBlockOutline {
+public final class FxRenderBlockOutline {
+    private int lines;
     public FxRenderBlockOutline(){
     }
+
     private static class blockOutlineToRender{
         protected blockOutlineToRender(ChunkCoordinates pos, int color, float thickness){
             this.pos=pos;
@@ -54,6 +56,7 @@ public class FxRenderBlockOutline {
 
     @SubscribeEvent
     public void onWorldRenderLast(RenderWorldLastEvent event) {
+        if(blockOutlineToRenderArrayList.isEmpty())return;
         try {
             blockOutlineToRenderArrayList.forEach(blockOutline -> renderBlockOutlineAt(blockOutline.pos, blockOutline.color, blockOutline.thickness));
         }catch (Throwable ignored){}
