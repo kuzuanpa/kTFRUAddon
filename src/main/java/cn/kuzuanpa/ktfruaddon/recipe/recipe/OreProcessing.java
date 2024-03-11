@@ -29,7 +29,7 @@ public class OreProcessing {
         RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2*U,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OP.dust.mat(matList.AmmoniumSulfate.mat,9));
         RM.Electrolyzer.addRecipe2(F,120,360,matList.AmmoniumChromicSulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U+U2,T)),OP.dust.mat(MT.Cr,1),matList.AmmoniumDichromate.getDust(2));
         RM.Electrolyzer.addRecipe2(F,64,320,matList.AmmoniumIronIIISulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U*3,T)),OP.dust.mat(MT.Fe,2),matList.AmmoniumSulfate.getDust(4));
-        recipeManager.HeatMixer.addRecipeX(T,256,160,ST.array(OP.dust.mat(matList.AmmoniumDichromate.get(),1)),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OP.dust.mat(MT.CrO2, 2));
+        recipeManager.HeatMixer.addRecipeX(T,320,160,ST.array(OP.dust.mat(matList.AmmoniumDichromate.get(),1)),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OP.dust.mat(MT.CrO2, 2));
 
    //Al processing
         RM.Mixer.addRecipe0(F,16,40,FL.array(FL.DistW.make(1000),FL.CarbonDioxide.make(1000)),FL.array(FL.Soda.make(1000)));

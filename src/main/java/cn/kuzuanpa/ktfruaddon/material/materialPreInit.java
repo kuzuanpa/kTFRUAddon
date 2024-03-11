@@ -9,6 +9,7 @@
 package cn.kuzuanpa.ktfruaddon.material;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import gregapi.data.MT;
 import gregapi.data.TD;
 
 import static cn.kuzuanpa.ktfruaddon.code.Variables.Symbols;
@@ -304,7 +305,8 @@ public class materialPreInit {
         matList.SodiumAluminiumHydride.registerC(22100,"SodiumAluminiumHydride","SodiumAluminiumHydride",178,231,255,255,255,130,"NaAlH4")
                 .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
         //智金
-        matList.Ij.registerC(22101,"intellite","Intellite",118,119,213,221,255,255,"Ij")
-                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES,TD.ItemGenerator.ORES);
+        matList.Ij.registerC(22101,"intellite","Intellite",118,132,213,221,255,255,"Ij")
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES,TD.ItemGenerator.ORES,TD.Processing.EXTRUDER_SIMPLE)
+                .ores(MT.Ag, MT.OREMATS.Ilmenite);
     }
 }

@@ -51,7 +51,7 @@ public class Circuits {
 
         
         CR.shaped(ItemList.CapacitorT1.get(1),DEF_REV," PC","FPC"," xW", 'P', Items.paper,'W',OP.wireFine.mat(MT.Cu,1),'C',OP.foil.mat(MT.Cu,1),'F',OP.foil.mat(MT.Rubber,1));
-        CR.shaped(ItemList.CapacitorT2.get(1),DEF_REV," PC","FPC"," xW", 'P',OP.dust.mat(MT.Al2O3,1),'W',OP.wireFine.mat(MT.Ag,1),'C',OP.foil.mat(MT.Cu,1),'F',OP.foil.mat(MT.Rubber,1));
+        CR.shaped(ItemList.CapacitorT2.get(1),DEF_REV," PC","FPC"," xW", 'P',OP.dust.mat(MT.Al2O3,1),'W',OP.wireFine.mat(MT.Ag,1),'C',OP.foil.mat(MT.Al,1),'F',OP.foil.mat(MT.Rubber,1));
         recipeManager.Assembler.addRecipeX(F,16,80,ST.array(OP.foil.mat(MT.Cu,16),OP.foil.mat(MT.Rubber,8),OP.plate.mat(MT.Paper,16),OP.wireFine.mat(MT.Cu,8)), FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CapacitorT1.get(8));
         recipeManager.Assembler.addRecipeX(F,140,70,ST.array(OP.foil.mat(MT.Al,16),OP.foil.mat(MT.Rubber,8),OP.dust.mat(MT.Al2O3,16),OP.wireFine.mat(MT.Ag,8)), FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CapacitorT2.get(10));
         recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Pt,4),OP.foil.mat(MT.Nb,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
