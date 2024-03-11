@@ -26,3 +26,4 @@ eclipse
 .vscode/
 bin/
 .classpath
+/libs/

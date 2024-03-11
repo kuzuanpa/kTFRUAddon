@@ -82,7 +82,9 @@ dependencies {
     implementation  "applecore:AppleCore:1.7.10-3.1.1:deobf"
     implementation  "ic2:IC2Classic:1.2.1.8:dev"
     implementation "micdoodle8.mods:MicdoodleCore:1.7-3.0.12.504:Dev"
-
+    implementation "openblocks:OpenBlocks:1.7.10-1.6-1.7.10:deobf"
+    implementation "openmods:OpenModsLib:1.7.10-0.10:deobf"
+    implementation "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
 
 }
 
