@@ -574,27 +574,6 @@ ktfru.item.it.computer.28.tooltip=算力: 11239 MFLOPS
 ktfru.item.it.computer.29=终极电路板计算机
 ktfru.item.it.computer.29.tooltip=算力: 32623 MFLOPS
 
-ktfru.item.particle.1000=Proton
-ktfru.item.particle.1000.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1001=Anti Proton
-ktfru.item.particle.1001.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1002=Electron
-ktfru.item.particle.1002.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1003=Positron (Anti Electron)
-ktfru.item.particle.1003.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1004=Neutron
-ktfru.item.particle.1004.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1005=Neutrino
-ktfru.item.particle.1005.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1006=Anti Neutrino
-ktfru.item.particle.1006.tooltip=A subatomic particle. Can be produced in particle collider.
-ktfru.item.particle.1007=Alpha Particle
-ktfru.item.particle.1007.tooltip=The nucleus of helium.
-ktfru.item.particle.1008=Higgs-Boson
-ktfru.item.particle.1008.tooltip=A Standard Model particle. Origin of mass.
-ktfru.item.particle.1009=Kerr Blackhole
-ktfru.item.particle.1009.tooltip=An extremely rare tiny blackhole that can be manually produced in particle collider
-
 
 ktfru.multitileentity.0=微型聚四氟乙烯流体管道
 ktfru.multitileentity.1=小型聚四氟乙烯流体管道
@@ -618,7 +597,14 @@ ktfru.multitileentity.10004=微型燃气涡轮 (钨钢)
 ktfru.multitileentity.10005=微型燃气涡轮 (钨)
 ktfru.multitileentity.10006=微型燃气涡轮 (铱)
 ktfru.multitileentity.10010=燃料电池
-ktfru.multitileentity.10011=手摇引擎
+ktfru.multitileentity.10021=手摇发动机 (木)
+ktfru.multitileentity.10022=手摇发动机 (青铜)
+ktfru.multitileentity.10026=手摇动能引擎 (木)
+ktfru.multitileentity.10027=手摇动能引擎 (青铜)
+ktfru.multitileentity.20000=流体加热器 (钢)
+ktfru.multitileentity.20001=流体加热器 (殷钢)
+ktfru.multitileentity.20002=流体加热器 (钛)
+ktfru.multitileentity.20003=流体加热器 (碳化钨)
 ktfru.multitileentity.22000=气体压缩机 (青铜)
 ktfru.multitileentity.22001=气体压缩机 (钢)
 ktfru.multitileentity.22002=气体压缩机 (钛)
@@ -664,17 +650,40 @@ ktfru.multitileentity.30003=光刻机 (UV)
 ktfru.multitileentity.30004=微型蒸馏塔
 ktfru.multitileentity.30005=小型蒸馏塔
 ktfru.multitileentity.30006=蒸馏塔
-ktfru.multitileentity.30007=模型测试大浸洗器
+ktfru.multitileentity.30007=太阳能集热塔
+ktfru.multitileentity.30008=模型测试大浸洗器
+
+ktfru.multitileentity.30009=光刻机 (步进UV)
 ktfru.multitileentity.30100=钢压缩气体储罐主方块
 ktfru.multitileentity.30101=不锈钢压缩气体储罐主方块
-ktfru.multitileentity.31000=传动轴 (Ti3Au)
-ktfru.multitileentity.31001=传动轴 (HSSE)
-ktfru.multitileentity.31002=铝壁板
-ktfru.multitileentity.31110=光模块 (UV)
-ktfru.multitileentity.31120=光刻机IO管理器 (UV)
-ktfru.multitileentity.31200=光刻机电源模块 (UV)
+ktfru.multitileentity.31000=铝壁板
+ktfru.multitileentity.31001=太阳能集热塔反射镜
+ktfru.multitileentity.31002=太阳能吸收器
+ktfru.multitileentity.31003=太阳能集热塔热管
+ktfru.multitileentity.31004=太阳能集热塔顶盖
+ktfru.multitileentity.31005=光刻机平台驱动器
+ktfru.multitileentity.31006=光刻机晶圆平台
+
+ktfru.multitileentity.31010=光模块 (UV)
+ktfru.multitileentity.31011=光模块(步进UV)
+ktfru.multitileentity.31012=光模块 (DUV)
+ktfru.multitileentity.31013=光模块 (EUV)
+
+ktfru.multitileentity.31020=光刻机IO管理器 (UV)
+ktfru.multitileentity.31021=光刻机IO管理器 (步进UV)
+ktfru.multitileentity.31022=光刻机IO管理器 (DUV)
+ktfru.multitileentity.31023=光刻机IO管理器 (EUV)
+
+
+
+ktfru.multitileentity.31500=光刻机电源模块 (UV)
+ktfru.multitileentity.31501=光刻机电源模块 (步进UV)
+ktfru.multitileentity.31502=光刻机电源模块 (DUV)
+ktfru.multitileentity.31503=光刻机电源模块 (EUV)
+
 ktfru.multitileentity.32005=计算集群
 ktfru.multitileentity.32006=简易计算集群
+ktfru.multitileentity.32750=戴森球控制台
 ktfru.multitileentity.32760=代码实用机器
 ktfru.multitileentity.32761=锈蚀青铜机械方块
 ktfru.multitileentity.32762=除锈青铜机械方块
