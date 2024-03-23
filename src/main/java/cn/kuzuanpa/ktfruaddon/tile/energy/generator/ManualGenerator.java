@@ -11,6 +11,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT;
+import gregapi.GT_API;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -33,6 +35,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -41,12 +44,16 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
+public class ManualGenerator extends TileEntityBase09FacingSingle implements ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff {
     public boolean mStopped = F;
-    public byte vProgressLevel;
+    public byte vProgressLevel,mPiston;
     public long mEnergy = 0, mOutputMin = 16, mOutputMax = 64,timeRemaining=0,timeGainRate=8,maxTime=800;
     public static TagData mEnergyTypeEmitted = TD.Energy.KU;
     public TE_Behavior_Active_Trinary mActivity = null;
+    public IIconContainer[] sColoreds =L6_IICONCONTAINER , sOverlays=L6_IICONCONTAINER, sOverlaysActive=L6_IICONCONTAINER, sOverlaysActiveFrontSpeed=L6_IICONCONTAINER, sOverlaysActiveSidesSpeed=L6_IICONCONTAINER ;
+
+    public ManualGenerator(){
+    }
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -60,6 +67,48 @@ public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements I
         if (aNBT.hasKey(kTileNBT.Generator.MAX_TIME)) maxTime = aNBT.getLong(kTileNBT.Generator.MAX_TIME);
         if (aNBT.hasKey(kTileNBT.Generator.TIME_GAIN_RATE)) timeGainRate = aNBT.getLong(kTileNBT.Generator.TIME_GAIN_RATE);
         if (aNBT.hasKey(kTileNBT.Generator.TIME_REMAINING)) timeRemaining = aNBT.getLong(kTileNBT.Generator.TIME_REMAINING);
+        if(CODE_CLIENT){
+            if(GT_API.sBlockIcons == null){
+                if (!aNBT.hasKey(NBT_TEXTURE))throw new IllegalArgumentException("Manual Generator Must have a Texture Name");
+                String mTextureName = aNBT.getString(NBT_TEXTURE);
+                sColoreds = new IIconContainer[]{
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/colored/front"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/colored/back"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/colored/sides"),
+                };
+                sOverlays = new IIconContainer[]{
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay/front"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay/back"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay/sides"),
+                }; sOverlaysActive = new IIconContainer[]{
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active/back"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active/back")
+                };
+                sOverlaysActiveFrontSpeed =new IIconContainer[]{
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_front/full"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_front/fast"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_front/medium"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_front/slow"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_front/least"),
+                };
+                sOverlaysActiveSidesSpeed =new IIconContainer[]{
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_sides/full"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_sides/fast"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_sides/medium"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_sides/slow"),
+                        new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/"+mTextureName+"/overlay_active_sides/least"),
+                };
+            } else {
+                TileEntity tCanonicalTileEntity = MultiTileEntityRegistry.getCanonicalTileEntity(getMultiTileEntityRegistryID(), getMultiTileEntityID());
+                if (tCanonicalTileEntity instanceof ManualGenerator) {
+                    sColoreds = ((ManualGenerator)tCanonicalTileEntity).sColoreds;
+                    sOverlays = ((ManualGenerator)tCanonicalTileEntity).sOverlays;
+                    sOverlaysActive  = ((ManualGenerator)tCanonicalTileEntity).sOverlaysActive;
+                    sOverlaysActiveFrontSpeed   = ((ManualGenerator)tCanonicalTileEntity).sOverlaysActiveFrontSpeed;
+                    sOverlaysActiveSidesSpeed   = ((ManualGenerator)tCanonicalTileEntity).sOverlaysActiveSidesSpeed;
+                }
+            }
+        }
     }
 
     @Override
@@ -102,23 +151,30 @@ public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements I
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
+        if (mActivity.mActive&&mEnergyTypeEmitted.equals(TD.Energy.KU) && aTimer % 17 == 0) {
+            mPiston += 1;
+            mPiston &= 3;
+        }
         if (aIsServerSide) {
+            if (timeRemaining > 0) {
+                mActivity.mActive = T;
+                mEnergy += getRate();
+                timeRemaining--;
+            } else mActivity.mActive = F;
             if (mEnergy >= getRate()) {
-                Util.emitEnergyToNetwork(mEnergyTypeEmitted, getRate(), 1, this);
+                if (mEnergyTypeEmitted.equals(TD.Energy.KU)) Util.emitEnergyToNetwork(mEnergyTypeEmitted, mPiston > 1 ? -getRate() : getRate(), 1, this);
+                else Util.emitEnergyToNetwork(mEnergyTypeEmitted, getRate(), 1, this);
                 mEnergy -= getRate();
             }
-            if (timeRemaining>0) {
-                mActivity.mActive = T;
-                mEnergy+=getRate();
-                timeRemaining--;
-            }else mActivity.mActive = F;
+            mActivity.check(timeRemaining>0);
             if (mEnergy < 0) mEnergy = 0;
         }
     }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()&&aPlayer.isEntityAlive()) {
+        if (isServerSide()&&aPlayer.isEntityAlive()&&timeRemaining<=maxTime) {
             timeRemaining+=timeGainRate;
+            aPlayer.addExhaustion(0.5f);
         }
         return T;
     }
@@ -126,7 +182,7 @@ public class ManualGeneratorKU extends TileEntityBase09FacingSingle implements I
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         long rReturn = super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
         if (rReturn > 0) return rReturn;
-return 0;
+        return 0;
     }
 
     @Override
@@ -216,35 +272,9 @@ return 0;
     @Override public boolean setStateOnOff(boolean aOnOff) {mStopped = !aOnOff;return !mStopped;}
     @Override public boolean getStateOnOff() {return !mStopped;}
 
-    // Icons
-    public static IIconContainer[] sColoreds = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/colored/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/colored/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/colored/sides"),
-    }, sOverlays = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay/front"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay/sides"),
-    }, sOverlaysActive = new IIconContainer[]{
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active/back"),
-            new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active/back")
-    },
-            sOverlaysActiveFrontSpeed =new IIconContainer[]{
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/full"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/fast"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/medium"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/slow"),
-                    new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_front/least"),
-            },   sOverlaysActiveSidesSpeed =new IIconContainer[]{
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/full"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/fast"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/medium"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/slow"),
-                new Textures.BlockIcons.CustomIcon("machines/generators/motor_manual/KU/overlay_active_sides/least"),
-    };
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.generator.manual.ku";
+        return "ktfru.multitileentity.generator.manual";
     }
     @Override    public IPacket getClientDataPacket(boolean aSendAll) {
         return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mActivity.mState,getProgressLevel());
