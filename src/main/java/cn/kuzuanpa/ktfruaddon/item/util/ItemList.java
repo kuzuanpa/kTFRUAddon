@@ -97,10 +97,17 @@ public enum ItemList implements IItemContainer{
     ResistanceT3, CapacitorT3, CoilT3,DiodeT3,DiodeT3Part,
     ResistanceT4,              CoilT4,
     CircuitBoardBasicUncompleted,CircuitBoardGoodUncompleted1,CircuitBoardGoodUncompleted2,
-    //Compact
-    ArmorAirSealant,SpaceSuitCloth,IntelligentCore, CrucibleModelInnerLayer,
+//Compact
+    ArmorAirSealant,SpaceSuitCloth,
+    IntelligentCore,
+    CrucibleModelInnerLayer,
+    //engine parts made by hand
+    EngineCrankShaftManual1, EngineCrankShaftManual2,EngineCrankShaftManual3, EngineCrankShaftManual4,EngineCrankShaftManual5, EngineCrankShaftManual6,EngineCrankShaftManual7, EngineCrankShaftManual8,
+    EngineCylinderManual1, EngineCylinderManual2,EngineCylinderManual3, EngineCylinderManual4,EngineCylinderManual5, EngineCylinderManual6,EngineCylinderManual7, EngineCylinderManual8,
 
-
+    //engine parts made by hand
+    EngineCrankShaft1, EngineCrankShaft2,EngineCrankShaft3, EngineCrankShaft4,EngineCrankShaft5, EngineCrankShaft6,EngineCrankShaft7, EngineCrankShaft8,
+    EngineCylinder1, EngineCylinder2,EngineCylinder3, EngineCylinder4,EngineCylinder5, EngineCylinder6,EngineCylinder7, EngineCylinder8,
 
 
 //Chemistry

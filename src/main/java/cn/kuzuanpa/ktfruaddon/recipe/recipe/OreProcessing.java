@@ -18,7 +18,6 @@ import gregapi.data.RM;
 import gregapi.util.OM;
 import gregapi.util.ST;
 
-import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.HeatMixer;
 import static gregapi.data.CS.*;
 
 public class OreProcessing {
@@ -57,7 +56,7 @@ public class OreProcessing {
         RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(4000),MT.HCl.fluid(4000,F)),FL.array(FL.Saltwater.make(8000)),OP.dust.mat(MT.H2WO4,3 ));
         RM.Mixer.addRecipeX(T,64, 100, ST.array(ZL_IS),FL.array(flList.SodiumHeterotungstate.make(4000),MT.NH3.gas(4000,F)),FL.array(flList.AmmoniumTungstate.make(2000)),OP.dust.mat(MT.NaOH,4 ));
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.AmmoniumTungstate.make(1000)),FL.array(FL.DistW.make(700)),OP.dust.mat(MT.WO3,1));
-        HeatMixer.addRecipe1(T, 320, 160, OM.dust(MT.WO3, U * 4), MT.H.gas(U * 6, T), MT.H2O.liquid(U * 9, F), OM.dust(MT.W, U));
+        recipeManager.HeatMixer.addRecipe1(T, 320, 160, OM.dust(MT.WO3, U * 4), MT.H.gas(U * 6, T), MT.H2O.liquid(U * 9, F), OM.dust(MT.W, U));
 
         //Ti Process
         RM.Bath.addRecipeX(T,0,120,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,4));
