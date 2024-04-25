@@ -141,7 +141,7 @@ public class utils {
      * <pre>You can also use Dummy Structure Map,please turn to exampleMachine class to get a look into that.</pre>
      * <pre></pre>
     **/
-    private static void dontSpamMyIDE(){/*long JavaDoc is annoying because it can fill whole screen when you hovered your mouse on it...*/};
+    private static void dontSpamMyIDE(){};
 
     /**
      * Detailed help can be found in utils.java
@@ -163,28 +163,20 @@ public class utils {
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }
-    public static Vec3 getRealCoordDouble(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ) {
+    public static Vec3 getRealCoord(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ) {
         double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return Vec3.createVectorHelper(resultX[Facing],oY +addY,resultZ[Facing]);
     }
-    public static double getRealXDouble(byte Facing, double oX, double oZ, double addX, double addZ){
+    public static double getRealX(byte Facing, double oX, double oZ, double addX, double addZ){
         double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         return resultX[Facing];
     }
-    public static double getRealZDouble(byte Facing, double oX, double oZ, double addX, double addZ){
+    public static double getRealZ(byte Facing, double oX, double oZ, double addX, double addZ){
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }
 
-    public static int offsetX(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
-        int[] resultX = {0, 0, tX - offsetX, tX + offsetX, tX + offsetZ, tX - offsetZ, 0, 0};
-        return resultX[Facing];
-    }
-    public static int offsetZ(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
-        int[] resultZ = {0, 0, tZ + offsetZ, tZ - offsetZ, tZ + offsetX, tZ - offsetX, 0, 0};
-        return resultZ[Facing];
-    }
     public static int getXOffset(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
         int[] resultX = {0, 0,  - offsetX,  + offsetX,  + offsetZ,  - offsetZ, 0, 0};
         return resultX[Facing];

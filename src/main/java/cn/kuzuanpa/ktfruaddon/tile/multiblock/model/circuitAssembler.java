@@ -129,8 +129,8 @@ public class circuitAssembler extends ModelRenderBaseMultiBlockMachine {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
-            tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,zMapOffset);
-            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,zMapOffset);
+            tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
@@ -151,8 +151,8 @@ public class circuitAssembler extends ModelRenderBaseMultiBlockMachine {
     public void resetParts() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
-            tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,zMapOffset);
-            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,zMapOffset);
+            tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
@@ -185,7 +185,7 @@ public class circuitAssembler extends ModelRenderBaseMultiBlockMachine {
     //controls areas inside the machine
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),yCoord,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
     //下面四个是设置输入输出的地方,return null是任意面
     //controls where to I/O, return null=any side
     @Override

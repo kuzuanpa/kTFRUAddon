@@ -20,10 +20,10 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlockMachine;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.CNCMachine3;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -33,24 +33,30 @@ import org.lwjgl.opengl.GL11;
 
 import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 
-public class TileEntityRenderExampleMultiBlock extends TileEntitySpecialRenderer {
-    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/lathe.obj"));
-
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/lathe.png");
+public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
+    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/CNCMachine3.obj"));
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/CNCMachine3.png");
 
     private static int bodyList;
 
-    public TileEntityRenderExampleMultiBlock() {
-        GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-        model.renderAll();
+    public TESRCNCMachine3() {
+        bodyList = GL11.glGenLists(3);
+        GL11.glNewList(bodyList, GL11.GL_COMPILE);
+        model.renderPart("base");
+        GL11.glEndList();
+        GL11.glNewList(bodyList+1, GL11.GL_COMPILE);
+        model.renderPart("head");
+        GL11.glEndList();
+        GL11.glNewList(bodyList+2, GL11.GL_COMPILE);
+        model.renderPart("processingItem");
         GL11.glEndList();
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x,
+    public void renderTileEntityAt(TileEntity t, double x,
                                    double y, double z, float f) {
-        ModelRenderBaseMultiBlockMachine multiBlockTile = (ModelRenderBaseMultiBlockMachine)tile;
-        boolean rendNow =false;
+        if(! (t instanceof CNCMachine3))return;
+        CNCMachine3 tile = (CNCMachine3)t;
 
         GL11.glPushMatrix();
 
@@ -60,19 +66,31 @@ public class TileEntityRenderExampleMultiBlock extends TileEntitySpecialRenderer
         int brightY = bright / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 
+
         //Rotate and move the model into position
-        GL11.glTranslated(x + .5f, y, z + 0.5f);
-        ForgeDirection front = VALID_DIRECTIONS[multiBlockTile.mFacing];
+        GL11.glTranslatef((float) utils.getXOffset(tile.mFacing, tile.xCoord, tile.zCoord,-1.5D,1D),0,(float)utils.getZOffset(tile.mFacing, tile.xCoord, tile.zCoord,-1.5D,1D));
+        GL11.glTranslated(x, y, z );
+        GL11.glTranslatef(0.5f, 0, 0.5f);
+        ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
-        GL11.glTranslated(-.5f, 5f, -2.5f);
+        GL11.glRotatef(-90,0,1,0);
 
         bindTexture(texture);
         GL11.glCallList(bodyList);
 
-        ItemStack outputStack;
-        if(multiBlockTile.mActive) {
+        if(!tile.invempty()||tile.mActive) GL11.glCallList(bodyList+2);
 
-            float progress = multiBlockTile.mProgress/(float)multiBlockTile.mMaxProgress;
+        GL11.glPushMatrix();
+
+
+        GL11.glCallList(bodyList+1);
+        if(tile.getRandomNumber(10)==0)tile.getWorldObj().spawnParticle("dripWater",tile.xCoord-0.95,tile.yCoord+2,tile.zCoord+1.6,0,0,0);
+
+
+        GL11.glPopMatrix();
+
+        if(tile.mActive) {
+            float progress = tile.mProgress/(float)tile.mMaxProgress;
 
             bindTexture(texture);
 

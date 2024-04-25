@@ -86,8 +86,8 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
             int tX = xCoord, tY = yCoord, tZ = zCoord;
             if (worldObj.blockExists(tX, tY, tZ)) {
                 boolean tSuccess = T;
-                tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,0);
-                tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,0);
+                tX= utils.getRealX(mFacing,tX,xMapOffset,0);
+                tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
                 int cX, cY, cZ;
                 for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                     for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
@@ -116,8 +116,8 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
     public void resetParts() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
-            tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,0);
-            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,0);
+            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
@@ -200,21 +200,21 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
             BoundingBox box;
             switch (aRenderPass) {
                 case 0:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.502, -0.4999, -0.502), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 2.5, 1.501));
+                    box = new BoundingBox(utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, -1.502, -0.4999, -0.502), utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, 1.501, 2.5, 1.501));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 1:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 0.5));
+                    box = new BoundingBox(utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, -0.5), utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 0.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 2:
                     //box for Top&Bottom overlay
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, 0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 1.5));
+                    box = new BoundingBox(utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, -0.5, -0.502, 0.5), utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, 0.5, 1.502, 1.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 3:
                     //box for Top&Bottom texture
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.5, -0.501, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.5, 1.501, 2.5));
+                    box = new BoundingBox(utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, -1.5, -0.501, -0.5), utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, 1.5, 1.501, 2.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
                 case 4:
-                    box = new BoundingBox(utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, -1.501, -0.5, -0.5), utils.getRealCoordDouble(mFacing, 0.5, 0.5, 0.5, 1.501, 1.5, 1.5));
+                    box = new BoundingBox(utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, -1.501, -0.5, -0.5), utils.getRealCoord(mFacing, 0.5, 0.5, 0.5, 1.501, 1.5, 1.5));
                     return box(aBlock, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
             }
         }

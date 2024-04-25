@@ -60,23 +60,23 @@ public class CompactItem {
         CR.shaped(ItemList.EngineCylinderManual7.get(1),CR.DEF," P ","fIh"," S ",'I', OP.ingotDouble.mat(MT.TungstenSteel,1),'P',OP.plateCurved.mat(MT.TungstenSteel,1),'S',OP.stick.mat(MT.TungstenSteel,1));
         CR.shaped(ItemList.EngineCylinderManual8.get(1),CR.DEF," P ","fIh"," S ",'I', OP.ingotDouble.mat(MT.Ir           ,1),'P',OP.plateCurved.mat(MT.Ir           ,1),'S',OP.stick.mat(MT.Ir           ,1));
 
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.Bronze       ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft1.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.ArsenicCopper,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft2.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.ArsenicBronze,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft3.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.Steel        ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft4.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.Invar        ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft5.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.Ti           ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft6.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.TungstenSteel,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft7.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.stickLong.mat(MT.Ir           ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft8.get(1));
+        recipeManager.CNCMachine.addRecipeX(F,70,600,ST.array(OP.stickLong.mat(MT.Bronze       ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft1.get(1), OP.dust.mat(MT.Bronze       ,1));
+        recipeManager.CNCMachine.addRecipeX(F,70,600,ST.array(OP.stickLong.mat(MT.ArsenicCopper,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft2.get(1), OP.dust.mat(MT.ArsenicCopper,1));
+        recipeManager.CNCMachine.addRecipeX(F,74,600,ST.array(OP.stickLong.mat(MT.ArsenicBronze,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft3.get(1), OP.dust.mat(MT.ArsenicBronze,1));
+        recipeManager.CNCMachine.addRecipeX(F,96,600,ST.array(OP.stickLong.mat(MT.Steel        ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft4.get(1), OP.dust.mat(MT.Steel        ,1));
+        recipeManager.CNCMachine.addRecipeX(F,128,600,ST.array(OP.stickLong.mat(MT.Invar        ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft5.get(1), OP.dust.mat(MT.Invar        ,1));
+        recipeManager.CNCMachine.addRecipeX(F,172,600,ST.array(OP.stickLong.mat(MT.Ti           ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft6.get(1), OP.dust.mat(MT.Ti           ,1));
+        recipeManager.CNCMachine.addRecipeX(F,256,600,ST.array(OP.stickLong.mat(MT.TungstenSteel,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft7.get(1), OP.dust.mat(MT.TungstenSteel,1));
+        recipeManager.CNCMachine.addRecipeX(F,320,600,ST.array(OP.stickLong.mat(MT.Ir           ,3)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCrankShaft8.get(1), OP.dust.mat(MT.Ir           ,1));
 
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.ingotDouble.mat(MT.Bronze       ,1), OP.plateCurved.mat(MT.Bronze       ,1), OP.stick.mat(MT.Bronze       ,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder1.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,70,80,ST.array(OP.ingotDouble.mat(MT.ArsenicCopper,1), OP.plateCurved.mat(MT.ArsenicCopper,1), OP.stick.mat(MT.ArsenicCopper,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder2.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,74,80,ST.array(OP.ingotDouble.mat(MT.ArsenicBronze,1), OP.plateCurved.mat(MT.ArsenicBronze,1), OP.stick.mat(MT.ArsenicBronze,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder3.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,74,80,ST.array(OP.ingotDouble.mat(MT.Steel        ,1), OP.plateCurved.mat(MT.Steel        ,1), OP.stick.mat(MT.Steel        ,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder4.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,74,80,ST.array(OP.ingotDouble.mat(MT.Invar        ,1), OP.plateCurved.mat(MT.Invar        ,1), OP.stick.mat(MT.Invar        ,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder5.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,74,80,ST.array(OP.ingotDouble.mat(MT.Ti           ,1), OP.plateCurved.mat(MT.Ti           ,1), OP.stick.mat(MT.Ti           ,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder6.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,74,80,ST.array(OP.ingotDouble.mat(MT.TungstenSteel,1), OP.plateCurved.mat(MT.TungstenSteel,1), OP.stick.mat(MT.TungstenSteel,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder7.get(1));
-        recipeManager.CNCMachine.addRecipeX(F,74,80,ST.array(OP.ingotDouble.mat(MT.Ir           ,1), OP.plateCurved.mat(MT.Ir           ,1), OP.stick.mat(MT.Ir           ,1)),FL.array(FL.DistW.make(100)),ZL_FS, ItemList.EngineCylinder8.get(1));
+        recipeManager.CNCMachine.addRecipeX(F,70,200,ST.array(OP.ingotDouble.mat(MT.Bronze       ,1), OP.plateCurved.mat(MT.Bronze       ,1), OP.stick.mat(MT.Bronze       ,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder1.get(1),OP.dust.mat(MT.Bronze       ,1));
+        recipeManager.CNCMachine.addRecipeX(F,70,200,ST.array(OP.ingotDouble.mat(MT.ArsenicCopper,1), OP.plateCurved.mat(MT.ArsenicCopper,1), OP.stick.mat(MT.ArsenicCopper,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder2.get(1),OP.dust.mat(MT.ArsenicCopper,1));
+        recipeManager.CNCMachine.addRecipeX(F,74,200,ST.array(OP.ingotDouble.mat(MT.ArsenicBronze,1), OP.plateCurved.mat(MT.ArsenicBronze,1), OP.stick.mat(MT.ArsenicBronze,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder3.get(1),OP.dust.mat(MT.ArsenicBronze,1));
+        recipeManager.CNCMachine.addRecipeX(F,96,200,ST.array(OP.ingotDouble.mat(MT.Steel        ,1), OP.plateCurved.mat(MT.Steel        ,1), OP.stick.mat(MT.Steel        ,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder4.get(1),OP.dust.mat(MT.Steel        ,1));
+        recipeManager.CNCMachine.addRecipeX(F,128,200,ST.array(OP.ingotDouble.mat(MT.Invar        ,1), OP.plateCurved.mat(MT.Invar        ,1), OP.stick.mat(MT.Invar        ,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder5.get(1),OP.dust.mat(MT.Invar        ,1));
+        recipeManager.CNCMachine.addRecipeX(F,172,200,ST.array(OP.ingotDouble.mat(MT.Ti           ,1), OP.plateCurved.mat(MT.Ti           ,1), OP.stick.mat(MT.Ti           ,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder6.get(1),OP.dust.mat(MT.Ti           ,1));
+        recipeManager.CNCMachine.addRecipeX(F,256,200,ST.array(OP.ingotDouble.mat(MT.TungstenSteel,1), OP.plateCurved.mat(MT.TungstenSteel,1), OP.stick.mat(MT.TungstenSteel,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder7.get(1),OP.dust.mat(MT.TungstenSteel,1));
+        recipeManager.CNCMachine.addRecipeX(F,320,200,ST.array(OP.ingotDouble.mat(MT.Ir           ,1), OP.plateCurved.mat(MT.Ir           ,1), OP.stick.mat(MT.Ir           ,1)),FL.array(FL.DistW.make(1000)),ZL_FS, ItemList.EngineCylinder8.get(1),OP.dust.mat(MT.Ir           ,1));
 
 
     }

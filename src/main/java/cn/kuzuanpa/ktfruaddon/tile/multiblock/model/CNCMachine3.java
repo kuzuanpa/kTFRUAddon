@@ -36,42 +36,42 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class CNCMachine extends ModelRenderBaseMultiBlockMachine {
+public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
 
     public final short machineX = 5, machineY = 3, machineZ = 3;
-    public final short xMapOffset = 0,yMapOffset=0,zMapOffset = 0;
+    public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;
     public static int[][][] blockIDMap = {{
-            {0    , 31002, 31002,31002,31002 },
-            {31002, 31002, 31002,31002,31002 },
-            {31002, 31002, 31002,31002,31002 }           
+            {31006, 0    , 31006,31006,31006 },
+            {31006, 31006, 31006,31006,31006 },
+            {31006, 31006, 31006,31006,31006 }
     },{
-            {31002, 31002, 31002,31002,31002 },
-            {31002, 31002, 31002,31002,31002 },
-            {31002, 31002, 31002,31002,31002 }
+            {31006, 31006, 31006,31006,31006 },
+            {31006, 31006, 31006,31006,31006 },
+            {31006, 31006, 31006,31006,31006 }
     },{
-            {31002, 31002, 31002,31002,31002 },
-            {31002, 31002, 31002,31002,31002 },
-            {31002, 31002, 31002,31002,31002 }
+            {31006, 31006, 31006,31006,31006 },
+            {31006, 31006, 31006,31006,31006 },
+            {31006, 31006, 31006,31006,31006 }
     }};
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public static boolean[][][] ignoreMap = {{
-            {T, T, T, T, T},
-            {T, T, T, T, T},
-            {T, T, T, T, T}
+            {F, T, F, F, F},
+            {F, F, F, F, F},
+            {F, F, F, F, F}
+    },{
+            {F, F, T, T, T},
+            {F, F, T, T, T},
+            {F, F, T, T, T}
     },{
             {T, T, T, T, T},
-            {T, T, T, T, T},
-            {T, T, T, T, T}
-    },{
-            {T, T, T, T, T},
-            {T, T, T, T, T},
+            {F, F, F, F, T},
             {T, T, T, T, T}
     }};
     public int getUsage(int blockID ,short registryID){
         if (blockID == 31003&&registryID==k) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else if (blockID == 31003||blockID==18022&&registryID==g) {
+        } else if (blockID == 31003||blockID==18022) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
@@ -87,9 +87,9 @@ public class CNCMachine extends ModelRenderBaseMultiBlockMachine {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
-            tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,zMapOffset);
+            tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             tY+=yMapOffset;
-            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,zMapOffset);
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
@@ -108,9 +108,9 @@ public class CNCMachine extends ModelRenderBaseMultiBlockMachine {
     public void resetParts() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
-            tX=utils.offsetX(mFacing,tX,tZ,xMapOffset,zMapOffset);
+            tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             tY+=yMapOffset;
-            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,zMapOffset);
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
@@ -143,7 +143,7 @@ public class CNCMachine extends ModelRenderBaseMultiBlockMachine {
     //controls areas inside the machine
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),yCoord,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.offsetX(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.offsetZ(mFacing,xCoord,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
     //下面四个是设置输入输出的地方,return null是任意面
     //controls where to I/O, return null=any side
     @Override
@@ -158,12 +158,12 @@ public class CNCMachine extends ModelRenderBaseMultiBlockMachine {
 
     @Override
     public DelegatorTileEntity<IInventory> getItemInputTarget(byte aSide) {
-        return null;
+        return new DelegatorTileEntity<>(this,SIDE_UP);
     }
 
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
-        return null;
+        return new DelegatorTileEntity<>(this,SIDE_UP);
     }
     @Override
     public String getTileEntityName() {

@@ -21,13 +21,13 @@ import org.lwjgl.opengl.GL11;
 
 import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 
-public class TileEntityRenderSunBoilerMirror extends TileEntitySpecialRenderer {
+public class TESRSunBoilerMirror extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/sunboiler/mirror.obj"));
     ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/sunboiler/mirror.png");
 
     private static int bodyLists;
 
-    public TileEntityRenderSunBoilerMirror() {
+    public TESRSunBoilerMirror() {
         bodyLists = GL11.glGenLists(3);
         GL11.glNewList(bodyLists, GL11.GL_COMPILE);
         model.renderPart("base");

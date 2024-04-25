@@ -33,16 +33,16 @@ import org.lwjgl.opengl.GL11;
 
 import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 
-public class TileEntityRenderCircuitAssembler extends TileEntitySpecialRenderer {
-    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/circuit_assembler.obj"));
+public class TESRExampleMultiBlock extends TileEntitySpecialRenderer {
+    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/lathe.obj"));
 
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/models/circuit_assembler.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/lathe.png");
 
     private static int bodyList;
 
-    public TileEntityRenderCircuitAssembler() {
+    public TESRExampleMultiBlock() {
         GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
-        model.renderOnly("body");
+        model.renderAll();
         GL11.glEndList();
     }
 
@@ -51,15 +51,11 @@ public class TileEntityRenderCircuitAssembler extends TileEntitySpecialRenderer 
                                    double y, double z, float f) {
         ModelRenderBaseMultiBlockMachine multiBlockTile = (ModelRenderBaseMultiBlockMachine)tile;
         boolean rendNow =false;
-        for (byte i = 1; i < 7; i++) {
-            if (multiBlockTile.shouldSideBeRendered(i)) rendNow = true;
-        }
-            if (!rendNow||!multiBlockTile.checkStructure(false))return;
 
         GL11.glPushMatrix();
 
         //Initial setup
-        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 2, tile.zCoord,0);
+        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
         int brightX = bright % 65536;
         int brightY = bright / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
@@ -68,7 +64,10 @@ public class TileEntityRenderCircuitAssembler extends TileEntitySpecialRenderer 
         GL11.glTranslated(x + .5f, y, z + 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[multiBlockTile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
-        GL11.glTranslated(-.5f, -1f, -2.5f);
+        GL11.glTranslated(-.5f, 5f, -2.5f);
+
+        bindTexture(texture);
+        GL11.glCallList(bodyList);
 
         ItemStack outputStack;
         if(multiBlockTile.mActive) {
@@ -76,7 +75,7 @@ public class TileEntityRenderCircuitAssembler extends TileEntitySpecialRenderer 
             float progress = multiBlockTile.mProgress/(float)multiBlockTile.mMaxProgress;
 
             bindTexture(texture);
-            model.renderPart("body");
+
 
             GL11.glPushMatrix();
             if(progress < 0.95f)
@@ -93,7 +92,7 @@ public class TileEntityRenderCircuitAssembler extends TileEntitySpecialRenderer 
             model.renderOnly("Cylinder");
 
             int color;
-            //Check for rare bug when outputs are null, usually occurs if player opens machine within 1st tick
+            //Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
             //if(multiBlockTile.getOutputs() != null && (outputStack = multiBlockTile.getOutputs().get(0)) != null)
             //    color = MaterialRegistry.getColorFromItemMaterial(outputStack);
             //else

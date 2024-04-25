@@ -110,8 +110,8 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
-            tX= utils.offsetX(mFacing,tX,tZ,xMapOffset,0);
-            tZ=utils.offsetZ(mFacing,tX,tZ,xMapOffset,0);
+            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {

@@ -8,15 +8,12 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.client.render.FxRenderBlockOutline;
-import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderCircuitAssembler;
-import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderExampleMultiBlock;
-import cn.kuzuanpa.ktfruaddon.client.render.TileEntityRenderSunBoilerMirror;
+import cn.kuzuanpa.ktfruaddon.client.render.*;
 import cn.kuzuanpa.ktfruaddon.nei.NeiHiddener;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.parts.SunHeaterMirror;
-import codechicken.nei.api.API;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -41,11 +38,12 @@ public class clientProxy extends commonProxy {
 
     @SideOnly(Side.CLIENT)
     public void registerRenderers(){
-        ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TileEntityRenderExampleMultiBlock());
-        ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TileEntityRenderCircuitAssembler());
-        ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirror.class, new TileEntityRenderSunBoilerMirror());
+        ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TESRExampleMultiBlock());
+        ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TESRCircuitAssembler());
+        ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirror.class, new TESRSunBoilerMirror());
+        ClientRegistry.bindTileEntitySpecialRenderer(CNCMachine3.class, new TESRCNCMachine3());
         MinecraftForge.EVENT_BUS.register(new FxRenderBlockOutline());
-        API.registerNEIGuiHandler(new NeiHiddener());
+        codechicken.nei.api.API.registerNEIGuiHandler(new NeiHiddener());
 
     }
 }
