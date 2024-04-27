@@ -56,7 +56,9 @@ public class utils {
         }
         try {
             ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
-        } catch (Throwable ignored){}
+        } catch (Throwable ignored){
+            System.out.println("err: "+aX+"/"+aY+"/"+aZ);
+        }
         return true;
     }
 
@@ -159,37 +161,38 @@ public class utils {
         int[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         return resultX[Facing];
     }
+    public static double getRealX(byte Facing, double oX, double addX, double addZ){
+        double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
+        return resultX[Facing];
+    }
     public static int getRealZ(byte Facing, int oZ, int addX, int addZ){
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }
+    public static double getRealZ(byte Facing, double oZ, double addX, double addZ){
+        double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
+        return resultZ[Facing];
+    }
+
+
     public static Vec3 getRealCoord(byte Facing, double oX, double oY, double oZ, double addX, double addY, double addZ) {
         double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return Vec3.createVectorHelper(resultX[Facing],oY +addY,resultZ[Facing]);
     }
-    public static double getRealX(byte Facing, double oX, double oZ, double addX, double addZ){
-        double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
-        return resultX[Facing];
-    }
-    public static double getRealZ(byte Facing, double oX, double oZ, double addX, double addZ){
-        double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
-        return resultZ[Facing];
-    }
-
-    public static int getXOffset(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
+    public static int getXOffset(byte Facing,int offsetX,int offsetZ){
         int[] resultX = {0, 0,  - offsetX,  + offsetX,  + offsetZ,  - offsetZ, 0, 0};
         return resultX[Facing];
     }
-    public static double getXOffset(byte Facing, double tX,double tZ,double offsetX,double offsetZ){
+    public static double getXOffset(byte Facing,double offsetX,double offsetZ){
         double[] resultX = {0, 0,  - offsetX,  + offsetX,  + offsetZ,  - offsetZ, 0, 0};
         return resultX[Facing];
     }
-    public static int getZOffset(byte Facing, int tX,int tZ,int offsetX,int offsetZ){
+    public static int getZOffset(byte Facing,int offsetX,int offsetZ){
         int[] resultZ = {0, 0, + offsetZ, - offsetZ, + offsetX, - offsetX, 0, 0};
         return resultZ[Facing];
     }
-    public static double getZOffset(byte Facing, double tX,double tZ,double offsetX,double offsetZ){
+    public static double getZOffset(byte Facing,double offsetX,double offsetZ){
         double[] resultZ = {0, 0, + offsetZ, - offsetZ, + offsetX, - offsetX, 0, 0};
         return resultZ[Facing];
     }

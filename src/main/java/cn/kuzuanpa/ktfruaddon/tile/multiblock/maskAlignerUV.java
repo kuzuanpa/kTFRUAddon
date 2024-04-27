@@ -41,11 +41,11 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
     public IIconContainer[] mTexturesMaterial = null, mTexturesInactive = null, mTexturesActive = null, mTexturesRunning = null;
 
     public static final int[][][] blockIDMap = {{
-                {31002,   0  , 31002},
-                {31002, 31200, 31002},
+                {31000,   0  , 31000},
+                {31000, 31500, 31000},
         },{
-                {31002, 31110, 31002},
-                {31002, 31120, 31002},
+                {31000, 31010, 31000},
+                {31000, 31020, 31000},
         }};
     public int getCheckX(int Facing, int tX, int addX, int addZ) {
         int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
@@ -77,7 +77,7 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
             return false;
         }
     public boolean isSubSource(int blockID){
-        return blockID == 31200;
+        return blockID == 31500;
     }
     public short getRegistryID(int x,int y,int z){return k;}
 

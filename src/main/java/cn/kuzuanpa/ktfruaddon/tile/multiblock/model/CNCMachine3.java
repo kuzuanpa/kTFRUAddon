@@ -18,6 +18,7 @@
  *
  */
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.model;
+
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.ModelRenderBaseMultiBlockMachine;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
@@ -26,6 +27,7 @@ import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
+import gregapi.util.WD;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -40,18 +42,20 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
 
     public final short machineX = 5, machineY = 3, machineZ = 3;
     public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;
+    //values used by TESR
+    public int processTime,proTime, headMoveToX, headMoveToZ;
     public static int[][][] blockIDMap = {{
-            {31006, 0    , 31006,31006,31006 },
-            {31006, 31006, 31006,31006,31006 },
-            {31006, 31006, 31006,31006,31006 }
+            {31008, 0    , 31007,31007,31007},
+            {31008, 31008, 31007,31007,31007},
+            {31008, 31008, 31007,31007,31007}
     },{
-            {31006, 31006, 31006,31006,31006 },
-            {31006, 31006, 31006,31006,31006 },
-            {31006, 31006, 31006,31006,31006 }
+            {31008, 31008, 0    ,0    ,0    },
+            {31008, 31008, 0    ,0    ,0    },
+            {31008, 31008, 0    ,0    ,0    }
     },{
-            {31006, 31006, 31006,31006,31006 },
-            {31006, 31006, 31006,31006,31006 },
-            {31006, 31006, 31006,31006,31006 }
+            {0    , 0    , 0    ,0    ,0    },
+            {31009, 31009, 31009,31014,0    },
+            {0    , 0    , 0    ,0    ,0    }
     }};
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
@@ -68,12 +72,11 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
             {F, F, F, F, T},
             {T, T, T, T, T}
     }};
-    public int getUsage(int blockID ,short registryID){
-        if (blockID == 31003&&registryID==k) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else if (blockID == 31003||blockID==18022) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
-        }else{return MultiTileEntityMultiBlockPart.NOTHING;}
+    public int getUsage(int x,int y,int z){
+        int blockID=getBlockID(x,y,z);
+        if (x==0&&y==0) return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+        else if (x==0&&y==1&&z==1)return MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
+        else {return MultiTileEntityMultiBlockPart.NOTHING;}
     }
     public int getBlockID(int checkX, int checkY, int checkZ){
         return blockIDMap[checkY][checkZ][checkX];
@@ -88,13 +91,13 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
             tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
+            tZ= utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             tY+=yMapOffset;
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
+                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
                             tSuccess = F;
                         }
                     }
@@ -109,13 +112,13 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
+            tZ= utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             tY+=yMapOffset;
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
                     for (cX = 0; cX < machineX; cX++) {
-                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealZ(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
+                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( cX,cY,cZ));
                     }
                 }
             }
@@ -148,12 +151,14 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     //controls where to I/O, return null=any side
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
-        return getAdjacentTank(SIDE_BOTTOM);
+        return getAdjacentTank(SIDE_UP);
     }
 
     @Override
     public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-        return getAdjacentTileEntity(SIDE_BOTTOM);
+        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,4,1), this.yCoord , utils.getRealZ(mFacing,zCoord,4,1), FACING_ROTATIONS[mFacing][SIDE_RIGHT], false);
+        if(te == null || te.mTileEntity == null) return this.delegator(SIDE_INVALID);
+        return new DelegatorTileEntity<>(te.mTileEntity,SIDE_INSIDE);
     }
 
     @Override
@@ -167,6 +172,6 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     }
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.model.cncmachine";
+        return "ktfru.multitileentity.multiblock.model.cncmachine3";
     }
 }

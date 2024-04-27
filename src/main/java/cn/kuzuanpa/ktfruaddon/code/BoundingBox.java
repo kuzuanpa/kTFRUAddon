@@ -35,18 +35,18 @@ public class BoundingBox {
         this.maxX=EndCoord.xCoord;this.maxY=EndCoord.yCoord;this.maxZ=EndCoord.zCoord;this.minX=StartCoord.xCoord;this.minY=StartCoord.yCoord;this.minZ=StartCoord.zCoord;
     }
     public boolean isCoordInBox(BlockCoord coord){
-        return minX<coord.x&&coord.x<maxX&&
-                minY<coord.y&&coord.y<maxY&&
-                minZ<coord.z&&coord.z<maxZ;
+        return  minX<=coord.x&&coord.x<=maxX&&
+                minY<=coord.y&&coord.y<=maxY&&
+                minZ<=coord.z&&coord.z<=maxZ;
     }  
     public boolean isCoordInBox(ChunkCoordinates coord){
-        return minX<coord.posX&&coord.posX<maxX&&
-                minY<coord.posY&&coord.posY<maxY&&
-                minZ<coord.posZ&&coord.posZ<maxZ;
+        return  minX<=coord.posX&&coord.posX<=maxX&&
+                minY<=coord.posY&&coord.posY<=maxY&&
+                minZ<=coord.posZ&&coord.posZ<=maxZ;
     }
     public boolean isXYZInBox(double x,double y,double z){
-        return minX<x&&x<maxX&&
-                minY<y&&y<maxY&&
-                minZ<z&&z<maxZ;
+        return  minX<=x&&x<=maxX&&
+                minY<=y&&y<=maxY&&
+                minZ<=z&&z<=maxZ;
     }
 }

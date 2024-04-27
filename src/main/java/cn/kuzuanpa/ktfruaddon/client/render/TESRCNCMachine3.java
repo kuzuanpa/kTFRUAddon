@@ -36,7 +36,6 @@ import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/CNCMachine3.obj"));
     ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/CNCMachine3.png");
-
     private static int bodyList;
 
     public TESRCNCMachine3() {
@@ -57,7 +56,7 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
                                    double y, double z, float f) {
         if(! (t instanceof CNCMachine3))return;
         CNCMachine3 tile = (CNCMachine3)t;
-
+        if(!tile.checkStructure(false))return;
         GL11.glPushMatrix();
 
         //Initial setup
@@ -68,7 +67,7 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
 
 
         //Rotate and move the model into position
-        GL11.glTranslatef((float) utils.getXOffset(tile.mFacing, tile.xCoord, tile.zCoord,-1.5D,1D),0,(float)utils.getZOffset(tile.mFacing, tile.xCoord, tile.zCoord,-1.5D,1D));
+        GL11.glTranslatef((float) utils.getXOffset(tile.mFacing,-1.5D,1D),0,(float)utils.getZOffset(tile.mFacing,-1.5D,1D));
         GL11.glTranslated(x, y, z );
         GL11.glTranslatef(0.5f, 0, 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
@@ -81,55 +80,28 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
         if(!tile.invempty()||tile.mActive) GL11.glCallList(bodyList+2);
 
         GL11.glPushMatrix();
+          if(tile.mActive||tile.processTime>0) {
+              int maxProcessTime = 2000;
+              float factor = 0.5F - Math.abs((tile.processTime / (float) tile.proTime) - 0.5F);
+              if (tile.processTime > 0)
+                  GL11.glTranslatef(tile.headMoveToX / 10000F * factor, (Math.max(8 * Math.abs((tile.processTime / (float) tile.proTime) - 0.5F), 3.21F) - 4F), (tile.headMoveToZ / 10000F * factor));
+
+              if (tile.processTime-- < -100) {
+                  tile.processTime = tile.rng(maxProcessTime / 2) + maxProcessTime / 2;
+                  tile.proTime = tile.processTime;
+                  tile.headMoveToX = tile.rng(20000);
+                  tile.headMoveToZ = tile.rng(20000) - 10000;
+              }
+          }else {
+              tile.processTime=0;
+          }
 
 
         GL11.glCallList(bodyList+1);
-        if(tile.getRandomNumber(10)==0)tile.getWorldObj().spawnParticle("dripWater",tile.xCoord-0.95,tile.yCoord+2,tile.zCoord+1.6,0,0,0);
-
+        if(tile.processTime>100&&tile.rng(4)==0)tile.getWorldObj().spawnParticle("splash",utils.getRealX(tile.mFacing,tile.xCoord+0.5,1.8,1),tile.yCoord+1.3,utils.getRealZ(tile.mFacing,tile.zCoord+0.5,1.8,1),tile.rng(8)/32F,tile.rng(8)/32F,tile.rng(8)/32F);
 
         GL11.glPopMatrix();
 
-        if(tile.mActive) {
-            float progress = tile.mProgress/(float)tile.mMaxProgress;
-
-            bindTexture(texture);
-
-
-            GL11.glPushMatrix();
-            if(progress < 0.95f)
-                GL11.glTranslatef(0f, 0f, progress/.95f);
-            else
-                GL11.glTranslatef(0f, 0f, (1 - progress)/.05f);
-
-            model.renderOnly("Tray");
-            GL11.glPopMatrix();
-
-            GL11.glPushMatrix();
-            GL11.glTranslatef(.5f, 1.5625f, 0f);
-            GL11.glRotatef(progress*1500, 0, 0, 1);
-            model.renderOnly("Cylinder");
-
-            int color;
-            //Check for rare bug when outputs is null, usually occurs if player opens machine within 1st tick
-            //if(multiBlockTile.getOutputs() != null && (outputStack = multiBlockTile.getOutputs().get(0)) != null)
-            //    color = MaterialRegistry.getColorFromItemMaterial(outputStack);
-            //else
-                color = 0;
-
-            GL11.glColor3d((0xff & color >> 16)/256f, (0xff & color >> 8)/256f , (color & 0xff)/256f);
-
-            model.renderOnly("rod");
-            GL11.glPopMatrix();
-
-            GL11.glColor4f(1f, 1f, 1f, 1f);
-        }
-        else {
-            bindTexture(texture);
-                model.renderPart("body");
-
-            model.renderPart("Tray");
-            //model.renderAllExcept("rod", "Cylinder");
-        }
         GL11.glPopMatrix();
     }
 }

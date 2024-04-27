@@ -211,6 +211,9 @@ public class CommonMachinePart extends MultiTileEntityBasicMachine implements IM
         this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();
         this.mDesign = aDesign;
     }
+    public void setDesign(int aDesign) {
+        this.mDesign = aDesign;
+    }
     public boolean breakBlock() {
         ITileEntityMultiBlockController tTarget = this.getTarget(false);
         if (tTarget != null) {

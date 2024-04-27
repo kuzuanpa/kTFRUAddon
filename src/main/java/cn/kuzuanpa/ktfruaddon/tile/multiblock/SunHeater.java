@@ -91,17 +91,17 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
     },{
-            {31131, 31131, 31131, 31131, 31131},
-            {31131, 31132, 31132, 31132, 31131},
-            {31131, 31132,   0  , 31132, 31131},
-            {31131, 31132, 31132, 31132, 31131},
-            {31131, 31131, 31131, 31131, 31131},
+            {31002, 31002, 31002, 31002, 31002},
+            {31002, 31003, 31003, 31003, 31002},
+            {31002, 31003,   0  , 31003, 31002},
+            {31002, 31003, 31003, 31003, 31002},
+            {31002, 31002, 31002, 31002, 31002},
     },{
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
-            {31133, 31133, 31133, 31133, 31133},
+            {31004, 31004, 31004, 31004, 31004},
+            {31004, 31004, 31004, 31004, 31004},
+            {31004, 31004, 31004, 31004, 31004},
+            {31004, 31004, 31004, 31004, 31004},
+            {31004, 31004, 31004, 31004, 31004},
     },};
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
@@ -170,7 +170,7 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
 
     public int getUsage(int blockID ,short registryID){
         if(blockID==18002&&registryID==g)return MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
-        if(blockID==31133&&registryID==k)return MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
+        if(blockID==31004&&registryID==k)return MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
         return MultiTileEntityMultiBlockPart.NOTHING;
     }
 

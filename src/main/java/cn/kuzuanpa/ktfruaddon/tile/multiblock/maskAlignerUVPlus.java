@@ -44,16 +44,16 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
 
     public static final int[][][] blockIDMap = {{
             {18002,   0  , 18002},
-            {18002, 31121, 18002},
-            {18002, 31201, 18002},
+            {18002, 31021, 18002},
+            {18002, 31501, 18002},
     },{
-            {18002, 31134, 18002},
-            {31134, 31135, 31134},
-            {18002, 31134, 18002},
+            {18002, 31005, 18002},
+            {31005, 31006, 31005},
+            {18002, 31005, 18002},
     },{
-            {31111, 31111, 31111},
-            {31111, 31111, 31111},
-            {31111, 31111, 31111},
+            {31011, 31011, 31011},
+            {31011, 31011, 31011},
+            {31011, 31011, 31011},
     }};
     public static short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public static short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
@@ -85,8 +85,8 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
 
     public int getUsage(int blockID ,short registryID){
         if (registryID==k) switch (blockID){
-            case 31111: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-            case 31121: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
+            case 31011: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+            case 31021: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
         }
         return MultiTileEntityMultiBlockPart.ONLY_IN;
     }
@@ -99,7 +99,7 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
         return false;
     }
     public boolean isSubSource(int blockID){
-        return blockID == 31201;
+        return blockID == 31501;
     }
     public short getRegistryID(int x,int y,int z){
         return registryIDMap[y][z][x];
