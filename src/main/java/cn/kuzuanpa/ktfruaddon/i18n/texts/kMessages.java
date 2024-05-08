@@ -18,6 +18,8 @@ public class kMessages {
         ,INVENTORY="ktfru.msg.common.inventory"
         ,SLOT="ktfru.msg.common.slot"
         ,TANK="ktfru.msg.common.tank"
+        ,NULL="ktfru.msg.common.null"
+        ,EMPTY="ktfru.msg.common.empty"
         ,CRUCIBLE_MODEL_0 ="ktfru.msg.machine.cruciblemodel.0"
         ,CRUCIBLE_MODEL_1 ="ktfru.msg.machine.cruciblemodel.1"
         ,SUN_BOILER_MIRROR="ktfru.tooltip.multiblock.sunboiler.mirror"

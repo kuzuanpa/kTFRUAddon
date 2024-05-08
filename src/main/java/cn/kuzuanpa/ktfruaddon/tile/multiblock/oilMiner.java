@@ -29,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
 import java.util.Collection;
@@ -38,7 +39,7 @@ import static cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips.*;
 import static gregapi.data.CS.SIDE_BOTTOM;
 import static gregapi.data.CS.*;
 
-public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy {
+public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy, IFluidHandler {
     public int wallID=-1;
     public FluidTankGT mTank = new FluidTankGT(32000);
     public FluidTankGT mTankInput = new FluidTankGT(32000);
@@ -83,12 +84,13 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         LH.add(OIL_MINER_0,"Walls used in recipes placed on left and right side of main Block, energy input from them");
         LH.add(OIL_MINER_1,"2*3 Oil Miner Head in back of main Block, springs should under these head");
         LH.add(OIL_MINER_2,"a layer of 3*3 Walls used in recipes placed on top");
-        LH.add(OIL_MINER_3,"fluid input at any 2nd layer wall, fluid output at top of the wall below the main block");
+        LH.add(OIL_MINER_3,"fluid input at any 2nd layer wall , fluid auto output at top of the wall below the main block");
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if (aIsServerSide&&mStructureOkay&& mEnergy>mInputMin&&mTankInput.has()) {
+        if (aIsServerSide&&mStructureOkay&& mEnergy>mInputMin){
+            if(mTankInput.has()) {
             for (int x=0;x<3;x++) for (int z=1;z<3;z++){
                 TileEntity t = getWorld().getTileEntity(utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,-1,0),x,z),yCoord-1,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,-1,0),x,z));
                 if(!(t instanceof MultiTileEntityFluidSpring))continue;
@@ -100,7 +102,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
             }
             FL.move(mTank, WD.te(getWorld(),xCoord,yCoord+2,zCoord,SIDE_BOTTOM,false));
         }
-
+        }
     }
     private Fluid getOutputFluid(FluidStack inputFluid,FluidStack springFluid) {
         if(inputFluid.getFluid().equals(FL.Water.fluid())) {
@@ -123,12 +125,14 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     public IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
         return mTankInput;
     }
+    @Override
+    protected IFluidTank[] getFluidTanks2(byte aSide) {return mTankInput.AS_ARRAY;}
 
     @Override
     public void onMagnifyingGlass2(List<String> aChatReturn) {
         super.onMagnifyingGlass2(aChatReturn);
-        aChatReturn.add(LH.get(kMessages.INPUT )+" "+LH.get(kMessages.TANK)+": "+ (mTankInput.isEmpty()? "null" :mTankInput.fluid().getLocalizedName(mTankInput.get())+" "+mTankInput.amount()+"L"));
-        aChatReturn.add(LH.get(kMessages.OUTPUT)+" "+LH.get(kMessages.TANK)+": "+ (mTank.isEmpty()? "null" : mTank.fluid().getLocalizedName(mTank.get())+" "+mTank.amount()+"L"));
+        aChatReturn.add(LH.get(kMessages.INPUT )+" "+LH.get(kMessages.TANK)+": "+ (mTankInput.isEmpty()? LH.get(kMessages.EMPTY) :mTankInput.fluid().getLocalizedName(mTankInput.get())+" "+mTankInput.amount()+"L"));
+        aChatReturn.add(LH.get(kMessages.OUTPUT)+" "+LH.get(kMessages.TANK)+": "+ (mTank.isEmpty()? LH.get(kMessages.EMPTY) : mTank.fluid().getLocalizedName(mTank.get())+" "+mTank.amount()+"L"));
     }
 
     //Energy
@@ -173,11 +177,13 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
             {g, g, g}
     }};
 
-    public int getUsage(int blockID ,short registryID,int dY){
+    public int getUsage(int blockID ,short registryID,int dX,int dY,int dZ){
         if (blockID == wallID&&registryID==g&&dY==0) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+        } else if (blockID == wallID&&registryID==g&&dY==1&&dX==1&&dZ==0) {
+            return  MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
         } else if (blockID == wallID&&registryID==g&&dY==1) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN;
+            return  MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
 
@@ -202,7 +208,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
                         if(!isIgnored(cX,cY,cZ)) {
-                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cY)))
+                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cX,cY,cZ)))
                                 tSuccess = F;
                         }
                     }

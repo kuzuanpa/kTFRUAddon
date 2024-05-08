@@ -15,6 +15,8 @@ ktfru.msg.common.output=输出
 ktfru.msg.common.inventory=物品栏
 ktfru.msg.common.slot=物品槽
 ktfru.msg.common.tank=流体槽
+ktfru.msg.common.empty=空
+ktfru.msg.common.null=无
 
 itemGroup.ktfru.item.battery.pole=kTFRUAddon: 电池电极
 itemGroup.ktfru.item.chemistry=kTFRUAddon: 化学
@@ -839,7 +841,7 @@ ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速
 ktfru.tooltip.multiblock.oilminer.0=主方块左右两侧放置配方中使用的壁板
 ktfru.tooltip.multiblock.oilminer.1=2*3钻井头放在背后，泉应在这些钻井头下面
 ktfru.tooltip.multiblock.oilminer.2=一层3*3的配方中使用的壁板放在上面
-ktfru.tooltip.multiblock.oilminer.3=流体从第二层的任意壁板输入，从主方块上方的壁板的上方输出
+ktfru.tooltip.multiblock.oilminer.3=流体从第二层的任意壁板输入，从主方块上方的壁板的上方主动输出
 
 
 fluid.acidpickledbauxide=酸浸铝土矿
