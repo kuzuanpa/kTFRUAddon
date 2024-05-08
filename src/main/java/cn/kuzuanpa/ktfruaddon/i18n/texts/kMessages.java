@@ -11,15 +11,20 @@
 package cn.kuzuanpa.ktfruaddon.i18n.texts;
 public class kMessages {
     public static final String
-             DONE_CHANGING_STRUCTURE ="ktfru.msg.common.tools.done_changing_structure"
-            ,CHANGING_STRUCTURE ="ktfru.msg.common.tools.changing_structure"
-            ,CRUCIBLE_MODEL_0 ="ktfru.msg.machine.cruciblemodel.0"
-            ,CRUCIBLE_MODEL_1 ="ktfru.msg.machine.cruciblemodel.1"
-            ,SUN_BOILER_MIRROR="ktfru.tooltip.multiblock.sunboiler.mirror"
-            ,SUN_BOILER_MIRROR_ERR="ktfru.tooltip.multiblock.sunboiler.mirror.err"
-            ,SUN_BOILER_0="ktfru.tooltip.multiblock.sunboiler.0"
-            ,SUN_BOILER_1="ktfru.tooltip.multiblock.sunboiler.1"
-            ,SUN_BOILER_ERR="ktfru.tooltip.multiblock.sunboiler.err"
-                    ;
+         DONE_CHANGING_STRUCTURE ="ktfru.msg.common.tools.done_changing_structure"
+        ,CHANGING_STRUCTURE ="ktfru.msg.common.tools.changing_structure"
+        ,INPUT="ktfru.msg.common.input"
+        ,OUTPUT="ktfru.msg.common.output"
+        ,INVENTORY="ktfru.msg.common.inventory"
+        ,SLOT="ktfru.msg.common.slot"
+        ,TANK="ktfru.msg.common.tank"
+        ,CRUCIBLE_MODEL_0 ="ktfru.msg.machine.cruciblemodel.0"
+        ,CRUCIBLE_MODEL_1 ="ktfru.msg.machine.cruciblemodel.1"
+        ,SUN_BOILER_MIRROR="ktfru.tooltip.multiblock.sunboiler.mirror"
+        ,SUN_BOILER_MIRROR_ERR="ktfru.tooltip.multiblock.sunboiler.mirror.err"
+        ,SUN_BOILER_0="ktfru.tooltip.multiblock.sunboiler.0"
+        ,SUN_BOILER_1="ktfru.tooltip.multiblock.sunboiler.1"
+        ,SUN_BOILER_ERR="ktfru.tooltip.multiblock.sunboiler.err"
+        ;
 
 }

@@ -29,6 +29,7 @@ public enum flList {
     //Ore Process
     AcidPickledBauxide, SodiumAluminate, PotassiumAluminate, SodiumCarbonate, PotassiumCarbonate, SodiumHeterotungstate, AmmoniumTungstate
     //Oil Process And Plastics
+    ,AqueousOilExtraHeavy,AqueousOilHeavy,AqueousOilMedium,AqueousOilNormal,AqueousOilLight
     ,DesaltOilExtraHeavy,DesaltOilHeavy,DesaltOilMedium,DesaltOilNormal,DesaltOilLight
     ,CleanedOilExtraHeavy,CleanedOilHeavy,CleanedOilMedium,CleanedOilNormal,CleanedOilLight
     ,/**一氧化碳**/CarbonMonoxide,/**石油脱硫剂**/ OilDesulfurizationer,/**硫化石油脱硫剂**/SulfuredOilDesulfurizationer,/**石油气**/OilGas,/**裂化石油气**/CrackedOilGas,/**初底油**/InitalBottomOil,/**石脑油**/Naphtha

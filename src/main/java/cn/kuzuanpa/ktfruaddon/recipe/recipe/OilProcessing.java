@@ -27,10 +27,16 @@ public class OilProcessing {
         RM.Mixer.addRecipeX(false,64,640, ST.array(OM.dust(MT.NaOH,U)), FL.array(flList.Methanol.make(500), FL.Water.make(1500)),FL.array(flList.OilDesulfurizationer.make(2000)));
         RM.Mixer.addRecipeX(false,64,640, ST.array(OM.dust(MT.KOH,U)), FL.array(flList.Methanol.make(500), FL.Water.make(1500)),FL.array(flList.OilDesulfurizationer.make(2000)));
 
-        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Light.make(150),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilLight.make(150)) );
-        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Normal.make(140),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilNormal.make(140)));
-        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Medium.make(130),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilMedium.make(130)));
-        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Heavy.make(115),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilHeavy.make(115)) );
+        RM.Centrifuge.addRecipe0(false,32,25,FL.array(flList.AqueousOilLight     .make(100)), FL.array(FL.Saltwater.make(25),flList.DesaltOilLight     .make(75)));
+        RM.Centrifuge.addRecipe0(false,32,30,FL.array(flList.AqueousOilNormal    .make(100)), FL.array(FL.Saltwater.make(25),flList.DesaltOilNormal    .make(75)));
+        RM.Centrifuge.addRecipe0(false,32,30,FL.array(flList.AqueousOilMedium    .make(100)), FL.array(FL.Saltwater.make(25),flList.DesaltOilMedium    .make(75)));
+        RM.Centrifuge.addRecipe0(false,32,35,FL.array(flList.AqueousOilHeavy     .make(100)), FL.array(FL.Saltwater.make(25),flList.DesaltOilHeavy     .make(75)));
+        RM.Centrifuge.addRecipe0(false,32,40,FL.array(flList.AqueousOilExtraHeavy.make(100)), FL.array(FL.Saltwater.make(25),flList.DesaltOilExtraHeavy.make(75)));
+
+        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Light     .make(150),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilLight.make(150)) );
+        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Normal    .make(140),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilNormal.make(140)));
+        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Medium    .make(130),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilMedium.make(130)));
+        RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_Heavy     .make(115),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilHeavy.make(115)) );
         RM.Mixer.addRecipe0(false,16,40,FL.array(FL.Oil_ExtraHeavy.make(115),FL.Water.make(20)), FL.array(FL.Saltwater.make(20),flList.DesaltOilExtraHeavy.make(100)));
 
         recipeManager.HeatMixer.addRecipeX(false,150,14, ST.array(OP.dust.mat(MT.Ni,0)), FL.array(FL.Hydrogen.make(5),flList.OilDesulfurizationer.make(4),flList.DesaltOilLight.make(100)),FL.array(flList.CleanedOilLight.make(100) ,flList.SulfuredOilDesulfurizationer.make(4)), ZL_IS);

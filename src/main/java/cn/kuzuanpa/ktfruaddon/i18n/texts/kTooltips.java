@@ -43,5 +43,9 @@ public class kTooltips {
             ,TANK_GAS_COMPRESSED_1="ktfru.tooltip.multiblock.tank.gas.compressed.1"
             ,TANK_GAS_COMPRESSED_2="ktfru.tooltip.multiblock.tank.gas.compressed.2"
             ,TANK_GAS_COMPRESSED_INPUTER="ktfru.tooltip.machine.compressedgasinputer"
+            ,OIL_MINER_0="ktfru.tooltip.multiblock.oilminer.0"
+            ,OIL_MINER_1="ktfru.tooltip.multiblock.oilminer.1"
+            ,OIL_MINER_2="ktfru.tooltip.multiblock.oilminer.2"
+            ,OIL_MINER_3="ktfru.tooltip.multiblock.oilminer.3"
     ;
 }

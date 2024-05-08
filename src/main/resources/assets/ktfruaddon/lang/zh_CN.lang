@@ -5,10 +5,16 @@ ktfru.tooltip.common.side.right=右侧
 ktfru.tooltip.common.side.top=顶端
 ktfru.tooltip.common.side.bottom=底端
 ktfru.tooltip.common.auto=(自动)
+
 ktfru.tooltip.tools.monkey_wrench_changing_structure=使用 活动扳手 修改机器结构
 
 ktfru.msg.common.changing_structure=开始调整机器结构
 ktfru.msg.common.done_changing_structure=机器结构调整完成
+ktfru.msg.common.input=输入
+ktfru.msg.common.output=输出
+ktfru.msg.common.inventory=物品栏
+ktfru.msg.common.slot=物品槽
+ktfru.msg.common.tank=流体槽
 
 itemGroup.ktfru.item.battery.pole=kTFRUAddon: 电池电极
 itemGroup.ktfru.item.chemistry=kTFRUAddon: 化学
@@ -830,6 +836,10 @@ ktfru.tooltip.multiblock.tank.gas.compressed.0=3x3x3 相应材料的致密壁板
 ktfru.tooltip.multiblock.tank.gas.compressed.1=这个阀门方块放在结构顶面/底面/侧面的中心, 正面朝外
 ktfru.tooltip.multiblock.tank.gas.compressed.2=只能输入气体且需要通过气体压缩机输入,气体从阀门自动输出
 ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速率:(输入KU)*10L/t
+ktfru.tooltip.multiblock.oilminer.0=主方块左右两侧放置配方中使用的壁板
+ktfru.tooltip.multiblock.oilminer.1=2*3钻井头放在背后，泉应在这些钻井头下面
+ktfru.tooltip.multiblock.oilminer.2=一层3*3的配方中使用的壁板放在上面
+ktfru.tooltip.multiblock.oilminer.3=流体从第二层的任意壁板输入，从主方块上方的壁板的上方输出
 
 
 fluid.acidpickledbauxide=酸浸铝土矿

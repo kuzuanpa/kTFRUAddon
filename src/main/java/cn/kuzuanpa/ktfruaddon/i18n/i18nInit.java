@@ -29,6 +29,11 @@ public class i18nInit {
 
         LH.add(kMessages.DONE_CHANGING_STRUCTURE,"Changing Contents");
         LH.add(kMessages.CHANGING_STRUCTURE,"Done Changing Contents");
+        LH.add(kMessages.INPUT,"Input");
+        LH.add(kMessages.OUTPUT,"Output");
+        LH.add(kMessages.INVENTORY,"Inventory");
+        LH.add(kMessages.SLOT,"Slot");
+        LH.add(kMessages.TANK,"Tank");
         LH.add(kMessages.CRUCIBLE_MODEL_0,"Still need ");
         LH.add(kMessages.CRUCIBLE_MODEL_1," clay ball.");
         LH.add(kMessages.SUN_BOILER_MIRROR,"Successfully binding Sun Boiler target:");

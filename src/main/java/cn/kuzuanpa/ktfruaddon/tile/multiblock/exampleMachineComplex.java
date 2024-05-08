@@ -16,7 +16,6 @@ import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import net.minecraft.inventory.IInventory;
@@ -97,38 +96,35 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
 
+    public int getBlockID(int checkX, int checkY, int checkZ){
+        return blockIDMap[checkY][checkZ][checkX];
+    }
+
+    public  boolean isIgnored(int checkX, int checkY, int checkZ){
+        return ignoreMap[checkY][checkZ][checkX];
+    }
+    public short getRegistryID(int checkX, int checkY, int checkZ){return registryIDMap[checkY][checkZ][checkX];}
+
     @Override
     public boolean checkStructure2() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
-            if (getFacing() == (short) 2) {
-                tZ += zMapOffset;
-                tX -= xMapOffset;
-            } else if (getFacing() == (short) 3) {
-                tZ -= zMapOffset;
-                tX += xMapOffset;
-            } else if (getFacing() == (short) 4) {
-                tX += zMapOffset;
-                tZ += xMapOffset;
-            } else if (getFacing() == (short) 5) {
-                tX -= zMapOffset;
-                tZ -= xMapOffset;
-            } else {
-                tSuccess = F;
-            }
-            int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < machineY&&tSuccess; checkY++) {
-                for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) {
-                    for (checkX = 0; checkX < machineX&&tSuccess; checkX++) {
-                        if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) {
-                            tSuccess = F;
+            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
+            int cX, cY, cZ;
+            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
+                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
+                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
+                        if(!isIgnored(cX,cY,cZ)) {
+                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 1, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
+                                tSuccess = F;
                         }
-                      //  FMLLog.log(Level.FATAL, "Checkpos" + mFacing + "/" + tX + "/" + tY + "/" + tZ + "/" + getCheckX(mFacing,tX,checkX,checkZ) + "/" + checkY + "/" +  getCheckZ(mFacing,tZ,checkX,checkZ)  + "/" + ignoreMap[checkY][checkZ][checkX]);
                     }
                 }
             }
             return tSuccess;
+
         }
         return mStructureOkay;
     }

@@ -138,6 +138,12 @@ public class fluidPreInit {
         //氢溴酸
         flList.HydrobromicAcid.register("HydrobromicAcid","HydrobromicAcid",matList.HydrobromicAcid.get(), GAS);
 
+        flList.AqueousOilExtraHeavy.register("aqueousoilextraheavy","Aqueous Very Heavy Oil",null,LIQUID,1000,277,700,1000);
+        flList.AqueousOilHeavy.register("aqueousoilheavy","Aqueous Heavy Oil",null,LIQUID,1000,277,600,1000);
+        flList.AqueousOilMedium.register("aqueousoilmedium","Aqueous Medium Oil",null,LIQUID,1000,277,500,1000);
+        flList.AqueousOilNormal.register("aqueousoilnormal","Aqueous Oil",null,LIQUID,1000,277,500,1000);
+        flList.AqueousOilLight.register("aqueousoillight","Aqueous Light Oil",null,LIQUID,1000,277,400,1000);
+
         flList.DesaltOilExtraHeavy.register("desaltoilextraheavy","Desalinized Very Heavy Oil",null,LIQUID,1000,277,900,1000);
         flList.DesaltOilHeavy.register("desaltoilheavy","Desalinized Heavy Oil",null,LIQUID,1000,277,800,1000);
         flList.DesaltOilMedium.register("desaltoilmedium","Desalinized Medium Oil",null,LIQUID,1000,277,700,1000);
