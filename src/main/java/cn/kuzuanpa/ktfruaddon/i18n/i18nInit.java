@@ -36,6 +36,8 @@ public class i18nInit {
         LH.add(kMessages.TANK,"Tank");
         LH.add(kMessages.NULL,"Null");
         LH.add(kMessages.EMPTY,"Empty");
+        LH.add(kMessages.NORMAL,"Normal");
+        LH.add(kMessages.ERROR,"error");
         LH.add(kMessages.CRUCIBLE_MODEL_0,"Still need ");
         LH.add(kMessages.CRUCIBLE_MODEL_1," clay ball.");
         LH.add(kMessages.SUN_BOILER_MIRROR,"Successfully binding Sun Boiler target:");
@@ -43,5 +45,9 @@ public class i18nInit {
         LH.add(kMessages.SUN_BOILER_0,"The Position of this block wrote to USB stick.");
         LH.add(kMessages.SUN_BOILER_1,"There already have some data in USB stick, click again to overwrite it.");
         LH.add(kMessages.SUN_BOILER_ERR,"There are some errors in structure.");
+        LH.add(kMessages.COMPUTE_CLUSTER_0,"No computer inserted.");
+        LH.add(kMessages.COMPUTE_CLUSTER_1,"Compute Cluster State: ");
+        LH.add(kMessages.COMPUTE_CLUSTER_2,"Total Compute Power: ");
+        LH.add(kMessages.COMPUTE_CLUSTER_3,"Power off");
     }
 }

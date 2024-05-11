@@ -13,7 +13,7 @@ import cn.kuzuanpa.ktfruaddon.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
-import cn.kuzuanpa.ktfruaddon.tile.parts.SunHeaterMirror;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;

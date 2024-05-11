@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.parts;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 

@@ -11,13 +11,10 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
 import gregapi.data.CS;
-import gregapi.render.BlockTextureDefault;
-import gregapi.render.BlockTextureMulti;
 import gregapi.render.ITexture;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import net.minecraft.block.Block;
 
-import static gregapi.data.CS.FACING_ROTATIONS;
 import static gregapi.data.CS.T;
 
 public abstract class ModelRenderBaseMultiBlockMachine extends TileEntityBase10MultiBlockMachine {
@@ -31,8 +28,8 @@ public abstract class ModelRenderBaseMultiBlockMachine extends TileEntityBase10M
     }
 
     @Override public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return mStructureOkay ? null : aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(mTexturesMaterial[FACING_ROTATIONS[mFacing][aSide]], mRGBa), BlockTextureDefault.get((mActive || worldObj == null ? mTexturesActive : mRunning ? mTexturesRunning : mTexturesInactive)[FACING_ROTATIONS[mFacing][aSide]])) : null;}
-
+        return mStructureOkay?null:super.getTexture2(aBlock, aRenderPass, aSide, aShouldSideBeRendered);
+    }
     public abstract boolean checkStructure3(boolean shouldPartsTransparent);
 
     @Override

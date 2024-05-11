@@ -9,7 +9,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.parts.SunHeaterMirror;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

@@ -10,7 +10,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartEnergyConsumer;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;

@@ -9,8 +9,9 @@
  */
 
 
-package cn.kuzuanpa.ktfruaddon.tile.parts;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.item.items.itemComputer;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.data.LH;
@@ -25,27 +26,21 @@ import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.ST;
 import gregapi.util.UT;
-import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
-//todo: apply changes in common cluster
-public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips {
-    public ChunkCoordinates mTargetPos = null;
-    public ITileEntityMultiBlockController mTarget = null;
+public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart {
 
     protected IIconContainer[][] mTextures;
-    public short mDesign;
     public boolean isRunning,isActive;
     public byte mState;
     public long ComputePower;
@@ -116,12 +111,12 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
                 boolean saidSomething = F;
                 for (int i=0;i < 2;i++) if (slot(i) != null) {
                     saidSomething = T;
-                    aChatReturn.add("Slot"+i+" has " + slot(i).getDisplayName());
+                    aChatReturn.add(LH.get(kMessages.SLOT)+i+": " + slot(i).getDisplayName());
                 }
-                if (!saidSomething) aChatReturn.add("Contains no Compute Node");
+                if (!saidSomething) aChatReturn.add(LH.get(kMessages.COMPUTE_CLUSTER_0));
                 updateComputePower();
-                aChatReturn.add("Total Computing Power:"+getComputePower());
-                aChatReturn.add("Is this cluster Running:"+isRunning);
+                aChatReturn.add(LH.get(kMessages.COMPUTE_CLUSTER_1)+(isRunning?LH.get(kMessages.NORMAL):LH.get(kMessages.COMPUTE_CLUSTER_3)));
+                aChatReturn.add(LH.get(kMessages.COMPUTE_CLUSTER_2)+getComputePower());
             }
         }
         if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
@@ -245,57 +240,20 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
         updateState();
         return T;
     }
-    //Every thing from MultiBlockPart
-    public ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
-        if (this.mTargetPos == null) {
-            return null;
-        } else {
-            if (this.mTarget == null || this.mTarget.isDead()) {
-                this.mTarget = null;
-                if (this.worldObj.blockExists(this.mTargetPos.posX, this.mTargetPos.posY, this.mTargetPos.posZ)) {
-                    TileEntity tTarget = WD.te(this.worldObj, this.mTargetPos, true);
-                    if (tTarget instanceof ITileEntityMultiBlockController && ((ITileEntityMultiBlockController)tTarget).isInsideStructure(this.xCoord, this.yCoord, this.zCoord)) {
-                        this.mTarget = (ITileEntityMultiBlockController)tTarget;
-                    } else {
-                        this.mTargetPos = null;
-                    }
-                }
-            }
 
-            return aCheckValidity && this.mTarget != null && !this.mTarget.checkStructure(false) ? null : this.mTarget;
-        }
-    }
-    public void setTarget(ITileEntityMultiBlockController aTarget, int aDesign, int aMode) {
-        this.mTarget = aTarget;
-        this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();
-    }
+    public ChunkCoordinates mTargetPos = null;
+    public ITileEntityMultiBlockController mTarget = null;
+    public int mDesign = 0;
+    @Override public ITileEntityMultiBlockController getTarget2() {return mTarget;}
+    @Override public void setTarget(ITileEntityMultiBlockController target) {mTarget = target;}
+    @Override public ChunkCoordinates getTargetPos() {return mTargetPos;}
+    @Override public void setTargetPos(ChunkCoordinates aCoords){mTargetPos=aCoords;}
+    @Override public void setDesign(int aDesign) {this.mDesign = aDesign;}
+    @Override public int getDesign(){return mDesign;}
     @Override
     public boolean breakBlock(){
-//MultiBlockBase
-        ITileEntityMultiBlockController tTarget = this.getTarget(false);
-        if (tTarget != null) {
-            this.mTargetPos = null;
-            this.mTarget = null;
-            tTarget.onStructureChange();
-        }
-//Base05Inventories
-        if (isServerSide()) for (short i = 0; i < invsize(); i++) if (slot(i) != null && canDrop(i) && !ST.debug(slot(i)) && breakDrop(i)) {
-            ItemStack tDumpedStack = ST.amount(UT.Code.bind_(0, 512L * Math.max(1, slot(i).getMaxStackSize()), slot(i).stackSize), slot(i));
-            int tMaxSize = Math.max(1, slot(i).getMaxStackSize());
-
-            while (tDumpedStack.stackSize > tMaxSize) {
-                ST.drop(worldObj, getCoords(), ST.amount(tMaxSize, tDumpedStack));
-                tDumpedStack.stackSize -= tMaxSize;
-                slot(i).stackSize -= tMaxSize;
-            }
-            if (tDumpedStack.stackSize > 0) {
-                slot(i).stackSize -= tDumpedStack.stackSize;
-                ST.drop(worldObj, getCoords(), ST.copy(tDumpedStack));
-            }
-
-            GarbageGT.trash(slot(i));
-        }
-        return F;
+        notifyTarget();
+        return super.breakBlock();
     }
     @Override
     public String getTileEntityName() {

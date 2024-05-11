@@ -9,7 +9,7 @@
  */
 
 
-package cn.kuzuanpa.ktfruaddon.tile.parts;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
@@ -172,9 +172,8 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
                 targetSunBoilerPos=null;
                 return false;
             }
-            isValid=true;
-            for (int i = yCoord+1; i < 256; i++) if (!(worldObj.isAirBlock(xCoord,i,zCoord)))isValid=false;
-            if (!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord+1))
+            isValid = worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord);
+            if (isValid&&!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord+1))
                 ||!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord))
                 ||!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord-1))
                 ||!(worldObj.isAirBlock(xCoord,yCoord,zCoord+1))

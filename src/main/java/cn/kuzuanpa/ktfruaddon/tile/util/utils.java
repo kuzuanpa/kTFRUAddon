@@ -11,16 +11,15 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.util;
 
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartComputeCluster;
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
-import cpw.mods.fml.common.FMLLog;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.IMultiBlockPart;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartComputeCluster;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartEnergyConsumer;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
-import org.apache.logging.log4j.Level;
 
 public class utils {
     public utils() {
@@ -51,14 +50,14 @@ public class utils {
     }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
-        if (tTileEntity == aController) {
+        if(tTileEntity == null) return false;
+        else if (tTileEntity == aController) {
             return true;
         }
         try {
-            ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
-        } catch (Throwable ignored){
-            System.out.println("err: "+aX+"/"+aY+"/"+aZ);
-        }
+            if(tTileEntity instanceof MultiTileEntityMultiBlockPart&&((MultiTileEntityMultiBlockPart) tTileEntity).getTarget(false).equals(aController))((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
+            if(tTileEntity instanceof IMultiBlockPart&& ((IMultiBlockPart) tTileEntity).getTarget(false).equals(aController))((IMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
+        } catch (Throwable ignored){}
         return true;
     }
 
@@ -68,35 +67,24 @@ public class utils {
             return true;
         } else if (tTileEntity instanceof MultiTileEntityMultiBlockPart && ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
             ITileEntityMultiBlockController tTarget = ((MultiTileEntityMultiBlockPart) tTileEntity).getTarget(false);
-            if (tTarget != aController && tTarget != null) {
-                return false;
-            } else {
+            if (tTarget != aController && tTarget != null) return false;
+            else {
                 ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(aController, aDesign, aMode);
-                FMLLog.log(Level.FATAL,"Out of range:"+coord+aRegistryMeta);
                 return true;
             }
-        } else if (tTileEntity instanceof MultiBlockPartComputeCluster && ((MultiBlockPartComputeCluster) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiBlockPartComputeCluster) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
-            ITileEntityMultiBlockController tTarget = ((MultiBlockPartComputeCluster) tTileEntity).getTarget(false);
-            if (tTarget != aController && tTarget != null) {
-                return false;
-            } else {
-                ((MultiBlockPartComputeCluster) tTileEntity).setTarget(aController, aDesign, aMode);
+        } else if (tTileEntity instanceof IMultiBlockPart && ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
+            ITileEntityMultiBlockController tTarget = ((IMultiBlockPart) tTileEntity).getTarget(false);
+            if (tTarget != aController && tTarget != null) return false;
+            else {
+                ((IMultiBlockPart) tTileEntity).setTarget(aController, aDesign, aMode);
                 return true;
             }
-        } else {
-            return false;
-        }
+        } else return false;
     }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,ChunkCoordinates coord, int aDesign, int aMode) {
-        TileEntity tTileEntity = aController.getTileEntity(coord.posX, coord.posY, coord.posZ);
-        if (tTileEntity == aController) {
-            return true;
-        }
-        try {
-            ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(null, aDesign, aMode);
-        } catch (Throwable ignored){}
-        return true;
-    }   public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
+        return resetTarget(aController,coord.posX,coord.posY, coord.posZ, aDesign, aMode);
+    }
+    public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
         if (tTileEntity == null) return false;
         if (tTileEntity == aController) return true;

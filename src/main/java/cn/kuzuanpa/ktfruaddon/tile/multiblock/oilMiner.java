@@ -37,6 +37,7 @@ import java.util.List;
 
 import static cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips.*;
 import static gregapi.data.CS.SIDE_BOTTOM;
+import static gregapi.data.CS.SIDE_FRONT;
 import static gregapi.data.CS.*;
 
 public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy, IFluidHandler {
@@ -72,12 +73,13 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
-        aList.add(LH.get(LH.CHEAP_OVERCLOCKING));
+        aList.add(LH.Chat.YELLOW+LH.get(LH.CHEAP_OVERCLOCKING));
         LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
-        aList.add(LH.get(OIL_MINER_0));
-        aList.add(LH.get(OIL_MINER_1));
-        aList.add(LH.get(OIL_MINER_2));
-        aList.add(LH.get(OIL_MINER_3));
+        aList.add(LH.Chat.CYAN+LH.get(LH.STRUCTURE));
+        aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_0));
+        aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_1));
+        aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_2));
+        aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_3));
     }
 
     static {
@@ -89,6 +91,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
+        if (aIsServerSide&&mStructureOkay&& mEnergy<0)mEnergy=0;
         if (aIsServerSide&&mStructureOkay&& mEnergy>mInputMin){
             if(mTankInput.has()) {
             for (int x=0;x<3;x++) for (int z=1;z<3;z++){
@@ -138,7 +141,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     //Energy
     long mInputMin=-1,mInputMax=-1,mInput =-1,mEnergy=0;
     TagData mEnergyTypeAccepted;
-    public long doInject (TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject ) {
+    public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject ) {
         if (mStructureOkay&&aEnergyType == mEnergyTypeAccepted) {
             long tInput = Math.min(mInputMax - mEnergy, aSize * aAmount), tConsumed = Math.min(aAmount, (tInput/aSize) + (tInput%aSize!=0?1:0));
             if (aDoInject) mEnergy += tConsumed * aSize;
@@ -157,8 +160,8 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     public final short xMapOffset = -1, zMapOffset = 0;
     public int[][][] blockIDMap = {{
             { -1000,   0  , -1000},
-            { 31015, 31015, 31015},
-            { 31015, 31015, 31015}
+            { 31014, 31014, 31014},
+            { 31014, 31014, 31014}
     },{
             { -1000, -1000, -1000},
             { -1000, -1000, -1000},
@@ -228,5 +231,10 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);
+    }
+    @Override public byte getDefaultSide() {return SIDE_FRONT;}
+    @Override
+    public boolean[] getValidSides() {
+        return SIDES_HORIZONTAL;
     }
 }

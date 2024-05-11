@@ -45,16 +45,16 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     //values used by TESR
     public int processTime,proTime, headMoveToX, headMoveToZ;
     public static int[][][] blockIDMap = {{
-            {31008, 0    , 31007,31007,31007},
-            {31008, 31008, 31007,31007,31007},
-            {31008, 31008, 31007,31007,31007}
+            {31000, 0    , 31007,31007,31007},
+            {31000, 31008, 31007,31007,31007},
+            {31000, 31008, 31007,31007,31007}
     },{
-            {31008, 31008, 0    ,0    ,0    },
-            {31008, 31008, 0    ,0    ,0    },
-            {31008, 31008, 0    ,0    ,0    }
+            {31000, 31008, 0    ,0    ,0    },
+            {31000, 31008, 0    ,0    ,0    },
+            {31000, 31008, 0    ,0    ,0    }
     },{
             {0    , 0    , 0    ,0    ,0    },
-            {31009, 31009, 31009,31014,0    },
+            {31000, 31000, 31000,31009,0    },
             {0    , 0    , 0    ,0    ,0    }
     }};
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
@@ -76,6 +76,7 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         int blockID=getBlockID(x,y,z);
         if (x==0&&y==0) return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         else if (x==0&&y==1&&z==1)return MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
+        else if(getBlockID(x, y, z)==31007)return MultiTileEntityMultiBlockPart.ONLY_ITEM_IN;
         else {return MultiTileEntityMultiBlockPart.NOTHING;}
     }
     public int getBlockID(int checkX, int checkY, int checkZ){
@@ -94,13 +95,9 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
             tZ= utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             tY+=yMapOffset;
             int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
-                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
-                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
-                            tSuccess = F;
-                        }
-                    }
+            for (cY  = 0; cY < machineY&&tSuccess; cY++) for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) for (cX = 0; cX < machineX&&tSuccess; cX++) {
+                if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
+                    tSuccess = F;
                 }
             }
             return tSuccess;
@@ -115,19 +112,13 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
             tZ= utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
             tY+=yMapOffset;
             int cX, cY, cZ;
-            for (cY  = 0; cY < machineY; cY++) {
-                for (cZ = 0; cZ < machineZ; cZ++) {
-                    for (cX = 0; cX < machineX; cX++) {
-                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( cX,cY,cZ));
-                    }
-                }
+            for (cY  = 0; cY < machineY; cY++) for (cZ = 0; cZ < machineZ; cZ++) for (cX = 0; cX < machineX; cX++) {
+                if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( cX,cY,cZ));
             }
         }
     }
 
 
-    //这是设置主方块的物品提示
-    //controls tooltip of controller block
     static {
         LH.add("gt.tooltip.multiblock.example.complex.1", "5x5x2 of Stainless Steel Walls");
         LH.add("gt.tooltip.multiblock.example.complex.2", "Main Block centered on Side-Bottom and facing outwards");
@@ -142,13 +133,10 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
-    //这里是设置该机器的内部区域
-    //controls areas inside the machine
+
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
-    //下面四个是设置输入输出的地方,return null是任意面
-    //controls where to I/O, return null=any side
+    public boolean isInsideStructure(int aX, int aY, int aZ) { return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
+
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
         return getAdjacentTank(SIDE_UP);

@@ -10,7 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.base;
 
-import cn.kuzuanpa.ktfruaddon.tile.parts.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartEnergyConsumer;
 import gregapi.data.FL;
 import gregapi.data.TD;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;

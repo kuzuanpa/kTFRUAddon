@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.parts;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import gregapi.GT_API;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -22,7 +22,6 @@ import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.ST;
 import gregapi.util.UT;
-import gregapi.util.WD;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -33,10 +32,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class CommonMachinePart extends MultiTileEntityBasicMachine implements IMultiTileEntity.IMTE_BreakBlock {
-    public ChunkCoordinates mTargetPos = null;
-    public ITileEntityMultiBlockController mTarget = null;
-
+public class CommonMachinePart extends MultiTileEntityBasicMachine implements IMultiTileEntity.IMTE_BreakBlock,IMultiBlockPart {
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -184,45 +180,21 @@ public class CommonMachinePart extends MultiTileEntityBasicMachine implements IM
         }
     }
 
+    public ChunkCoordinates mTargetPos = null;
+    public ITileEntityMultiBlockController mTarget = null;
     public int mDesign = 0;
-
-    public ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
-        if (this.mTargetPos == null) {
-            return null;
-        } else {
-            if (this.mTarget == null || this.mTarget.isDead()) {
-                this.mTarget = null;
-                if (this.worldObj.blockExists(this.mTargetPos.posX, this.mTargetPos.posY, this.mTargetPos.posZ)) {
-                    TileEntity tTarget = WD.te(this.worldObj, this.mTargetPos, true);
-                    if (tTarget instanceof ITileEntityMultiBlockController && ((ITileEntityMultiBlockController)tTarget).isInsideStructure(this.xCoord, this.yCoord, this.zCoord)) {
-                        this.mTarget = (ITileEntityMultiBlockController)tTarget;
-                    } else {
-                        this.mTargetPos = null;
-                    }
-                }
-            }
-
-            return aCheckValidity && this.mTarget != null && !this.mTarget.checkStructure(false) ? null : this.mTarget;
-        }
-    }
-
-    public void setTarget(ITileEntityMultiBlockController aTarget, int aDesign, int aMode) {
-        this.mTarget = aTarget;
-        this.mTargetPos = this.mTarget == null ? null : this.mTarget.getCoords();
-        this.mDesign = aDesign;
-    }
-    public void setDesign(int aDesign) {
-        this.mDesign = aDesign;
-    }
+    @Override public ITileEntityMultiBlockController getTarget2() {return mTarget;}
+    @Override public void setTarget(ITileEntityMultiBlockController target) {mTarget = target;}
+    @Override public ChunkCoordinates getTargetPos() {return mTargetPos;}
+    @Override public void setTargetPos(ChunkCoordinates aCoords){mTargetPos=aCoords;}
+    @Override public void setDesign(int aDesign) {this.mDesign = aDesign;}
+    @Override public int getDesign(){return mDesign;}
+    @Override
     public boolean breakBlock() {
-        ITileEntityMultiBlockController tTarget = this.getTarget(false);
-        if (tTarget != null) {
-            this.mTargetPos = null;
-            this.mTarget = null;
-            tTarget.onStructureChange();
-        }
-        return false;
+        notifyTarget();
+        return super.breakBlock();
     }
+    @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
     }
