@@ -75,7 +75,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         super.addToolTips(aList, aStack, aF3_H);
         aList.add(LH.Chat.YELLOW+LH.get(LH.CHEAP_OVERCLOCKING));
         LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
-        aList.add(LH.Chat.CYAN+LH.get(LH.STRUCTURE));
+        aList.add(LH.Chat.CYAN+LH.get(LH.STRUCTURE)+": ");
         aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_0));
         aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_1));
         aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_2));
@@ -84,7 +84,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
 
     static {
         LH.add(OIL_MINER_0,"Walls used in recipes placed on left and right side of main Block, energy input from them");
-        LH.add(OIL_MINER_1,"2*3 Oil Miner Head in back of main Block, springs should under these head");
+        LH.add(OIL_MINER_1,"2*3 Oil Miner Drill in back of main Block, springs should under these drills");
         LH.add(OIL_MINER_2,"a layer of 3*3 Walls used in recipes placed on top");
         LH.add(OIL_MINER_3,"fluid input at any 2nd layer wall , fluid auto output at top of the wall below the main block");
     }

@@ -696,26 +696,25 @@ ktfru.multitileentity.10001=微型燃气涡轮 (钢)
 ktfru.multitileentity.10002=微型燃气涡轮 (殷钢)
 ktfru.multitileentity.10003=微型燃气涡轮 (钛)
 ktfru.multitileentity.10004=微型燃气涡轮 (钨钢)
-ktfru.multitileentity.10005=微型燃气涡轮 (钨)
-ktfru.multitileentity.10006=微型燃气涡轮 (铱)
+ktfru.multitileentity.10005=微型燃气涡轮 (铱)
 
-ktfru.multitileentity.10100=低效燃油引擎 (青铜)
-ktfru.multitileentity.10101=低效燃油引擎 (砷青铜)
-ktfru.multitileentity.10102=低效燃油引擎 (砷铜)
-ktfru.multitileentity.10103=低效燃油引擎 (钢)
-ktfru.multitileentity.10104=低效燃油引擎 (殷钢)
-ktfru.multitileentity.10105=低效燃油引擎 (钛)
-ktfru.multitileentity.10106=低效燃油引擎 (钨钢)
-ktfru.multitileentity.10107=低效燃油引擎 (铱)
+ktfru.multitileentity.10100=燃油引擎 (青铜)
+ktfru.multitileentity.10101=燃油引擎 (砷青铜)
+ktfru.multitileentity.10102=燃油引擎 (砷铜)
+ktfru.multitileentity.10103=燃油引擎 (钢)
+ktfru.multitileentity.10104=燃油引擎 (殷钢)
+ktfru.multitileentity.10105=燃油引擎 (钛)
+ktfru.multitileentity.10106=燃油引擎 (钨钢)
+ktfru.multitileentity.10107=燃油引擎 (铱)
 
-ktfru.multitileentity.10150=燃油引擎 (青铜)
-ktfru.multitileentity.10151=燃油引擎 (砷青铜)
-ktfru.multitileentity.10152=燃油引擎 (砷铜)
-ktfru.multitileentity.10153=燃油引擎 (钢)
-ktfru.multitileentity.10154=燃油引擎 (殷钢)
-ktfru.multitileentity.10155=燃油引擎 (钛)
-ktfru.multitileentity.10156=燃油引擎 (钨钢)
-ktfru.multitileentity.10157=燃油引擎 (铱)
+ktfru.multitileentity.10150=涡轮增压燃油引擎 (青铜)
+ktfru.multitileentity.10151=涡轮增压燃油引擎 (砷青铜)
+ktfru.multitileentity.10152=涡轮增压燃油引擎 (砷铜)
+ktfru.multitileentity.10153=涡轮增压燃油引擎 (钢)
+ktfru.multitileentity.10154=涡轮增压燃油引擎 (殷钢)
+ktfru.multitileentity.10155=涡轮增压燃油引擎 (钛)
+ktfru.multitileentity.10156=涡轮增压燃油引擎 (钨钢)
+ktfru.multitileentity.10157=涡轮增压燃油引擎 (铱)
 
 ktfru.multitileentity.10010=燃料电池
 ktfru.multitileentity.10021=手摇发动机 (木)
@@ -773,29 +772,34 @@ ktfru.multitileentity.30005=小型蒸馏塔
 ktfru.multitileentity.30006=蒸馏塔
 ktfru.multitileentity.30007=太阳能集热塔
 ktfru.multitileentity.30008=模型测试大浸洗器
-
 ktfru.multitileentity.30009=光刻机 (步进UV)
-ktfru.multitileentity.30100=钢压缩气体储罐主方块
-ktfru.multitileentity.30101=不锈钢压缩气体储罐主方块
+ktfru.multitileentity.30010=光刻机 (DUV)
+ktfru.multitileentity.30011=光刻机 (EUV)
+ktfru.multitileentity.30012=3轴数控车床
+ktfru.multitileentity.30013=油井
+
+ktfru.multitileentity.30100=钢压缩气体储罐主阀门
+ktfru.multitileentity.30101=不锈钢压缩气体储罐主阀门
 ktfru.multitileentity.31000=铝壁板
 ktfru.multitileentity.31001=太阳能集热塔反射镜
 ktfru.multitileentity.31002=太阳能吸收器
 ktfru.multitileentity.31003=太阳能集热塔热管
 ktfru.multitileentity.31004=太阳能集热塔顶盖
-ktfru.multitileentity.31005=光刻机平台驱动器
+ktfru.multitileentity.31005=光刻机晶圆平台驱动器
 ktfru.multitileentity.31006=光刻机晶圆平台
-
+ktfru.multitileentity.31007=数控车床平台
+ktfru.multitileentity.31008=数控车床马达
+ktfru.multitileentity.31009=数控车床车头
 ktfru.multitileentity.31010=光模块 (UV)
-ktfru.multitileentity.31011=光模块(步进UV)
+ktfru.multitileentity.31011=光模块 (步进UV)
 ktfru.multitileentity.31012=光模块 (DUV)
 ktfru.multitileentity.31013=光模块 (EUV)
+ktfru.multitileentity.31014=油井钻头
 
 ktfru.multitileentity.31020=光刻机IO管理器 (UV)
 ktfru.multitileentity.31021=光刻机IO管理器 (步进UV)
 ktfru.multitileentity.31022=光刻机IO管理器 (DUV)
 ktfru.multitileentity.31023=光刻机IO管理器 (EUV)
-
-
 
 ktfru.multitileentity.31500=光刻机电源模块 (UV)
 ktfru.multitileentity.31501=光刻机电源模块 (步进UV)
@@ -867,7 +871,7 @@ ktfru.tooltip.multiblock.tank.gas.compressed.0=3x3x3 相应材料的致密壁板
 ktfru.tooltip.multiblock.tank.gas.compressed.1=这个阀门方块放在结构顶面/底面/侧面的中心, 正面朝外
 ktfru.tooltip.multiblock.tank.gas.compressed.2=只能输入气体且需要通过气体压缩机输入,气体从阀门自动输出
 ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速率:(输入KU)*10L/t
-ktfru.tooltip.multiblock.oilminer.0=主方块左右两侧放置配方中使用的壁板
+ktfru.tooltip.multiblock.oilminer.0=主方块左右两侧放置配方中使用的壁板，从它们输入能源
 ktfru.tooltip.multiblock.oilminer.1=2*3钻井头放在背后，泉应在这些钻井头下面
 ktfru.tooltip.multiblock.oilminer.2=一层3*3的配方中使用的壁板放在上面
 ktfru.tooltip.multiblock.oilminer.3=流体从第二层的任意壁板输入，从主方块上方的壁板的上方主动输出
