@@ -131,7 +131,10 @@ public class Plastic {
 
         recipeManager.HeatMixer          .addRecipe1(F,262,140,matList.VinylAcetate.getDust(1),FL.array(MT.H2O2.liquid(5*U100,false),flList.Methanol.make(0)),FL.array(FL.Water.make(50)),OP.dust.mat(matList.PolyVinylAcetate.get(),1));
 
-        RM.           Mixer              .addRecipe2(F,140,320,matList.PolyVinylAcetate.getDust(1),OP.dust.mat(MT.NaOH,1),FL.array(flList.Methanol.make(0)),FL.array(flList.GlacialAceticAcid.make(100)),OP.dust.mat(matList.PVA.get(),1));
+        RM.           Mixer              .addRecipe2(F,140,220,matList.PolyVinylAcetate.getDust(1),OP.dust.mat(MT.NaOH,1),FL.array(flList.Methanol.make(0)),FL.array(flList.GlacialAceticAcid.make(100)),OP.dust.mat(matList.PVA.get(),1));
 
+        RM.           Mixer              .addRecipe1(F,140,80,OP.dust.mat(MT.NaHCO3,0), FL.array(flList.DichloroPropane.make(1000),FL.DistW.make(1000)),FL.array(flList.Propanediol.make(1000)));
+
+        RM.           CryoMixer          .addRecipe0(F, 32,300, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U*20,false)),FL.array(flList.DichloroPropane.make(1000)));
     }
 }
