@@ -56,7 +56,7 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
                                    double y, double z, float f) {
         if(! (t instanceof CNCMachine3))return;
         CNCMachine3 tile = (CNCMachine3)t;
-        if(!tile.checkStructure(false))return;
+        if(!tile.mStructureOkay)return;
         GL11.glPushMatrix();
 
         //Initial setup

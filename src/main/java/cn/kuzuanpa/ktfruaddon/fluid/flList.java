@@ -52,7 +52,7 @@ public enum flList {
     ,/**氢氧化钾溶液**/SolutionPotassiumHydroxide,/**双酚钠盐溶液**/ SolutionBPASodium
     ,HotDistW
     ,CrackedNaphthaLow,CrackedNaphthaMedium,CrackedNaphthaHigh,CrackedDieselLow,CrackedDieselMedium,CrackedDieselHigh
-    ,MoltenTeflon,MoltenNaK,HotMoltenNaK
+    ,MoltenTeflon,MoltenBakelite,MoltenNaK,HotMoltenNaK
     ;
     public Fluid fluid;
     public String name;

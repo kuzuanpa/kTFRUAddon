@@ -198,6 +198,7 @@ public class fluidPreInit {
         flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
         flList.SolutionPotassiumHydroxide.registerSolution("solutionpotassiumhydroxide","Potassium Hydroxide Solution",MT.KOH,1000);
         flList.MoltenTeflon.registerMolten("teflon","Teflon",MT.Teflon);
+        flList.MoltenBakelite.registerMolten("bakelite","Bakelite",MT.Bakelite);
         flList.MoltenNaK.registerMolten("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
         flList.HotMoltenNaK.registerMolten("potassiumsodium_hot","Hot Potassium Sodium",matList.PotassiumSodium.mat,800);
 

@@ -69,8 +69,8 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe1(F,148,87 ,matList.TriethylAluminium.getDust(0),FL.array(FL.Ethylene.make(100),MT.TiCl4.liquid(0,false)),ZL_FS,OP.dust.mat(MT.Plastic,1));
 
-        RM.           Mixer              .addRecipe0(F,320,120,FL.array(MT.H2SO4.liquid(0,false),flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
-        recipeManager.HeatMixer          .addRecipe1(F,320,120,OP.dust.mat(MT.NaOH,0),FL.array(flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
+        RM.           Mixer              .addRecipe0(F,250,120,FL.array(MT.H2SO4.liquid(0,false),flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
+        recipeManager.HeatMixer          .addRecipe1(F,180,120,OP.dust.mat(MT.NaOH,0),FL.array(flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
 
         recipeManager.HeatMixer          .addRecipe1(F,210,100,OP.dust.mat(MT.Mg,1),FL.array(flList.Chloromethane.make(300),flList.Methoxymethane.make(0)),FL.array(flList.MethylmagnesiumChloride.make(300)),ZL_IS);
 
@@ -95,7 +95,7 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe0(F,256,120,FL.array(FL.Ethylene.make(100),MT.Cl.gas(U10,false)),FL.array(flList.DichloroEthane.make(100)),ZL_IS);
 
-        recipeManager.PressureHeatMixer  .addRecipe0(F,256,120,FL.array(flList.DichloroEthane.make(100)),FL.array(flList.VinylChloride.make(100),MT.HCl.gas(U10,false)),ZL_IS);
+        recipeManager.HeatMixer          .addRecipe0(F,256,120,FL.array(flList.DichloroEthane.make(100)),FL.array(flList.VinylChloride.make(100),MT.HCl.gas(U10,false)),ZL_IS);
 
         recipeManager.HeatMixer          .addRecipe0(F,256,120,FL.array(flList.VinylChloride.make(100),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.PVC,1));
 
@@ -113,7 +113,7 @@ public class Plastic {
 
         RM.           Electrolyzer       .addRecipe1(F,320,40,ItemList.ProtonExchangeMembrane.get(0),FL.array(flList.MoltenTeflon.make(500),MT.Br.liquid(U5,false)),FL.array(flList.HFPO.make(200),flList.HydrobromicAcid.make(200),FL.Hydrogen.make(100)),ZL_IS);
 
-        recipeManager.PressureHeatMixer  .addRecipe0(F,0,1600,FL.array(flList.HexaFluoroPropylene.make(100),FL.Oxygen.make(100),flList.Benzene.make(0)),FL.array(flList.HFPO.make(100)),ZL_IS);
+        recipeManager.HeatMixer          .addRecipe0(F,0,1600,FL.array(flList.HexaFluoroPropylene.make(100),FL.Oxygen.make(100),flList.Benzene.make(0)),FL.array(flList.HFPO.make(100)),ZL_IS);
 
         recipeManager.HeatMixer          .addRecipe1(F,210,100,OP.dust.mat(MT.Na2CO3,1),FL.array(flList.TFES.make(100),flList.HFPO.make(100),flList.Methoxymethane.make(0)),FL.array(flList.PrecursorPSVE.make(100)),ZL_IS);
 
@@ -133,8 +133,8 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe2(F,140,220,matList.PolyVinylAcetate.getDust(1),OP.dust.mat(MT.NaOH,1),FL.array(flList.Methanol.make(0)),FL.array(flList.GlacialAceticAcid.make(100)),OP.dust.mat(matList.PVA.get(),1));
 
-        RM.           Mixer              .addRecipe1(F,140,80,OP.dust.mat(MT.NaHCO3,0), FL.array(flList.DichloroPropane.make(1000),FL.DistW.make(1000)),FL.array(flList.Propanediol.make(1000)));
+        RM.           Mixer              .addRecipe1(F,140,80,OP.dust.mat(MT.NaHCO3,0), FL.array(flList.DichloroPropane.make(1000),FL.DistW.make(1000)),FL.array(flList.Propanediol.make(1000),MT.HCl.gas(U*2,false)));
 
-        RM.           CryoMixer          .addRecipe0(F, 32,300, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U*20,false)),FL.array(flList.DichloroPropane.make(1000)));
+        RM.           CryoMixer          .addRecipe0(F, 32,300, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U,false)),FL.array(flList.DichloroPropane.make(1000)));
     }
 }
