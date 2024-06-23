@@ -89,7 +89,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        mEnergy = aNBT.getLong(NBT_ENERGY);
+        if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
         mActivity = new TE_Behavior_Active_Trinary(this, aNBT);
         if (aNBT.hasKey(NBT_STOPPED)) mStopped = aNBT.getBoolean(NBT_STOPPED);
         if (aNBT.hasKey(NBT_OUTPUT)) mRate = aNBT.getLong(NBT_OUTPUT);

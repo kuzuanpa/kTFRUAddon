@@ -10,8 +10,8 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
-import cn.kuzuanpa.ktfruaddon.gui.ContainerClientTest;
-import cn.kuzuanpa.ktfruaddon.gui.ContainerCommonTest;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTest;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTest;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import net.minecraft.entity.player.EntityPlayer;
 

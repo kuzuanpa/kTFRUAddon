@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.gui;
+package cn.kuzuanpa.ktfruaddon.client.gui;
 
 import gregapi.code.ArrayListNoNulls;
 import gregapi.gui.ContainerClient;
@@ -61,6 +61,7 @@ public abstract class ContainerClientbase extends ContainerClient {
     @Override
     protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_)
     {
+        super.mouseClicked(p_73864_1_, p_73864_2_, p_73864_3_);
         if (p_73864_3_ == 0)
         {
             boolean result=false;

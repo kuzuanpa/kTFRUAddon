@@ -8,13 +8,13 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.gui;
+package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.gui.button.CommonGuiButton;
-import cn.kuzuanpa.ktfruaddon.gui.button.DysonSphere.DysonNodeButton;
-import cn.kuzuanpa.ktfruaddon.gui.button.DysonSphere.DysonNodeButtonDummy;
-import cn.kuzuanpa.ktfruaddon.gui.button.DysonSphere.StarButton;
-import cn.kuzuanpa.ktfruaddon.gui.button.customText;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.CommonGuiButton;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.DysonSphere.DysonNodeButton;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.DysonSphere.DysonNodeButtonDummy;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.DysonSphere.StarButton;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.customText;
 import cn.kuzuanpa.ktfruaddon.nei.IHiddenNei;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;

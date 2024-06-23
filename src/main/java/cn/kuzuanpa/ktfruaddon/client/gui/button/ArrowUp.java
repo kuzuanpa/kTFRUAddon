@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.gui.button;
+package cn.kuzuanpa.ktfruaddon.client.gui.button;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -16,8 +16,8 @@ import org.lwjgl.opengl.GL11;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class ArrowDown extends CommonGuiButton {
-    public ArrowDown(int id, int xPos, int yPos, String displayText) {
+public class ArrowUp extends CommonGuiButton {
+    public ArrowUp(int id, int xPos, int yPos, int width, int height, String displayText) {
         super(id, xPos, yPos, 8, 5, displayText);
     }
     ResourceLocation textures=new ResourceLocation(MOD_ID,"textures/gui/buttons.png");
@@ -28,8 +28,8 @@ public class ArrowDown extends CommonGuiButton {
             GL11.glPushMatrix();
             p_146112_1_.getTextureManager().bindTexture(textures);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            if (isMouseHover) this.drawTexturedModalRect(xPosition,yPosition, 0, 5, 8, 5);
-            else this.drawTexturedModalRect(xPosition,yPosition, 0, 0, 8, 5);
+            if (isMouseHover) this.drawTexturedModalRect(xPosition,yPosition, 8, 5, 8, 5);
+            else this.drawTexturedModalRect(xPosition,yPosition, 8, 0, 8, 5);
             GL11.glPopMatrix();
         }
     }

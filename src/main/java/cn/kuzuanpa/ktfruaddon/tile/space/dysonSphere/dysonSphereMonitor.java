@@ -10,8 +10,8 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.space.dysonSphere;
 
-import cn.kuzuanpa.ktfruaddon.gui.ContainerClientDysonSphereMonitor;
-import cn.kuzuanpa.ktfruaddon.gui.ContainerCommonDysonSphereMonitor;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientDysonSphereMonitor;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonDysonSphereMonitor;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import net.minecraft.entity.player.EntityPlayer;
 

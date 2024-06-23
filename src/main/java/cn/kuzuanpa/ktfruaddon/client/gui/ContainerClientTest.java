@@ -17,12 +17,12 @@
  * along with GregTech. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cn.kuzuanpa.ktfruaddon.gui;
+package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.gui.button.ArrowDown;
-import cn.kuzuanpa.ktfruaddon.gui.button.ArrowRight;
-import cn.kuzuanpa.ktfruaddon.gui.button.CommonGuiButton;
-import cn.kuzuanpa.ktfruaddon.gui.button.DataBar;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.ArrowDown;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.ArrowRight;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.CommonGuiButton;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.DataBar;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

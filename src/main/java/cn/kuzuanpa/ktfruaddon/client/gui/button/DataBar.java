@@ -8,7 +8,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.gui.button;
+package cn.kuzuanpa.ktfruaddon.client.gui.button;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;

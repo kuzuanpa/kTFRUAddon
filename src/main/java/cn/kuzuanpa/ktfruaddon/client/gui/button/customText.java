@@ -1,4 +1,4 @@
-package cn.kuzuanpa.ktfruaddon.gui.button;
+package cn.kuzuanpa.ktfruaddon.client.gui.button;
 
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;

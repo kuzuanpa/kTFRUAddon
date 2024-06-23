@@ -43,6 +43,7 @@ public class recipeManager {
             , FuelBattery             = new Recipe.RecipeMap(null, "ktfru.recipe.fuelbattery"            , "Gas Battery"               , "Gas Battery",                 0, 1, RES_PATH_GUI + "machines/GasBattery",               2, 0, 2, 3, 2, 2,  4,  1, "", 1, "", T, T, T, T, F, F, F)
             , FluidHeating            = new Recipe.RecipeMap(null, "ktfru.recipe.fluidheating"           , "Fluid Heating"             , "Fluid Heating",               0, 1, RES_PATH_GUI + "machines/FluidHeating",             0, 0, 0, 1, 1, 1,  1,  1, "", 1, "", T, T, T, T, F, F, F)
             , CNCMachine              = new Recipe.RecipeMap(null, "ktfru.recipe.cncmachine"             , "CNC Machine"               , "CNC Machine"         ,        0, 1, RES_PATH_GUI + "machines/CNCMachine",               3, 3, 1, 3, 0, 1,  1,  1, "", 1, "", T, T, T, T, F, F, F)
+            , FusionTokamak           = new Recipe.RecipeMap(null, "ktfru.recipe.fusion.tokamak"         , "Tokamak Fusion"            , "Tokamak Fusion"      ,        0, 1, RES_PATH_GUI + "machines/CNCMachine",               3, 3, 1, 3, 0, 1,  1,  1, "Start:", 1, "", T, T, T, T, F, F, F)
 
     ;
     @Deprecated

@@ -1,0 +1,791 @@
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * LGPLv3 License: https://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakExp;
+import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.tile.util.utils;
+import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import gregapi.code.TagData;
+import gregapi.data.FL;
+import gregapi.data.LH;
+import gregapi.data.TD;
+import gregapi.fluid.FluidTankGT;
+import gregapi.network.INetworkHandler;
+import gregapi.network.IPacket;
+import gregapi.old.Textures;
+import gregapi.recipes.Recipe;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
+import gregapi.tileentity.base.TileEntityBase01Root;
+import gregapi.tileentity.energy.ITileEntityEnergy;
+import gregapi.tileentity.multiblocks.*;
+import gregapi.util.ST;
+import gregapi.util.UT;
+import gregapi.util.WD;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import static gregapi.data.CS.*;
+
+public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory {
+    public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
+    public static final short MAX_FIELD_STRENGTH=400, KEEP_CHARGE_EUt=200;
+    public static final long MAX_CHARGE =16*1024L*1024L;
+    public byte mState= STATE_STOPPED;
+    public short mFieldStrength=0;
+    public float dischargeRate=0.08F, progress =0;
+    public long mEnergy=0 , mEnergyCharged = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0;
+    public TagData mEnergyTypeAccepted = TD.Energy.EU, mEnergyTypeCharging = TD.Energy.LU;
+    public Recipe.RecipeMap mRecipes = recipeManager.FusionTokamak;
+    public Recipe mCurrentRecipe=null,lastRecipe=null;
+    public ItemStack[] mOutputItems = ZL_IS;
+    public FluidStack[] mOutputFluids = ZL_FS;
+    public FluidTankGT[] mTanks = {new FluidTankGT(2000),new FluidTankGT(2000), new FluidTankGT(2000), new FluidTankGT(2000)},
+            mTanksInput = {mTanks[0],mTanks[1]}, mTanksOutput ={ mTanks[2],mTanks[3]};
+
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        if (aNBT.hasKey(NBT_STATE)) mState = aNBT.getByte(NBT_STATE);
+        if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
+        if (aNBT.hasKey(NBT_ENERGY+".1")) mEnergyCharged = aNBT.getLong(NBT_ENERGY+".1");
+        if (aNBT.hasKey(NBT_EFFICIENCY)) mFieldStrength = aNBT.getShort(NBT_EFFICIENCY);
+        if (aNBT.hasKey(NBT_ENERGY_EU)) recipeChargeRequired = aNBT.getLong(NBT_ENERGY_EU);
+        if (aNBT.hasKey(NBT_PROGRESS)) progress = aNBT.getFloat(NBT_PROGRESS);
+        if (aNBT.hasKey(NBT_PROGRESS+".req")) recipeTotalTime = aNBT.getLong(NBT_PROGRESS+".req");
+        if (aNBT.hasKey(NBT_INPUT_EU)) recipeEUt = aNBT.getLong(NBT_INPUT_EU);
+        if (aNBT.hasKey(NBT_ENERGY_ACCEPTED)) mEnergyTypeAccepted = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED));
+        if (aNBT.hasKey(NBT_ENERGY_ACCEPTED_2)) mEnergyTypeCharging = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED_2));
+        if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
+
+        mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(2000);
+        mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(2000);
+        mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(2000);
+        mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(2000);
+
+
+        mOutputFluids = new FluidStack[mRecipes.mOutputFluidCount];
+        for (int i = 0; i < mOutputFluids.length; i++) mOutputFluids[i] = FL.load(aNBT, NBT_TANK_OUT+"."+i);
+        mOutputItems = new ItemStack[mRecipes.mOutputItemsCount];
+        for (int i = 0; i < mOutputItems.length; i++) mOutputItems[i] = ST.load(aNBT, NBT_INV_OUT+"."+i);
+    }
+
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+
+        aNBT.setByte(NBT_STATE, mState);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY+".1", mEnergyCharged);
+        aNBT.setShort(NBT_EFFICIENCY,mFieldStrength);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY_EU,recipeChargeRequired);
+        aNBT.setFloat(NBT_PROGRESS, progress);
+        aNBT.setLong(NBT_PROGRESS+".req", recipeTotalTime);
+        UT.NBT.setNumber(aNBT, NBT_INPUT_EU,recipeEUt);
+        aNBT.setByte(NBT_FACING, mFacing);
+        aNBT.setByte(NBT_STATE, mState);
+        mTanks[0].writeToNBT(aNBT, NBT_TANK+".0");
+        mTanks[1].writeToNBT(aNBT, NBT_TANK+".1");
+        mTanks[2].writeToNBT(aNBT, NBT_TANK+".2");
+        mTanks[3].writeToNBT(aNBT, NBT_TANK+".3");
+
+        for (int i = 0; i < mOutputFluids.length; i++) FL.save(aNBT, NBT_TANK_OUT+"."+i, mOutputFluids[i]);
+        for (int i = 0; i < mOutputItems .length; i++) ST.save(aNBT, NBT_INV_OUT +"."+i, mOutputItems [i]);
+    }
+    @Override
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        if (!aIsServerSide||!mStructureOkay) return;
+        //refresh state
+        if(mState==STATE_ERROR){
+            if(mEnergy >= KEEP_CHARGE_EUt){
+                mFieldStrength = (short) Math.min(mFieldStrength+4,MAX_FIELD_STRENGTH);
+                setState(STATE_STOPPED);
+            }
+            mEnergyCharged=0;
+            return;
+        }
+        //If no plasma in reactor
+        boolean isInputEmpty = Arrays.stream(mTanksInput).allMatch(FluidTankGT::isEmpty);
+        if(isInputEmpty&&mState!=STATE_RUNNING){
+            setState(STATE_STOPPED);
+            mEnergyCharged=0;
+            nullifyCurrentRecipe();
+            return;
+        }
+        //receiveEnergy
+        mEnergyCharged +=mRateCharging;
+        if (mEnergyCharged < 0) mEnergyCharged = 0;
+        if(mEnergyCharged > MAX_CHARGE) onError();
+        mRateChargingLast=mRateCharging;
+        if(mRateCharging==0)mEnergyCharged= (long) Math.max(0,Math.max(mEnergyCharged-100,mEnergyCharged*(1-dischargeRate)));
+        mRateCharging=0;
+
+        //AutoOutput
+        if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(mFacing));
+        if (mTanks[3]!=null) FL.move(mTanks[3], getAdjacentTank(OPOS[mFacing]));
+
+        //Field Handle
+        if(mEnergy >= (recipeEUt==0? KEEP_CHARGE_EUt : recipeEUt))mFieldStrength= (short) Math.min(MAX_FIELD_STRENGTH,mFieldStrength+4);
+        else if(mState==STATE_CHARGING||mState==STATE_RUNNING||mState==STATE_VOID_CHARGING)mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
+        mEnergy=0;
+        if(mFieldStrength<0){
+            if(mEnergyCharged>0) onError();
+            return;
+        }
+
+        //do recipe
+        if(mState==STATE_RUNNING) {
+            progress += mEnergyCharged *1F / recipeChargeRequired;
+            if (progress > recipeTotalTime) {
+                if(mOutputFluids!=null)Arrays.stream(mTanksOutput).forEach(tank-> Arrays.stream(mOutputFluids).forEach(fluid->tank.fill(fluid, true)));
+                nullifyCurrentRecipe();
+                mState=STATE_STOPPED;
+            }
+            else return;
+        }
+
+
+        if(!isInputEmpty&& (mState==STATE_STOPPED||mState==STATE_VOID_CHARGING|| (mState==STATE_CHARGING&&mCurrentRecipe==null) )){
+            Recipe tRecipe = mRecipes.findRecipe(this, lastRecipe, T, Long.MAX_VALUE, NI, mTanksInput, slot(0),slot(1));
+            if (tRecipe !=null&&tRecipe.isRecipeInputEqual(F,F,mTanksInput,slot(0),slot(1)))setRecipe(tRecipe);
+            else setState(STATE_VOID_CHARGING);
+        }
+
+        if (mEnergyCharged > recipeChargeRequired && mState==STATE_CHARGING && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0),slot(1)))setState(STATE_RUNNING);
+    }
+
+    protected void setState(byte state){
+        mState=state;
+        updateClientData();
+    }
+    protected void setRecipe(Recipe recipe){
+        setState(STATE_CHARGING);
+        lastRecipe=recipe;
+        mCurrentRecipe=recipe;
+        recipeChargeRequired=recipe.mSpecialValue;
+        recipeEUt=recipe.mEUt;
+        recipeTotalTime=recipe.mDuration;
+        mOutputFluids=recipe.mFluidOutputs;
+        mOutputItems=recipe.mOutputs;
+    }
+
+    protected void nullifyCurrentRecipe(){
+        progress =0;
+        recipeChargeRequired=0;
+        recipeEUt=0;
+        recipeTotalTime=0;
+        mCurrentRecipe=null;
+        mOutputFluids = null;
+        mOutputItems = null;
+    }
+
+    protected void onError(){
+        ((TileEntityBase01Root) WD.te(worldObj, xCoord, yCoord + 4, zCoord, false)).explode(2);
+        Arrays.stream(mTanks).forEach(FluidTankGT::setEmpty);
+        mEnergyCharged=0;
+        mFieldStrength=0;
+        nullifyCurrentRecipe();
+        setState(STATE_ERROR);
+    }
+    @Override
+    protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
+        return aFluidToFill.isFluidEqual(mTanksInput[0].getFluid())?mTanksInput[0]:mTanksInput[1];
+    }
+
+    @Override
+    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
+        for (FluidTankGT tank:mTanks) if (!tank.isEmpty()) return tank;
+        return null;
+    }
+
+    @Override
+    protected IFluidTank[] getFluidTanks2(byte aSide) {
+        return mTanks;
+    }
+
+    // Icons
+    public final static IIconContainer
+            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/base"),
+            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_stop"),
+            sOverlayCharge    = new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_charging"),
+            sOverlayRun       = new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_running"),
+            sOverlayErr       = new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_error"),
+            sOverlayVoidCharge= new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_void_charging");
+
+    public long doInject (TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject ) {
+        if(aEnergyType==mEnergyTypeCharging&&mState!=STATE_STOPPED&&mState!=STATE_ERROR){
+            mRateCharging += aSize*aAmount;
+            return aAmount;
+        }
+        if(aEnergyType==mEnergyTypeAccepted&&mEnergy<mRate){
+            long amountNeeded = (long)Math.ceil((mRate-mEnergy*1F)/aSize);
+            mEnergy+=amountNeeded*aSize;
+            return amountNeeded;
+        }
+        return 0;
+    }
+
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if(aSide!=mFacing)return BlockTextureDefault.get(sTextureSides);
+        switch(mState){
+            case STATE_STOPPED      : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayStop      ));
+            case STATE_CHARGING     : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayCharge    ));
+            case STATE_RUNNING      : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayRun       ));
+            case STATE_ERROR        : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayErr       ));
+            case STATE_VOID_CHARGING: return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayVoidCharge));
+        }
+        return null;
+    }
+
+    @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
+        return !aEmitting && (aEnergyType == mEnergyTypeAccepted||aEnergyType == mEnergyTypeCharging);}
+    public long getEnergySizeInputRecommended(TagData aEnergyType, byte aSide) {return mRate;}
+
+    @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
+
+    public short clientDensity(){
+        return mState==STATE_RUNNING||mState==STATE_CHARGING?32767: (short) (((Arrays.stream(mTanksInput).mapToLong(FluidTankGT::amount).sum()*1D) / (Arrays.stream(mTanksInput).mapToLong(FluidTankGT::getCapacity).sum()))*32767);
+    }
+    public short clientTemp(){
+        return (short) ((mEnergyCharged*1D/ MAX_CHARGE)*600);
+    }
+    public short clientProgress(){
+        return mState==STATE_RUNNING ? (short) ((progress * 1D / recipeTotalTime) * 32767) : 0;
+    }
+    //client
+    @Override
+    public IPacket getClientDataPacket(boolean aSendAll) {
+        return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mState);
+    }
+
+    @Override
+    public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
+        mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
+        setDirectionData(aData[3]);
+        mState=aData[4];
+        return T;
+    }
+
+    //inventory
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
+    @Override public boolean canDrop(int aInventorySlot) {return T;}
+
+    private static final int[] ACCESSIBLE_SLOTS = new int[] {0, 1};
+
+    @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
+
+    @Override
+    public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
+        if (aSlot >= 2) return F;
+        for (int i = 0; i < 2; i++) if (slot(i)== null) {
+            return T;
+        }
+        return F;
+    }
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
+        return T;
+    }
+
+
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide()) openGUI(aPlayer, aSide);
+        return T;
+    }
+
+    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
+        return new ContainerClientFusionTokamakExp(aPlayer.inventory, this, mRecipes, aGUIID, "");
+    }
+    @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
+        return new ContainerCommonFusionTokamakExp(aPlayer.inventory, this, mRecipes, aGUIID);
+    }
+
+    public final short machineX = 27, machineY = 14, machineZ = 27;
+    public final short xMapOffset = -12,yMapOffset = -1, zMapOffset = 0;
+
+    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
+    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+
+
+    //change value there to set usage of every block.
+    public int getUsage(int blockID ,short registryID){
+        if (blockID == 18002&&registryID==k) {
+            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
+        } else if (blockID == 18002||blockID==18022&&registryID==g) {
+            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
+        }else{return MultiTileEntityMultiBlockPart.NOTHING;}
+    }
+
+    public int getBlockID(int checkX, int checkY, int checkZ){
+        return blockIDMap[checkY][checkZ][checkX];
+    }
+
+    public  boolean isIgnored(int blockID){
+        return blockID==0?T:F;
+    }
+
+    public short getRegistryID(int blockID){return blockID==18002?g:k;}
+
+    @Override
+    public boolean checkStructure2() {
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
+        if (worldObj.blockExists(tX, tY, tZ)) {
+            boolean tSuccess = T;
+            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
+            tY+=yMapOffset;
+            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
+            int cX, cY, cZ;
+            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
+                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
+                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
+                        if(!isIgnored(getBlockID(cX, cY, cZ))) {
+                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(getBlockID(cX, cY, cZ)), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(getBlockID(cX, cY, cZ)))))
+                                tSuccess = F;
+                        }
+                    }
+                }
+            }
+            return tSuccess;
+
+        }
+        return mStructureOkay;
+    }
+
+    static {
+
+    }
+
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
+        super.addToolTips(aList, aStack, aF3_H);
+    }
+    @Override
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);
+    }
+
+    @Override public byte getDefaultSide() {return SIDE_FRONT;}
+    @Override public boolean[] getValidSides() {return SIDES_HORIZONTAL;}
+    @Override public String getTileEntityName() {
+        return "ktfru.multitileentity.multiblock.fusion.tokamak.1";
+    }
+    private final static int[][][] blockIDMap = {{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,18002,32005,18002,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31015,31015,18002,18002,18002,31015,31015,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31015,31015,31015,31015,31015,31015,31015,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31015,31015,31025,31025,31025,31015,31015,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  },
+            {  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  },
+            {  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    }, {
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,31019,32005,0/**/,32005,31019,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31019,31019,18002,32005,18002,31019,31019,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31019,31019,31025,31025,31025,31019,31019,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31019,31019,31025,31025,31025,31019,31019,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,31019,31025,31025,31025,31019,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,31019,31025,31025,31025,31019,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,31019,31019,31025,31025,31025,31019,31019,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31019,31019,31025,31025,31025,31019,31019,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31019,31019,31025,31025,31025,31019,31019,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31019,31019,31025,31025,31025,31019,31019,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31019,31025,31025,31025,31019,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  },
+            {31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  },
+            {31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,31019,18002,32005,18002,31019,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31019,31019,18002,18002,18002,31019,31019,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31019,31019,31026,31026,31026,31019,31019,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31019,31019,31026,31026,31026,31019,31019,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,31019,31019,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31025,31025,31025,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31025,31025,31025,31025,31025,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {31026,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,31027,31027,31028,31028,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,31027,31027,31028,31028,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,31027,31027,31028,31028,31028,31028,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31025,31025,31025,31025,31025,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31025,31025,31025,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31019,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31015,31015,31024,31019,31024,31019,31015,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31015,31015,31026,31026,31026,31015,31015,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31015,31015,31015,31026,31026,31026,31015,31015,31015,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028},
+            {31026,31026,  0  ,  0  ,31027,31027,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,31027,31027,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,31027,31027,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,31027,31027,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,31027,31027,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,31027,31027,31028,31028,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    }, {
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31024,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {31026,31026,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    }, {
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    }, {
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {31026,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {31026,31026,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028},
+            {31026,31026,  0  ,  0  ,31027,31027,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,31027,31027,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,31027,31027,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,31027,31027,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,31027,31027,  0  ,  0  ,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,  0  ,  0  ,31027,31027,31028,31028,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,31027,31025,31025,31025,31025,31025,31027,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,  0  ,  0  ,  0  ,  0  ,31027,31025,31025,31025,31027,  0  ,  0  ,  0  ,  0  ,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31027,31027,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,31026,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31025,31025,31025,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31025,31025,31025,31025,31025,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {31026,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,31027,31027,31028,31028,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,31027,31027,31028,31028,31028,31028,31026,31026,31028,31028},
+            {31026,31026,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31025,31025,  0  ,  0  ,  0  ,31025,31025,31027,31027,31027,31028,31028,31028,31028,31026,31026,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31025,31025,31025,31025,31025,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31025,31025,31025,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31027,31028,31028,31028,31028,31028,31028,31028,31028,31028},
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31027,31027,31027,31027,31027,31027,31027,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31026,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  },
+            {31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  },
+            {31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    },{
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  },
+            {  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  },
+            {  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,31025,31025,31025,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31025,31025,31025,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+    }
+    };
+}

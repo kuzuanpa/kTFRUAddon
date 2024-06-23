@@ -22,5 +22,6 @@ public class recipeInit {
         OilProcessing.init();
         Plastic.init();
         CompactItem.init();
+        Fusion.init();
     }
 }

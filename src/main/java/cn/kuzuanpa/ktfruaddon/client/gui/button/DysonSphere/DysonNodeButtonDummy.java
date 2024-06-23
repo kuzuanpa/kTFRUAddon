@@ -18,9 +18,9 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.gui.button.DysonSphere;
+package cn.kuzuanpa.ktfruaddon.client.gui.button.DysonSphere;
 
-import cn.kuzuanpa.ktfruaddon.gui.button.CommonGuiButton;
+import cn.kuzuanpa.ktfruaddon.client.gui.button.CommonGuiButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
@@ -28,16 +28,17 @@ import org.lwjgl.opengl.GL11;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class DysonNodeButton extends CommonGuiButton {
-    public int  nodeX,nodeY,nodeLevel,nodeType,nodeBuildingProgress,screenWidth,screenHeight;
+public class DysonNodeButtonDummy extends CommonGuiButton {
+    public int  nodeLevel,nodeType, nodeX, nodeY,screenWidth,screenHeight;
+    public boolean isAvailable;
     ResourceLocation textures=new ResourceLocation(MOD_ID,"textures/gui/DysonSphere/nodes.png");
-    public DysonNodeButton(int id, int xPos, int yPos,int nodeX,int nodeY,int nodeLevel,int nodeType,int nodeBuildingProgress,int screenWidth,int screenHeight){
-        super(id, xPos, yPos,8,8,"");
-        this.nodeX=nodeX;
-        this.nodeY=nodeY;
+    public DysonNodeButtonDummy(int id, int xPos, int yPos, int nodeLevel, int nodeType,boolean isAvailable,int nodeX,int nodeY,int screenWidth,int screenHeight){
+        super(id, xPos, yPos,16,16,"");
         this.nodeLevel=nodeLevel;
         this.nodeType=nodeType;
-        this.nodeBuildingProgress=nodeBuildingProgress;
+        this.isAvailable=isAvailable;
+        this.nodeX=nodeX;
+        this.nodeY=nodeY;
         this.screenHeight=screenHeight;
         this.screenWidth=screenWidth;
     }
@@ -45,10 +46,9 @@ public class DysonNodeButton extends CommonGuiButton {
         if (this.visible) {
             GL11.glPushMatrix();
             GL11.glEnable(GL11.GL_BLEND);
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
             mc.getTextureManager().bindTexture(textures);
-            GL11.glTranslatef(width*0.25F+xPosition,height*0.25F+yPosition,0);
-            GL11.glScalef(0.25F,0.25F,1);
+            GL11.glTranslatef(width*0.5F+xPosition,height*0.5F+yPosition,0);
+            GL11.glScalef(0.5F,0.5F,1);
             GL11.glTranslatef(-width-xPosition,-height-yPosition,0);
 
             ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -57,9 +57,9 @@ public class DysonNodeButton extends CommonGuiButton {
             int windowHeight = (int) (screenHeight / (resolution.getScaledHeight() * 1.0) * mc.displayHeight);
             GL11.glScissor((int) (windowWidth*0.6), (int) (windowHeight*0.26), (int) windowWidth,windowHeight);
 
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.8F);
+            if(isAvailable)GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.9F);
+            else GL11.glColor4f(0.6F, 0.6F, 0.6F, 0.5F);
             this.drawTexturedModalRect(xPosition, yPosition, nodeLevel*32 ,nodeType*32, 32, 32);
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glPopMatrix();
         }
