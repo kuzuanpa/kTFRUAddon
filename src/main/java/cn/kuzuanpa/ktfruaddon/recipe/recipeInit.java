@@ -23,5 +23,6 @@ public class recipeInit {
         Plastic.init();
         CompactItem.init();
         Fusion.init();
+        FakeRecipe.init();
     }
 }

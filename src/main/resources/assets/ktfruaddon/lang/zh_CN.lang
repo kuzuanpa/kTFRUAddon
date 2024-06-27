@@ -72,7 +72,7 @@ ktfru.item.compact.2005.tooltip=它的转动平衡不太好,转起来肯定会�
 ktfru.item.compact.2006=粗制引擎曲柄 (钨钢)
 ktfru.item.compact.2006.tooltip=它的转动平衡不太好,转起来肯定会剧烈振动...
 ktfru.item.compact.2007=粗制引擎曲柄 (铱)
-ktfru.item.compact.2107.tooltip=它的转动平衡不太好,转起来肯定会剧烈振动...
+ktfru.item.compact.2007.tooltip=它的转动平衡不太好,转起来肯定会剧烈振动...
 ktfru.item.compact.2100=粗制气缸 (青铜)
 ktfru.item.compact.2100.tooltip=它密封性不太好,上下滑动也有些顿挫...
 ktfru.item.compact.2101=粗制气缸 (砷青铜)
@@ -878,7 +878,7 @@ ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速
 ktfru.tooltip.multiblock.oilminer.0=主方块左右两侧放置配方中使用的壁板，从它们输入能源
 ktfru.tooltip.multiblock.oilminer.1=2*3钻井头放在背后，泉应在这些钻井头下面
 ktfru.tooltip.multiblock.oilminer.2=一层3*3的配方中使用的壁板放在上面
-ktfru.tooltip.multiblock.oilminer.3=流体从第二层的任意壁板输入，从主方块上方的壁板的上方主动输出
+ktfru.tooltip.multiblock.oilminer.3=流体从上层任意壁板输入，从主方块上方的壁板的上方主动输出
 
 
 fluid.acidpickledbauxide=酸浸铝土矿

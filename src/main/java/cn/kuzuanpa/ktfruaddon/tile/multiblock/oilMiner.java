@@ -86,12 +86,12 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         LH.add(OIL_MINER_0,"Walls used in recipes placed on left and right side of main Block, energy input from them");
         LH.add(OIL_MINER_1,"2*3 Oil Miner Drill in back of main Block, springs should under these drills");
         LH.add(OIL_MINER_2,"a layer of 3*3 Walls used in recipes placed on top");
-        LH.add(OIL_MINER_3,"fluid input at any 2nd layer wall , fluid auto output at top of the wall below the main block");
+        LH.add(OIL_MINER_3,"fluid input at any top layer wall , fluid auto output at top of the wall below the main block");
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if (aIsServerSide&&mStructureOkay&& mEnergy<0)mEnergy=0;
+        if (aIsServerSide&&mEnergy<0)mEnergy=0;
         if (aIsServerSide&&mStructureOkay&& mEnergy>mInputMin){
             if(mTankInput.has()) {
             for (int x=0;x<3;x++) for (int z=1;z<3;z++){
@@ -104,7 +104,8 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
                 mTankInput.remove(mTank.fill(new FluidStack(fl, amount)));
             }
             FL.move(mTank, WD.te(getWorld(),xCoord,yCoord+2,zCoord,SIDE_BOTTOM,false));
-        }
+            }
+            mEnergy=0;
         }
     }
     private Fluid getOutputFluid(FluidStack inputFluid,FluidStack springFluid) {
@@ -114,6 +115,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
             if (springFluid.getFluid().equals(FL.Oil_Medium.fluid())) return flList.AqueousOilMedium.fluid;
             if (springFluid.getFluid().equals(FL.Oil_Normal.fluid())) return flList.AqueousOilNormal.fluid;
             if (springFluid.getFluid().equals(FL.Oil_Light.fluid())) return flList.AqueousOilLight.fluid;
+            if (FL.Lava.is(springFluid)) return null;
             if (!springFluid.getFluid().isGaseous())return springFluid.getFluid();
             return null;
         }

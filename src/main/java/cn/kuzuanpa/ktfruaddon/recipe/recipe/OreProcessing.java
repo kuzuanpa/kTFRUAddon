@@ -61,7 +61,10 @@ public class OreProcessing {
         //Ti Process
         RM.Bath.addRecipeX(T,0,120,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,4));
         RM.Drying.addRecipeX(T,32,40, ST.array(OP.dust.mat(matList.MetatitanicAcid.mat,2)),FL.array(ZL_FS),FL.array(FL.DistW.make(200)),OP.dust.mat(MT.TiO2,1));
-        recipeManager.HeatMixer.addRecipeX(T,128,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Mg.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
+        recipeManager.HeatMixer.addRecipeX(T,96,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Mg.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
+        recipeManager.HeatMixer.addRecipe1(T,128,60,OP.dust.mat(MT.Mg,2),FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
+        recipeManager.HeatMixer.addRecipeX(T,96,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Na.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.NaCl,6));
+        recipeManager.HeatMixer.addRecipe1(T,128,60,OP.dust.mat(MT.Na,2),FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.NaCl,6));
 
         //K2CO3
         RM.Drying.addRecipeX(T,32,40, ST.array(ZL_IS),FL.array(flList.PotassiumCarbonate.make(1000)),FL.array(FL.DistW.make(750)),OP.dust.mat(MT.K2CO3,1));
@@ -86,8 +89,8 @@ public class OreProcessing {
         recipeManager.HeatMixer.addRecipe1(F,468,20,OP.dust.mat(MT.PO4,1),FL.array(flList.Butanol.make(3000)),FL.array(flList.TributylPhosphate.make(1000),FL.Water.make(1000)),ZL_IS);
 
         recipeManager.HeatMixer.addRecipe2(F,465,100,OP.dust.mat(MT.WaxParaffin,1),OP.dust.mat(MT.MnO2,0),FL.array(FL.Oxygen.make(1000)),ZL_FS,matList.OleicAcid.getDust(1));
-        recipeManager.HeatMixer.addRecipe1(F,240,600,OP.ingot.mat(MT.Butter,2),FL.array(MT.HCl.gas(0,false)),FL.array(MT.Glycerol.liquid(U,false)),matList.OleicAcid.getDust(3));
-        recipeManager.HeatMixer.addRecipe1(F,240,600,OP.ingot.mat(MT.Butter,2),FL.array(MT.H2SO4.liquid(0,false)),FL.array(MT.Glycerol.liquid(U,false)),matList.OleicAcid.getDust(3));
+        recipeManager.HeatMixer.addRecipe1(F,120,600,OP.ingot.mat(MT.Butter,2),FL.array(MT.HCl.gas(0,false)),FL.array(MT.Glycerol.liquid(U,false)),matList.OleicAcid.getDust(3));
+        recipeManager.HeatMixer.addRecipe1(F,120,600,OP.ingot.mat(MT.Butter,2),FL.array(MT.H2SO4.liquid(0,false)),FL.array(MT.Glycerol.liquid(U,false)),matList.OleicAcid.getDust(3));
 
         RM.Centrifuge.addRecipe1(F,200,80,matList.PitchblendeCinder.getDust(2),ZL_FS,ZL_FS,OP.dust.mat(MT.Th,1),OP.dust.mat(MT.Pb,1),OP.dust.mat(MT.Na2SO4,2));
         RM.Centrifuge.addRecipe1(F,200,80,matList.UraniniteCinder.getDust(1),ZL_FS,ZL_FS,OP.dustSmall.mat(MT.Th,1),OP.dustTiny.mat(MT.Pb,3));

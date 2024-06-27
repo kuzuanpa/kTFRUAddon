@@ -105,7 +105,7 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe0(F,784,120,FL.array(flList.Styrene.make(100),flList.Butadiene.make(100)),FL.array(flList.SBR.make(100)),ZL_IS);
 
-        recipeManager.HeatMixer          .addRecipe1(F,120,120,matList.TriethylAluminium.getDust(0),FL.array(MT.TiCl4.liquid(0,false),flList.Isoprene.make(144)),FL.array(FL.Latex.make(144)),ZL_IS);
+        recipeManager.HeatMixer          .addRecipe1(F,120,120,matList.TriethylAluminium.getDust(0),FL.array(MT.TiCl4.liquid(0,false),flList.Isoprene.make(144)),FL.array(FL.Latex.make(720)),ZL_IS);
 
         recipeManager.HeatMixer          .addRecipe0(F,210,100,FL.array(flList.Tetrafluoroethylene.make(100),MT.SO3.gas(U10,false)),FL.array(flList.TFES.make(100)),ZL_IS);
 

@@ -48,7 +48,7 @@ public class fluidPreInit {
         //丙二醇
         flList.Propanediol.register("propanediol","Propanediol",matList.Propanediol.get(), LIQUID,1000,277,1036);
         //乙烷
-        flList.Ethane.register("ethane","Ethane",matList.Ethane.get(), LIQUID,1000,277,1036);
+        flList.Ethane.register("ethane","Ethane",matList.Ethane.get(), GAS,1000,277,1036);
         //二甲醚
         flList.Methoxymethane.register("methoxymethane","Methoxymethane",null, LIQUID);
 
