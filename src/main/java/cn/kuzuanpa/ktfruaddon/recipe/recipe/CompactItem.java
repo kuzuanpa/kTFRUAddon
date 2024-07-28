@@ -19,6 +19,7 @@ import gregapi.util.CR;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 
 import static gregapi.data.CS.*;
 
@@ -34,6 +35,8 @@ public class CompactItem {
         recipeManager.Assembler.addRecipe1(false,1574,80,ItemList.CPUGT3660.get(1), FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.IntelligentCore.get(2));
 
         recipeManager.Assembler.addRecipeX(false,16384,16384, ST.array(OP.nugget.mat(MT.DraconiumAwakened,2),OP.plateTiny.mat(MT.Ad,2),OP.wireFine.mat(MT.Terrasteel,64),OP.plate.mat(MT.VibraniumSteel,1),OP.plateGem.mat(MT.NetherStar,1)), ZL_FS,ZL_FS,ST.make(Items.skull,1,3, UT.NBT.make("SkullOwner","kuzuanpa")));
+
+        RM.Extruder.addRecipe2(false,120,10, new ItemStack(Items.clay_ball,1),IL.Shape_SimpleEx_Ingot.get(0),new ItemStack(Items.brick,1));
 
         //GoldBlock TFC->Vanilla
         RM.Generifier.addRecipe1(false,0,1, ST.make(MD.TFC,"MetalBlock",1,8),ZL_FS,ZL_FS, OP.block.mat(MT.Au,1));

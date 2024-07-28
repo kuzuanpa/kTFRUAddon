@@ -21,8 +21,8 @@ public class ComputerBuilding {
         recipeManager.HeatMixer.addRecipeX(F,32 ,120, ST.array(OP.dust.mat(matList.Naphthalene.get(), 1)),FL.array(MT.Cl.gas(U5,false),FL.Water.make(200)),FL.array(MT.HCl.gas(U5,false)), matList.Naphthalenol.getDust(1));
         RM.           Mixer    .addRecipeX(F,100,80, ST.array(OP.dust.mat(matList.Naphthalenol.get(), 1),OP.dust.mat(MT.NaNO3,1)),FL.array(MT.HCl.gas(U5,false)),ZL_FS, matList.DiazoNaphthol.getDust(1));
 
-        RM.           Mixer    .addRecipe0(F, 60,70,FL.array(flList.Propanediol.make(100),flList.Methanol.make(100)),FL.array(flList.MethoxyPropanol.make(100)),ZL_IS);
-        recipeManager.HeatMixer.addRecipe0(F,100,70,FL.array(flList.MethoxyPropanol.make(100),flList.GlacialAceticAcid.make(100)),FL.array(flList.PGMEA.make(100)),ZL_IS);
+        RM.           Mixer    .addRecipe0(F, 50,70,FL.array(flList.Propanediol.make(100),flList.Methanol.make(100)),FL.array(flList.MethoxyPropanol.make(100)),ZL_IS);
+        recipeManager.HeatMixer.addRecipe0(F,60,70,FL.array(flList.MethoxyPropanol.make(100),flList.GlacialAceticAcid.make(100)),FL.array(flList.PGMEA.make(100)),ZL_IS);
 
         recipeManager.HeatMixer.addRecipe2(F,160,90,OP.dust.mat(MT.Bakelite,8),matList.DiazoNaphthol.getDust(8),FL.array(flList.PGMEA.make(1000)),FL.array(flList.DNQPhotoresist.make(1000)),ZL_IS);
 
@@ -71,8 +71,8 @@ public class ComputerBuilding {
         RM.Autoclave.addRecipeX(T,512,1200, ST.array(ItemList.SiliconPlate8inchCleanedT2.get(1)),FL.array(FL.Steam.make(40000)),FL.array(ZL_FS), ItemList.SiliconPlate8inchOxidizedT2.get(1));
 
 //Coat 涂胶 EU
-        recipeManager.WaferCoater.addRecipeX(T,30,200, ST.array(ItemList.SiliconPlate8inchT1.get(1)),FL.array(flList.DNQPhotoresist.make(200)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT1.get(1));
-        recipeManager.WaferCoater.addRecipeX(T,240,200, ST.array(ItemList.SiliconPlate8inchOxidizedT2.get(1)),FL.array(flList.DNQPhotoresist.make(200)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT2.get(1));
+        recipeManager.WaferCoater.addRecipeX(T,30,200, ST.array(ItemList.SiliconPlate8inchT1.get(1)),FL.array(flList.DNQPhotoresist.make(100)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT1.get(1));
+        recipeManager.WaferCoater.addRecipeX(T,240,200, ST.array(ItemList.SiliconPlate8inchOxidizedT2.get(1)),FL.array(flList.DNQPhotoresist.make(100)),FL.array(ZL_FS), ItemList.SiliconPlate8inchCoatedT2.get(1));
 
 //SoftBake 固化光刻胶 HU
         //T1 skip softbake
@@ -81,18 +81,18 @@ public class ComputerBuilding {
 //MaskAlign 光刻 EU+LU
         recipeManager.MaskAligner.addRecipeX(T, 128, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CPUPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer200um.get(1));
         recipeManager.MaskAligner.addRecipeX(T, 256, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CPUPhotomask72um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer72um.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 768, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CPUPhotomask28um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer28um.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 1024, 8000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CPUPhotomask8um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer8um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 768,12000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CPUPhotomask28um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer28um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T,1024,12000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CPUPhotomask8um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer8um.get(1));
 
-        recipeManager.MaskAligner.addRecipeX(T, 100, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.RAMPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer200um.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 240, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.RAMPhotomask72um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer72um.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 642, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.RAMPhotomask28um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer28um.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 968, 8000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.RAMPhotomask8um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer8um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 100, 3000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.RAMPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer200um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 240, 3000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.RAMPhotomask72um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer72um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 642, 9000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.RAMPhotomask28um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer28um.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 968, 9000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.RAMPhotomask8um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWafer8um.get(1));
 
-        recipeManager.MaskAligner.addRecipeX(T, 120, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CircuitPartPhotomaskT3.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT3.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 180, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CircuitPartPhotomaskT4.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT4.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 546, 4000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CircuitPartPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT5.get(1));
-        recipeManager.MaskAligner.addRecipeX(T, 842, 8000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CircuitPartPhotomaskT6.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT6.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 120, 3000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CircuitPartPhotomaskT3.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT3.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 180, 3000, ST.array(ItemList.SiliconPlate8inchCoatedT1.get(1),ItemList.CircuitPartPhotomaskT4.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT4.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 546, 9000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CircuitPartPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT5.get(1));
+        recipeManager.MaskAligner.addRecipeX(T, 842, 9000, ST.array(ItemList.SiliconPlate8inchCoatedT2.get(1),ItemList.CircuitPartPhotomaskT6.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT6.get(1));
 
 //Develop 显影 TU
         RM.Bath.addRecipeX(T,0,400, ST.array(ItemList.CPUWafer200um.get(1)),FL.array(flList.NegativeColloid.make(100)),FL.array(ZL_FS), ItemList.CPUWafer200umDeveloped.get(1));
@@ -159,10 +159,10 @@ public class ComputerBuilding {
         recipeManager.WaferTester.addRecipeX(T,860 ,1000, ST.array(ItemList.CircuitPartWaferT6Doped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CircuitPartWaferT6Checked.get(1));
 
 //Cut into Die 切割 LU
-        recipeManager.LaserCutter.addRecipeX(T,120,400,new long[]{3500,1200}, ST.array(ItemList.CPUWafer200umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3386.get(20),ItemList.CPUDieTF3386S.get(17));
-        recipeManager.LaserCutter.addRecipeX(T,250,400,new long[]{2000,800}, ST.array(ItemList.CPUWafer72umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3586.get(27),ItemList.CPUDieTF3586S.get(10));
-        recipeManager.LaserCutter.addRecipeX(T,720,400,new long[]{2500,900} , ST.array(ItemList.CPUWafer28umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieGT1000.get(27),ItemList.CPUDieGT1090.get(10));
-        recipeManager.LaserCutter.addRecipeX(T,1000,1000,new long[]{1400,550} , ST.array(ItemList.CPUWafer8umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieGT2000.get(27),ItemList.CPUDieGT2090.get(10));
+        recipeManager.LaserCutter.addRecipeX(T,120,400,new long[]{3500,1200}, ST.array(ItemList.CPUWafer200umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3386.get(10),ItemList.CPUDieTF3386S.get(7));
+        recipeManager.LaserCutter.addRecipeX(T,250,400,new long[]{2000,800}, ST.array(ItemList.CPUWafer72umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3586.get(12),ItemList.CPUDieTF3586S.get(5));
+        recipeManager.LaserCutter.addRecipeX(T,720,400,new long[]{2500,900} , ST.array(ItemList.CPUWafer28umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieGT1000.get(12),ItemList.CPUDieGT1090.get(5));
+        recipeManager.LaserCutter.addRecipeX(T,1000,1000,new long[]{1400,550} , ST.array(ItemList.CPUWafer8umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieGT2000.get(12),ItemList.CPUDieGT2090.get(5));
 
         recipeManager.LaserCutter.addRecipeX(T,80 ,400,new long[]{5000}, ST.array(ItemList.RAMWafer200umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.RAMDie2K.get(40));
         recipeManager.LaserCutter.addRecipeX(T,210,400,new long[]{3000}, ST.array(ItemList.RAMWafer72umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.RAMDie32K.get(40));
@@ -340,12 +340,12 @@ public class ComputerBuilding {
 
 
         //Computers made by Circuit
-        recipeManager.Assembler.addRecipeX(F,16,80,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,16),IL.Circuit_Basic.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerBasicCircuits.get(1));
-        recipeManager.Assembler.addRecipeX(F,16,160,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,16),IL.Circuit_Good.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerGoodCircuits.get(1));
-        recipeManager.Assembler.addRecipeX(F,16,320,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,32),IL.Circuit_Advanced.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerAdvancedCircuits.get(1));
-        recipeManager.Assembler.addRecipeX(F,16,640,ST.array(OP.plate.mat(MT.StainlessSteel,4),OP.screw.mat(MT.Steel,32),IL.Circuit_Elite.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerEliteCircuits.get(1));
-        recipeManager.Assembler.addRecipeX(F,32,960,ST.array(OP.plate.mat(MT.StainlessSteel,4),OP.screw.mat(MT.StainlessSteel,64),IL.Circuit_Master.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerMasterCircuits.get(1));
-        recipeManager.Assembler.addRecipeX(F,32,1280,ST.array(OP.plate.mat(MT.TungstenSteel,4),OP.screw.mat(MT.StainlessSteel,64),IL.Circuit_Ultimate.get(4)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerUltimateCircuits.get(1));
+        recipeManager.Assembler.addRecipeX(F,16,80,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,16),IL.Circuit_Basic.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerBasicCircuits.get(1));
+        recipeManager.Assembler.addRecipeX(F,16,160,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,16),IL.Circuit_Good.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerGoodCircuits.get(1));
+        recipeManager.Assembler.addRecipeX(F,16,320,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,32),IL.Circuit_Advanced.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerAdvancedCircuits.get(1));
+        recipeManager.Assembler.addRecipeX(F,16,640,ST.array(OP.plate.mat(MT.StainlessSteel,4),OP.screw.mat(MT.Steel,32),IL.Circuit_Elite.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerEliteCircuits.get(1));
+        recipeManager.Assembler.addRecipeX(F,32,960,ST.array(OP.plate.mat(MT.StainlessSteel,4),OP.screw.mat(MT.StainlessSteel,64),IL.Circuit_Master.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerMasterCircuits.get(1));
+        recipeManager.Assembler.addRecipeX(F,32,1280,ST.array(OP.plate.mat(MT.TungstenSteel,4),OP.screw.mat(MT.StainlessSteel,64),IL.Circuit_Ultimate.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerUltimateCircuits.get(1));
 
         //downgrading computer
         CR.shapeless(ItemList.UnderClockedNoviceComputer.get(1), new Object[]{"ktfruNoviceComputer"});

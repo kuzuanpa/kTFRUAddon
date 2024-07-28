@@ -44,30 +44,30 @@ public class Circuits {
         recipeManager.Assembler.addRecipeX(F,1000,100,ST.array(OP.plate.mat(MT.Cu,1),OP.stick.mat(MT.ElectricalSteel,4),OP.wireFine.mat(MT.Pt,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CoilT3.get(24));
         recipeManager.Assembler.addRecipeX(F,4096,80,ST.array(OP.plate.mat(MT.Au,1),OP.stick.mat(MT.ElectricalSteel,4),OP.wireFine.mat(MT.Graphene,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CoilT4.get(24));
 
-        CR.shaped(ItemList.CoilT1.get(2),DEF_REV,"WCW","FSF","WxW", 'S',OP.bolt.mat(MT.ElectricalSteel,1),'L',OP.wireFine.mat(MT.Cu,1),'C',OP.plateTiny.mat(MT.Cu,1),'F',OP.foil.mat(MT.Plastic,1));
-        CR.shaped(ItemList.CoilT2.get(2),DEF_REV,"WCW","FSF","WxW", 'S',OP.bolt.mat(MT.ElectricalSteel,1),'L',OP.wireFine.mat(MT.Au,1),'C',OP.plateTiny.mat(MT.Cu,1),'F',OP.foil.mat(MT.Plastic,1));
+        CR.shaped(ItemList.CoilT1.get(2),DEF_REV,"WCW","FSF","WxW", 'S',OP.bolt.mat(MT.ElectricalSteel,1),'W',OP.wireFine.mat(MT.Cu,1),'C',OP.plateTiny.mat(MT.Cu,1),'F',OP.foil.mat(MT.Plastic,1));
+        CR.shaped(ItemList.CoilT2.get(2),DEF_REV,"WCW","FSF","WxW", 'S',OP.bolt.mat(MT.ElectricalSteel,1),'W',OP.wireFine.mat(MT.Au,1),'C',OP.plateTiny.mat(MT.Cu,1),'F',OP.foil.mat(MT.Plastic,1));
         recipeManager.Assembler.addRecipeX(F,16,180,ST.array(OP.plate.mat(MT.Cu,1),OP.stick.mat(MT.ElectricalSteel,4),OP.wireFine.mat(MT.Cu,32),OP.foil.mat(MT.Plastic,8)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CoilT1.get(16));
         recipeManager.Assembler.addRecipeX(F,80,140,ST.array(OP.plate.mat(MT.Cu,1),OP.stick.mat(MT.ElectricalSteel,4),OP.wireFine.mat(MT.Au,32),OP.foil.mat(MT.Plastic,8)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CoilT2.get(16));
 
         
-        CR.shaped(ItemList.CapacitorT1.get(1),DEF_REV," PC","FPC"," xW", 'P', Items.paper,'W',OP.wireFine.mat(MT.Cu,1),'C',OP.foil.mat(MT.Cu,1),'F',OP.foil.mat(MT.Rubber,1));
-        CR.shaped(ItemList.CapacitorT2.get(1),DEF_REV," PC","FPC"," xW", 'P',OP.dust.mat(MT.Al2O3,1),'W',OP.wireFine.mat(MT.Ag,1),'C',OP.foil.mat(MT.Al,1),'F',OP.foil.mat(MT.Rubber,1));
-        recipeManager.Assembler.addRecipeX(F,16,80,ST.array(OP.foil.mat(MT.Cu,16),OP.foil.mat(MT.Rubber,8),OP.plate.mat(MT.Paper,16),OP.wireFine.mat(MT.Cu,8)), FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CapacitorT1.get(8));
-        recipeManager.Assembler.addRecipeX(F,140,70,ST.array(OP.foil.mat(MT.Al,16),OP.foil.mat(MT.Rubber,8),OP.dust.mat(MT.Al2O3,16),OP.wireFine.mat(MT.Ag,8)), FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CapacitorT2.get(10));
-        recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Pt,4),OP.foil.mat(MT.Nb,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
-        recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Pt,4),OP.foil.mat(MT.Ta,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
-        recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Nb,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
-        recipeManager.Assembler.addRecipeX(F,1000,50,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Ta,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64));
+        CR.shaped(ItemList.CapacitorT1.get(4),DEF_REV," PC","FPC"," xW", 'P', Items.paper,'W',OP.wireFine.mat(MT.Cu,1),'C',OP.foil.mat(MT.Cu,1),'F',OP.foil.mat(MT.Rubber,1));
+        CR.shaped(ItemList.CapacitorT2.get(4),DEF_REV," PC","FPC"," xW", 'P',OP.dust.mat(MT.Al2O3,1),'W',OP.wireFine.mat(MT.Ag,1),'C',OP.foil.mat(MT.Al,1),'F',OP.foil.mat(MT.Rubber,1));
+        recipeManager.Assembler.addRecipeX(F,  16,120,ST.array(OP.foil.mat(MT.Cu,16),OP.foil.mat(MT.Rubber,8),OP.plate.mat(MT.Paper,4),OP.wireFine.mat(MT.Cu,8)), FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CapacitorT1.get(32));
+        recipeManager.Assembler.addRecipeX(F, 140,100,ST.array(OP.foil.mat(MT.Al,16),OP.foil.mat(MT.Rubber,8),OP.dust.mat(MT.Al2O3,16),OP.wireFine.mat(MT.Ag,8)), FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CapacitorT2.get(40));
+        recipeManager.Assembler.addRecipeX(F,1000, 80,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Pt,4),OP.foil.mat(MT.Nb,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64),ItemList.CapacitorT3.get(64));
+        recipeManager.Assembler.addRecipeX(F,1000, 80,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Pt,4),OP.foil.mat(MT.Ta,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64),ItemList.CapacitorT3.get(64));
+        recipeManager.Assembler.addRecipeX(F,1000, 80,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Nb,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64),ItemList.CapacitorT3.get(64));
+        recipeManager.Assembler.addRecipeX(F,1000, 80,ST.array(OP.plate.mat(MT.Cu,1),OP.wireFine.mat(MT.Graphene,4),OP.foil.mat(MT.Ta,32),OP.dust.mat(MT.Teflon,4)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CapacitorT3.get(64),ItemList.CapacitorT3.get(64));
 
-        recipeManager.Assembler.addRecipeX(F,256,50,ST.array(OP.plateGem.mat(MT.Si,1),OP.dust.mat(MT.B,2),OP.dust.mat(MT.P,4),OP.foil.mat(MT.Ag,4),OP.dust.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.DiodeT1.get(32));
-        recipeManager.Assembler.addRecipeX(F,1024,8,ST.array(ItemList.DiodeT2Part.get(1),OP.wireFine.mat(MT.Ag,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U10,F)),ZL_FS,ItemList.DiodeT2.get(1));
-        recipeManager.Assembler.addRecipeX(F,4096,4,ST.array(ItemList.DiodeT3Part.get(1),OP.wireFine.mat(MT.Graphene,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U10,F)),ZL_FS,ItemList.DiodeT3.get(1));
+        recipeManager.Assembler.addRecipeX(F, 256,60,ST.array(OP.plateGem.mat(MT.Si,1),OP.dust.mat(MT.B,2),OP.dust.mat(MT.P,4),OP.foil.mat(MT.Ag,4),OP.dust.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.DiodeT1.get(32));
+        recipeManager.Assembler.addRecipeX(F,1024,10,ST.array(ItemList.DiodeT2Part.get(4),OP.wireFine.mat(MT.Ag,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U100,F)),ZL_FS,ItemList.DiodeT2.get(4));
+        recipeManager.Assembler.addRecipeX(F,4096,10,ST.array(ItemList.DiodeT3Part.get(4),OP.wireFine.mat(MT.Graphene,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U100,F)),ZL_FS,ItemList.DiodeT3.get(4));
 
 
 
 
         RM.           Mixer    .addRecipe1(F,32,80,OP.dust.mat(MT.FeCl3,4),FL.array(MT.AquaRegia.liquid(U,T)),FL.array(flList.EtchingSolution.make(1000)));
-        recipeManager.Assembler.addRecipe1(F,16,80,OP.plate.mat(MT.Wood,1),FL.array(FL.Glue.make(288)),ZL_FS,IL.Circuit_Plate_Empty.get(1));
+        recipeManager.Assembler.addRecipe2(F,16,80,OP.plate.mat(MT.Wood,1),OP.dust.mat(MT.SiO2,1),FL.array(FL.Glue.make(288)),ZL_FS,IL.Circuit_Plate_Empty.get(1));
 
         recipeManager.Assembler.addRecipe1(F,16,80,OP.foil.mat(MT.Bakelite,4),FL.array(FL.Glue.make(288)),ZL_FS,ItemList.CircuitBoardEmptyT2.get(1));
 
