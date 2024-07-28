@@ -11,10 +11,15 @@
 package cn.kuzuanpa.ktfruaddon.code;
 
 import codechicken.lib.vec.BlockCoord;
+import gregapi.code.ITagDataContainer;
+import gregapi.code.TagData;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 
 import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class codeUtil {
     /**Turning CodeChicken BlockCoord to Minecraft ChunkCoordinates **/
@@ -75,6 +80,10 @@ public class codeUtil {
             }
 
             return new Color(color[0], color[1], color[2]).hashCode();
+        }
+
+        public static List<TagData> getAllTagData(ITagDataContainer container){
+        return TagData.TAGS.stream().filter(container::contains).collect(Collectors.toList());
         }
 
 }

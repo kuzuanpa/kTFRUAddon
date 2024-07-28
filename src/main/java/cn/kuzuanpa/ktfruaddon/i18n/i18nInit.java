@@ -13,6 +13,7 @@ package cn.kuzuanpa.ktfruaddon.i18n;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips;
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kUserInterface;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import gregapi.data.LH;
 
@@ -49,5 +50,13 @@ public class i18nInit {
         LH.add(kMessages.COMPUTE_CLUSTER_1,"Compute Cluster State: ");
         LH.add(kMessages.COMPUTE_CLUSTER_2,"Total Compute Power: ");
         LH.add(kMessages.COMPUTE_CLUSTER_3,"Power off");
+        LH.add(kMessages.FILTER_PROPERTIES,"\u00a7aFiltering Property:\u00a7r");
+        LH.add(kMessages.FILTER_PROPERTIES_ALL,"\u00a7bAll Properties: ");
+
+        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_STOPPED,"Stopped");
+        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_CHARGING,"Charging");
+        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_RUNNING,"Running");
+        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_ERROR,"ERROR");
+        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_VOIDCHARGE,"Void Charging");
     }
 }

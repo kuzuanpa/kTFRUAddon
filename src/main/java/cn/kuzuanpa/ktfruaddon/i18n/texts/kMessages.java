@@ -33,6 +33,8 @@ public class kMessages {
             ,COMPUTE_CLUSTER_1="ktfru.msg.multiblock.compute_cluster.1"
             ,COMPUTE_CLUSTER_2="ktfru.msg.multiblock.compute_cluster.2"
             ,COMPUTE_CLUSTER_3="ktfru.msg.multiblock.compute_cluster.3"
+            ,FILTER_PROPERTIES="ktfru.msg.filter.properties"
+            ,FILTER_PROPERTIES_ALL="ktfru.msg.filter.properties.all"
         ;
 
 }

@@ -21,5 +21,6 @@ public class itemPreInit {
         new itemBatteryPole();
         new itemCompact();
         new itemChemistry();
+        new itemTechnological();
     }
 }
