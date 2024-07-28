@@ -22,6 +22,7 @@ import gregapi.util.ST;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -29,11 +30,11 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
+public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMachine implements IMappedStructure{
 
     //决定机器大小
     //this controls the size of machine.
-    public final short machineX = 5, machineY = 1, machineZ = 4;
+    public final short sizeX = 5, sizeY = 1, sizeZ = 4;
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
@@ -88,8 +89,15 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
             {F, F, F, F, F},
     }};
 
-    //change value there to set usage of every block.
-    public int getUsage(int blockID ,short registryID){
+    @Override
+    public int getDesign(int mapX, int mapY, int mapZ) {
+        return 0;
+    }
+
+    @Override
+    public int getUsage(int mapX, int mapY, int mapZ) {
+        int blockID =getBlockID(mapX,mapY,mapZ);
+        int registryID = getRegistryID(mapX,mapY,mapZ);
         if (blockID == 18002&&registryID==k) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (blockID == 18002||blockID==18022&&registryID==g) {
@@ -107,27 +115,14 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
     public short getRegistryID(int checkX, int checkY, int checkZ){return registryIDMap[checkY][checkZ][checkX];}
 
     @Override
+    public List<ChunkCoordinates> getComputeNodesCoordList() {return null;}
+    ChunkCoordinates lastFailedPos=null;
+    @Override
     public boolean checkStructure2() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
-            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
-                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
-                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ)) {
-                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
-                                tSuccess = F;
-                        }
-                    }
-                }
-            }
-            return tSuccess;
-
-        }
-        return mStructureOkay;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset);
+        return lastFailedPos==null;
     }
 
     //这是设置主方块的物品提示
@@ -150,7 +145,7 @@ public class exampleMachineComplex extends TileEntityBaseLimitedOutputMachine {
     //controls areas inside the machine
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
     }
     //下面四个是设置输入输出的地方,return null是任意面
     //controls where to I/O, return null=any side

@@ -20,10 +20,13 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
+import cn.kuzuanpa.ktfruaddon.code.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.code.OreScanner;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import org.apache.logging.log4j.Level;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine {
     public OreScanner oreVeinScanner;
@@ -34,9 +37,9 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine {
 @Override
 public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (isServerSide()) {
-       // openGUI(aPlayer, aSide);
+        openGUI(aPlayer, aSide);
         try {
-            //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
+            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
            // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
         }catch (Throwable ignored) {}
     }

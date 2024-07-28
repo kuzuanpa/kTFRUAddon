@@ -38,7 +38,7 @@ import net.minecraft.util.ChunkCoordinates;
 import java.util.List;
 
 import static gregapi.data.CS.*;
-public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart {
+public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputeNode {
 
     protected IIconContainer[][] mTextures;
     public boolean isRunning,isActive;
@@ -67,11 +67,6 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
         isRunning=true;
         mState=1;
     }
-    public void inactive(){
-        isActive=false;
-        isRunning=true;
-        mState=1;
-    }
     public void stop(){
         isActive=false;
         isRunning=false;
@@ -87,13 +82,15 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
                         playClick();
                         mDisplaySlot[tSlot] = 1;
                         updateClientData();
-                    return T;
+                        updateComputePower();
+                        return T;
                 }
             if (slotHas(tSlot) && aStack == null && UT.Inventories.addStackToPlayerInventoryOrDrop(aPlayer, slot(tSlot), T, worldObj, xCoord + 0.5, yCoord + 1.2, zCoord + 0.5)) {
                 slotKill(tSlot);
                 updateInventory();
                 mDisplaySlot[tSlot] = 0;
                 updateClientData();
+                updateComputePower();
                 return T;
             }
         }
@@ -132,10 +129,10 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
 
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
-        for (int i=0;i<2;i++){
-            if (slot(i)!=null)mDisplaySlot[i]=1;
-            else mDisplaySlot[i]=0;
-        }
+            for (int i=0;i<2;i++)if (slot(i)!=null)mDisplaySlot[i]=1;
+                                 else mDisplaySlot[i]=0;
+            if(aTimer%20==0&&getTarget(true)==null)stop();
+            if(aTimer%10==0)updateComputePower();
         }
     }
     @Override
@@ -157,6 +154,7 @@ public class MultiBlockPartComputeClusterSimple extends TileEntityBase09FacingSi
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
+        updateComputePower();
         if (aNBT.hasKey("gt.target")) {
             this.mTargetPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong("gt.target.x")), UT.Code.bindInt(aNBT.getLong("gt.target.y")), UT.Code.bindInt(aNBT.getLong("gt.target.z")));
         }

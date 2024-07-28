@@ -61,7 +61,7 @@ public class utils {
         return true;
     }
 
-        public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(coord);
         if (tTileEntity == aController) {
             return true;
@@ -145,19 +145,19 @@ public class utils {
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return new ChunkCoordinates(resultX[Facing],oY +addY,resultZ[Facing]);
     }
-    public static int getRealX(byte Facing, int oX, int addX, int addZ){
+    public static int getRealX(short Facing, int oX, int addX, int addZ){
         int[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         return resultX[Facing];
     }
-    public static double getRealX(byte Facing, double oX, double addX, double addZ){
+    public static double getRealX(short Facing, double oX, double addX, double addZ){
         double[] resultX = {0, 0, oX - addX, oX + addX, oX + addZ, oX - addZ, 0, 0};
         return resultX[Facing];
     }
-    public static int getRealZ(byte Facing, int oZ, int addX, int addZ){
+    public static int getRealZ(short Facing, int oZ, int addX, int addZ){
         int[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }
-    public static double getRealZ(byte Facing, double oZ, double addX, double addZ){
+    public static double getRealZ(short Facing, double oZ, double addX, double addZ){
         double[] resultZ = {0, 0, oZ + addZ, oZ - addZ, oZ + addX, oZ - addX, 0, 0};
         return resultZ[Facing];
     }

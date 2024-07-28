@@ -39,9 +39,8 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips,IMultiBlockPart {
+public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips,IMultiBlockPart,IComputeNode {
 
-    protected IIconContainer[][] mTextures;
     public boolean isRunning,isActive;
     public byte mState;
     public long ComputePower;
@@ -61,20 +60,19 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
         isRunning=true;
         isActive=true;
         mState=2;
+        updateClientData();
     }
     public void run(){
         isRunning=true;
-        mState=1;
-    }
-    public void inactive(){
         isActive=false;
-        isRunning=true;
         mState=1;
+        updateClientData();
     }
     public void stop(){
         isActive=false;
         isRunning=false;
         mState=0;
+        updateClientData();
     }
     public long getComputePower(){return ComputePower;}
     @Override
@@ -87,6 +85,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
                         playClick();
                         mDisplaySlot[tSlot] = 1;
                         updateClientData();
+                        updateComputePower();
                     return T;
                 }
             if (slotHas(tSlot) && aStack == null && UT.Inventories.addStackToPlayerInventoryOrDrop(aPlayer, slot(tSlot), T, worldObj, xCoord + 0.5, yCoord + 1.2, zCoord + 0.5)) {
@@ -94,6 +93,7 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
                 updateInventory();
                 mDisplaySlot[tSlot] = 0;
                 updateClientData();
+                updateComputePower();
                 return T;
             }
         }
@@ -133,9 +133,11 @@ public class MultiBlockPartComputeCluster extends TileEntityBase09FacingSingle i
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
 
     public void onTick2(long aTimer, boolean aIsServerSide) {
-        if (aIsServerSide) for (int i=0;i<4;i++){
-            if (slot(i)!=null)mDisplaySlot[i]=1;
-            else mDisplaySlot[i]=0;
+        if (aIsServerSide) {
+            for (int i=0;i<4;i++)if (slot(i)!=null)mDisplaySlot[i]=1;
+                                 else mDisplaySlot[i]=0;
+            if(aTimer%20==0&&getTarget(true)==null)stop();
+            if(aTimer%100==0)updateComputePower();
         }
     }
     @Override
