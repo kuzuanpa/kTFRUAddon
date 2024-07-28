@@ -104,7 +104,6 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
                 }
             }
             if (tSuccess==F) resetParts();
-            // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
             return tSuccess;
 
         }

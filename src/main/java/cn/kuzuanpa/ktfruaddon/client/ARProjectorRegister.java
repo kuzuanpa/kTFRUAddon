@@ -39,7 +39,6 @@ public class ARProjectorRegister implements IDummyMultiBlockRegisterer {
 
         dummyStructures.add(new DummyTileMultiBlock(TokamakTierExp(),"ktfru.projector.fusionReactorTokamakExperiment"));
         dummyStructures.add(new DummyTileMultiBlock(new Object[][][]{TokamakTier1Layer13(),TokamakTier1Layer12(),TokamakTier1Layer11(),TokamakTier1Layer10(),TokamakTier1Layer9(),TokamakTier1Layer8(),TokamakTier1Layer7(),TokamakTier1Layer6(),TokamakTier1Layer5(),TokamakTier1Layer4(),TokamakTier1Layer3(),TokamakTier1Layer2(),TokamakTier1Layer1(),TokamakTier1Layer0()},"ktfru.projector.fusionReactorTokamakT1"));
-        dummyStructures.get(1).isVisibleInProjector=false;
         return dummyStructures;
     }
 
@@ -253,8 +252,8 @@ return new Object[][] {
             { null , null , null , null ,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null , null , null ,WallT1, null , null , null , null , null , null },
             { null , null , null , null ,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null , null , null ,WallT1, null , null , null , null , null , null },
             { null , null , null , null ,CoilT1,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null ,WallT1,CoilT1, null , null , null , null , null , null },
-            { null , null , null , null , null ,CoilT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null , null ,WallT1,CoilT1, null , null , null , null , null , null , null },
-            { null , null , null , null , null , null , null , null ,WallT1,WallT1,WallT1, null , null , null ,WallT1,WallT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null },
+            { null , null , null , null , null ,CoilT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null ,WallT1,WallT1,CoilT1, null , null , null , null , null , null , null },
+            { null , null , null , null , null , null , null , null ,WallT1,WallT1,WallT1, null , null , null ,WallT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null ,WallT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null ,CoilT1,CoilT1,CoilT1, null , null , null , null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null ,CoilT1,CoilT1,CoilT1, null , null , null , null , null , null , null , null , null , null , null , null , null },
@@ -363,8 +362,8 @@ return new Object[][] {
             { null , null , null , null ,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null , null , null ,WallT1, null , null , null , null , null , null },
             { null , null , null , null ,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null , null , null ,WallT1, null , null , null , null , null , null },
             { null , null , null , null ,CoilT1,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null ,WallT1,CoilT1, null , null , null , null , null , null },
-            { null , null , null , null , null ,CoilT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null , null ,WallT1,CoilT1, null , null , null , null , null , null , null },
-            { null , null , null , null , null , null , null , null ,WallT1,WallT1,WallT1, null , null , null ,WallT1,WallT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null },
+            { null , null , null , null , null ,CoilT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null ,WallT1,WallT1,CoilT1, null , null , null , null , null , null , null },
+            { null , null , null , null , null , null , null , null ,WallT1,WallT1,WallT1, null , null , null ,WallT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null ,WallT1,WallT1,WallT1, null , null , null , null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null ,CoilT1,CoilT1,CoilT1, null , null , null , null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null ,CoilT1,CoilT1,CoilT1, null , null , null , null , null , null , null , null , null , null , null , null , null },
@@ -419,7 +418,7 @@ return new Object[][] {
 
 return new Object[][] {
             { null , null , null , null , null , null , null , null , null , null , null , null ,ToPipe, null , null , null , null , null , null , null , null , null , null , null , null , null , null },
-            { null , null , null , null , null , null , null , null ,VaPump,VaPump,VaPump,CoPump,ToPipe,CoPump,ToPipe,VaPump,VaPump, null , null , null , null , null , null , null , null , null , null },
+            { null , null , null , null , null , null , null , null ,VaPump,VaPump,VaPump,CoPump,ToPipe,CoPump,VaPump,VaPump,VaPump, null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null ,VaPump,VaPump,VaPump,CoilT1,CoilT1,CoilT1,VaPump,VaPump,VaPump, null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null ,VaPump,VaPump,VaPump,CoilT1,CoilT1,CoilT1,VaPump,VaPump,VaPump, null , null , null , null , null , null , null , null , null , null },
             { null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null },

@@ -22,8 +22,10 @@ package cn.kuzuanpa.ktfruaddon.client.gui;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.fusionReactorTokamakExp;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregapi.data.LH;
 import gregapi.gui.ContainerCommon;
 import gregapi.gui.Slot_Normal;
+import gregapi.gui.Slot_Render;
 import gregapi.recipes.Recipe;
 import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -41,8 +43,15 @@ public class ContainerCommonFusionTokamakExp extends ContainerCommon {
 	
 	@Override
 	public int addSlots(InventoryPlayer aPlayerInventory) {
-		addSlotToContainer(new Slot_Normal(mTileEntity, 0, 151, 4));
-		addSlotToContainer(new Slot_Normal(mTileEntity, 1, 151, 61));
+		mRecipes = ((fusionReactorTokamakExp)mTileEntity).mRecipes;
+		int tIndex =0;
+		addSlotToContainer(new Slot_Normal(mTileEntity, tIndex++, 151, 4));
+		addSlotToContainer(new Slot_Normal(mTileEntity, tIndex++, 133, 62));
+
+		addSlotToContainer(new Slot_Render(mTileEntity, tIndex++, 85,62).setTooltip("Extract using a Tap or Nozzle", LH.Chat.WHITE));
+		addSlotToContainer(new Slot_Render(mTileEntity, tIndex++, 103,62).setTooltip("Extract using a Tap or Nozzle", LH.Chat.WHITE));
+		addSlotToContainer(new Slot_Render(mTileEntity, tIndex++, 151,62).setTooltip("Extract using a Tap or Nozzle", LH.Chat.WHITE));
+
 		return super.addSlots(aPlayerInventory);
 	}
 

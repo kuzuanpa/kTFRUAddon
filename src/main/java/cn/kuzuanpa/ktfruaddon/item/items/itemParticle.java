@@ -23,6 +23,10 @@ public class itemParticle extends MultiItemRandom {
 
     @Override
     public void addItems() {
+        ItemList.FusionTokamakData0.set(addItem(0, "Tokamak Experiment Data (Electric)", "A common data, do some help in improving tokamak reactor."));
+        ItemList.FusionTokamakData1.set(addItem(1, "Tokamak Experiment Data (Heat)", "A rare data, do massive help in improving tokamak reactor."));
+        ItemList.FusionTokamakData2.set(addItem(2, "Tokamak Experiment Data (Structure)", "A legendary data, can be used to create a fusion reactor."));
+
         //Copy From GT6U
         ItemList.Proton.set(addItem(1000, "Proton", "A subatomic particle. Can be produced in particle collider."));
         ItemList.Anti_Proton.set(addItem(1001, "Anti Proton", "A subatomic particle. Can be produced in particle collider."));

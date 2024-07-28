@@ -14,6 +14,7 @@ import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakExp;
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.IComputeNode;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -42,23 +43,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static gregapi.data.CS.*;
 
-public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory {
+public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory, IMappedStructure {
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
-    public static final short MAX_FIELD_STRENGTH=400, KEEP_CHARGE_EUt=200;
+    public static final short MAX_FIELD_STRENGTH=400, KEEP_CHARGE_EUt=512;
     public static final long MAX_CHARGE =16*1024L*1024L;
     public byte mState= STATE_STOPPED;
+    public boolean isComputePowerEnough=false;
     public short mFieldStrength=0;
-    public float dischargeRate=0.08F, progress =0;
-    public long mEnergy=0 , mEnergyCharged = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0;
+    public float dischargeRate=0.2F, progress =0;
+    public long mEnergy=0 , mEnergyCharged = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0,computePowerNeeded=1024L;
     public TagData mEnergyTypeAccepted = TD.Energy.EU, mEnergyTypeCharging = TD.Energy.LU;
     public Recipe.RecipeMap mRecipes = recipeManager.FusionTokamak;
     public Recipe mCurrentRecipe=null,lastRecipe=null;
@@ -66,10 +67,12 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public FluidStack[] mOutputFluids = ZL_FS;
     public FluidTankGT[] mTanks = {new FluidTankGT(2000),new FluidTankGT(2000), new FluidTankGT(2000), new FluidTankGT(2000)},
             mTanksInput = {mTanks[0],mTanks[1]}, mTanksOutput ={ mTanks[2],mTanks[3]};
+    private final ArrayList<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
+        if (aNBT.hasKey(NBT_INPUT)) mRate = aNBT.getLong(NBT_INPUT);
         if (aNBT.hasKey(NBT_STATE)) mState = aNBT.getByte(NBT_STATE);
         if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
         if (aNBT.hasKey(NBT_ENERGY+".1")) mEnergyCharged = aNBT.getLong(NBT_ENERGY+".1");
@@ -118,16 +121,29 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
-        if (!aIsServerSide||!mStructureOkay) return;
-        //refresh state
-        if(mState==STATE_ERROR){
-            if(mEnergy >= KEEP_CHARGE_EUt){
-                mFieldStrength = (short) Math.min(mFieldStrength+4,MAX_FIELD_STRENGTH);
-                setState(STATE_STOPPED);
-            }
-            mEnergyCharged=0;
+        if (!aIsServerSide) return;
+        if (!mStructureOkay){
+            if(mEnergyCharged>0)onError();
             return;
         }
+        isComputePowerEnough = (computeNodesCoord.stream().filter(coord->WD.te(worldObj,coord,true) instanceof IComputeNode).mapToLong(coord->((IComputeNode) WD.te(worldObj,coord,true)).getComputePower()).sum() >= computePowerNeeded);
+        if(!isComputePowerEnough){
+            mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
+            if(mFieldStrength<0&&mEnergyCharged>0)onError();
+            return;
+        }
+        //refresh state
+        if(mState==STATE_ERROR){
+            mEnergyCharged=0;
+            if(mEnergy < KEEP_CHARGE_EUt)return;
+            mFieldStrength = (short) Math.min(mFieldStrength+4,MAX_FIELD_STRENGTH);
+            setState(STATE_STOPPED);
+        }
+        //display fluids
+        slot(2, FL.display(mTanksInput [0], T, T));
+        slot(3, FL.display(mTanksInput [1], T, T));
+        slot(4, FL.display(mTanksOutput[0], T, T));
+
         //If no plasma in reactor
         boolean isInputEmpty = Arrays.stream(mTanksInput).allMatch(FluidTankGT::isEmpty);
         if(isInputEmpty&&mState!=STATE_RUNNING){
@@ -136,6 +152,7 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
             nullifyCurrentRecipe();
             return;
         }
+
         //receiveEnergy
         mEnergyCharged +=mRateCharging;
         if (mEnergyCharged < 0) mEnergyCharged = 0;
@@ -160,26 +177,27 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         //do recipe
         if(mState==STATE_RUNNING) {
             progress += mEnergyCharged *1F / recipeChargeRequired;
-            if (progress > recipeTotalTime) {
-                if(mOutputFluids!=null)Arrays.stream(mTanksOutput).forEach(tank-> Arrays.stream(mOutputFluids).forEach(fluid->tank.fill(fluid, true)));
-                nullifyCurrentRecipe();
-                mState=STATE_STOPPED;
-            }
-            else return;
+            if (progress < recipeTotalTime) return;
+            if(mOutputFluids!=null)Arrays.stream(mOutputFluids).forEach(fluid-> {for (FluidTankGT tank : mTanksOutput) if(tank.fill(fluid, true)>0)return;});
+            if(mOutputItems!=null)Arrays.stream(mOutputItems).filter(Objects::nonNull).forEach(item-> addStackToSlot(1, item));
+            nullifyCurrentRecipe();
+            mState=STATE_STOPPED;
         }
 
 
         if(!isInputEmpty&& (mState==STATE_STOPPED||mState==STATE_VOID_CHARGING|| (mState==STATE_CHARGING&&mCurrentRecipe==null) )){
-            Recipe tRecipe = mRecipes.findRecipe(this, lastRecipe, T, Long.MAX_VALUE, NI, mTanksInput, slot(0),slot(1));
-            if (tRecipe !=null&&tRecipe.isRecipeInputEqual(F,F,mTanksInput,slot(0),slot(1)))setRecipe(tRecipe);
+            Recipe tRecipe = mRecipes.findRecipe(this, lastRecipe, T, mRate, NI, mTanksInput, slot(0));
+            if (tRecipe !=null&&tRecipe.isRecipeInputEqual(F,F,mTanksInput,slot(0)))setRecipe(tRecipe);
             else setState(STATE_VOID_CHARGING);
         }
 
-        if (mEnergyCharged > recipeChargeRequired && mState==STATE_CHARGING && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0),slot(1)))setState(STATE_RUNNING);
+        if (mEnergyCharged > recipeChargeRequired && mState==STATE_CHARGING && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0)))setState(STATE_RUNNING);
     }
 
     protected void setState(byte state){
         mState=state;
+        if(state==STATE_STOPPED||state==STATE_ERROR)computeNodesCoord.stream().map(coord->WD.te(worldObj,coord,true)).filter(tile-> tile instanceof IComputeNode).forEach(tile->((IComputeNode) tile).stop());
+        else computeNodesCoord.stream().map(coord->WD.te(worldObj,coord,true)).filter(tile-> tile instanceof IComputeNode).forEach(tile->((IComputeNode) tile).active());
         updateClientData();
     }
     protected void setRecipe(Recipe recipe){
@@ -190,7 +208,9 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         recipeEUt=recipe.mEUt;
         recipeTotalTime=recipe.mDuration;
         mOutputFluids=recipe.mFluidOutputs;
-        mOutputItems=recipe.mOutputs;
+        for (int i = 0; i < recipe.mOutputs.length; i++) {
+            if(getRandomNumber(10000)<=recipe.getOutputChance(i))mOutputItems[i]=recipe.mOutputs[i];
+        }
     }
 
     protected void nullifyCurrentRecipe(){
@@ -199,8 +219,8 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         recipeEUt=0;
         recipeTotalTime=0;
         mCurrentRecipe=null;
-        mOutputFluids = null;
-        mOutputItems = null;
+        mOutputFluids = new FluidStack[mRecipes.mOutputFluidCount];
+        mOutputItems = new ItemStack[mRecipes.mOutputItemsCount];
     }
 
     protected void onError(){
@@ -213,7 +233,7 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     }
     @Override
     protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
-        return aFluidToFill.isFluidEqual(mTanksInput[0].getFluid())?mTanksInput[0]:mTanksInput[1];
+        return mTanksInput[0].isEmpty()||aFluidToFill.isFluidEqual(mTanksInput[0].getFluid())?mTanksInput[0]:mTanksInput[1];
     }
 
     @Override
@@ -242,6 +262,7 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
             return aAmount;
         }
         if(aEnergyType==mEnergyTypeAccepted&&mEnergy<mRate){
+            if(aSize > mRate)return 0;
             long amountNeeded = (long)Math.ceil((mRate-mEnergy*1F)/aSize);
             mEnergy+=amountNeeded*aSize;
             return amountNeeded;
@@ -266,7 +287,7 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
         return !aEmitting && (aEnergyType == mEnergyTypeAccepted||aEnergyType == mEnergyTypeCharging);}
     public long getEnergySizeInputRecommended(TagData aEnergyType, byte aSide) {return mRate;}
-
+    public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return 16;}
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
 
     public short clientDensity(){
@@ -293,7 +314,7 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     }
 
     //inventory
-    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2+mRecipes.mInputFluidCount+mRecipes.mOutputFluidCount];}
     @Override public boolean canDrop(int aInventorySlot) {return T;}
 
     private static final int[] ACCESSIBLE_SLOTS = new int[] {0, 1};
@@ -311,8 +332,6 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
         return T;
     }
-
-
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (isServerSide()) openGUI(aPlayer, aSide);
@@ -332,12 +351,16 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
 
+    @Override
+    public int getDesign(int mapX, int mapY, int mapZ) {
+        return 0;
+    }
 
-    //change value there to set usage of every block.
-    public int getUsage(int blockID ,short registryID){
-        if (registryID==g) {
+    @Override
+    public int getUsage(int mapX, int mapY, int mapZ) {
+        if (getRegistryID(mapX,mapY,mapZ)==g) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else if (blockID == 31019) {
+        } else if (getBlockID(mapX,mapY,mapZ) == 31019) {
             return  MultiTileEntityMultiBlockPart.ONLY_FLUID;
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
@@ -346,31 +369,27 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         return blockIDMap[checkY][checkZ][checkX];
     }
 
-    public boolean isIgnored(int blockID){
-        return blockID==0?T:F;
+    @Override
+    public boolean isIgnored(int mapX, int mapY, int mapZ) {
+        return getBlockID(mapX,mapY,mapZ)==0?T:F;
     }
 
-    public short getRegistryID(int blockID){return blockID==18002?g:k;}
+    @Override
+    public short getRegistryID(int mapX, int mapY, int mapZ) {
+        return getBlockID(mapX,mapY,mapZ)==18002?g:k;
+    }
 
     @Override
-    public boolean checkStructure2() {
-        int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
-            tY+=yMapOffset;
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
-            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                if(!isIgnored(getBlockID(cX, cY, cZ))) {
-                    if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(getBlockID(cX, cY, cZ)), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(getBlockID(cX, cY, cZ)))))
-                    tSuccess = F;
-                }
-            }
-            return tSuccess;
+    public List<ChunkCoordinates> getComputeNodesCoordList() {
+        return computeNodesCoord;
+    }
 
-        }
-        return mStructureOkay;
+    private ChunkCoordinates lastFailedPos=null;
+    @Override
+    public boolean checkStructure2() {
+        if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        lastFailedPos = checkMappedStructure(lastFailedPos,machineX,machineY,machineZ,xMapOffset,yMapOffset,zMapOffset);
+        return lastFailedPos==null;
     }
 
     static {
@@ -392,14 +411,12 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         long rReturn = super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
         if (rReturn > 0) return rReturn;
         if (isClientSide()) return 0;
-
-        if (aTool.equals(TOOL_softhammer)) {
-        }
         return 0;
     }
 
     public void onMagnifyingGlass2(List<String> aChatReturn) {
         aChatReturn.add("Structure is formed already!");
+        if(!isComputePowerEnough)aChatReturn.add("Insufficient Compute Power!");
     }
 
 

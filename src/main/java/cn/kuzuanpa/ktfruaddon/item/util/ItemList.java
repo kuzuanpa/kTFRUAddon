@@ -124,6 +124,7 @@ public enum ItemList implements IItemContainer{
     UnderClockedNoviceComputer,UnderClockedModerateComputer,UnderClockedAdvancedComputer,UnderClockedEliteComputer,UnderClockedMasterComputer,UnderClockedUltimateComputer,
     //itemParticle
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
+    FusionTokamakData0,FusionTokamakData1,FusionTokamakData2,
     //itemBatteryPole
     BatteryPoleGold, BatteryPolePlatinum,BatteryPoleCarbon,BatteryPoleGraphene,
     ;
