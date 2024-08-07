@@ -227,8 +227,9 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
             sTextureSingle      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/sides"),
             sOverlaySingleFront = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/single/front"),
             sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front"),
-            sOverlayFrontRunning = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front_running"),
             sOverlayFrontActive = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front_active"),
+            sOverlayFrontRunningGlow = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front_running_glow"),
+            sOverlayFrontActiveGlow = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/front_active_glow"),
             sOverlayBack        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/back"),
             sOverlayTopA        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/topa"),
             sOverlayTopB        = new Textures.BlockIcons.CustomIcon("machines/maskaligner/0/overlay/topb"),
@@ -256,9 +257,9 @@ public class maskAlignerUV extends TileEntityBaseMultiInputMachine {
             switch (aRenderPass) {
                 case 0:
                     if (mActive) {
-                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontActive)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ?null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
+                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontActive), BlockTextureDefault.get(sOverlayFrontActiveGlow, true)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ?null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
                     } else if (mRunning) {
-                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFrontRunning)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
+                        return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFront), BlockTextureDefault.get(sOverlayFrontRunningGlow, true)) : SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null: aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
                     }
                     return aSide == mFacing ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa), BlockTextureDefault.get(sOverlayFront)) :  SIDE_TOP == aSide||SIDE_BOTTOM == aSide ? null :  aSide == OPOS[mFacing] ? BlockTextureMulti.get(BlockTextureDefault.get(sTextureSidesA, mRGBa),BlockTextureDefault.get(sOverlayBack)) : null;
                 case 1:

@@ -18,6 +18,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.tile;
 
+import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.block.MaterialMachines;
 import gregapi.block.MaterialScoopable;
@@ -31,7 +32,7 @@ import static gregapi.data.CS.*;
 
 public class tileEntityPreInit {
     public static void init(FMLPreInitializationEvent aEvent) {
-        new MultiTileEntityRegistry("ktfru.multitileentity");
+        ktfruaddon.kTileRegistry0 = new MultiTileEntityRegistry("ktfru.multitileentity");
         MultiTileEntityBlock.getOrCreate(MOD_ID, "iron"         , Material.iron             , Block.soundTypeMetal, TOOL_pickaxe, 0, 0, 15, F, F);
         MultiTileEntityBlock.getOrCreate(MOD_ID, "iron"         , Material.iron             , Block.soundTypeMetal, TOOL_shovel , 0, 0, 15, F, F);
         MultiTileEntityBlock.getOrCreate(MOD_ID, "machine"      , MaterialMachines.instance , Block.soundTypeMetal, TOOL_cutter , 0, 0, 15, F, F);

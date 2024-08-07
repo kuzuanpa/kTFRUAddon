@@ -14,7 +14,7 @@ import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
 import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
-import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit;
+import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit0;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cpw.mods.fml.common.event.*;
 import gregapi.api.Abstract_Proxy;
@@ -37,7 +37,7 @@ public class commonProxy extends Abstract_Proxy {
 
 
     public void init(FMLInitializationEvent aEvent) {
-        tileEntityInit.init(aEvent);
+        tileEntityInit0.init(aEvent);
         recipeInit.init(aEvent);
         PROXY.registerRenderers();
 

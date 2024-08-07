@@ -10,6 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.material;
 
+import gregapi.data.MT;
 import gregapi.oredict.OreDictMaterial;
 
 public class matAlia {
@@ -21,5 +22,5 @@ public class matAlia {
     public OreDictMaterial nAmmoniumChromicSulfate = matList.AmmoniumChromicSulfate.mat;
     public OreDictMaterial pLiuSuanGeAn = matList.AmmoniumChromicSulfate.mat;
     public OreDictMaterial aDPC = matList.DiphenylCarbonate.mat;
-    public OreDictMaterial aPC = matList.Polycarbonate.mat;
+    public OreDictMaterial aPC = MT.Polycarbonate;
 }

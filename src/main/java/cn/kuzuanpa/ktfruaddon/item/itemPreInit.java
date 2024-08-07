@@ -22,5 +22,6 @@ public class itemPreInit {
         new itemCompact();
         new itemChemistry();
         new itemTechnological();
+        new itemTurbine();
     }
 }

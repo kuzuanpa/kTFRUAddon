@@ -14,7 +14,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.SunHeater;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.generator.SunHeater;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.block.multitileentity.IMultiTileEntity;

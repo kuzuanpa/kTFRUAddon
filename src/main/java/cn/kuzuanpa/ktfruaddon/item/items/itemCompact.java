@@ -28,8 +28,12 @@ public class itemCompact extends MultiItemRandom {
 
     @Override
     public void addItems() {
-        ItemList.CrucibleModelInnerLayer.set(addItem(0, "Crucible Model Inner Layer", ""));
-        ItemList.IntelligentCore .set(addItem(100, "Intelligent Core", ""));
+        ItemList.CrucibleModelInnerLayer .set(addItem(0, "Crucible Model Inner Layer", ""));
+        ItemList.Co60FlawDetectionCore   .set(addItem(1, "Co-60 Flaw Detection Core", ""));
+        ItemList.Tm170FlawDetectionCore  .set(addItem(2, "Tm-170 Flaw Detection Core", ""));
+        ItemList.IntelligentCore         .set(addItem(100, "Intelligent Core", ""));
+        ItemList.RefinedStoragePart      .set(addItem(101, "Refined Storage Part", ""));
+        ItemList.RefinedFluidStoragePart .set(addItem(102, "Refined Fluid Storage Part", ""));
 
         ItemList.ArmorAirSealant.set(addItem(1000, "Armor Sealant", ""));
         ItemList.SpaceSuitCloth .set(addItem(1001, "Space Suit Inner Cloth", ""));
@@ -79,6 +83,8 @@ public class itemCompact extends MultiItemRandom {
         ItemList.EngineTurbo6.set(addItem(2405, "Engine Turbo (Titanium)"      , ""),new OreDictItemData(MT.Ti           ,6*U+U4));
         ItemList.EngineTurbo7.set(addItem(2406, "Engine Turbo (Tungsten Steel)", ""),new OreDictItemData(MT.TungstenSteel,6*U+U4));
         ItemList.EngineTurbo8.set(addItem(2407, "Engine Turbo (Iridium)"       , ""),new OreDictItemData(MT.Ir           ,6*U+U4));
+
+        ItemList.VibrateDetector.set(addItem(2500, "Vibrate Detector"       , ""),new OreDictItemData(MT.StainlessSteel,U+U9));
 
     }
 }

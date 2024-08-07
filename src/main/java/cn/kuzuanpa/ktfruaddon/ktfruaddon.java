@@ -12,6 +12,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.api.Abstract_Mod;
 import gregapi.api.Abstract_Proxy;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.ModData;
 
 @Mod(modid = cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID, name = ktfruaddon.MOD_NAME, version = ktfruaddon.VERSION,dependencies= ktfruaddon.DEPENDS , acceptedMinecraftVersions = "1.7.10")
@@ -24,7 +25,7 @@ public final class ktfruaddon extends Abstract_Mod {
     @SidedProxy(clientSide = "cn.kuzuanpa.ktfruaddon.clientProxy",
             serverSide = "cn.kuzuanpa.ktfruaddon.commonProxy")
     public static commonProxy PROXY;
-
+    public static MultiTileEntityRegistry kTileRegistry0 = null;
     public ktfruaddon() {
     }
 

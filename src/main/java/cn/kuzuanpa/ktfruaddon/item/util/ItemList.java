@@ -45,7 +45,8 @@ import static gregapi.data.CS.*;
 
 public enum ItemList implements IItemContainer{
     //itemIT
-    SiliconBoulePure, MoO2Boule, MoO2BoulePure,
+    SiliconBoulePure, MoO2Boule, MoO2BoulePure, MonocrystallineSteel, MonocrystallineStainlessSteel, MonocrystallineTitanium, MonocrystallineTrinitanium, MonocrystallineHSSG, MonocrystallineHSSE, MonocrystallineHSSS, MonocrystallineTungstenSteel, MonocrystallineTungsten, MonocrystallineVibramantium,
+
     SiliconPlate8inchT1,SiliconPlate8inchT2, MoO2Plate8inchT1,MoO2Plate8inchT2,
     SiliconPlate8inchCleanedT1,SiliconPlate8inchCleanedT2, MoO2Plate8inchCleanedT1,MoO2Plate8inchCleanedT2,
     SiliconPlate8inchOxidizedT1,SiliconPlate8inchOxidizedT2, MoO2Plate8inchOxidizedT1,MoO2Plate8inchOxidizedT2,
@@ -72,7 +73,7 @@ public enum ItemList implements IItemContainer{
                              RAMBar256K16, RAMBar2M16, RAMBar16M16, RAMBar128M16, RAMBar768M16, RAMBar2G16,
                                                        RAMBar16M32, RAMBar128M32, RAMBar768M32, RAMBar2G32,
 
-     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4,
+    CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4,
     CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4,
     
     CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4,
@@ -98,9 +99,12 @@ public enum ItemList implements IItemContainer{
     ResistanceT4,              CoilT4,
     CircuitBoardBasicUncompleted,CircuitBoardGoodUncompleted1,CircuitBoardGoodUncompleted2,
 //Compact
+    //AdvancedRocketry
     ArmorAirSealant,SpaceSuitCloth,
-    IntelligentCore,
-    CrucibleModelInnerLayer,
+    //AppliedEnergistics2
+    IntelligentCore,RefinedStoragePart,RefinedFluidStoragePart,
+    //Gregtech6
+    CrucibleModelInnerLayer,Co60FlawDetectionCore,Tm170FlawDetectionCore,
     //engine parts made by hand
     EngineCrankShaftManual1, EngineCrankShaftManual2,EngineCrankShaftManual3, EngineCrankShaftManual4,EngineCrankShaftManual5, EngineCrankShaftManual6,EngineCrankShaftManual7, EngineCrankShaftManual8,
     EngineCylinderManual1, EngineCylinderManual2,EngineCylinderManual3, EngineCylinderManual4,EngineCylinderManual5, EngineCylinderManual6,EngineCylinderManual7, EngineCylinderManual8,
@@ -112,6 +116,9 @@ public enum ItemList implements IItemContainer{
 
     EngineTurbo1, EngineTurbo2,EngineTurbo3, EngineTurbo4,EngineTurbo5, EngineTurbo6,EngineTurbo7, EngineTurbo8,
 
+    
+
+    VibrateDetector,
 //Chemistry
     ProtonExchangeMembrane,
 
@@ -127,6 +134,11 @@ public enum ItemList implements IItemContainer{
     FusionTokamakData0,FusionTokamakData1,FusionTokamakData2,
     //itemBatteryPole
     BatteryPoleGold, BatteryPolePlatinum,BatteryPoleCarbon,BatteryPoleGraphene,
+    //itemTurbine
+    TurbineSteelSteam, TurbineSteelGas, TurbineStainlessSteelSteam, TurbineStainlessSteelGas, TurbineTitaniumSteam, TurbineTitaniumGas, TurbineTrinitaniumSteam, TurbineTrinitaniumGas, TurbineHSSGSteam, TurbineHSSGGas, TurbineHSSESteam, TurbineHSSEGas, TurbineHSSSSteam, TurbineHSSSGas, TurbineTungstenSteelSteam, TurbineTungstenSteelGas, TurbineTungstenSteam, TurbineTungstenGas, TurbineVibramantiumSteam, TurbineVibramantiumGas,
+    TurbineSteelSteamChecked, TurbineSteelGasChecked, TurbineStainlessSteelSteamChecked, TurbineStainlessSteelGasChecked, TurbineTitaniumSteamChecked, TurbineTitaniumGasChecked, TurbineTrinitaniumSteamChecked, TurbineTrinitaniumGasChecked, TurbineHSSGSteamChecked, TurbineHSSGGasChecked, TurbineHSSESteamChecked, TurbineHSSEGasChecked, TurbineHSSSSteamChecked, TurbineHSSSGasChecked, TurbineTungstenSteelSteamChecked, TurbineTungstenSteelGasChecked, TurbineTungstenSteamChecked, TurbineTungstenGasChecked, TurbineVibramantiumSteamChecked, TurbineVibramantiumGasChecked,
+    TurbineSteelSteamDamaged, TurbineSteelGasDamaged, TurbineStainlessSteelSteamDamaged, TurbineStainlessSteelGasDamaged, TurbineTitaniumSteamDamaged, TurbineTitaniumGasDamaged, TurbineTrinitaniumSteamDamaged, TurbineTrinitaniumGasDamaged, TurbineHSSGSteamDamaged, TurbineHSSGGasDamaged, TurbineHSSESteamDamaged, TurbineHSSEGasDamaged, TurbineHSSSSteamDamaged, TurbineHSSSGasDamaged, TurbineTungstenSteelSteamDamaged, TurbineTungstenSteelGasDamaged, TurbineTungstenSteamDamaged, TurbineTungstenGasDamaged, TurbineVibramantiumSteamDamaged, TurbineVibramantiumGasDamaged,
+    TurbineSteelSteamCheckedDamaged, TurbineSteelGasCheckedDamaged, TurbineStainlessSteelSteamCheckedDamaged, TurbineStainlessSteelGasCheckedDamaged, TurbineTitaniumSteamCheckedDamaged, TurbineTitaniumGasCheckedDamaged, TurbineTrinitaniumSteamCheckedDamaged, TurbineTrinitaniumGasCheckedDamaged, TurbineHSSGSteamCheckedDamaged, TurbineHSSGGasCheckedDamaged, TurbineHSSESteamCheckedDamaged, TurbineHSSEGasCheckedDamaged, TurbineHSSSSteamCheckedDamaged, TurbineHSSSGasCheckedDamaged, TurbineTungstenSteelSteamCheckedDamaged, TurbineTungstenSteelGasCheckedDamaged, TurbineTungstenSteamCheckedDamaged, TurbineTungstenGasCheckedDamaged, TurbineVibramantiumSteamCheckedDamaged, TurbineVibramantiumGasCheckedDamaged,
     ;
 
     //Copied from gt6

@@ -23,10 +23,15 @@ package cn.kuzuanpa.ktfruaddon.tile.machine;
 import cn.kuzuanpa.ktfruaddon.code.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.code.OreScanner;
 import cpw.mods.fml.common.FMLLog;
+import gregapi.old.Textures;
+import gregapi.render.IIconContainer;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.Level;
+
+import static gregapi.data.CS.PX_P;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine {
     public OreScanner oreVeinScanner;
@@ -52,8 +57,26 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
         //if(!isServerSide()&&aTimer%100==0)oreVeinScanner.rendOres(-10);
 
     }
-@Override
+    public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
+        switch (aRenderPass) {
+            case 0:
+                return box(aBlock, PX_P[0] + 0.001, PX_P[0], PX_P[0] + 0.001, PX_P[16] - 0.001, PX_P[5], PX_P[16] - 0.001);
+            case 1:
+                return box(aBlock, PX_P[0] + 0.0001, PX_P[6], PX_P[0], PX_P[16], PX_P[16], PX_P[16]);
+        }
+        return true;
+    }
+    @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.machine.code";
     }
+
+    @Override
+    public int getRenderPasses2(Block aBlock, boolean[] aShouldSideBeRendered) {
+        return 2;
+    }
+
+    public static IIconContainer
+            sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/common"),
+            sTextureCommosn= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/commsson");
 }

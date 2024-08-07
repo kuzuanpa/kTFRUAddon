@@ -123,8 +123,7 @@ public class materialPreInit {
         matList.DiphenylCarbonate.registerC(22039,"DiphenylCarbonate","Diphenyl Carbonate",82,301,255,255,255,10,"PhOCOOPh")
                 .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
         //PC,聚碳酸酯
-        matList.Polycarbonate.registerC(22040,"Polycarbonate","Polycarbonate",220,310,255,255,255,10,"C"+NUM_SUB[16]+"H"+NUM_SUB[18]+"O"+NUM_SUB[5])
-                .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
+        //MT.Polycarbonate
         //四氟乙烯
         matList.Tetrafluoroethylene.registerC(22041,"Tetrafluoroethylene","Tetrafluoroethylene",-142,-76,255,255,255,130,"CF"+NUM_SUB[2]+"CF"+NUM_SUB[2])
                 .put(TD.Compounds.DECOMPOSABLE);

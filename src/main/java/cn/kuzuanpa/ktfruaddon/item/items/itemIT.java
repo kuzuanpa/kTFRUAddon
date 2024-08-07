@@ -10,10 +10,13 @@ package cn.kuzuanpa.ktfruaddon.item.items;
 
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
 import gregapi.data.LH;
+import gregapi.data.MT;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
+import gregapi.oredict.OreDictItemData;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
+import static gregapi.data.CS.U;
 
 public class itemIT extends MultiItemRandom {
     public itemIT() {
@@ -24,9 +27,22 @@ public class itemIT extends MultiItemRandom {
 
     @Override
     public void addItems() {
-        ItemList.SiliconBoulePure.set(addItem(9701, "Pure Silicon Boule", "Ready to Cut into Plates"));
-        ItemList.MoO2Boule.set(addItem(9702, "MoO2 Boule", "Ready to Cut into Plates"));
-        ItemList.MoO2BoulePure.set(addItem(9703, "Pure MoO2 Boule", "Ready to Cut into Plates"));
+
+
+
+        ItemList.SiliconBoulePure             .set(addItem(9701, "Pure Silicon Boule", "Ready to Cut into Plates"));
+        ItemList.MoO2Boule                    .set(addItem(9702, "MoO2 Boule", "Ready to Cut into Plates"));
+        ItemList.MoO2BoulePure                .set(addItem(9703, "Pure MoO2 Boule", "Ready to Cut into Plates"));
+        ItemList.MonocrystallineSteel         .set(addItem(9704, "Monocrystalline Steel","")          , new OreDictItemData(MT.Steel         , 48*U));
+        ItemList.MonocrystallineStainlessSteel.set(addItem(9705, "Monocrystalline StainlessSteel","") , new OreDictItemData(MT.StainlessSteel, 48*U));
+        ItemList.MonocrystallineTitanium      .set(addItem(9706, "Monocrystalline Titanium","")       , new OreDictItemData(MT.Ti            , 48*U));
+        ItemList.MonocrystallineTrinitanium   .set(addItem(9707, "Monocrystalline Trinitanium","")    , new OreDictItemData(MT.Trinitanium   , 48*U));
+        ItemList.MonocrystallineHSSG          .set(addItem(9708, "Monocrystalline HSS-G","")          , new OreDictItemData(MT.HSSG          , 48*U));
+        ItemList.MonocrystallineHSSE          .set(addItem(9709, "Monocrystalline HSS-E","")          , new OreDictItemData(MT.HSSE          , 48*U));
+        ItemList.MonocrystallineHSSS          .set(addItem(9710, "Monocrystalline HSS-S","")          , new OreDictItemData(MT.HSSS          , 48*U));
+        ItemList.MonocrystallineTungstenSteel .set(addItem(9711, "Monocrystalline TungstenSteel","")  , new OreDictItemData(MT.TungstenSteel , 48*U));
+        ItemList.MonocrystallineTungsten      .set(addItem(9712, "Monocrystalline Tungsten","")       , new OreDictItemData(MT.W             , 48*U));
+        ItemList.MonocrystallineVibramantium  .set(addItem(9713, "Monocrystalline Vibramantium","")   , new OreDictItemData(MT.Vibramantium  , 48*U));
 
         ItemList.SiliconPlate8inchT1.set(addItem(9800, "SiliconPlate8inchT1", "Next Step:"+ LH.Chat._CYAN+"Coat"));
         ItemList.SiliconPlate8inchT2.set(addItem(9801, "SiliconPlate8inchT2", "Next Step:"+ LH.Chat._CYAN+"Clean"));

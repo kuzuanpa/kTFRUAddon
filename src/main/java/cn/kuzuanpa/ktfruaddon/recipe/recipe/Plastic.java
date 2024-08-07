@@ -41,7 +41,7 @@ public class Plastic {
         RM.           Mixer              .addRecipe0(F,140,200,FL.array(FL.Propylene.make(100),flList.Benzene.make(100),FL.Oxygen.make(50)),FL.array(flList.Phenol.make(100),flList.Acetone.make(100)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140,120,FL.array(MT.Cl.gas(U10,false),flList.CarbonMonoxide.make(100)),FL.array(flList.Phosgene.make(100)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140,120,FL.array(flList.Phosgene.make(100),flList.Phenol.make(100)),ZL_FS,matList.DiphenylCarbonate.getDust(1));
-        recipeManager.HeatMixer          .addRecipe2(F,140,110,matList.DiphenylCarbonate.getDust(1),matList.BPA.getDust(1),ZL_FS,ZL_FS,matList.Polycarbonate.getDust(1));
+        recipeManager.HeatMixer          .addRecipe2(F,140,110,matList.DiphenylCarbonate.getDust(1),matList.BPA.getDust(1),ZL_FS,ZL_FS,OP.dust.mat(MT.Polycarbonate,2));
         recipeManager.HeatMixer          .addRecipe1(F,64 ,82,OP.dust.mat(MT.Al,1),FL.array(flList.Ethane.make(1500)),ZL_FS,matList.TriethylAluminium.getDust(1));
         RM.           Mixer              .addRecipe0(F,32 ,100,FL.array(MT.Cl.gas(U10,false),FL.Water.make(100)),FL.array(flList.HypochlorousAcid.make(100),FL.make("hydrochloricacid",100)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140,120,FL.array(flList.Methanol.make(200),MT.H2SO4.liquid(0,false)),FL.array(flList.Methoxymethane.make(200),FL.Water.make(100)),ZL_IS);
@@ -58,7 +58,7 @@ public class Plastic {
         recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.CarbonMonoxide.make(100),FL.Propylene.make(100),MT.HF.gas(0,false)),FL.array(flList.MethacrylicAcid.make(100)),ZL_IS);
 
         RM           .Bath               .addRecipe2(F,0,80,OP.dust.mat(MT.NaOH,4),matList.BPA.getDust(4),FL.array(FL.Water.make(1000)),FL.array(flList.SolutionBPASodium.make(1000)),ZL_IS);
-        recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.SolutionBPASodium.make(1000),flList.Phosgene.make(200),flList.Dichloromethane.make(200)),ZL_FS,matList.Polycarbonate.getDust(4));
+        recipeManager.HeatMixer          .addRecipe0(F,110,110,FL.array(flList.SolutionBPASodium.make(1000),flList.Phosgene.make(200),flList.Dichloromethane.make(200)),ZL_FS,OP.dust.mat(MT.Polycarbonate,2));
 
         recipeManager.HeatMixer          .addRecipe1(F,142,380,OP.dust.mat(MT.Zn,1),FL.array(MT.HF.gas(16*U10,false),flList.Chloroform.make(400)),FL.array(flList.Tetrafluoroethylene.make(400),MT.HCl.gas(2*U,false)),matList.ZincChloride.getDust(3));
 

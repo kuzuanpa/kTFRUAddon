@@ -164,7 +164,7 @@ public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
                 boolean tInventoryChanged = mInventoryChanged;
                 mInventoryChanged = F;
                 doOutputItems();
-                if (mInventoryChanged) mOutputBlocked = 0; else mInventoryChanged |= tInventoryChanged;
+                if (mInventoryChanged) mOutputBlocked = 0; else mInventoryChanged = tInventoryChanged;
             }
 
             tOutputEmpty = T;
