@@ -19,21 +19,24 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 
-import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
+import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.FM;
 import gregapi.data.LH;
 import gregapi.data.LH.Chat;
 import gregapi.fluid.FluidTankGT;
+import gregapi.oredict.OreDictMaterial;
 import gregapi.recipes.Recipe;
 import gregapi.recipes.Recipe.RecipeMap;
+import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -46,24 +49,31 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	public FluidTankGT[] mTanks = new FluidTankGT[] {mInputTank, mTanksOutput[0], mTanksOutput[1], mTanksOutput[2]};
 	public RecipeMap mRecipes = FM.Gas;
 	public Recipe mLastRecipe = null;
-	
+
 	@Override
 	public void readFromNBT2(NBTTagCompound aNBT) {
 		super.readFromNBT2(aNBT);
 		if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
-		for (int i = 0; i < mTanksOutput.length; i++)
-		mTanksOutput[i].readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(mEnergyIN.mMax*16);
-		mInputTank.readFromNBT(aNBT, NBT_TANK).setCapacity(mEnergyIN.mMax*4);
+		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(mRateMax*16);
+		mInputTank.readFromNBT(aNBT, NBT_TANK).setCapacity(mRateMax*4);
 	}
 	
 	@Override
 	public void writeToNBT2(NBTTagCompound aNBT) {
 		super.writeToNBT2(aNBT);
-		for (int i = 0; i < mTanksOutput.length; i++)
-		mTanksOutput[i].writeToNBT(aNBT, NBT_TANK+"."+i);
+		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].writeToNBT(aNBT, NBT_TANK+"."+i);
 		mInputTank.writeToNBT(aNBT, NBT_TANK);
 	}
-	
+
+	@Override
+	public void transformTurbineItem() {
+		int meta = slot(0).getItemDamage();
+		mTurbineDurability = getTurbineDurability(OreDictMaterial.get(meta));
+		mTurbineEfficiency = getTurbineEfficiency(OreDictMaterial.get(meta));
+		usingCheckedTurbine = prefixList.gasLargeTurbineChecked.contains(slot(0));
+		ST.set(slot(0), prefixList.gasLargeTurbineDamaged.mat(OreDictMaterial.get(meta),1));
+	}
+
 	static {
 		LH.add("gt.tooltip.multiblock.gasturbine.1", "3x3x4 of 35 ");
 		LH.add("gt.tooltip.multiblock.gasturbine.2", "Main centered on the 3x3 facing outwards");
@@ -80,11 +90,7 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 		aList.add(Chat.ORANGE   + LH.get("gt.tooltip.multiblock.gasturbine.4"));
 		super.addToolTips(aList, aStack, aF3_H);
 	}
-	
-	@Override
-	public void addToolTipsEnergy(List<String> aList, ItemStack aStack, boolean aF3_H) {
-		mEnergyOUT.addToolTips(aList, aStack, aF3_H, null, T);
-	}
+
 	
 	@Override
 	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
@@ -105,47 +111,39 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	
 	@Override
 	public void doConversion(long aTimer) {
-		if (mStorage.mEnergy >= mConverter.mEnergyIN.mMax) {
-			// hacking my own code, lol
-			long tEnergy = mStorage.mEnergy;
-			mStorage.mEnergy = mConverter.mEnergyIN.mMax;
-			super.doConversion(aTimer);
-			mStorage.mEnergy = tEnergy - mConverter.mEnergyIN.mMax;
-			return;
-		}
 		for (FluidTankGT tank : mTanksOutput) if (tank.has()) {
-			FL.move(tank, WD.te(worldObj,getOffset(OPOS[mFacing], 4),mFacing,false));
-			if (FL.gas(tank) && !WD.hasCollide(worldObj, getOffset(OPOS[mFacing], 4))) tank.setEmpty();
+			ChunkCoordinates pos = getOffset(OPOS[mFacing], 4);
+			pos.posY-=1;
+			FL.move(tank, WD.te(worldObj,pos,mFacing,false));
+			if (FL.gas(tank) && !WD.hasCollide(worldObj, pos)) tank.setEmpty();
 		}
-		if (!mStopped && mInputTank.has() && slotHas(0) && mTanksOutput[0].underHalf() && mTanksOutput[1].underHalf() && mTanksOutput[2].underHalf()) {
-			Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, F, mEnergyIN.mMax, NI, mInputTank.AS_ARRAY, ZL_IS);
+		if (!mForcedStopped && mInputTank.has() && slotHas(0) && mTanksOutput[0].underHalf() && mTanksOutput[1].underHalf() && mTanksOutput[2].underHalf()) {
+			Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, F, Integer.MAX_VALUE, NI, mInputTank.AS_ARRAY, ZL_IS);
 			if (tRecipe != null) {
-				if(isTurbineAboutToBreak&&getRandomNumber(20)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
+				if(isTurbineAboutToBreak&&getRandomNumber(10)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
 				mLastRecipe = tRecipe;
 				if (tRecipe.mEUt < 0 && tRecipe.mDuration > 0) {
-					int tMax = UT.Code.bindInt(UT.Code.divup(mEnergyIN.mMax - mStorage.mEnergy, -tRecipe.mEUt * tRecipe.mDuration)), tParallel = tRecipe.isRecipeInputEqual(tMax, mInputTank.AS_ARRAY, ZL_IS);
+					int tMax = UT.Code.bindInt(UT.Code.divup((long) ((mOverclock? mRate*mTurbineEfficiency : mRate*Math.min(mTurbineEfficiency,2)) - mEnergyStored), -tRecipe.mEUt * tRecipe.mDuration));
+					int tParallel = tRecipe.isRecipeInputEqual(tMax, mInputTank.AS_ARRAY, ZL_IS);
 					if (tParallel < tMax) mInputTank.setEmpty();
 					if (tParallel > 0) {
-						mStorage.mEnergy -= tParallel * tRecipe.mEUt * tRecipe.mDuration;
+						mEnergyStored -= tParallel * tRecipe.mEUt * tRecipe.mDuration;
 						damageTurbine(tParallel * tRecipe.mEUt * tRecipe.mDuration,TURBINE_GAS);
 						for (int i = 0; i < tRecipe.mFluidOutputs.length && i < mTanksOutput.length; i++) {
 							if (!mTanksOutput[i].fillAll(tRecipe.mFluidOutputs[i], tParallel)) {
-								mStorage.mEnergy = 0;
+								mEnergyStored = 0;
 							}
 						}
-						super.doConversion(aTimer);
 						return;
 					}
 				}
 			}
 		}
 
-		mStorage.mEnergy -= mConverter.mEnergyIN.mMax;
-		if (mStorage.mEnergy < 0) mStorage.mEnergy = 0;
-		super.doConversion(aTimer);
+		if (mEnergyStored < 0) mEnergyStored = 0;
 	}
 	
-	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mStopped && mRecipes.containsInput(aFluidToFill, this, NI) ? mInputTank : null;}
+	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && mRecipes.containsInput(aFluidToFill, this, NI) ? mInputTank : null;}
 	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
 	
 	@Override
@@ -159,12 +157,15 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	}
 	@Override
 	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-		if (aSlot >= 1||! (aStack.getItem() instanceof itemTurbine && aStack.getItemDamage()>5000 && aStack.getItemDamage()<itemTurbine.offsetDamaged)) return F;
+		if (aSlot >= 1||! (prefixList.gasLargeTurbine.contains(aStack) || prefixList.gasLargeTurbineChecked.contains(aStack))) return F;
 		if (slot(0)== null) {
 			mTurbineDurability =0;
 			return T;
 		}
 		return F;
 	}
+
+
 	@Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.turbine.gas";}
+
 }

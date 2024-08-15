@@ -13,7 +13,7 @@ import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.util.ST;
 
-import static cn.kuzuanpa.ktfruaddon.recipe.recipeManager.ParticleCollider;
+import static cn.kuzuanpa.ktfruaddon.recipe.recipeMaps.ParticleCollider;
 import static gregapi.data.CS.T;
 import static gregapi.data.CS.U;
 

@@ -11,7 +11,7 @@
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 import cn.kuzuanpa.ktfruaddon.fluid.flList;
-import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.recipe.recipeMaps;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 
@@ -22,11 +22,11 @@ public class FakeRecipe {
         MultiTileEntityRegistry gRegistry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
         MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
 
-        recipeManager.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilExtraHeavy.make(1),ZL_IS);
-        recipeManager.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilHeavy.make(1),ZL_IS);
-        recipeManager.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilMedium.make(1),ZL_IS);
-        recipeManager.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilNormal.make(1),ZL_IS);
-        recipeManager.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilLight.make(1),ZL_IS);
-        recipeManager.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Air.make(1), FL.Gas_Natural.make(1),ZL_IS);
+        recipeMaps.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilExtraHeavy.make(1),ZL_IS);
+        recipeMaps.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilHeavy.make(1),ZL_IS);
+        recipeMaps.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilMedium.make(1),ZL_IS);
+        recipeMaps.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilNormal.make(1),ZL_IS);
+        recipeMaps.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Water.make(1), flList.AqueousOilLight.make(1),ZL_IS);
+        recipeMaps.OilMiner.addRecipe1(false,false,true,false,true, 1, 1, kRegistry.getItem(30013), FL.Air.make(1), FL.Gas_Natural.make(1),ZL_IS);
     }
 }

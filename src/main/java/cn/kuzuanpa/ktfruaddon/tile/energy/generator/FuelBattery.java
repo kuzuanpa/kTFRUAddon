@@ -21,7 +21,7 @@ package cn.kuzuanpa.ktfruaddon.tile.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips;
-import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.recipe.recipeMaps;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.code.TagData;
 import gregapi.data.FL;
@@ -72,7 +72,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     public short mEfficiency = 10000;
     public long mEnergy = 0, mRate = 32;
     public TagData mEnergyTypeEmitted = TD.Energy.EU;
-    public RecipeMap mRecipes = recipeManager.FuelBattery;
+    public RecipeMap mRecipes = recipeMaps.FuelBattery;
     public Recipe mLastRecipe = null;
     public FluidTankGT[] mTanks = {new FluidTankGT(1000),new FluidTankGT(1000), new FluidTankGT(1000), new FluidTankGT(1000), new FluidTankGT(1000)}
 

@@ -20,12 +20,15 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 
 import cn.kuzuanpa.ktfruaddon.fluid.flList;
-import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
+import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.LH;
 import gregapi.data.LH.Chat;
 import gregapi.fluid.FluidTankGT;
+import gregapi.oredict.OreDictMaterial;
+import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
@@ -33,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -50,8 +54,8 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 		if (aNBT.hasKey(NBT_OUTPUT_SU)) mEnergyProducedNextTick = aNBT.getLong(NBT_OUTPUT_SU);
 
 		for (int i = 0; i < mTanks.length; i++) mTanks[i].readFromNBT(aNBT, NBT_TANK+"."+i);
-		mTanks[0].setCapacity(mEnergyIN.mMax*4);
-		mTanks[1].setCapacity(mEnergyIN.mMax*4).setVoidExcess();
+		mTanks[0].setCapacity(mRateMax*200);
+		mTanks[1].setCapacity(mRateMax*4).setVoidExcess();
 	}
 	
 	@Override
@@ -68,23 +72,18 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 		LH.add("gt.tooltip.multiblock.steamturbine.3", "Input only possible at frontal 3x3");
 		LH.add("gt.tooltip.multiblock.steamturbine.4", "Distilled Water can be pumped out at Bottom Layer");
 	}
-	
+
 	@Override
 	public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
 		aList.add(Chat.CYAN     + LH.get(LH.STRUCTURE) + ":");
+
 		aList.add(Chat.WHITE    + LH.get("gt.tooltip.multiblock.steamturbine.1") + MultiTileEntityRegistry.getRegistry(getMultiTileEntityRegistryID()).getLocal(mTurbineWalls));
 		aList.add(Chat.WHITE    + LH.get("gt.tooltip.multiblock.steamturbine.2"));
 		aList.add(Chat.WHITE    + LH.get("gt.tooltip.multiblock.steamturbine.3"));
 		aList.add(Chat.WHITE    + LH.get("gt.tooltip.multiblock.steamturbine.4"));
 		super.addToolTips(aList, aStack, aF3_H);
 	}
-	
-	@Override
-	public void addToolTipsEnergy(List<String> aList, ItemStack aStack, boolean aF3_H) {
-		super.addToolTipsEnergy(aList, aStack, aF3_H);
-		aList.add(Chat.ORANGE   + LH.get(LH.EMITS_USED_STEAM) + " ("+LH.get(LH.FACE_SIDES)+", 95%)");
-	}
-	
+
 	@Override
 	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
 		long rReturn = super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
@@ -103,13 +102,14 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 	@Override
 	public void doConversion(long aTimer) {
 		if (mEnergyProducedNextTick > 0) {
-			mStorage.mEnergy += mEnergyProducedNextTick;
+			mEnergyStored += mEnergyProducedNextTick;
 			mEnergyProducedNextTick = 0;
-		} else if (!mStopped && slotHas(0) &&  mTanks[0].has(getEnergySizeInputMin(mEnergyIN.mType, SIDE_ANY) * 2)) {
-			long tSteam = mTanks[0].amount();
+		} else if (!mForcedStopped && slotHas(0) &&  mTanks[0].has(getEnergySizeInputMin(mEnergyTypeEmitted, SIDE_ANY) * 2)) {
+			long tSteam = (long) (mRate*(mOverclock?mTurbineEfficiency:Math.min(mTurbineEfficiency,2)));
+			FMLLog.log(Level.FATAL,tSteam+"");
 			mSteamCounter += tSteam;
-			mStorage.mEnergy += tSteam / 2;
-			damageTurbine(tSteam / 2,TURBINE_STEAM);
+			mEnergyStored += tSteam / 2;
+			damageTurbine((long) (tSteam / (mOverclock?0.25F:2)),TURBINE_STEAM);
 			if(isTurbineAboutToBreak&&getRandomNumber(20)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
 			mEnergyProducedNextTick += tSteam / 2;
 			mTanks[0].setEmpty();
@@ -118,15 +118,21 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 				mSteamCounter %= STEAM_PER_WATER;
 			}
 		}
-		super.doConversion(aTimer);
 	}
-	
-	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mStopped && FL.steam(aFluidToFill) ? mTanks[0] : null;}
+	@Override
+	public void transformTurbineItem() {
+		int meta = slot(0).getItemDamage();
+		mTurbineDurability = getTurbineDurability(OreDictMaterial.get(meta));
+		mTurbineEfficiency = getTurbineEfficiency(OreDictMaterial.get(meta));
+		usingCheckedTurbine=prefixList.steamLargeTurbineChecked.contains(slot(0));
+		ST.set(slot(0), prefixList.steamLargeTurbineDamaged.mat(OreDictMaterial.get(meta),1));
+	}
+	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && FL.steam(aFluidToFill) ? mTanks[0] : null;}
 	@Override protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {return mTanks[1];}
 	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
 	@Override
 	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-		if (aSlot >= 1||! (aStack.getItem() instanceof itemTurbine && aStack.getItemDamage()<itemTurbine.offsetDamaged)) return F;
+		if (aSlot >= 1||! (prefixList.steamLargeTurbine.contains(aStack) || prefixList.steamLargeTurbineChecked.contains(aStack))) return F;
 		if (slot(0)== null) {
 			mTurbineDurability =0;
 			return T;

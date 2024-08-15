@@ -22,7 +22,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
-import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
@@ -72,7 +72,7 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
     public long mRate=32,mEnergy=0, maxEnergyStorePerLayer =5000000, maxEmitRatePerLayer =256;
     public double timeRemains=-1;
     public TE_Behavior_Active_Trinary mActivity = null;
-    public Recipe.RecipeMap mRecipes = recipeManager.FluidHeating;
+    public Recipe.RecipeMap mRecipes = recipeMaps.FluidHeating;
     public Recipe mLastRecipe = null;
     private TagData mEnergyTypeEmitted=TD.Energy.HU;
     public long mTemperature=DEFAULT_ENVIRONMENT_TEMPERATURE;

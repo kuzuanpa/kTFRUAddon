@@ -13,7 +13,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakExp;
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
-import cn.kuzuanpa.ktfruaddon.recipe.recipeManager;
+import cn.kuzuanpa.ktfruaddon.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.IComputeNode;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -61,7 +61,7 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public float dischargeRate=0.2F, progress =0;
     public long mEnergy=0 , mEnergyCharged = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0,computePowerNeeded=1024L;
     public TagData mEnergyTypeAccepted = TD.Energy.EU, mEnergyTypeCharging = TD.Energy.LU;
-    public Recipe.RecipeMap mRecipes = recipeManager.FusionTokamak;
+    public Recipe.RecipeMap mRecipes = recipeMaps.FusionTokamak;
     public Recipe mCurrentRecipe=null,lastRecipe=null;
     public ItemStack[] mOutputItems = ZL_IS;
     public FluidStack[] mOutputFluids = ZL_FS;

@@ -11,7 +11,11 @@
 package cn.kuzuanpa.ktfruaddon.item;
 
 import cn.kuzuanpa.ktfruaddon.item.items.*;
+import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import gregapi.item.prefixitem.PrefixItem;
+
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 
 public class itemPreInit {
     public static void init(FMLPreInitializationEvent aEvent){
@@ -22,6 +26,15 @@ public class itemPreInit {
         new itemCompact();
         new itemChemistry();
         new itemTechnological();
-        new itemTurbine();
+
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.flywheel", prefixList.flywheel);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.blade", prefixList.largeTurbineBlade);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.gas", prefixList.gasLargeTurbine);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.steam", prefixList.steamLargeTurbine);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.gas.checked", prefixList.gasLargeTurbineChecked);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.steam.checked", prefixList.steamLargeTurbineChecked);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.gas.damaged", prefixList.gasLargeTurbineDamaged);
+        new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.steam.damaged", prefixList.steamLargeTurbineDamaged);
+
     }
 }
