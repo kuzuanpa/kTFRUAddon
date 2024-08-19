@@ -196,6 +196,10 @@ public class fluidPreInit {
 
         //双酚钠盐溶液
         flList.SolutionBPASodium.register("solutionbpasodium","BPA & Sodium Solution",null,LIQUID);
+        //氧化钇锆
+        flList.YttriumZirconiumOxide.register("yttriumzirconiumoxide","Yttrium-Zirconium Oxide",null,LIQUID,1000,2700);
+
+
         flList.SolutionPotassiumHydroxide.registerSolution("solutionpotassiumhydroxide","Potassium Hydroxide Solution",MT.KOH,1000);
         flList.MoltenTeflon.registerMolten("teflon","Teflon",MT.Teflon);
         flList.MoltenBakelite.registerMolten("bakelite","Bakelite",MT.Bakelite);

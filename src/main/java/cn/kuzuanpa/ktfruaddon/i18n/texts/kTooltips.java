@@ -47,5 +47,11 @@ public class kTooltips {
             ,OIL_MINER_1="ktfru.tooltip.multiblock.oilminer.1"
             ,OIL_MINER_2="ktfru.tooltip.multiblock.oilminer.2"
             ,OIL_MINER_3="ktfru.tooltip.multiblock.oilminer.3"
+            ,TURBINE_POWERRATE="ktfru.tooltip.item.turbine.powerrate"
+            ,TURBINE_DURABILITY="ktfru.tooltip.item.turbine.durability"
+            ,TURBINE_UNCHECKED="ktfru.tooltip.item.turbine.unchecked"
+            ,TURBINE_DAMAGED="ktfru.tooltip.item.turbine.damaged"
+            ,FLYWHEEL_MaxRPM="ktfru.tooltip.item.flywheel.maxRPM"
+            ,FLYWHEEL_STORAGE="ktfru.tooltip.item.flywheel.storage"
     ;
 }

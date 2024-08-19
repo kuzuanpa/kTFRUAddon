@@ -38,7 +38,11 @@ public class tankGasCompressed extends MultiTileEntityTank {
         super.addToolTips(aList, aStack, aF3_H);
     }
 
-
+    static {
+        LH.add(kTooltips.TANK_GAS_COMPRESSED_0,"");
+        LH.add(kTooltips.TANK_GAS_COMPRESSED_1,"");
+        LH.add(kTooltips.TANK_GAS_COMPRESSED_2,"");
+    }
     @Override
     public boolean checkStructure2() {
         int tX = getOffsetXN(mFacing), tY = getOffsetYN(mFacing), tZ = getOffsetZN(mFacing);

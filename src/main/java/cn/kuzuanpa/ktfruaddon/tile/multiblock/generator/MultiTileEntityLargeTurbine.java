@@ -21,6 +21,8 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTurbine;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTurbine;
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
+import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.code.TagData;
@@ -39,7 +41,9 @@ import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.*;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -159,7 +163,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if(!mStructureOkay) {setActive(false); return;}
 
 		updateClientData();
-		if(!mActive&&mTurbineEfficiency==0&&slotHas(0)) mTurbineEfficiency = getTurbineEfficiency(OreDictMaterial.get(slot(0).getItemDamage()));
+		if(!mActive&&mTurbineEfficiency==0&&slotHas(0)) mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(slot(0).getItemDamage()));
 		float factor = mOverclock? (float) (mTurbineEfficiency / Math.floor(mTurbineEfficiency)) :Math.min(mTurbineEfficiency,2);
 		setActive(ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), mOverclock? (long) Math.floor(mTurbineEfficiency) :1, this, getEmittingTileEntity()) > 0);
 		if(mActive) mEnergyStored-= (long) (mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1));
@@ -200,8 +204,14 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		super.addToolTips(aList, aStack, aF3_H);
 	}
 
-	public static long getTurbineDurability(OreDictMaterial aMat){return (long)(aMat.mToolQuality==0?0.5:aMat.mToolQuality*128)*aMat.mToolDurability*3600*10L;}
-	public static long getTurbineEfficiency(OreDictMaterial aMat){return (long)(aMat.mToolQuality /4D + Math.pow(aMat.mToolSpeed, 2)/64D - aMat.mMass/800F);}
+	@Override
+	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+		if (aTool.equals(TOOL_hammer)) {
+			mOverclock=!mOverclock;
+			aChatReturn.add(LH.Chat.ORANGE+LH.get(kMessages.CHANGING_STRUCTURE)+" "+mOverclock);
+		}
+		return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+	}
 
 	public abstract void transformTurbineItem();
 

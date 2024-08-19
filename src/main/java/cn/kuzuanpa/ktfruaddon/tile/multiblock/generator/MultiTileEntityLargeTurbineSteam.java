@@ -20,6 +20,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 
 import cn.kuzuanpa.ktfruaddon.fluid.flList;
+import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -122,17 +123,17 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 	@Override
 	public void transformTurbineItem() {
 		int meta = slot(0).getItemDamage();
-		mTurbineDurability = getTurbineDurability(OreDictMaterial.get(meta));
-		mTurbineEfficiency = getTurbineEfficiency(OreDictMaterial.get(meta));
-		usingCheckedTurbine=prefixList.steamLargeTurbineChecked.contains(slot(0));
-		ST.set(slot(0), prefixList.steamLargeTurbineDamaged.mat(OreDictMaterial.get(meta),1));
+		mTurbineDurability = itemTurbine.getTurbineDurability(OreDictMaterial.get(meta));
+		mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(meta));
+		usingCheckedTurbine=prefixList.turbineLargeSteamChecked.contains(slot(0));
+		ST.set(slot(0), prefixList.turbineLargeSteamDamaged.mat(OreDictMaterial.get(meta),1));
 	}
 	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && FL.steam(aFluidToFill) ? mTanks[0] : null;}
 	@Override protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {return mTanks[1];}
 	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
 	@Override
 	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-		if (aSlot >= 1||! (prefixList.steamLargeTurbine.contains(aStack) || prefixList.steamLargeTurbineChecked.contains(aStack))) return F;
+		if (aSlot >= 1||! (prefixList.turbineLargeSteam.contains(aStack) || prefixList.turbineLargeSteamChecked.contains(aStack))) return F;
 		if (slot(0)== null) {
 			mTurbineDurability =0;
 			return T;

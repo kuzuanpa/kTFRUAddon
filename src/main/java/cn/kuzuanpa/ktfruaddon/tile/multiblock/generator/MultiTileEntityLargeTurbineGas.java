@@ -19,6 +19,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 
+import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
@@ -68,10 +69,10 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	@Override
 	public void transformTurbineItem() {
 		int meta = slot(0).getItemDamage();
-		mTurbineDurability = getTurbineDurability(OreDictMaterial.get(meta));
-		mTurbineEfficiency = getTurbineEfficiency(OreDictMaterial.get(meta));
-		usingCheckedTurbine = prefixList.gasLargeTurbineChecked.contains(slot(0));
-		ST.set(slot(0), prefixList.gasLargeTurbineDamaged.mat(OreDictMaterial.get(meta),1));
+		mTurbineDurability = itemTurbine.getTurbineDurability(OreDictMaterial.get(meta));
+		mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(meta));
+		usingCheckedTurbine = prefixList.turbineLargeGasChecked.contains(slot(0));
+		ST.set(slot(0), prefixList.turbineLargeGasDamaged.mat(OreDictMaterial.get(meta),1));
 	}
 
 	static {
@@ -157,7 +158,7 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	}
 	@Override
 	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-		if (aSlot >= 1||! (prefixList.gasLargeTurbine.contains(aStack) || prefixList.gasLargeTurbineChecked.contains(aStack))) return F;
+		if (aSlot >= 1||! (prefixList.turbineLargeGas.contains(aStack) || prefixList.turbineLargeGasChecked.contains(aStack))) return F;
 		if (slot(0)== null) {
 			mTurbineDurability =0;
 			return T;

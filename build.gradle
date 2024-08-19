@@ -85,7 +85,6 @@ dependencies {
     implementation "openblocks:OpenBlocks:1.7.10-1.6-1.7.10:deobf"
     implementation "openmods:OpenModsLib:1.7.10-0.10:deobf"
     implementation "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
-
 }
 
 processResources {

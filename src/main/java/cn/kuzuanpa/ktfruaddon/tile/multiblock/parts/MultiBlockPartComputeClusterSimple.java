@@ -12,7 +12,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
-import cn.kuzuanpa.ktfruaddon.item.items.itemComputer;
+import cn.kuzuanpa.ktfruaddon.item.items.random.itemComputer;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
