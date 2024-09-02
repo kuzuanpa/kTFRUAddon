@@ -1,14 +1,17 @@
-ktfru.projector.fusionReactorTokamakExperiment=托卡马克堆(实验)
-ktfru.projector.fusionReactorTokamakT1=托卡马克堆(T1)
+ktfru.projector.fusionReactorTokamakExperiment=Tokamak Reactor(Exp)
+ktfru.projector.fusionReactorTokamakT1=Tokamak Reactor(T1)
+ktfru.projector.cncMachine3=3-axle CNC Machine
+ktfru.projector.oilMiner=Oil Miner
 
 
-ktfru.tooltip.common.side.front=前侧
-ktfru.tooltip.common.side.back=后侧
-ktfru.tooltip.common.side.left=左侧
-ktfru.tooltip.common.side.right=右侧
-ktfru.tooltip.common.side.top=顶端
-ktfru.tooltip.common.side.bottom=底端
-ktfru.tooltip.common.auto=(自动)
+ktfru.tooltip.common.side.front=front
+ktfru.tooltip.common.side.back=back
+ktfru.tooltip.common.side.left=left
+ktfru.tooltip.common.side.right=right
+ktfru.tooltip.common.side.top=top
+ktfru.tooltip.common.side.bottom=bottom
+ktfru.tooltip.common.auto=(auto)
+ktfru.tooltip.common.structure_projector=See Structure in Projector.
 
 ktfru.tooltip.item.turbine.powerrate=涡轮能量系数:
 ktfru.tooltip.item.turbine.durability=涡轮耐久:
