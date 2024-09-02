@@ -60,7 +60,7 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
 
         //Initial setup
-        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
+        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 2, tile.zCoord,0);
         int brightX = bright % 65536;
         int brightY = bright / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
@@ -79,29 +79,27 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
 
         if(!tile.invempty()||tile.mActive) GL11.glCallList(bodyList+2);
 
-        GL11.glPushMatrix();
-          if(tile.mActive||tile.processTime>0) {
-              int maxProcessTime = 2000;
-              float factor = 0.5F - Math.abs((tile.processTime / (float) tile.proTime) - 0.5F);
-              if (tile.processTime > 0)
-                  GL11.glTranslatef(tile.headMoveToX / 10000F * factor, (Math.max(8 * Math.abs((tile.processTime / (float) tile.proTime) - 0.5F), 3.21F) - 4F), (tile.headMoveToZ / 10000F * factor));
+        if(tile.mActive||tile.processTime>0) {
+            int maxProcessTime = 2000;
+            float factor = 0.5F - Math.abs((tile.processTime / (float) tile.proTime) - 0.5F);
+            if (tile.processTime > 0)
+                GL11.glTranslatef(tile.headMoveToX / 10000F * factor, (Math.max(8 * Math.abs((tile.processTime / (float) tile.proTime) - 0.5F), 3.21F) - 4F), (tile.headMoveToZ / 10000F * factor));
 
-              if (tile.processTime-- < -100) {
-                  tile.processTime = tile.rng(maxProcessTime / 2) + maxProcessTime / 2;
-                  tile.proTime = tile.processTime;
-                  tile.headMoveToX = tile.rng(20000);
-                  tile.headMoveToZ = tile.rng(20000) - 10000;
-              }
-          }else {
-              tile.processTime=0;
-          }
+            if (tile.processTime-- < -100) {
+                tile.processTime = tile.rng(maxProcessTime / 2) + maxProcessTime / 2;
+                tile.proTime = tile.processTime;
+                tile.headMoveToX = tile.rng(20000);
+                tile.headMoveToZ = tile.rng(20000) - 10000;
+            }
+        }else {
+            tile.processTime=0;
+        }
 
 
         GL11.glCallList(bodyList+1);
         if(tile.processTime>100&&tile.rng(4)==0)tile.getWorldObj().spawnParticle("splash",utils.getRealX(tile.mFacing,tile.xCoord+0.5,1.8,1),tile.yCoord+1.3,utils.getRealZ(tile.mFacing,tile.zCoord+0.5,1.8,1),tile.rng(8)/32F,tile.rng(8)/32F,tile.rng(8)/32F);
 
-        GL11.glPopMatrix();
-
+        GL11.glColor4f(1,1,1,1);
         GL11.glPopMatrix();
     }
 }
