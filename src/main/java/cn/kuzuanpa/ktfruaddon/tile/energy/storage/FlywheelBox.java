@@ -10,11 +10,12 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.energy.storage;
 
+import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
 import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.code.TagData;
 import gregapi.data.CS;
+import gregapi.data.LH;
 import gregapi.data.OP;
 import gregapi.data.TD;
 import gregapi.old.Textures;
@@ -28,17 +29,20 @@ import gregapi.tileentity.energy.TileEntityBase10EnergyBatBox;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.apache.logging.log4j.Level;
+
+import java.util.List;
 
 import static gregapi.data.CS.*;
 
 public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     public long mCapacity=0, mMaxAmpere=1;
     public float mMaxRPM=0,mCurrentRPM=0,mLossRate=0;
-    public boolean isContentChanged=false;
+    public boolean isContentChanged=false,willFlywheelBreak=false;
 
     public FlywheelBox() {
         this.mEnergyType = TD.Energy.RU;
@@ -60,8 +64,32 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
         aNBT.setFloat("ktfru.nbt.maxRPM",mMaxRPM);
     }
     @Override
-    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {return false;}
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        ItemStack aStack=aPlayer.getCurrentEquippedItem();
+        if(aStack == null ) for (int i=this.invsize() - 1;i>-1;i--){
+            if(!slotHas(i)||!canExtractItem(i,slot(i),SIDE_INSIDE)) continue;
+            aPlayer.inventory.setInventorySlotContents(aPlayer.inventory.currentItem, slot(i));
+            slotKill(i);
+            return true;
+        }else if (aStack.getItem() instanceof itemFlywheel) for (int i = 0; i < this.invsize(); i++) {
+            if (!canInsertItem(i, aStack, SIDE_INSIDE)||slotHas(i)) continue;
+            slot(i, aStack);
+            aPlayer.inventory.setInventorySlotContents(aPlayer.inventory.currentItem, null);
+            return T;
+        }
+        return F;
+    }
 
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (aTool.equals(TOOL_magnifyingglass) && isServerSide() && aChatReturn!=null) {
+            aChatReturn.add(LH.get(kMessages.INVENTORY)+":");
+            for (int i = 0; i < invsize(); i++) {
+                if(slotHas(i))aChatReturn.add(slot(i).getDisplayName());
+            }
+        }
+            return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
@@ -81,7 +109,6 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                 isContentChanged=false;
             }
 
-            FMLLog.log(Level.ERROR,"maxRPM"+mMaxRPM+"/currentRPM"+mCurrentRPM+"/capacity"+mCapacity+"/energy"+mEnergy);
             mActive = (mEnergy >= mOutput);
 
             mAmperageLastEmitting=0;
@@ -92,6 +119,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                     long tOutput = (mMode == 0 ? amount : Math.min(mMode, amount));
                     if (tOutput > 0) {
                         long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, tSize, tOutput, this);
+                        mOutputLast=tSize;
                         mEmitsEnergy = (tAmountUsed > 0);
                         mAmperageLastEmitting = tAmountUsed;
                         mEnergy -= tSize * tAmountUsed;
@@ -119,17 +147,22 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
         if (aDoInject) {
             mEnergy += aAmount * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, aAmount));
-            if(mEnergy>mCapacity)overcharge(aSize,aEnergyType);
+            if(mEnergy>mCapacity){
+                willFlywheelBreak=true;
+                overcharge(aSize,aEnergyType);
+            }
         }
         mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
         return aAmount;
     }
 
     public void overcharge(long aVoltage, TagData aEnergyType) {
-        //flywheel break
-        for (int i = 0; i < 4; i++) ST.place(worldObj,xCoord,yCoord,zCoord, OP.scrapGt.mat(OreDictMaterial.get(slot(0).getItemDamage()),18));
-        slotKill(0);
-        //machine break
+        //break flywheel
+        if(willFlywheelBreak) {
+            for (int i = 0; i < 4; i++) ST.place(worldObj, xCoord, yCoord, zCoord, OP.scrapGt.mat(OreDictMaterial.get(slot(0).getItemDamage()), 18));
+            slotKill(0);
+        }
+        //break machine
         for (int i = 0; i < 4; i++) ST.place(worldObj,xCoord,yCoord,zCoord, OP.scrapGt.mat(mMaterial,getRandomNumber(18)));
         setToAir();
         UT.Sounds.send(worldObj, CS.SFX.IC_MACHINE_INTERRUPT , 1, 1, getCoords());
@@ -149,9 +182,16 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     };
 
     @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        aList.add(LH.Chat.ORANGE + LH.get(LH.NO_GUI_CLICK_TO_INVENTORY));
+        super.addToolTips(aList, aStack, aF3_H);
+    }
+    @Override public long getEnergySizeOutputMax            (TagData aEnergyType, byte aSide) {return mOutput * 2;}
+
+    @Override
     public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return 4;}
 
-    @Override public boolean canInsertItem2 (int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return aStack != null && prefixList.flywheel.contains(aStack);}
+    @Override public boolean canInsertItem2 (int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return !mActive && aStack != null && prefixList.flywheel.contains(aStack);}
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return !mActive;}
     @Override
     public String getTileEntityName() {return "ktfru.multitileentity.energy.storage.flywheel_box";}
