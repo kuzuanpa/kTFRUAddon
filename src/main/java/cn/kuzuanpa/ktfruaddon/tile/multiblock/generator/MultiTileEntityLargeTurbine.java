@@ -201,14 +201,15 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	@Override
 	public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
 		aList.add((LH.Chat.RED + LH.get("gt.lang.energy.output") + ": " + LH.Chat.WHITE + this.mRate + " " + LH.Chat.WHITE +(mRateMax > mRate ?"(up to "+mRateMax+" )":"") + mEnergyTypeEmitted.getLocalisedChatNameShort()+ LH.Chat.WHITE+"/A * "+ LH.Chat.CYAN + "?A/t"));
+		aList.add(LH.Chat.GRAY+ LH.get(LH.TOOL_TO_TOGGLE_SCREWDRIVER));
 		super.addToolTips(aList, aStack, aF3_H);
 	}
 
 	@Override
 	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
-		if (aTool.equals(TOOL_hammer)) {
+		if (aTool.equals(TOOL_screwdriver)) {
 			mOverclock=!mOverclock;
-			aChatReturn.add(LH.Chat.ORANGE+LH.get(kMessages.CHANGING_STRUCTURE)+" "+mOverclock);
+			aChatReturn.add(LH.Chat.ORANGE+LH.get(kMessages.OVERCLOCKING)+" "+mOverclock);
 		}
 		return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
 	}
