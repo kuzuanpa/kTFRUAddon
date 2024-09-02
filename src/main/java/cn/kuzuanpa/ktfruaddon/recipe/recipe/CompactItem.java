@@ -45,14 +45,14 @@ public class CompactItem {
 
 
         //Engine Parts
-        CR.shaped(ItemList.EngineCrankShaftManual1.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.Bronze       ,1));
-        CR.shaped(ItemList.EngineCrankShaftManual2.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.ArsenicCopper,1));
-        CR.shaped(ItemList.EngineCrankShaftManual3.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.ArsenicBronze,1));
-        CR.shaped(ItemList.EngineCrankShaftManual4.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.Steel        ,1));
-        CR.shaped(ItemList.EngineCrankShaftManual5.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.Invar        ,1));
-        CR.shaped(ItemList.EngineCrankShaftManual6.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.Ti           ,1));
-        CR.shaped(ItemList.EngineCrankShaftManual7.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.TungstenSteel,1));
-        CR.shaped(ItemList.EngineCrankShaftManual8.get(1),CR.DEF,"f h","AAA"," w ",'A', OP.stickLong.mat(MT.Ir           ,1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.Bronze       ,3),ItemList.EngineCrankShaftManual1.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.ArsenicCopper,3),ItemList.EngineCrankShaftManual2.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.ArsenicBronze,3),ItemList.EngineCrankShaftManual3.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.Steel        ,3),ItemList.EngineCrankShaftManual4.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.Invar        ,3),ItemList.EngineCrankShaftManual5.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.Ti           ,3),ItemList.EngineCrankShaftManual6.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.TungstenSteel,3),ItemList.EngineCrankShaftManual7.get(1));
+        RM.Lathe.addRecipe1(F,20,600, OP.stickLong.mat(MT.Ir           ,3),ItemList.EngineCrankShaftManual8.get(1));
 
         CR.shaped(ItemList.EngineCylinderManual1.get(1),CR.DEF," P ","fIh"," S ",'I', OP.ingotDouble.mat(MT.Bronze       ,1),'P',OP.plateCurved.mat(MT.Bronze       ,1),'S',OP.stick.mat(MT.Bronze       ,1));
         CR.shaped(ItemList.EngineCylinderManual2.get(1),CR.DEF," P ","fIh"," S ",'I', OP.ingotDouble.mat(MT.ArsenicCopper,1),'P',OP.plateCurved.mat(MT.ArsenicCopper,1),'S',OP.stick.mat(MT.ArsenicCopper,1));

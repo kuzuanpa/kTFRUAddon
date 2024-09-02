@@ -113,7 +113,7 @@ public class Plastic {
 
         RM.           Electrolyzer       .addRecipe1(F,320,40,ItemList.ProtonExchangeMembrane.get(0),FL.array(flList.MoltenTeflon.make(500),MT.Br.liquid(U5,false)),FL.array(flList.HFPO.make(200),flList.HydrobromicAcid.make(200),FL.Hydrogen.make(100)),ZL_IS);
 
-        recipeMaps.HeatMixer          .addRecipe0(F,0,1600,FL.array(flList.HexaFluoroPropylene.make(100),FL.Oxygen.make(100),flList.Benzene.make(0)),FL.array(flList.HFPO.make(100)),ZL_IS);
+        recipeMaps.HeatMixer          .addRecipe0(F,160,1600,FL.array(flList.HexaFluoroPropylene.make(100),FL.Oxygen.make(100),flList.Benzene.make(0)),FL.array(flList.HFPO.make(100)),ZL_IS);
 
         recipeMaps.HeatMixer          .addRecipe1(F,210,100,OP.dust.mat(MT.Na2CO3,1),FL.array(flList.TFES.make(100),flList.HFPO.make(100),flList.Methoxymethane.make(0)),FL.array(flList.PrecursorPSVE.make(100)),ZL_IS);
 

@@ -38,4 +38,5 @@ public class itemTurbine extends itemPrefixWithTooltip {
         aList.add(LH.Chat.WHITE+LH.get(kTooltips.TURBINE_POWERRATE)+ " " +LH.Chat.CYAN+ format.format(getTurbineEfficiency(tMat)));
         aList.add(LH.Chat.WHITE+LH.get(kTooltips.TURBINE_DURABILITY)+ " " +LH.Chat.GREEN+ getTurbineDurability(tMat)/(20*3600) + "RU * h");
     }
+    @Override public int getItemStackLimit(ItemStack aStack) {return 1;}
 }

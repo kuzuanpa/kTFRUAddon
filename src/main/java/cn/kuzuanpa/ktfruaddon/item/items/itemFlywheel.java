@@ -35,6 +35,7 @@ public class itemFlywheel extends itemPrefixWithTooltip{
     public itemFlywheel(ModData aMod, String aNameInternal, OreDictPrefix aPrefix) {
         super(aMod, aNameInternal, aPrefix);
     }
+    @Override public int getItemStackLimit(ItemStack aStack) {return 1;}
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean aF3_H) {
         super.addInformation(aStack, aPlayer, aList, aF3_H);
         DecimalFormat format = new DecimalFormat("0.00");
