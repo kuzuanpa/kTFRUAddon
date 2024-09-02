@@ -8,7 +8,6 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
-import cn.kuzuanpa.ktfruaddon.client.ARProjectorRegister;
 import cn.kuzuanpa.ktfruaddon.client.render.*;
 import cn.kuzuanpa.ktfruaddon.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.CNCMachine3;
@@ -22,7 +21,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.MinecraftForge;
-import zmaster587.libVulpes.LibVulpes;
 
 public class clientProxy extends commonProxy {
     public void preInit(FMLPreInitializationEvent event) {
@@ -46,6 +44,5 @@ public class clientProxy extends commonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(CNCMachine3.class, new TESRCNCMachine3());
         MinecraftForge.EVENT_BUS.register(new FxRenderBlockOutline());
         codechicken.nei.api.API.registerNEIGuiHandler(new NeiHiddener());
-        LibVulpes.addDummyMultiBlockRegisterer(new ARProjectorRegister());
     }
 }

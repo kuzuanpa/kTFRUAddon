@@ -80,6 +80,8 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_1));
         aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_2));
         aList.add(LH.Chat.WHITE+LH.get(OIL_MINER_3));
+        aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
+
     }
 
     static {

@@ -20,13 +20,14 @@ import gregapi.data.LH;
 
 public class i18nPostInit {
     public i18nPostInit(FMLPostInitializationEvent aEvent){
-        LH.add(kTooltips.SIDE_BACK,"Back");
-        LH.add(kTooltips.SIDE_FRONT,"Front");
+        LH.add(kTooltips.SIDE_BACK,"back");
+        LH.add(kTooltips.SIDE_FRONT,"front");
         LH.add(kTooltips.SIDE_TOP,"top");
         LH.add(kTooltips.SIDE_BOTTOM,"bottom");
         LH.add(kTooltips.SIDE_LEFT,"left");
         LH.add(kTooltips.SIDE_RIGHT,"right");
         LH.add(kTooltips.AUTO,"(auto)");
+        LH.add(kTooltips.HAS_PROJECTOR_STRUCTURE,"See Structure in Projector.");
         LH.add(kTooltips.USE_MONKEY_WRENCH_CHANGE_STRUCTURE,"Use Monkey Wrench to Change Contents.");
         LH.add(kTooltips.TANK_GAS_COMPRESSED_INPUTER,"Works with Compressed Gas Tank, Speed: (Input KU)*10 L/t.");
         LH.add(kTooltips.TURBINE_UNCHECKED,"Unchecked, may break when spinning amd cause explode");

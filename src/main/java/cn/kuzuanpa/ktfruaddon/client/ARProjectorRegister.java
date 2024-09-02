@@ -39,12 +39,57 @@ public class ARProjectorRegister implements IDummyMultiBlockRegisterer {
 
         dummyStructures.add(new DummyTileMultiBlock(TokamakTierExp(),"ktfru.projector.fusionReactorTokamakExperiment"));
         dummyStructures.add(new DummyTileMultiBlock(new Object[][][]{TokamakTier1Layer13(),TokamakTier1Layer12(),TokamakTier1Layer11(),TokamakTier1Layer10(),TokamakTier1Layer9(),TokamakTier1Layer8(),TokamakTier1Layer7(),TokamakTier1Layer6(),TokamakTier1Layer5(),TokamakTier1Layer4(),TokamakTier1Layer3(),TokamakTier1Layer2(),TokamakTier1Layer1(),TokamakTier1Layer0()},"ktfru.projector.fusionReactorTokamakT1"));
+        dummyStructures.add(new DummyTileMultiBlock(oilMiner(),"ktfru.projector.oilMiner"));
+        dummyStructures.add(new DummyTileMultiBlock(cncMachine3(),"ktfru.projector.cncMachine3"));
+
         return dummyStructures;
+    }
+    static Object[][][] cncMachine3(){
+        BlockMeta main = tile(k, 30012);
+        BlockMeta wall = tile(k, 31000);
+        BlockMeta plat = tile(k, 31007);
+        BlockMeta moto = tile(k, 31008);
+        BlockMeta head = tile(k, 31009);
+
+        return new Object[][][]{
+                {
+                        {null,null,null,null,null},
+                        {wall,wall,wall,head,null},
+                        {null,null,null,null,null},
+                },
+                {
+                        {wall,moto,null,null,null},
+                        {wall,moto,null,null,null},
+                        {wall,moto,null,null,null},
+                },
+                {
+                        {wall,main,plat,plat,plat},
+                        {wall,moto,plat,plat,plat},
+                        {wall,moto,plat,plat,plat},
+                },
+        };
+    }
+    static Object[][][] oilMiner() {
+        BlockMeta wall = tile(g, 18002);
+        BlockMeta main = tile(k, 30013);
+        BlockMeta dril = tile(k, 31014);
+
+        return new Object[][][]{
+            {
+                    {wall,wall,wall},
+                    {wall,wall,wall},
+                    {wall,wall,wall},
+            },
+            {
+                {wall,main,wall},
+                {dril,dril,dril},
+                {dril,dril,dril},
+            },
+        };
     }
 
     static Object[][] TokamakTier1Layer13(){
-        
-        BlockMeta VaPump= tile(k,31015);
+
         BlockMeta CondT1= tile(k,31025);
 
 return new Object[][] {
@@ -563,7 +608,7 @@ return new Object[][] {
             { null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null , null },
             };}
 
-    Object[][][] TokamakTierExp() {
+    static Object[][][] TokamakTierExp() {
 
         BlockMeta VaPump= tile(k,31015);
         BlockMeta CondTe= tile(k,31016);

@@ -50,6 +50,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
 public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory, IMappedStructure {
@@ -395,7 +396,7 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
+        aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
         super.addToolTips(aList, aStack, aF3_H);
     }
     @Override

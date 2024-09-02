@@ -36,6 +36,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
+import static cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
 public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
@@ -118,19 +119,9 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         }
     }
 
-
-    static {
-        LH.add("gt.tooltip.multiblock.example.complex.1", "5x5x2 of Stainless Steel Walls");
-        LH.add("gt.tooltip.multiblock.example.complex.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("gt.tooltip.multiblock.example.complex.3", "Input and Output at any Blocks");
-    }
-
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.1"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.2"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
+        aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
         super.addToolTips(aList, aStack, aF3_H);
     }
 

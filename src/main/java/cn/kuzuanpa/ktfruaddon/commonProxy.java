@@ -8,6 +8,7 @@
  */
 package cn.kuzuanpa.ktfruaddon;
 
+import cn.kuzuanpa.ktfruaddon.client.ARProjectorRegister;
 import cn.kuzuanpa.ktfruaddon.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.i18n.i18nPostInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
@@ -16,8 +17,10 @@ import cn.kuzuanpa.ktfruaddon.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit0;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.*;
 import gregapi.api.Abstract_Proxy;
+import zmaster587.libVulpes.LibVulpes;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.PROXY;
 
@@ -40,7 +43,9 @@ public class commonProxy extends Abstract_Proxy {
         tileEntityInit0.init(aEvent);
         recipeInit.init(aEvent);
         PROXY.registerRenderers();
-
+        if(Loader.isModLoaded("libVulpes"))try{
+            LibVulpes.addDummyMultiBlockRegisterer(new ARProjectorRegister());
+        }catch (Exception ignored){}
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
