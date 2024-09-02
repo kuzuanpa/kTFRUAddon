@@ -41,7 +41,6 @@ import static gregapi.data.CS.*;
         public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
             ItemStack tStack = ST.load(aStack.getTagCompound(), "ktfru.filter.property");
             if (ST.valid(tStack)) try {aList.add(LH.Chat.CYAN + tStack.getDisplayName());} catch(Throwable e) {aList.add(LH.Chat.BLINKING_RED + "ERROR, CANNOT DISPLAY ITEM NAME");}
-            aList.add(LH.Chat.ORANGE + "Not NBT sensitive!");
             super.addToolTips(aList, aStack, aF3_H);
             aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_TOGGLE_CONTROLLER_COVER));
             aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_TOGGLE_SCREWDRIVER));
@@ -57,6 +56,7 @@ import static gregapi.data.CS.*;
             }
             if (aTool.equals(TOOL_softhammer)) {
                 if (aData.mNBTs[aCoverSide] != null) aData.mNBTs[aCoverSide].removeTag("ktfru.filter.property");
+                lastClickStackTags.clear();
                 return 10000;
             }
             if (aTool.equals(TOOL_magnifyingglass)) {
@@ -66,13 +66,7 @@ import static gregapi.data.CS.*;
                         aChatReturn.add("Filter is empty!");
                         aData.mNBTs[aCoverSide] = null;
                     } else {
-                        ItemStack tStack = ST.load(aData.mNBTs[aCoverSide], "ktfru.filter.property");
-                        if (ST.invalid(tStack)) {
-                            aChatReturn.add("Filter is empty!");
-                            aData.mNBTs[aCoverSide] = null;
-                        } else {
-                            aChatReturn.add("Filters for: " + LH.Chat.CYAN + ST.regName(tStack) + LH.Chat.GRAY + " ; " + (ST.meta_(tStack) == W ? LH.Chat.GREEN + "Wildcard" : LH.Chat.CYAN + ST.meta_(tStack)));
-                        }
+                        aChatReturn.add(LH.Chat.GREEN+ LH.get(kMessages.FILTERING_PROPERTIES)+LH.Chat.WHITE+" " + aData.mNBTs[aCoverSide].getString("ktfru.filter.property"));
                     }
                 }
                 return 1;
