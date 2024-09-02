@@ -48,6 +48,9 @@ public class i18nPostInit {
         LH.add(kMessages.EMPTY,"Empty");
         LH.add(kMessages.NORMAL,"Normal");
         LH.add(kMessages.ERROR,"error");
+        LH.add(kMessages.STORED_ENERGY,"Stored Energy");
+        LH.add(kMessages.CAPACITY,"Capacity");
+        LH.add(kMessages.OUTPUTTING,"Outputting");
         LH.add(kMessages.CRUCIBLE_MODEL_0,"Still need ");
         LH.add(kMessages.CRUCIBLE_MODEL_1," clay ball.");
         LH.add(kMessages.SUN_BOILER_MIRROR,"Successfully binding Sun Boiler target:");

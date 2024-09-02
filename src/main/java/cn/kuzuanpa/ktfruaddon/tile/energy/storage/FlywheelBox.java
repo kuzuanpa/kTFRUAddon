@@ -51,12 +51,13 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey("ktfru.nbt.maxOutputAmpere")) mMaxAmpere = aNBT.getLong("ktfru.nbt.maxOutputAmpere");
-        if (aNBT.hasKey("ktfru.nbt.lossRate")) mLossRate = aNBT.getFloat("ktfru.nbt.maxOutputAmpere");
+        if (aNBT.hasKey("ktfru.nbt.maxAmpere")) mMaxAmpere = aNBT.getLong("ktfru.nbt.maxAmpere");
+        if (aNBT.hasKey("ktfru.nbt.lossRate")) mLossRate = aNBT.getFloat("ktfru.nbt.lossRate");
 
         if (aNBT.hasKey(NBT_CAPACITY)) mCapacity = aNBT.getLong(NBT_CAPACITY);
         if (aNBT.hasKey("ktfru.nbt.maxRPM")) mMaxRPM = aNBT.getFloat("ktfru.nbt.maxRPM");
 
+        mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
@@ -126,6 +127,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                     }
                 }
                 if (mTimer % 600 == 5) doDefaultStructuralChecks();
+                if(mTimer % 200 == 5) mEnergy=(long)Math.floor(mEnergy*(1.0D-mLossRate));
             }
 
             receivedEnergyLast.clear();
