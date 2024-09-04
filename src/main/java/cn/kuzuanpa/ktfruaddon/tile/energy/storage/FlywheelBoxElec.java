@@ -54,16 +54,16 @@ public class FlywheelBoxElec extends FlywheelBox implements IMultiTileEntity.IMT
             if (aDoInject) overcharge(aSize, aEnergyType);
             return aAmount;
         }
+        long canReceiveAmount = Math.min( (long) Math.ceil((mCapacity-mEnergy)*1F/aSize) , mMaxAmpere );
         if (aDoInject) {
-            long canReceiveAmount = (long) Math.ceil((mCapacity-mEnergy)*1F/aSize);
-            mEnergy += Math.min(canReceiveAmount,mMaxAmpere) * aSize;
+            mEnergy += Math.min(canReceiveAmount,aAmount) * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, aAmount));
             if(mEnergy>mCapacity){
                 mEnergy=mCapacity;
             }
         }
         mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
-        return aAmount;
+        return Math.min(canReceiveAmount,aAmount);
     }
 
     @Override

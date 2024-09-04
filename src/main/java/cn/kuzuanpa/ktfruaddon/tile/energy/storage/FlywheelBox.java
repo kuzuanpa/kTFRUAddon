@@ -40,7 +40,7 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class FlywheelBox extends TileEntityBase10EnergyBatBox {
-    public long mCapacity=0, mMaxAmpere=1;
+    public long mCapacity=0, mMaxAmpere=1, mOutputMin;
     public float mMaxRPM=0,mCurrentRPM=0,mLossRate=0;
     public boolean isContentChanged=false,willFlywheelBreak=false;
 
@@ -53,6 +53,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
         super.readFromNBT2(aNBT);
         if (aNBT.hasKey("ktfru.nbt.maxAmpere")) mMaxAmpere = aNBT.getLong("ktfru.nbt.maxAmpere");
         if (aNBT.hasKey("ktfru.nbt.lossRate")) mLossRate = aNBT.getFloat("ktfru.nbt.lossRate");
+        if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
 
         if (aNBT.hasKey(NBT_CAPACITY)) mCapacity = aNBT.getLong(NBT_CAPACITY);
         if (aNBT.hasKey("ktfru.nbt.maxRPM")) mMaxRPM = aNBT.getFloat("ktfru.nbt.maxRPM");
@@ -118,7 +119,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                     long amount = (long) Math.ceil(mCurrentRPM/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
                     long tSize = (long) Math.floor(mCurrentRPM/amount);
                     long tOutput = (mMode == 0 ? amount : Math.min(mMode, amount));
-                    if (tOutput > 0) {
+                    if (tOutput > 0&&tSize>4) {
                         long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, tSize, tOutput, this);
                         mOutputLast=tSize;
                         mEmitsEnergy = (tAmountUsed > 0);
@@ -190,8 +191,10 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     }
     @Override public long getEnergySizeOutputMax            (TagData aEnergyType, byte aSide) {return mOutput * 2;}
 
+    public String getLocalisedInputSide () {return LH.get(LH.FACE_BACK);}
     @Override
     public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return 4;}
+    public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return mOutputMin;}
 
     @Override public boolean canInsertItem2 (int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return !mActive && aStack != null && prefixList.flywheel.contains(aStack);}
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return !mActive;}
