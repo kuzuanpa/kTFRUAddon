@@ -59,8 +59,12 @@ public class OreProcessing {
         recipeMaps.HeatMixer.addRecipe1(T, 320, 160, OM.dust(MT.WO3, U * 4), MT.H.gas(U * 6, T), MT.H2O.liquid(U * 9, F), OM.dust(MT.W, U));
 
         //Ti Process
-        RM.Bath.addRecipeX(T,0,120,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,4));
+        RM.Bath.addRecipeX(T,0,200,ST.array(OP.dust.mat(MT.OREMATS.Ilmenite,2)),FL.array(MT.H2SO4.liquid(7*U,T)),FL.array(MT.MartianVitriol.fluid(6000,F)),OP.dust.mat(matList.MetatitanicAcid.mat,3));
         RM.Drying.addRecipeX(T,32,40, ST.array(OP.dust.mat(matList.MetatitanicAcid.mat,2)),FL.array(ZL_FS),FL.array(FL.DistW.make(200)),OP.dust.mat(MT.TiO2,1));
+        recipeMaps.HeatMixer.addRecipeX(T,96,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.He.gas(10,T),MT.Mg.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
+        recipeMaps.HeatMixer.addRecipe1(T,128,60,OP.dust.mat(MT.Mg,2),FL.array(MT.TiCl4.liquid(5*U,T),MT.He.gas(10,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
+        recipeMaps.HeatMixer.addRecipeX(T,96,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.He.gas(10,T),MT.Na.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.NaCl,6));
+        recipeMaps.HeatMixer.addRecipe1(T,128,60,OP.dust.mat(MT.Na,2),FL.array(MT.TiCl4.liquid(5*U,T),MT.He.gas(10,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.NaCl,6));
         recipeMaps.HeatMixer.addRecipeX(T,96,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Mg.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
         recipeMaps.HeatMixer.addRecipe1(T,128,60,OP.dust.mat(MT.Mg,2),FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.MgCl2,6));
         recipeMaps.HeatMixer.addRecipeX(T,96,60,ZL_IS,FL.array(MT.TiCl4.liquid(5*U,T),MT.Ar.gas(1,T),MT.Na.liquid(U*2,T)),ZL_FS,OP.dustSmall.mat(MT.Ti,6),OP.dust.mat(MT.NaCl,6));

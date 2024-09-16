@@ -57,6 +57,7 @@ public class ComputerBuilding {
 
 //Make Boule 制作单晶硅 HU
         RM.CrystallisationCrucible.addRecipe1(T,16,36000,OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Nitrogen.make(80000),MT.Si.liquid(U*4,false)),FL.array(ZL_FS),OP.bouleGt.mat(MT.Si,1));
+        RM.CrystallisationCrucible.addRecipe1(T,16,36000,OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Helium.make(20000),MT.Si.liquid(U*4,false)),FL.array(ZL_FS),OP.bouleGt.mat(MT.Si,1));
         RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Helium.make(20000),flList.Silane.make(4000)),FL.array(ZL_FS),ItemList.SiliconBoulePure.get(1));
 
 //Cut Boule to plate 切割单晶硅 LU
