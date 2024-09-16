@@ -55,7 +55,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import java.util.Collection;
 import java.util.List;
 
-import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Generator.WORKING_MODE;
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.WORKING_MODE;
 import static gregapi.data.CS.*;
 
 public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, ITileEntityEnergy{

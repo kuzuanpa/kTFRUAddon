@@ -11,18 +11,15 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.util;
 
-public class kTileNBT {
-    public static class Generator {
-        public static String MAX_TIME = "ktfru.nbt.energy.maxtime";
-        public static String TIME_GAIN_RATE = "ktfru.nbt.energy.timegainrate";
-        public static String TIME_REMAINING = "ktfru.nbt.energy.timeremaining";
-        public static String WORKING_MODE = "ktfru.nbt.energy.working_mode";
-
-    }
-    public static class Machine {
-        public static String CRUCIBLE_MODEL_TIMER ="ktfru.nbt.machine.cruciblemodel.timer";
-        public static String MINER_RANGE="ktfru.nbt.machine.miner.range";
-        public static String MINER_SPEED="ktfru.nbt.machine.miner.speed";
-    }
+public final class kTileNBT {
+    public static final String MAX_TIME = "ktfru.nbt.energy.maxtime";
+    public static final String TIME_GAIN_RATE = "ktfru.nbt.energy.timegainrate";
+    public static final String TIME_REMAINING = "ktfru.nbt.energy.timeremaining";
+    public static final String WORKING_MODE = "ktfru.nbt.energy.working_mode";
+    public static final String LOSS_PERCENT ="ktfru.nbt.lossRate";
+    public static final String MAX_AMPERE="ktfru.nbt.maxAmpere";
+    public static final String CRUCIBLE_MODEL_TIMER ="ktfru.nbt.machine.cruciblemodel.timer";
+    public static final String MINER_RANGE="ktfru.nbt.machine.miner.range";
+    public static final String MINER_SPEED="ktfru.nbt.machine.miner.speed";
 }
 

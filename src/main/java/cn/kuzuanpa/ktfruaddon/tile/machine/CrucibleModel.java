@@ -38,7 +38,7 @@ import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
 
-import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.Machine.CRUCIBLE_MODEL_TIMER;
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.CRUCIBLE_MODEL_TIMER;
 import static gregapi.data.CS.*;
 
 public class CrucibleModel extends TileEntityBase07Paintable{

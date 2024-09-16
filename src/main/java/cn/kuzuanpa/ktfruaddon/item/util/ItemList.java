@@ -104,17 +104,17 @@ public enum ItemList implements IItemContainer{
     //AppliedEnergistics2
     IntelligentCore,RefinedStoragePart,RefinedFluidStoragePart,
     //Gregtech6
-    CrucibleModelInnerLayer,Co60FlawDetectionCore,Tm170FlawDetectionCore,
+    CrucibleModelInnerLayer,Co60FlawDetectionCore,Tm170FlawDetectionCore, GoodCircuitPartPrecursor,
     //engine parts made by hand
-    EngineCrankShaftManual1, EngineCrankShaftManual2,EngineCrankShaftManual3, EngineCrankShaftManual4,EngineCrankShaftManual5, EngineCrankShaftManual6,EngineCrankShaftManual7, EngineCrankShaftManual8,
-    EngineCylinderManual1, EngineCylinderManual2,EngineCylinderManual3, EngineCylinderManual4,EngineCylinderManual5, EngineCylinderManual6,EngineCylinderManual7, EngineCylinderManual8,
+    EngineCrankShaftManual1, EngineCrankShaftManual2,EngineCrankShaftManual3, EngineCrankShaftManual4,EngineCrankShaftManual5, EngineCrankShaftManual6,EngineCrankShaftManual7, EngineCrankShaftManual8, EngineCrankShaftManualCr,
+    EngineCylinderManual1, EngineCylinderManual2,EngineCylinderManual3, EngineCylinderManual4,EngineCylinderManual5, EngineCylinderManual6,EngineCylinderManual7, EngineCylinderManual8, EngineCylinderManualCr,
 
 
     //engine parts made by machine
-    EngineCrankShaft1, EngineCrankShaft2,EngineCrankShaft3, EngineCrankShaft4,EngineCrankShaft5, EngineCrankShaft6,EngineCrankShaft7, EngineCrankShaft8,
-    EngineCylinder1, EngineCylinder2,EngineCylinder3, EngineCylinder4,EngineCylinder5, EngineCylinder6,EngineCylinder7, EngineCylinder8,
+    EngineCrankShaft1, EngineCrankShaft2,EngineCrankShaft3, EngineCrankShaft4,EngineCrankShaft5, EngineCrankShaft6,EngineCrankShaft7, EngineCrankShaft8, EngineCrankShaftCr,
+    EngineCylinder1, EngineCylinder2,EngineCylinder3, EngineCylinder4,EngineCylinder5, EngineCylinder6,EngineCylinder7, EngineCylinder8, EngineCylinderCr,
 
-    EngineTurbo1, EngineTurbo2,EngineTurbo3, EngineTurbo4,EngineTurbo5, EngineTurbo6,EngineTurbo7, EngineTurbo8,
+    EngineTurbo1, EngineTurbo2,EngineTurbo3, EngineTurbo4,EngineTurbo5, EngineTurbo6,EngineTurbo7, EngineTurbo8, EngineTurboCr,
 
     
 

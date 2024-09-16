@@ -37,11 +37,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.LOSS_PERCENT;
+import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.MAX_AMPERE;
 import static gregapi.data.CS.*;
 
 public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     public long mCapacity=0, mMaxAmpere=1, mOutputMin;
-    public float mMaxRPM=0,mCurrentRPM=0,mLossRate=0;
+    public float mMaxRPM=0,mCurrentRPM=0, mLossPercent =0;
     public boolean isContentChanged=false,willFlywheelBreak=false;
 
     public FlywheelBox() {
@@ -51,8 +53,8 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey("ktfru.nbt.maxAmpere")) mMaxAmpere = aNBT.getLong("ktfru.nbt.maxAmpere");
-        if (aNBT.hasKey("ktfru.nbt.lossRate")) mLossRate = aNBT.getFloat("ktfru.nbt.lossRate");
+        if (aNBT.hasKey(MAX_AMPERE)) mMaxAmpere = aNBT.getLong(MAX_AMPERE);
+        if (aNBT.hasKey(LOSS_PERCENT)) mLossPercent = aNBT.getFloat(LOSS_PERCENT);
         if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
 
         if (aNBT.hasKey(NBT_CAPACITY)) mCapacity = aNBT.getLong(NBT_CAPACITY);
@@ -115,6 +117,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
 
             mAmperageLastEmitting=0;
             if (mActive) {
+                mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
                 if (!mStopped) {
                     long amount = (long) Math.ceil(mCurrentRPM/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
                     long tSize = (long) Math.floor(mCurrentRPM/amount);
@@ -128,7 +131,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                     }
                 }
                 if (mTimer % 600 == 5) doDefaultStructuralChecks();
-                if(mTimer % 200 == 5) mEnergy=(long)Math.floor(mEnergy*(1.0D-mLossRate));
+                if(mTimer % 200 == 5) mEnergy=(long)Math.floor(mEnergy*(1.0D-(mLossPercent /100D)));
             }
 
             receivedEnergyLast.clear();
@@ -155,7 +158,6 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                 overcharge(aSize,aEnergyType);
             }
         }
-        mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
         return aAmount;
     }
 

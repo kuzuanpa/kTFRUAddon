@@ -64,9 +64,9 @@ public class ManualGenerator extends TileEntityBase09FacingSingle implements ITi
         if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
         if (aNBT.hasKey(NBT_OUTPUT_MAX)) mOutputMax = aNBT.getLong(NBT_OUTPUT_MAX);
         if (aNBT.hasKey(NBT_ENERGY_EMITTED)) mEnergyTypeEmitted = TagData.createTagData(aNBT.getString(NBT_ENERGY_EMITTED));
-        if (aNBT.hasKey(kTileNBT.Generator.MAX_TIME)) maxTime = aNBT.getLong(kTileNBT.Generator.MAX_TIME);
-        if (aNBT.hasKey(kTileNBT.Generator.TIME_GAIN_RATE)) timeGainRate = aNBT.getLong(kTileNBT.Generator.TIME_GAIN_RATE);
-        if (aNBT.hasKey(kTileNBT.Generator.TIME_REMAINING)) timeRemaining = aNBT.getLong(kTileNBT.Generator.TIME_REMAINING);
+        if (aNBT.hasKey(kTileNBT.MAX_TIME)) maxTime = aNBT.getLong(kTileNBT.MAX_TIME);
+        if (aNBT.hasKey(kTileNBT.TIME_GAIN_RATE)) timeGainRate = aNBT.getLong(kTileNBT.TIME_GAIN_RATE);
+        if (aNBT.hasKey(kTileNBT.TIME_REMAINING)) timeRemaining = aNBT.getLong(kTileNBT.TIME_REMAINING);
         if(CODE_CLIENT){
             if(GT_API.sBlockIcons == null){
                 if (!aNBT.hasKey(NBT_TEXTURE))throw new IllegalArgumentException("Manual Generator Must have a Texture Name");
@@ -118,7 +118,7 @@ public class ManualGenerator extends TileEntityBase09FacingSingle implements ITi
         UT.NBT.setBoolean(aNBT, NBT_STOPPED, mStopped);
         UT.NBT.setNumber(aNBT,NBT_OUTPUT_MIN, mOutputMin);
         UT.NBT.setNumber(aNBT,NBT_OUTPUT_MAX, mOutputMax);
-        UT.NBT.setNumber(aNBT,kTileNBT.Generator.TIME_REMAINING,timeRemaining);
+        UT.NBT.setNumber(aNBT, kTileNBT.TIME_REMAINING,timeRemaining);
         mActivity.save(aNBT);
     }
 
