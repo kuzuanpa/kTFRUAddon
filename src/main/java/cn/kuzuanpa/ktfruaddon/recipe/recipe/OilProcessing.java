@@ -114,7 +114,7 @@ public class OilProcessing {
 
         RM.SteamCracking.addRecipe1(F, 16,  64, OP.dust.mat(MT.Kaolinite,0),FL.array(FL.Steam.make(1000), FL.Diesel.make(100)), FL.array(FL.Hydrogen.make( 2), flList.OilGas.make(18), FL.Petrol.make(65), FL.Lubricant.make(90), FL.Ethylene.make(20),FL.Methane.make(10),FL.Propylene.make(10)), ZL_IS);
 
-        RM.Centrifuge.addRecipe0(false,256,200,flList.OilGas.make(100),FL.array(FL.Propane.make(40),FL.Butane.make(40),FL.Nitrogen.make(5),FL.CarbonDioxide.make(5)));
+        RM.Centrifuge.addRecipe0(false,172,200,flList.OilGas.make(100),FL.array(FL.Propane.make(40),FL.Butane.make(40),FL.Nitrogen.make(5),FL.CarbonDioxide.make(5)));
 
         recipeMaps.HeatMixer.addRecipe0(false,32,40,FL.array(flList.OilGas.make(100),flList.Benzene.make(5),FL.Hydrogen.make(80)),FL.array(FL.Diesel.make(10),flList.CrackedOilGas.make(100)),ZL_IS);
 

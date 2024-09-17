@@ -135,6 +135,6 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe1(F,140,80,OP.dust.mat(MT.NaHCO3,0), FL.array(flList.DichloroPropane.make(1000),FL.DistW.make(1000)),FL.array(flList.Propanediol.make(1000),MT.HCl.gas(U*2,false)));
 
-        RM.           CryoMixer          .addRecipe0(F, 32,300, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U,false)),FL.array(flList.DichloroPropane.make(1000)));
+        RM.           HeatMixer          .addRecipe0(F, 120,200, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U,false)),FL.array(flList.DichloroPropane.make(1000)));
     }
 }
