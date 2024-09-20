@@ -41,7 +41,26 @@ public class itemCompact extends MultiItemRandom {
         ItemList.CrucibleModelInnerLayer .set(addItem(0, "Crucible Model Inner Layer", ""));
         ItemList.Co60FlawDetectionCore   .set(addItem(1, "Co-60 Flaw Detection Core", ""));
         ItemList.Tm170FlawDetectionCore  .set(addItem(2, "Tm-170 Flaw Detection Core", ""));
-        ItemList.GoodCircuitPartPrecursor.set(addItem(3, "Good Circuit Part Precursor", ""));
+        ItemList.GoodCircuitPartCore     .set(addItem(3, "Good Circuit Part Core", ""));
+        ItemList.TFRUCoin1               .set(addItem(4,  "1 TFRU Coin", ""));
+        ItemList.TFRUCoin5               .set(addItem(5,  "5 TFRU Coin", ""));
+        ItemList.TFRUCoin10              .set(addItem(6, "10 TFRU Coin", ""));
+        ItemList.PreparedIronOre         .set(addItem(7, "Prepared Iron Ore", ""));
+        //Clay Molds for glass and so on.
+        ItemList.ClayGlassBlockMold                  .set(addItem(8,  "Clay Glass Block Mold", ""));
+        ItemList.CeramicGlassBlockMold               .set(addItem(9,  "Ceramic Glass Block Mold", ""));
+        ItemList.CeramicGlassBlockMoldFull           .set(addItem(10, "Ceramic Glass Block Mold Full", ""));
+        ItemList.CeramicGlassBlockMoldComplete       .set(addItem(11, "Ceramic Glass Block Mold Complete ", ""));
+        ItemList.ClayGlassBottleMold                 .set(addItem(12, "Clay Glass Bottle Mold", ""));
+        ItemList.CeramicGlassBottleMold              .set(addItem(13, "Ceramic Glass Bottle Mold", ""));
+        ItemList.CeramicGlassBottleMoldFull          .set(addItem(14, "Ceramic Glass Bottle Mold Full", ""));
+        ItemList.CeramicGlassBottleMoldComplete      .set(addItem(15, "Ceramic Glass Bottle Mold Complete", ""));
+        ItemList.NetherStarPlus                      .set(addItem(16, "Nether Star Plus", "PlaceHolder now"));
+
+        ItemList.NaturalCore                         .set(addItem(18, "Natural Core", ""));
+        ItemList.FlowerCluster                       .set(addItem(19, "Flower Cluster", ""));
+
+
         ItemList.IntelligentCore         .set(addItem(100, "Intelligent Core", ""));
         ItemList.RefinedStoragePart      .set(addItem(101, "Refined Storage Part", ""));
         ItemList.RefinedFluidStoragePart .set(addItem(102, "Refined Fluid Storage Part", ""));

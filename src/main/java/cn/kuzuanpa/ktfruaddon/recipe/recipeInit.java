@@ -9,6 +9,7 @@
 package cn.kuzuanpa.ktfruaddon.recipe;
 
 import cn.kuzuanpa.ktfruaddon.recipe.recipe.*;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 public class recipeInit {
@@ -24,5 +25,6 @@ public class recipeInit {
         CompactItem.init();
         Fusion.init();
         FakeRecipe.init();
+        if(Loader.isModLoaded("terrafirmacraft"))TFCRecipe.init();
     }
 }
