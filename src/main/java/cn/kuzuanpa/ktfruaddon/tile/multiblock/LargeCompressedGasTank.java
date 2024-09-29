@@ -11,6 +11,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips;
+import cn.kuzuanpa.ktfruaddon.tile.ICompressGasTank;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class tankGasCompressed extends MultiTileEntityTank {
+public class LargeCompressedGasTank extends MultiTileEntityTank implements ICompressGasTank {
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN     + LH.get(LH.STRUCTURE) + ":");
@@ -91,6 +92,7 @@ public class tankGasCompressed extends MultiTileEntityTank {
         setToFire();
         return T;
     }
+
     @Override
     public boolean allowFluid(FluidStack aFluid) {
         return !FL.powerconducting(aFluid) && FL.temperature(aFluid) < mMaterial.mMeltingPoint && FL.gas(aFluid);
@@ -100,7 +102,7 @@ public class tankGasCompressed extends MultiTileEntityTank {
         return null;
     }
 
-    public int forceFill(FluidStack fluid){return mTank.fill(fluid);}
+    public int fillCompressedGas(FluidStack fluid){return mTank.fill(fluid);}
     @Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.tank.gas.compressed";}
 
 }

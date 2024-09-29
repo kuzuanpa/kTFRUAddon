@@ -45,15 +45,15 @@ import static gregapi.data.CS.*;
 
 public enum ItemList implements IItemContainer{
     //itemIT
-    SiliconBoulePure, MoO2Boule, MoO2BoulePure, MonocrystallineSteel, MonocrystallineStainlessSteel, MonocrystallineTitanium, MonocrystallineTrinitanium, MonocrystallineHSSG, MonocrystallineHSSE, MonocrystallineHSSS, MonocrystallineTungstenSteel, MonocrystallineTungsten, MonocrystallineVibramantium,
+    SiliconBoulePure, MoO2Boule, MoO2BoulePure,
 
-    SiliconPlate8inchT1,SiliconPlate8inchT2, MoO2Plate8inchT1,MoO2Plate8inchT2,
-    SiliconPlate8inchCleanedT1,SiliconPlate8inchCleanedT2, MoO2Plate8inchCleanedT1,MoO2Plate8inchCleanedT2,
-    SiliconPlate8inchOxidizedT1,SiliconPlate8inchOxidizedT2, MoO2Plate8inchOxidizedT1,MoO2Plate8inchOxidizedT2,
-    SiliconPlate8inchCoatedT1,SiliconPlate8inchCoatedT2, MoO2Plate8inchCoatedT1,MoO2Plate8inchCoatedT2,
-    SiliconPlate8inchSoftBakedT1,SiliconPlate8inchSoftBakedT2, MoO2Plate8inchSoftBakedT1,MoO2Plate8inchSoftBakedT2,
+    SiliconPlateT1,SiliconPlateT2, MoO2PlateT1,MoO2PlateT2,
+    SiliconPlateCleanedT1,SiliconPlateCleanedT2, MoO2PlateCleanedT1,MoO2PlateCleanedT2,
+    SiliconPlateOxidizedT1,SiliconPlateOxidizedT2, MoO2PlateOxidizedT1,MoO2PlateOxidizedT2,
+    SiliconPlateCoatedT1,SiliconPlateCoatedT2, MoO2PlateCoatedT1,MoO2PlateCoatedT2,
+    SiliconPlateSoftBakedT1,SiliconPlateSoftBakedT2, MoO2PlateSoftBakedT1,MoO2PlateSoftBakedT2,
     CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask28um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm,
-    CPUWafer200um, CPUWafer72um, CPUWafer28um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm, 
+    CPUWafer200um, CPUWafer72um, CPUWafer28um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm,
     CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer28umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped, 
     CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer28umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked,
     CPUWafer200umDoped, CPUWafer72umDoped, CPUWafer28umDoped, CPUWafer8umDoped, CPUWafer400nmDoped, CPUWafer80nmDoped, CPUWafer32nmDoped, CPUWafer14nmDoped,
@@ -73,13 +73,19 @@ public enum ItemList implements IItemContainer{
                              RAMBar256K16, RAMBar2M16, RAMBar16M16, RAMBar128M16, RAMBar768M16, RAMBar2G16,
                                                        RAMBar16M32, RAMBar128M32, RAMBar768M32, RAMBar2G32,
 
+    InterLayerPhotomask32nm, InterLayerPhotomask14nm, InterLayerWafer32nm, InterLayerWafer14nm,
+    InterLayerWafer32nmDeveloped, InterLayerWafer14nmDeveloped,
+    InterLayerWafer32nmHardBaked, InterLayerWafer14nmHardBaked,
+    InterLayerWafer32nmDoped, InterLayerWafer14nmDoped,
+    InterLayerWafer32nmChecked, InterLayerWafer14nmChecked,
+    InterLayerT1, InterLayerT2,
+
     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4,
     CPUDieTF3386S, CPUDieTF3586S, CPUDieGT1090, CPUDieGT2090, CPUDieGT3680, CPUDieGT3680v2, CPUDieGT3680v3, CPUDieGT3680v4,
     
-    CPUTF3386, CPUTF3586, CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4,
-    CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4,
-                                                  CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4,
-                                                CPUGT3680v3E, CPUGT3680v4E, CPUGT3699v3E, CPUGT3699v4E,
+    CPUTF3386 , CPUTF3586 , CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4,
+    CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4, CPUGT3680v3E, CPUGT3680v4E,
+                                                  CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4, CPUGT3699v3E, CPUGT3699v4E,
 
     CircuitPartPhotomaskT3, CircuitPartPhotomaskT4, CircuitPartPhotomaskT5, CircuitPartPhotomaskT6,
     CircuitPartWaferT3, CircuitPartWaferT4, CircuitPartWaferT5, CircuitPartWaferT6,

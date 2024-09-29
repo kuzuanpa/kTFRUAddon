@@ -12,9 +12,6 @@ package cn.kuzuanpa.ktfruaddon.tile.machine;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.item.util.ItemList;
-import com.bioxx.tfc.Core.TFC_Climate;
-import com.bioxx.tfc.TileEntities.TEForge;
-import com.bioxx.tfc.api.TFCBlocks;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.data.MD;
@@ -37,6 +34,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
+import java.util.Objects;
 
 import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.CRUCIBLE_MODEL_TIMER;
 import static gregapi.data.CS.*;
@@ -163,14 +161,14 @@ public class CrucibleModel extends TileEntityBase07Paintable{
                updateClientData();
            }
            if (MD.TFC.mLoaded){
-               if(worldObj.getBlock(xCoord, yCoord - 1, zCoord) == TFCBlocks.forge)
+               if(Objects.equals(worldObj.getBlock(xCoord, yCoord - 1, zCoord), com.bioxx.tfc.api.TFCBlocks.forge))
                {
-                   TEForge te = (TEForge) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
+                   com.bioxx.tfc.TileEntities.TEForge te = (com.bioxx.tfc.TileEntities.TEForge) worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
                    if (te.fireTemp > mTemperature)
                        mTemperature +=2;
                    if(mState==3&&mTemperature >1400)mTimer++;
                }
-               if(mTemperature > TFC_Climate.getHeightAdjustedTemp(worldObj, xCoord, yCoord, zCoord))
+               if(mTemperature > com.bioxx.tfc.Core.TFC_Climate.getHeightAdjustedTemp(worldObj, xCoord, yCoord, zCoord))
                    mTemperature--;
            }else mTimer++;
        }

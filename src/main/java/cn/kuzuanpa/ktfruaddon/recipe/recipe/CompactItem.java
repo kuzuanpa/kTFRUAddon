@@ -113,18 +113,6 @@ public class CompactItem {
         }
         CR.shaped(ItemList.VibrateDetector.get(1),CR.DEF,"hR ","RBR"," Rw",'R', OP.ring.mat(MT.StainlessSteel,1),'B',OP.nugget.mat(MT.StainlessSteel   ,1));
         recipeMaps.Assembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
-
-
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Steel,1),FL.array(FL.Helium.make(20000), MT.Steel.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineSteel.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.StainlessSteel,1),FL.array(FL.Helium.make(20000), MT.StainlessSteel.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineStainlessSteel.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Ti,1),FL.array(FL.Helium.make(20000), MT.Ti.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineTitanium.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Trinitanium,1),FL.array(FL.Helium.make(20000), MT.Trinitanium.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineTrinitanium.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.HSSG,1),FL.array(FL.Helium.make(20000), MT.HSSG.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineHSSG.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.HSSE,1),FL.array(FL.Helium.make(20000), MT.HSSE.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineHSSE.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.HSSS,1),FL.array(FL.Helium.make(20000), MT.HSSS.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineHSSS.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.TungstenSteel,1),FL.array(FL.Helium.make(20000), MT.TungstenSteel.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineTungstenSteel.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.W,1),FL.array(FL.Helium.make(20000), MT.W.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineTungsten.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Vibramantium,1),FL.array(FL.Helium.make(20000), MT.Vibramantium.liquid(48*U,false)),FL.array(ZL_FS),ItemList.MonocrystallineVibramantium.get(1));
     }
 }
 

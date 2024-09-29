@@ -21,174 +21,134 @@
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kTooltips;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.tankGasCompressed;
+import cn.kuzuanpa.ktfruaddon.tile.ICompressGasTank;
+import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
 import gregapi.data.TD;
-import gregapi.tileentity.ITileEntityAdjacentInventoryUpdatable;
+import gregapi.fluid.FluidTankGT;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
+import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
+import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.UT;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
+import java.util.Collection;
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class tankGasCompressedInputer extends MultiTileEntityBasicMachine {
+public class tankGasCompressedInputer extends TileEntityBase09FacingSingle implements ITileEntityEnergy,IFluidHandler {
+    public static TagData mEnergyTypeAccepted = TD.Energy.KU;
+    public long mInput=0,mInputMin=0,mInputMax=0;
+    FluidTankGT mTank = new FluidTankGT(64000);
+    public static IIconContainer[] mTexturesMaterial = L6_IICONCONTAINER, mTexturesInactive = L6_IICONCONTAINER;
+
+    static {
+        mTexturesMaterial = new IIconContainer[]{
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/colored/bottom"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/colored/top"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/colored/left"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/colored/front"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/colored/right"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/colored/back")};
+        mTexturesInactive = new IIconContainer[]{
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/overlay/bottom"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/overlay/top"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/overlay/left"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/overlay/front"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/overlay/right"),
+                new Textures.BlockIcons.CustomIcon("machines/tankgascompressedinputer/overlay/back")};
+    }
     @Override
-    public void onTickFirst2(boolean aIsServerSide) {}
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+
+        if (aNBT.hasKey(NBT_INPUT)) {mInput = aNBT.getLong(NBT_INPUT); mInputMin = mInput / 2; mInputMax = mInput * 2;}
+        if (aNBT.hasKey(NBT_INPUT_MIN)) {mInputMin = aNBT.getLong(NBT_INPUT_MIN);}
+        if (aNBT.hasKey(NBT_INPUT_MAX)) {mInputMax = aNBT.getLong(NBT_INPUT_MAX);}
+        if (aNBT.hasKey(NBT_TANK_CAPACITY)) {mTank.setCapacity(aNBT.getLong(NBT_TANK_CAPACITY));}
+
+    }
+
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        addToolTipsSided(aList, aStack, aF3_H);
+        LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
         aList.add(LH.Chat.CYAN    + LH.get(kTooltips.TANK_GAS_COMPRESSED_INPUTER));
-        aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_TOGGLE_SCREWDRIVER));
-        if (SIDES_VALID[mFluidAutoInput])
-            aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_TOGGLE_AUTO_INPUTS_MONKEY_WRENCH));
-        if (SIDES_VALID[mFluidAutoOutput])
-            aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_TOGGLE_AUTO_OUTPUTS_MONKEY_WRENCH));
-        aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_RESET_SOFT_HAMMER));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
-    @Override
-    public void onTick2(long aTimer, boolean aIsServerSide) {
-        if (aIsServerSide) {
-            if (mBlockUpdated) updateAdjacentToggleableEnergySources();
-            if (!mStopped) {
-                if (mEnergyTypeAccepted == TD.Energy.TU) mEnergy++;
-                if (mChargeRequirement > 0 && mEnergyTypeCharged == TD.Energy.TU) mChargeRequirement--;
-            }
-            doWork(aTimer);
 
-            if (!mDisabledFluidOutput && SIDES_VALID[mFluidAutoOutput]&&mTanksOutput[0].has()) doOutputFluids();
-
-            if (mTimer % 600 == 5 && mRunning) doDefaultStructuralChecks();
-
-            for (int i = 0; i < mTanksInput .length; i++) slot(mRecipes.mInputItemsCount + mRecipes.mOutputItemsCount + 1 + i                       , FL.display(mTanksInput [i], T, T));
-            for (int i = 0; i < mTanksOutput.length; i++) slot(mRecipes.mInputItemsCount + mRecipes.mOutputItemsCount + 1 + i + mTanksInput.length  , FL.display(mTanksOutput[i], T, T));
-
-        }
-    }
-
-    @Override
-    public void doOutputFluids() {
-        DelegatorTileEntity<IFluidHandler> aTo = getFluidOutputTarget(FACING_TO_SIDE[mFacing][mFluidAutoOutput], mTanksOutput[0].fluid());
-        if (aTo == null)return;
-        FluidStack tDrained = mTanksOutput[0].drain(UT.Code.bindInt(Long.MAX_VALUE), F);
-        if (tDrained == null || tDrained.amount <= 0) return;
-        tankGasCompressed target = null;
-        if (aTo.mTileEntity instanceof tankGasCompressed) target= (tankGasCompressed) aTo.mTileEntity;
-        if ((aTo.mTileEntity instanceof MultiTileEntityMultiBlockPart)&& ((MultiTileEntityMultiBlockPart)aTo.mTileEntity).getTarget(F) instanceof tankGasCompressed) target=(tankGasCompressed)((MultiTileEntityMultiBlockPart)aTo.mTileEntity).getTarget(F);
+    public void doOutputFluids(int amount) {
+        DelegatorTileEntity<IFluidHandler> aTo = getAdjacentTank(OPOS[mFacing]);
+        if (aTo == null||mTank.getFluid()==null)return;
+        ICompressGasTank target = null;
+        if (aTo.mTileEntity instanceof ICompressGasTank) target= (ICompressGasTank) aTo.mTileEntity;
+        if ((aTo.mTileEntity instanceof MultiTileEntityMultiBlockPart)&& ((MultiTileEntityMultiBlockPart)aTo.mTileEntity).getTarget(F) instanceof ICompressGasTank) target=(ICompressGasTank)((MultiTileEntityMultiBlockPart)aTo.mTileEntity).getTarget(F);
         if (target==null) return;
-        tDrained.amount = UT.Code.bindInt((target.forceFill(tDrained.copy())));
-        if (tDrained.amount <= 0) return;
-        mTanksOutput[0].drain(tDrained.amount, T);
+        FluidStack fluidStack = mTank.getFluid().copy();
+        fluidStack.amount=amount;
+        int used = UT.Code.bindInt((target.fillCompressedGas(fluidStack)));
+        if (used <= 0) return;
+        mTank.drain(used, T);
         updateInventory();
-    }
-
-    @Override
-    public boolean doActive(long aTimer, long aEnergy) {
-        boolean rActive = F;
-
-        if (mMaxProgress <= 0) {
-            // Successfully produced something or just got ignited || Some Inventory Stuff changes || The Machine has just been turned ON || Check once every Minute
-            if ((mIgnited > 0 || mInventoryChanged || !mRunning || aTimer%1200 == 5) && checkRecipe(!mStopped, T) == FOUND_AND_SUCCESSFULLY_USED_RECIPE) {
-                onProcessStarted();
-            } else {
-                mProgress = 0;
-            }
-        }
-
-        mSuccessful = F;
-
-        if (!(mSpecialIsStartEnergy && mChargeRequirement > 0)) {
-            if ((mTanksOutput[0].contains(mTanksInput[0].fluid())&&(mTanksInput[0].capacity() >= mTanksOutput[0].amount())||mTanksOutput[0].isEmpty()))
-            {
-                rActive=true;
-                int moveRate = (int)aEnergy*10;
-                if (mTanksOutput[0].contains(mTanksInput[0].fluid()) && (mTanksInput[0].capacity() >= mTanksOutput[0].amount())) {
-                    updateInventory();
-                    mTanksOutput[0].add(moveRate);
-                    mSuccessful = T;
-                    mIgnited = 40;
-                    mTanksInput[0].remove(moveRate);
-                }
-                if (mTanksOutput[0].isEmpty()) {
-                    mTanksOutput[0].setFluid(mTanksInput[0].drain(moveRate));
-                    mSuccessful = T;
-                    mIgnited = 40;
-                }
-
-                if (UT.Code.containsSomething(mOutputItems) || UT.Code.containsSomething(mOutputFluids)) {
-                    mMinEnergy = 0;
-                    mOutputEnergy = 0;
-                    mChargeRequirement = 0;
-                } else {
-                    mProgress -= mMaxProgress; // this way the leftover energy can be used on the next processed thing, unless it gets stuck on an output.
-                    mMinEnergy = 0;
-                    mMaxProgress = 0;
-                    mOutputEnergy = 0;
-                    mChargeRequirement = 0;
-                    mOutputItems = ZL_IS;
-                    mOutputFluids = ZL_FS;
-                    mSuccessful = T;
-                    mIgnited = 40;
-
-                    for (byte tSide : ALL_SIDES_VALID_FIRST[FACING_TO_SIDE[mFacing][mItemAutoOutput]])
-                        if (FACE_CONNECTED[FACING_ROTATIONS[mFacing][tSide]][mItemOutputs]) {
-                            DelegatorTileEntity<TileEntity> tDelegator = getItemOutputTarget(tSide);
-                            if (tDelegator != null && tDelegator.mTileEntity instanceof ITileEntityAdjacentInventoryUpdatable) {
-                                ((ITileEntityAdjacentInventoryUpdatable) tDelegator.mTileEntity).adjacentInventoryUpdated(tDelegator.mSideOfTileEntity, this);
-                            }
-                        }
-
-                    onProcessFinished();
-                }
-            }
-        }
-
-        mStateOld = mStateNew;
-
-        if (!mDisabledItemOutput && SIDES_VALID[mItemAutoOutput]) {
-            boolean tOutputEmpty = T;
-            for (int i = mRecipes.mInputItemsCount, j = i + mRecipes.mOutputItemsCount; i < j; i++) if (slotHas(i)) {tOutputEmpty = F; break;}
-
-            // Output not Empty && (Successfully produced something or just got ignited || Some Inventory Stuff changes || The Machine has just been turned ON || Output has been blocked since 256 active ticks || Check once every 10 Seconds)
-            if (!tOutputEmpty && (mIgnited > 0 || mInventoryChanged || !mRunning || mOutputBlocked == 1 || aTimer%200 == 5)) {
-                boolean tInventoryChanged = mInventoryChanged;
-                mInventoryChanged = F;
-                doOutputItems();
-                if (mInventoryChanged) mOutputBlocked = 0; else mInventoryChanged = tInventoryChanged;
-            }
-
-            tOutputEmpty = T;
-            for (int i = mRecipes.mInputItemsCount, j = i + mRecipes.mOutputItemsCount; i < j; i++) if (slotHas(i)) {tOutputEmpty = F; mOutputBlocked++; break;}
-
-            if (tOutputEmpty) mOutputBlocked = 0;
-        }
-
-        return rActive;
     }
 
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         return false;
     }
+
     @Override
     public IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
         if (!FL.gas(aFluidToFill)) return null;
-        if (!mDisabledFluidOutput && SIDES_VALID[mFluidAutoOutput] && FACING_TO_SIDE[mFacing][mFluidAutoOutput] == aSide) return null;
-        if (!FACE_CONNECTED[FACING_ROTATIONS[mFacing][aSide]][mFluidInputs]) return null;
-        for (gregapi.fluid.FluidTankGT fluidTankGT : mTanksInput) if (fluidTankGT.contains(aFluidToFill)) return fluidTankGT;
-        for (gregapi.fluid.FluidTankGT fluidTankGT : mTanksInput) if (fluidTankGT.isEmpty()) return fluidTankGT;
+        if (mTank.isEmpty() || mTank.contains(aFluidToFill)) return mTank;
         return null;
     }
+    public IFluidTank[] getFluidTanks2(byte aSide) {
+        return mTank.AS_ARRAY;
+    }
+    @Override
+    public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
+        aSize = Math.abs(aSize);
+        if (aSize > getEnergySizeInputMax(aEnergyType, aSide)) {
+            if (aDoInject) overcharge(aSize, aEnergyType);
+            return aAmount;
+        }
+        if (aEnergyType == mEnergyTypeAccepted) {
+            long tInput = Math.min(mInputMax, aSize * aAmount), tConsumed = Math.min(aAmount, (tInput/aSize) + (tInput%aSize!=0?1:0));
+            if (aDoInject) doOutputFluids((int) (tConsumed * aSize * 10));
+            return tConsumed;
+        }
+        return 0;
+    }
+
+    @Override public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        return aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(mTexturesMaterial[FACING_ROTATIONS[mFacing][aSide]], mRGBa), BlockTextureDefault.get(mTexturesInactive[FACING_ROTATIONS[mFacing][aSide]])) : null;
+    }
+
+    @Override public boolean isEnergyType                   (TagData aEnergyType, byte aSide, boolean aEmitting) {return  aEnergyType == mEnergyTypeAccepted;}
+    @Override public long getEnergySizeInputMin             (TagData aEnergyType, byte aSide) {return mInputMin;}
+    @Override public long getEnergySizeInputRecommended     (TagData aEnergyType, byte aSide) {return mInput;}
+    @Override public long getEnergySizeInputMax             (TagData aEnergyType, byte aSide) {return mInputMax;}
+
+    @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
 
     @Override public String getTileEntityName() {return "ktfru.multitileentity.machine.compressedgasinputer";}
+
+    @Override
+    public boolean canDrop(int aSlot) {
+        return false;
+    }
 }
