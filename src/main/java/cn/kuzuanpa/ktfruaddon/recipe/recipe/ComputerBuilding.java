@@ -188,23 +188,23 @@ public class ComputerBuilding {
         recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT2.get(1),ItemList.CPUDieGT2090.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT2090.get(1));
 
         recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3660  .get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3660  .get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680  .get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3680  .get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680  .get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699  .get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3660v2.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3660v2.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v2.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3680v2.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v2.get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v2.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3660v3.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3660v3.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3680v3.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v3.get(1));
-
+        recipeMaps.Assembler.addRecipeX(F,520,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3660v2.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3660v2.get(1));
+        recipeMaps.Assembler.addRecipeX(F,600,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3660v3.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3660v3.get(1));
         recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3660v4.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3660v4.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3680v4.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(2),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3699v4.get(1));
+
+        recipeMaps.Assembler.addRecipeX(F,460,280,ST.array(ST.tag(0), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680  .get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3680  .get(1));
+        recipeMaps.Assembler.addRecipeX(F,500,280,ST.array(ST.tag(1), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680  .get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699  .get(1));
+        recipeMaps.Assembler.addRecipeX(F,500,280,ST.array(ST.tag(0), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v2.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3680v2.get(1));
+        recipeMaps.Assembler.addRecipeX(F,580,280,ST.array(ST.tag(1), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v2.get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v2.get(1));
+        recipeMaps.Assembler.addRecipeX(F,560,280,ST.array(ST.tag(0), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUGT3680v3.get(1));
+        recipeMaps.Assembler.addRecipeX(F,620,280,ST.array(ST.tag(1), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v3.get(1));
+        recipeMaps.Assembler.addRecipeX(F,700,280,ST.array(ST.tag(0), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3680v4.get(1));
+        recipeMaps.Assembler.addRecipeX(F,780,280,ST.array(ST.tag(1), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(2),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3699v4.get(1));
         
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3680v3E.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(2),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v3E.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(1),ItemList.InterLayerT2.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3680v4E.get(1));
-        recipeMaps.Assembler.addRecipeX(F,420,280,ST.array(ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(2),ItemList.InterLayerT2.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3699v4E.get(1));
+        recipeMaps.Assembler.addRecipeX(F,700,280,ST.array(ST.tag(10), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3680v3E.get(1));
+        recipeMaps.Assembler.addRecipeX(F,780,280,ST.array(ST.tag(11), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(2),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v3E.get(1));
+        recipeMaps.Assembler.addRecipeX(F,700,280,ST.array(ST.tag(10), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(1),ItemList.InterLayerT2.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3680v4E.get(1));
+        recipeMaps.Assembler.addRecipeX(F,780,280,ST.array(ST.tag(11), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(2),ItemList.InterLayerT2.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3699v4E.get(1));
 
 
         recipeMaps.Assembler.addRecipeX(F,42 ,80 ,ST.array(ST.tag(0),ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K  .get(4 )),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.RAMBar2K4 .get(1));
