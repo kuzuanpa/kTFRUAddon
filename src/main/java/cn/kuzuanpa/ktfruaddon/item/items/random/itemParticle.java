@@ -27,9 +27,8 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class itemParticle extends MultiItemRandom {
     public itemParticle() {
         super(MOD_ID, "ktfru.item.particle");
-        setCreativeTab(new CreativeTab(this.getUnlocalizedName(), "kTFRUAddon: Particles", this, (short) 1008));
+        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Particles", this, (short) 1008));
     }
-
 
     @Override
     public void addItems() {

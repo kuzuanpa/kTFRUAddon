@@ -99,7 +99,7 @@ public enum ItemList implements IItemContainer{
     //These Tier NOT corresponding the Tier of GT Circuits
     DiodePartPhotomaskT2,DiodePartPhotomaskT3,
     CircuitBoardEmptyT2,CircuitBoardEmptyT3,
-    ResistanceT1, CapacitorT1, CoilT1,DiodeT1,
+    ResistanceT1, CapacitorT1, CoilT1,DiodeT1, LEDSet,
     ResistanceT2, CapacitorT2, CoilT2,DiodeT2,DiodeT2Part,
     ResistanceT3, CapacitorT3, CoilT3,DiodeT3,DiodeT3Part,
     ResistanceT4,              CoilT4,

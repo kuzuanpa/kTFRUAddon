@@ -23,7 +23,6 @@ import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTurbine;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTurbine;
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.code.TagData;
 import gregapi.data.LH;
@@ -48,7 +47,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidHandler;
-import org.apache.logging.log4j.Level;
 
 import java.util.Collection;
 import java.util.List;
@@ -169,7 +167,6 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if(mActive) mEnergyStored-= (long) (mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1));
 		if(mForcedStopped)return;
 		doConversion(aTimer);
-		FMLLog.log(Level.FATAL,mEnergyStored+"");
 	}
 	public ITileEntityUnloadable mEmittingTo = null;
 

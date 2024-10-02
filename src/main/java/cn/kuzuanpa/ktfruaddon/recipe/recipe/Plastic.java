@@ -33,7 +33,7 @@ public class Plastic {
             if(prefix!=OP.foil)       RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_SimpleEx_Foil.get(0), ZL_FS, ZL_FS, OP.foil.mat(material, 4));
         }
 
-        recipeMaps.LightMixer         .addRecipe0(F,32 ,120,FL.array(FL.Methane.make(300),MT.Cl.gas(6*U10,false)),FL.array(flList.Chloromethane.make(100),flList.Dichloromethane.make(100),flList.Chloroform.make(100),MT.HCl.gas(6*U10,false)),ZL_IS);
+        recipeMaps.LightMixer         .addRecipe0(F,32 ,600,FL.array(FL.Methane.make(300),MT.Cl.gas(6*U10,false)),FL.array(flList.Chloromethane.make(100),flList.Dichloromethane.make(100),flList.Chloroform.make(100),MT.HCl.gas(6*U10,false)),ZL_IS);
 
         recipeMaps.HeatMixer          .addRecipe1(F,64 ,80, OP.dust.mat(MT.CaCO3,1), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.CalciumAcetate.getDust(1));
         recipeMaps.HeatMixer          .addRecipe1(F,64 ,80,OP.dust.mat(matList.ZincChromate.mat, 0),FL.array(FL.BioEthanol.make(100)),FL.array(flList.Acetone.make(45),FL.CarbonDioxide.make(50)),ZL_IS);

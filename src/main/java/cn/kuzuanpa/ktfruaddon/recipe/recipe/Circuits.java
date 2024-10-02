@@ -63,6 +63,7 @@ public class Circuits {
         recipeMaps.Assembler.addRecipeX(F,1024,10,ST.array(ItemList.DiodeT2Part.get(4),OP.wireFine.mat(MT.Ag,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U100,F)),ZL_FS,ItemList.DiodeT2.get(4));
         recipeMaps.Assembler.addRecipeX(F,4096,10,ST.array(ItemList.DiodeT3Part.get(4),OP.wireFine.mat(MT.Graphene,1),OP.dustTiny.mat(MT.Teflon,1)), FL.array(MT.SolderingAlloy.liquid(U100,F)),ZL_FS,ItemList.DiodeT3.get(4));
 
+        recipeMaps.Assembler.addRecipeX(F, 128,60,ST.array(OP.plateTiny.mat(MT.Ga,4),OP.dust.mat(MT.As,2),OP.dust.mat(MT.Al,1),OP.foil.mat(MT.Ag,4)), FL.array(flList.MoltenTeflon.make(144)),ZL_FS,ItemList.LEDSet.get(2));
 
 
 
@@ -91,7 +92,7 @@ public class Circuits {
 
         recipeMaps.Assembler.addRecipeX(F,16  ,120,ST.array(IL.Circuit_Part_Basic.get(2),   IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(2),ItemList.ResistanceT1.get(4)), FL.array(FL.Glue.make(72)),ZL_FS, IL.Circuit_Board_Basic.get(1));
         recipeMaps.Assembler.addRecipeX(F,64  ,120,ST.array(IL.Circuit_Part_Good.get(2),    IL.Circuit_Plate_Copper.get(1),   ItemList.CoilT1.get(2),ItemList.CapacitorT1.get(8),ItemList.ResistanceT1.get(8)), FL.array(FL.Glue.make(72)),ZL_FS, IL.Circuit_Board_Good.get(1));
-        recipeMaps.Assembler.addRecipeX(F,128 ,120,ST.array(IL.Circuit_Part_Advanced.get(4),IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12),ItemList.DiodeT1.get(2)), FL.array(flList.MoltenBakelite.make(72)),ZL_FS, IL.Circuit_Board_Advanced.get(1));
+        recipeMaps.Assembler.addRecipeX(F,128 ,120,ST.array(IL.Circuit_Part_Advanced.get(4),IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(2),ItemList.CapacitorT2.get(6),ItemList.ResistanceT2.get(12)), FL.array(flList.MoltenBakelite.make(72)),ZL_FS, IL.Circuit_Board_Advanced.get(1));
         recipeMaps.Assembler.addRecipeX(F,512 ,120,ST.array(IL.Circuit_Part_Elite.get(4),   IL.Circuit_Plate_Gold.get(1),     ItemList.CoilT2.get(4),ItemList.CapacitorT2.get(8),ItemList.ResistanceT2.get(20),ItemList.DiodeT1.get(2)), FL.array(flList.MoltenBakelite.make(72)),ZL_FS, IL.Circuit_Board_Elite.get(1));
         recipeMaps.Assembler.addRecipeX(F,2048,120,ST.array(IL.Circuit_Part_Master.get(6),  IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT3.get(8),ItemList.CapacitorT3.get(24),ItemList.ResistanceT3.get(64),ItemList.DiodeT2.get(8)), FL.array(flList.MoltenTeflon.make(144)),ZL_FS, IL.Circuit_Board_Master.get(1));
         recipeMaps.Assembler.addRecipeX(F,8192,120,ST.array(IL.Circuit_Part_Ultimate.get(8),IL.Circuit_Plate_Platinum.get(1), ItemList.CoilT4.get(8),ItemList.CapacitorT3.get(64),ItemList.ResistanceT4.get(128),ItemList.DiodeT3.get(16)), FL.array(flList.MoltenTeflon.make(144)),ZL_FS, IL.Circuit_Board_Ultimate.get(1));
