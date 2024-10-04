@@ -12,8 +12,6 @@
 package cn.kuzuanpa.ktfruaddon.tile.util;
 
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.IMultiBlockPart;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartComputeCluster;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartEnergyConsumer;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
@@ -25,28 +23,7 @@ public class utils {
     public utils() {
     }
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
-        if (tTileEntity == aController) {
-            return true;
-        } else if (tTileEntity instanceof MultiTileEntityMultiBlockPart && ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
-            ITileEntityMultiBlockController tTarget = ((MultiTileEntityMultiBlockPart) tTileEntity).getTarget(false);
-            if (tTarget != aController && tTarget != null) {
-                return false;
-            } else {
-                ((MultiTileEntityMultiBlockPart) tTileEntity).setTarget(aController, aDesign, aMode);
-                return true;
-            }
-        } else if (tTileEntity instanceof MultiBlockPartComputeCluster && ((MultiBlockPartComputeCluster) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiBlockPartComputeCluster) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
-            ITileEntityMultiBlockController tTarget = ((MultiBlockPartComputeCluster) tTileEntity).getTarget(false);
-            if (tTarget != aController && tTarget != null) {
-                return false;
-            } else {
-                ((MultiBlockPartComputeCluster) tTileEntity).setTarget(aController, aDesign, aMode);
-                return true;
-            }
-        } else {
-            return false;
-        }
+        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ),aRegistryMeta,aRegistryID,aDesign,aMode);
     }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign, int aMode) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
@@ -84,18 +61,9 @@ public class utils {
     public static boolean resetTarget(ITileEntityMultiBlockController aController,ChunkCoordinates coord, int aDesign, int aMode) {
         return resetTarget(aController,coord.posX,coord.posY, coord.posZ, aDesign, aMode);
     }
+    @Deprecated
     public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
-        if (tTileEntity == null) return false;
-        if (tTileEntity == aController) return true;
-        else if (tTileEntity instanceof MultiBlockPartEnergyConsumer && ((MultiBlockPartEnergyConsumer) tTileEntity).getMultiTileEntityID() == aRegistryMeta && ((MultiBlockPartEnergyConsumer) tTileEntity).getMultiTileEntityRegistryID() == aRegistryID) {
-            ITileEntityMultiBlockController tTarget = ((MultiBlockPartEnergyConsumer) tTileEntity).getTarget(false);
-            if (tTarget != aController && tTarget != null) return false;
-            else {
-                ((MultiBlockPartEnergyConsumer) tTileEntity).setTarget(aController, aDesign, aMode);
-                return true;
-            }
-        } else return false;
+        return checkAndSetTarget(aController, aX, aY, aZ, aRegistryMeta, aRegistryID, aDesign, aMode);
     }
 
     public static String getTargetTileEntityName(TileEntity tile) {

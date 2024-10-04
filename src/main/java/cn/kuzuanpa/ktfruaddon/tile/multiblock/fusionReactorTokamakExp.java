@@ -353,12 +353,12 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
 
     @Override
-    public int getDesign(int mapX, int mapY, int mapZ) {
+    public int getDesign(int mapX, int mapY, int mapZ, int blockId, int registryID) {
         return 0;
     }
 
     @Override
-    public int getUsage(int mapX, int mapY, int mapZ) {
+    public int getUsage(int mapX, int mapY, int mapZ, int registryID, int blockID) {
         if (getRegistryID(mapX,mapY,mapZ)==g) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (getBlockID(mapX,mapY,mapZ) == 31019) {

@@ -90,14 +90,12 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
     }};
 
     @Override
-    public int getDesign(int mapX, int mapY, int mapZ) {
+    public int getDesign(int mapX, int mapY, int mapZ, int blockId, int registryID) {
         return 0;
     }
 
     @Override
-    public int getUsage(int mapX, int mapY, int mapZ) {
-        int blockID =getBlockID(mapX,mapY,mapZ);
-        int registryID = getRegistryID(mapX,mapY,mapZ);
+    public int getUsage(int mapX, int mapY, int mapZ, int registryID, int blockID) {
         if (blockID == 18002&&registryID==k) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (blockID == 18002||blockID==18022&&registryID==g) {

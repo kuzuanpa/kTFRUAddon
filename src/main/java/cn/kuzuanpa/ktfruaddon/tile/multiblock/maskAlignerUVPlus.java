@@ -8,10 +8,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartEnergyConsumer;
-import cn.kuzuanpa.ktfruaddon.tile.util.utils;
-import cpw.mods.fml.common.FMLLog;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseControlledMachine;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
 import gregapi.data.CS;
@@ -29,16 +26,16 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
-    public final short machineX = 3, machineY = 3, machineZ = 3;
+public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implements IMappedStructure{
+    public final short sizeX = 3, sizeY = 3, sizeZ = 3;
     public final short xMapOffset = -1;
     public IIconContainer[] mTexturesMaterial = null, mTexturesInactive = null, mTexturesActive = null, mTexturesRunning = null;
 
@@ -71,19 +68,8 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
             {k, k, k},
             {k, k, k},
     }};
-    public int getCheckX(int Facing, int tX, int addX, int addZ) {
-        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
-        return result[Facing];
-    }
-
-    public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
-        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
-        return result[Facing];
-    }
-
-    //change value there to set usage of every block.
-
-    public int getUsage(int blockID ,short registryID){
+    @Override
+    public int getUsage(int mapX,int mapY,int mapZ, int registryID, int blockID){
         if (registryID==k) switch (blockID){
             case 31011: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
             case 31021: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
@@ -91,50 +77,41 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
         return MultiTileEntityMultiBlockPart.ONLY_IN;
     }
 
+    @Override
     public int getBlockID(int checkX, int checkY, int checkZ){
         return blockIDMap[checkY][checkZ][checkX];
     }
-
+    @Override
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;
     }
-    public boolean isSubSource(int blockID){
-        return blockID == 31501;
-    }
+    @Override
     public short getRegistryID(int x,int y,int z){
         return registryIDMap[y][z][x];
     }
+    @Override
+    public boolean isController(int mapX,int mapY,int mapZ, int registryID, int blockID){
+        return blockID == 31501;
+    }
 
+    @Override
+    public int getDesign(int mapX, int mapY, int mapZ, int blockId, int registryID) {
+        return 1;
+    }
+    @Override
+    public List<ChunkCoordinates> getControllerPosList() {
+        return ControllerPos;
+    }
+    @Override
+    public List<ChunkCoordinates> getComputeNodesCoordList() {return null;}
+    ChunkCoordinates lastFailedPos=null;
     @Override
     public boolean checkStructure2() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
-            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
-                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
-                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ)) {
-                            if (isSubSource(getBlockID(cX, cY, cZ))) {
-                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
-                                    tSuccess = F;
-                                if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ)));
-                            } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
-                                tSuccess = F;
-                            if(tSuccess)   FMLLog.log(Level.FATAL,"fail");
-                        }
-                    }
-                }
-            }
-            // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
-            return tSuccess;
-
-        }
-        return mStructureOkay;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,0);
+        return lastFailedPos==null;
     }
-
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {
@@ -164,12 +141,12 @@ public class maskAlignerUVPlus extends TileEntityBaseMultiInputMachine {
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         //FMLLog.log(Level.FATAL,"a"+(xCoord-(SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX)));
-        return aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : machineX) &&
-                aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : machineY) &&
-                aZ >= zCoord - (SIDE_Z_NEG == mFacing ? 0 : SIDE_Z_POS == mFacing ? 3 : machineZ) &&
-                aX <= xCoord + (SIDE_X_POS == mFacing ? 0 : SIDE_X_NEG == mFacing ? 3 : machineX) &&
-                aY <= yCoord + (SIDE_Y_POS == mFacing ? 0 : SIDE_Y_NEG == mFacing ? 3 : machineX) &&
-                aZ <= zCoord + (SIDE_Z_POS == mFacing ? 0 : SIDE_Z_NEG == mFacing ? 3 : machineZ);
+        return aX >= xCoord - (SIDE_X_NEG == mFacing ? 0 : SIDE_X_POS == mFacing ? 3 : sizeX) &&
+                aY >= yCoord - (SIDE_Y_NEG == mFacing ? 0 : SIDE_Y_POS == mFacing ? 3 : sizeY) &&
+                aZ >= zCoord - (SIDE_Z_NEG == mFacing ? 0 : SIDE_Z_POS == mFacing ? 3 : sizeZ) &&
+                aX <= xCoord + (SIDE_X_POS == mFacing ? 0 : SIDE_X_NEG == mFacing ? 3 : sizeX) &&
+                aY <= yCoord + (SIDE_Y_POS == mFacing ? 0 : SIDE_Y_NEG == mFacing ? 3 : sizeX) &&
+                aZ <= zCoord + (SIDE_Z_POS == mFacing ? 0 : SIDE_Z_NEG == mFacing ? 3 : sizeZ);
     }
     //下面四个是设置输入输出的地方,return null是任意面
     //controls where to I/O, return null=any side

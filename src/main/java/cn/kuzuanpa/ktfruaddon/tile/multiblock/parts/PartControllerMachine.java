@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class MultiBlockPartEnergyConsumer extends CommonMachinePart {
+public class PartControllerMachine extends CommonMachinePart implements IMachineRunController{
 
     @Override
     public String getTileEntityName() {
@@ -31,4 +31,8 @@ public class MultiBlockPartEnergyConsumer extends CommonMachinePart {
         return false;
     }
 
+    @Override
+    public boolean canMachineRun() {
+        return mActive;
+    }
 }

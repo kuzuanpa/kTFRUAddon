@@ -9,8 +9,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseMultiInputMachine;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.MultiBlockPartEnergyConsumer;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.base.TileEntityBaseControlledMachine;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
@@ -29,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -36,10 +36,10 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class maskAlignerEUV extends TileEntityBaseMultiInputMachine {
+public class maskAlignerEUV extends TileEntityBaseControlledMachine implements IMappedStructure{
     public final short machineX = 3, machineY = 2, machineZ = 2;
     public final short xMapOffset = -1;
-    public IIconContainer[] mTexturesMaterial = null, mTexturesInactive = null, mTexturesActive = null, mTexturesRunning = null;
+
 
     public static final int[][][] blockIDMap = {{
             {31002,   0  , 31002},
@@ -48,21 +48,13 @@ public class maskAlignerEUV extends TileEntityBaseMultiInputMachine {
             {31002, 31110, 31002},
             {31002, 31120, 31002},
     }};
-    public int getCheckX(int Facing, int tX, int addX, int addZ) {
-        int[] result = {0, 0, tX - addX, tX + addX, tX + addZ, tX - addZ, 0, 0};
-        return result[Facing];
-    }
 
-    public int getCheckZ(int Facing, int tZ, int addX, int addZ) {
-        int[] result = {0, 0, tZ + addZ, tZ - addZ, tZ + addX, tZ - addX, 0, 0};
-        return result[Facing];
-    }
     public short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
     public short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
 
     //change value there to set usage of every block.
 
-    public int getUsage(int blockID ,short registryID){
+    public int getUsage(int mapX, int mapY, int mapZ, int blockID, int registryID){
         if (registryID==k) switch (blockID){
             case 31110: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
             case 31120: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
@@ -77,41 +69,30 @@ public class maskAlignerEUV extends TileEntityBaseMultiInputMachine {
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;
     }
-    public boolean isSubSource(int blockID){
+    public boolean isController(int mapX, int mapY, int mapZ, int blockID, int registryID){
         return blockID == 31200;
     }
     public short getRegistryID(int x,int y,int z){return k;}
+    @Override
+    public int getDesign(int mapX, int mapY, int mapZ, int blockID, int registryID) {
+        return 1;
+    }
 
+    @Override
+    public List<ChunkCoordinates> getControllerPosList() {
+        return ControllerPos;
+    }
+
+    @Override
+    public List<ChunkCoordinates> getComputeNodesCoordList() {return null;}
+    ChunkCoordinates lastFailedPos=null;
     @Override
     public boolean checkStructure2() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
-                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
-                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ)) {
-                            if (isSubSource(getBlockID(cX, cY, cZ))) {
-                                if (!utils.checkAndSetTargetEnergyConsumerPermitted(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 1, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
-                                    tSuccess = F;
-                                if (tSuccess) this.addInputSubSource((MultiBlockPartEnergyConsumer) this.getTileEntity(getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ)));
-                            } else if (!utils.checkAndSetTarget(this, getCheckX(mFacing, tX, cX, cZ), tY + cY, getCheckZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 1, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ))))
-                                tSuccess = F;
-                        }
-                    }
-                }
-            }
-            if (tSuccess==F) resetParts();
-            // FMLLog.log(Level.FATAL, "CheckposState"+tSuccess);
-            return tSuccess;
-
-        }
-        return mStructureOkay;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = checkMappedStructure(null, machineX, machineY, machineZ,xMapOffset,0,0);
+        return lastFailedPos==null;
     }
-
-
 
     public void resetParts() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
@@ -122,7 +103,7 @@ public class maskAlignerEUV extends TileEntityBaseMultiInputMachine {
             for (cY  = 0; cY < machineY; cY++) {
                 for (cZ = 0; cZ < machineZ; cZ++) {
                     for (cX = 0; cX < machineX; cX++) {
-                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
+                        if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0, getUsage( cX,cY,cZ,getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)));
                     }
                 }
             }

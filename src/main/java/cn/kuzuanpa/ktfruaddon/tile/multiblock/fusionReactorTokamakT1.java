@@ -354,12 +354,12 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
 
     @Override
-    public int getDesign(int mapX, int mapY, int mapZ) {
+    public int getDesign(int mapX, int mapY, int mapZ, int blockId, int registryID) {
         return 0;
     }
 
     @Override
-    public int getUsage(int mapX, int mapY, int mapZ) {
+    public int getUsage(int mapX, int mapY, int mapZ, int registryID, int blockID) {
         if (getRegistryID(mapX,mapY,mapZ)==g) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (getBlockID(mapX,mapY,mapZ) == 31019) {

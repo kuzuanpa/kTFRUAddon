@@ -11,10 +11,14 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import gregapi.util.UT;
 import gregapi.util.WD;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+
+import static gregapi.data.CS.*;
 
 public interface IMultiBlockPart {
     ChunkCoordinates getTargetPos();
@@ -23,6 +27,19 @@ public interface IMultiBlockPart {
         if (tTarget != null) tTarget.onStructureChange();
     }
     void setTargetPos(ChunkCoordinates pos);
+
+    static void writeToNBT(NBTTagCompound aNBT, ChunkCoordinates targetPos, int design){
+        if (design != 0) aNBT.setByte(NBT_DESIGN, (byte)design);
+        if (targetPos != null) {
+            UT.NBT.setBoolean(aNBT, "gt.target", true);
+            UT.NBT.setNumber(aNBT, "gt.target.x", targetPos.posX);
+            UT.NBT.setNumber(aNBT, "gt.target.y", targetPos.posY);
+            UT.NBT.setNumber(aNBT, "gt.target.z", targetPos.posZ);
+        }
+    }
+    static ChunkCoordinates readTargetPosFromNBT(NBTTagCompound aNBT){
+        return new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
+    }
     default ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
             if (getTargetPos() == null) {
                 return null;
