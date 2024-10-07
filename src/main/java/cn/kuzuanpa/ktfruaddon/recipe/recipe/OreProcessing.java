@@ -23,11 +23,11 @@ import static gregapi.data.CS.*;
 public class OreProcessing {
     public static void init(){
   //Cr processing
-        recipeMaps.HeatMixer.addRecipe1(F,100,400,OP.dust.mat(MT.Fe,0),FL.array(FL.Nitrogen.make(1000),FL.Hydrogen.make(3000)),FL.array(MT.NH3.gas(2*U,F)));
+        recipeMaps.HeatMixer.addRecipe1(F,100,400,OP.dust.mat(MT.Fe,0),FL.array(FL.Nitrogen.make(2000),FL.Hydrogen.make(3000)),FL.array(MT.NH3.gas(2*U,F)));
         RM.Bath.addRecipeX(T,0, 512 , ST.array(OP.dust.mat(MT.OREMATS.Chromite, 4), OP.dust.mat(matList.AmmoniumSulfate.get(), 9)), FL.array(MT.H2SO4.liquid(6*U,F)), FL.array(FL.Water.make(1500)), OP.dust.mat(matList.AmmoniumChromicSulfate.get(), 6), OP.dust.mat(matList.AmmoniumIronIIISulfate.mat, 3));
         RM.Mixer.addRecipeX(T,64,82,ST.array(ZL_IS),FL.array(MT.NH3.gas(2*U,T),MT.H2SO4.liquid(U , T)), FL.array(ZL_FS),OP.dust.mat(matList.AmmoniumSulfate.mat,9));
         RM.Electrolyzer.addRecipe2(F,120,360,matList.AmmoniumChromicSulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U+U2,T)),OP.dust.mat(MT.Cr,1),matList.AmmoniumDichromate.getDust(2));
-        RM.Electrolyzer.addRecipe2(F,64,320,matList.AmmoniumIronIIISulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U*3,T)),OP.dust.mat(MT.Fe,2));
+        RM.Electrolyzer.addRecipe2(F,64,320,matList.AmmoniumIronIIISulfate.getDust(3),ST.tag(0),ZL_FS, FL.array(MT.H2SO4.liquid(U*3,T), FL.Nitrogen.make(1000)),OP.dust.mat(MT.Fe,2));
         recipeMaps.HeatMixer.addRecipeX(T,320,160,ST.array(OP.dust.mat(matList.AmmoniumDichromate.get(),1)),FL.array(MT.O.gas(U *4,T )),FL.array(FL.Nitrogen.make(250)),OP.dust.mat(MT.CrO2, 2));
 
    //Al processing
