@@ -20,7 +20,7 @@ import static gregapi.data.CS.U;
 import static gregapi.data.TD.Atomic.ANTIMATTER;
 
 public class prefixList {
-    static final ICondition<?> conditionLargeTurbine = new ICondition.And<>(TD.Properties.HAS_TOOL_STATS, TD.ItemGenerator.MOLTEN, new ICondition.Or<>(TD.Atomic.METAL, TD.Compounds.ALLOY), MT.Alumite.NOT);//Because it is too weak and have negative efficiency...
+    static final ICondition<?> conditionLargeTurbine = new ICondition.And<>(TD.Properties.HAS_TOOL_STATS, TD.ItemGenerator.MOLTEN, new ICondition.Or<>(TD.Atomic.METAL, TD.Compounds.ALLOY), MT.AnnealedCopper.NOT, MT.WroughtIron.NOT /*Could not register Recipe*/, MT.Alumite.NOT);//it's too weak and have negative efficiency
 
 
     public static final OreDictPrefix flywheel = create("flywheel", "Flywheels", "", " Flywheel").setMaterialStats(8*U).setCondition(new ICondition.And<>(TD.Properties.HAS_TOOL_STATS, TD.Processing.SMITHABLE)).addListener(new recipePrefixItems.Parts_Flywheel(ANTIMATTER.NOT));

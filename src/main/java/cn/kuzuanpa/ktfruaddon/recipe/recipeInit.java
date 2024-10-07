@@ -10,10 +10,10 @@ package cn.kuzuanpa.ktfruaddon.recipe;
 
 import cn.kuzuanpa.ktfruaddon.recipe.recipe.*;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 public class recipeInit {
-    public static void init(FMLInitializationEvent aEvent){
+    public static void init(FMLPostInitializationEvent aEvent){
         HeatMixer.init();
         ParticleCollinder.init();
         OreProcessing.init();

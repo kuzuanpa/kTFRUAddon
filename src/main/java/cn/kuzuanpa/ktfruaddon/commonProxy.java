@@ -20,7 +20,6 @@ import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.*;
 import gregapi.api.Abstract_Proxy;
-import zmaster587.libVulpes.LibVulpes;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.PROXY;
 
@@ -41,15 +40,15 @@ public class commonProxy extends Abstract_Proxy {
 
     public void init(FMLInitializationEvent aEvent) {
         tileEntityInit0.init(aEvent);
-        recipeInit.init(aEvent);
         PROXY.registerRenderers();
         if(Loader.isModLoaded("libVulpes"))try{
-            LibVulpes.addDummyMultiBlockRegisterer(new ARProjectorRegister());
+            zmaster587.libVulpes.LibVulpes.addDummyMultiBlockRegisterer(new ARProjectorRegister());
         }catch (Exception ignored){}
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
         new i18nPostInit(aEvent);
+        recipeInit.init(aEvent);
         lootPostInit.init(aEvent);
 
     }

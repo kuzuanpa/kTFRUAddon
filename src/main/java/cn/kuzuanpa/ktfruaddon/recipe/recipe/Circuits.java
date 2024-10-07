@@ -74,13 +74,13 @@ public class Circuits {
 
         recipeMaps.Assembler.addRecipe2(F,16,80,OP.foil.mat(MT.Bakelite,6),OP.foil.mat(matList.EpoxyResin.mat,6),FL.array(FL.Glass.make(576)),ZL_FS,ItemList.CircuitBoardEmptyT3.get(1));
 
-        RM.           Bath     .addRecipe2(F,16,80,IL.Circuit_Plate_Empty.get(1),OP.foil.mat(MT.Cu,2),FL.array(flList.EtchingSolution.make(200)),ZL_FS,IL.Circuit_Plate_Copper.get(1));
+        RM.           Bath     .addRecipe2(F,0,80,IL.Circuit_Plate_Empty.get(1),OP.foil.mat(MT.Cu,2),FL.array(flList.EtchingSolution.make(200)),ZL_FS,IL.Circuit_Plate_Copper.get(1));
         RM.           Press    .addRecipe2(F,16,80,IL.Circuit_Plate_Empty.get(1),IL.Circuit_Wire_Copper.get(2),ZL_FS,ZL_FS,IL.Circuit_Plate_Copper.get(1));
 
-        RM.           Bath     .addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT2.get(1),OP.foil.mat(MT.Au,7),FL.array(flList.EtchingSolution.make(700)),ZL_FS,IL.Circuit_Plate_Gold.get(1));
+        RM.           Bath     .addRecipe2(F,0,80,ItemList.CircuitBoardEmptyT2.get(1),OP.foil.mat(MT.Au,7),FL.array(flList.EtchingSolution.make(700)),ZL_FS,IL.Circuit_Plate_Gold.get(1));
         RM.           Press    .addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT2.get(1),IL.Circuit_Wire_Gold.get(4),ZL_FS,ZL_FS,IL.Circuit_Plate_Gold.get(1));
 
-        RM.           Bath     .addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT3.get(1),OP.foil.mat(MT.Pt,11),FL.array(flList.EtchingSolution.make(1100)),ZL_FS,IL.Circuit_Plate_Platinum.get(1));
+        RM.           Bath     .addRecipe2(F,0,80,ItemList.CircuitBoardEmptyT3.get(1),OP.foil.mat(MT.Pt,11),FL.array(flList.EtchingSolution.make(1100)),ZL_FS,IL.Circuit_Plate_Platinum.get(1));
         RM.           Press    .addRecipe2(F,16,80,ItemList.CircuitBoardEmptyT3.get(1),IL.Circuit_Wire_Platinum.get(8),ZL_FS,ZL_FS,IL.Circuit_Plate_Platinum.get(1));
 
         CR.shapeless(ItemList.CircuitBoardBasicUncompleted.get(1),new Object[]{IL.Circuit_Part_Basic.get(1),IL.Circuit_Part_Basic.get(1),IL.Circuit_Plate_Copper.get(1),ItemList.CoilT1.get(1),ItemList.CapacitorT1.get(1),ItemList.CapacitorT1.get(1)});

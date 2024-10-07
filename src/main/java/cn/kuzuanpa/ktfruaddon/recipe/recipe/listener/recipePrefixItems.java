@@ -44,7 +44,10 @@ public class recipePrefixItems {
         @Override
         public void onOreRegistration(OreDictRegistrationContainer aEvent) {
             if (mCondition.isTrue(aEvent.mMaterial)) {
-                recipeMaps.CNC.addRecipe2(true,32,Math.max(aEvent.mMaterial.mToolQuality, 1)*aEvent.mMaterial.mToolDurability, ST.tag(1), OP.bouleGt.mat(aEvent.mMaterial,1), FL.array(FL.DistW.make(2000)),ZL_FS, prefixList.largeTurbineBlade.mat(aEvent.mMaterial,1),OP.dust.mat(aEvent.mMaterial, 2));
+                RM. CrystallisationCrucible.addRecipe1(false,16,3600,OP.dustDiv72.mat(aEvent.mMaterial,1),FL.array(aEvent.mMaterial.liquid(4*U,true), FL.Nitrogen.make(1000)),ZL_FS,OP.bouleGt.mat(aEvent.mMaterial,1));
+                RM. CrystallisationCrucible.addRecipe1(false,16,3600,OP.dustDiv72.mat(aEvent.mMaterial,1),FL.array(aEvent.mMaterial.liquid(4*U,true), FL.Helium.make(200)),ZL_FS,OP.bouleGt.mat(aEvent.mMaterial,1));
+
+                recipeMaps.CNC.addRecipe2(true,32,Math.max(aEvent.mMaterial.mToolQuality, 1)*aEvent.mMaterial.mToolDurability / 2, ST.tag(1), OP.bouleGt.mat(aEvent.mMaterial,1), FL.array(FL.DistW.make(2000)),ZL_FS, prefixList.largeTurbineBlade.mat(aEvent.mMaterial,1),OP.dust.mat(aEvent.mMaterial, 2));
                 RM.        Welder    .addRecipe2(true,aEvent.mMaterial.mMeltingPoint/2, Math.max(aEvent.mMaterial.mToolQuality, 1)*800, prefixList.largeTurbineBlade.mat(aEvent.mMaterial,24), ST.tag(0), FL.array(MT.SolderingAlloy.liquid(12*U,true)),ZL_FS, prefixList.turbineLargeSteam.mat(aEvent.mMaterial,1));
                 RM.        Welder    .addRecipe2(true,aEvent.mMaterial.mMeltingPoint/2, Math.max(aEvent.mMaterial.mToolQuality, 1)*600, prefixList.largeTurbineBlade.mat(aEvent.mMaterial,12), prefixList.turbineLargeSteam.mat(aEvent.mMaterial,1), FL.array(MT.SolderingAlloy.liquid(6*U,true)),ZL_FS, prefixList.turbineLargeGas.mat(aEvent.mMaterial,1));
                 RM.        Welder    .addRecipe2(true,aEvent.mMaterial.mMeltingPoint/2, Math.max(aEvent.mMaterial.mToolQuality, 1)*600, prefixList.largeTurbineBlade.mat(aEvent.mMaterial,12), prefixList.turbineLargeSteamChecked.mat(aEvent.mMaterial,1), FL.array(MT.SolderingAlloy.liquid(6*U,true)),ZL_FS, prefixList.turbineLargeGas.mat(aEvent.mMaterial,1));

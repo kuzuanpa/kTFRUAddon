@@ -100,9 +100,9 @@ public class CompactItem {
             aMat = MT.Ir;
             RM.Lathe.addRecipe1(F, 128, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual8.get(1));
             CR.shaped(ItemList.EngineCylinderManual8.get(1), CR.DEF, " P ", "fIh", " S ", 'I', OP.ingotDouble.mat(aMat, 1), 'P', OP.plateCurved.mat(aMat, 1), 'S', OP.stick.mat(aMat, 1));
-            recipeMaps.CNC.addRecipeX(F, 320, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft8.get(1), OP.dust.mat(aMat, 1));
-            recipeMaps.CNC.addRecipeX(F, 320, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder8.get(1), OP.dustSmall.mat(aMat, 4));
-            recipeMaps.CNC.addRecipeX(F, 320, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo8.get(1), OP.dustSmall.mat(aMat, 4));
+            recipeMaps.CNC.addRecipeX(F, 256, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft8.get(1), OP.dust.mat(aMat, 1));
+            recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder8.get(1), OP.dustSmall.mat(aMat, 4));
+            recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo8.get(1), OP.dustSmall.mat(aMat, 4));
 
             aMat = MT.Cr;
             RM.Lathe.addRecipe1(F, 96, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManualCr.get(1));
@@ -113,6 +113,8 @@ public class CompactItem {
         }
         CR.shaped(ItemList.VibrateDetector.get(1),CR.DEF,"hR ","RBR"," Rw",'R', OP.ring.mat(MT.StainlessSteel,1),'B',OP.nugget.mat(MT.StainlessSteel   ,1));
         recipeMaps.Assembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
+
+        RM.Canner.addRecipe2(F, 16, 16, OP.bolt.mat(MT.Co, 4), IL.Reactor_Rod_Empty.get(1), kRegistry.getItem(9980));
     }
 }
 

@@ -29,7 +29,7 @@ public class itemTurbine extends itemPrefixWithTooltip {
     }
 
     public static float getTurbineEfficiency(OreDictMaterial aMat){return (float) (aMat.mToolQuality /4D + Math.pow(aMat.mToolSpeed, 2)/64D - aMat.mMass/800F);}
-    public static long getTurbineDurability(OreDictMaterial aMat){return (long)(Math.pow(Math.max(0.5F,aMat.mToolQuality),1.5)*24*aMat.mToolDurability*65536L);}
+    public static long getTurbineDurability(OreDictMaterial aMat){return (long)(Math.pow(Math.max(0.5F,aMat.mToolQuality),1.5)*64*aMat.mToolDurability*65536L);}
 
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean aF3_H) {
         super.addInformation(aStack, aPlayer, aList, aF3_H);

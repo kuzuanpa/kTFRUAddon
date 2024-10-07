@@ -22,7 +22,6 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.energy.ITileEntityEnergy;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
@@ -92,41 +91,41 @@ public class PartControllerEnergy extends TileEntityBase09FacingSingle implement
             if (GT_API.sBlockIcons == null && aNBT.hasKey(NBT_TEXTURE)) {
                 String tTextureName = aNBT.getString(NBT_TEXTURE);
                 mTexturesMaterial = new IIconContainer[] {
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/colored/bottom"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/colored/top"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/colored/left"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/colored/front"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/colored/right"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/colored/back")};
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/colored/bottom"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/colored/top"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/colored/left"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/colored/front"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/colored/right"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/colored/back")};
                 mTexturesInactive = new IIconContainer[] {
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay/bottom"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay/top"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay/left"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay/front"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay/right"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay/back")};
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay/bottom"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay/top"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay/left"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay/front"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay/right"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay/back")};
                 mTexturesActive = new IIconContainer[] {
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active/bottom"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active/top"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active/left"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active/front"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active/right"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active/back")};
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active/bottom"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active/top"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active/left"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active/front"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active/right"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active/back")};
                 mTexturesActiveGlow = new IIconContainer[] {
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active_glowing/bottom"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active_glowing/top"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active_glowing/left"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active_glowing/front"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active_glowing/right"),
-                        new Textures.BlockIcons.CustomIcon("machines/basicmachines/"+tTextureName+"/overlay_active_glowing/back")};
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active_glowing/bottom"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active_glowing/top"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active_glowing/left"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active_glowing/front"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active_glowing/right"),
+                        new Textures.BlockIcons.CustomIcon("machines/multiblockparts/"+tTextureName+"/overlay_active_glowing/back")};
             } else {
                 TileEntity tCanonicalTileEntity = MultiTileEntityRegistry.getCanonicalTileEntity(getMultiTileEntityRegistryID(), getMultiTileEntityID());
-                if (tCanonicalTileEntity instanceof MultiTileEntityBasicMachine) {
-                    mTexturesMaterial = ((MultiTileEntityBasicMachine) tCanonicalTileEntity).mTexturesMaterial;
-                    mTexturesInactive = ((MultiTileEntityBasicMachine) tCanonicalTileEntity).mTexturesInactive;
-                    mTexturesActive = ((MultiTileEntityBasicMachine) tCanonicalTileEntity).mTexturesActive;
+                if (tCanonicalTileEntity instanceof PartControllerEnergy) {
+                    mTexturesMaterial = ((PartControllerEnergy) tCanonicalTileEntity).mTexturesMaterial;
+                    mTexturesInactive = ((PartControllerEnergy) tCanonicalTileEntity).mTexturesInactive;
+                    mTexturesActive = ((PartControllerEnergy) tCanonicalTileEntity).mTexturesActive;
 
-                    mTexturesActiveGlow = ((MultiTileEntityBasicMachine) tCanonicalTileEntity).mTexturesActiveGlow;
+                    mTexturesActiveGlow = ((PartControllerEnergy) tCanonicalTileEntity).mTexturesActiveGlow;
 
                 } else {
                     mTexturesMaterial = mTexturesInactive = mTexturesActive = mTexturesActiveGlow = L6_IICONCONTAINER;
