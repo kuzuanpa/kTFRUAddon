@@ -134,7 +134,14 @@ public class DebugGenerator extends TileEntityBase09FacingSingle implements ITil
         return 0;
     }
 
+    @Override
+    public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
+        return aAmount;
+    }
+
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {return aEmitting && aEnergyType == mEnergyTypeEmitted;}
+
+    @Override public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {return true; }
     @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aSide == mFacing && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);}
     @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {return mRate;}
     @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return mRate;}

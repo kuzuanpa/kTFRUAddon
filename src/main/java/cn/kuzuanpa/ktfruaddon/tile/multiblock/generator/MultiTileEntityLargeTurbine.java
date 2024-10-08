@@ -53,7 +53,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IFluidHandler, ITileEntitySwitchableOnOff, IMultiBlockInventory, IMultiTileEntity.IMTE_SyncDataByte {
+public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler,IMultiBlockEnergy, IFluidHandler, ITileEntitySwitchableOnOff, IMultiBlockInventory, IMultiTileEntity.IMTE_SyncDataByte {
 	public short mTurbineWalls = 18022;
 	public long mEnergyStored=0,mRate=0,mRateMax=0,mTurbineDurability = 0;
 	public float mTurbineEfficiency=0;
@@ -74,14 +74,16 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if (aNBT.hasKey("ktfru.turbine.duration")) mTurbineDurability = aNBT.getLong("ktfru.turbine.duration");
 		if (aNBT.hasKey("ktfru.turbine.efficiency")) mTurbineEfficiency = aNBT.getLong("ktfru.turbine.efficiency") / 1000F;
 		if (aNBT.hasKey("ktfru.turbine.checked")) usingCheckedTurbine = aNBT.getBoolean("ktfru.turbine.checked");
+		if (aNBT.hasKey("ktfru.turbine.overclock")) mOverclock = aNBT.getBoolean("ktfru.turbine.overclock");
 	}
 	@Override
 	public void writeToNBT2(NBTTagCompound aNBT) {
 		super.writeToNBT2(aNBT);
 		UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergyStored);
 		UT.NBT.setNumber(aNBT,"ktfru.turbine.duration", mTurbineDurability);
-		UT.NBT.setNumber(aNBT,"ktfru.turbine.efficiency", (long)mTurbineEfficiency* 1000L);
+		UT.NBT.setNumber(aNBT,"ktfru.turbine.efficiency", (long)(mTurbineEfficiency * 1000L));
 		UT.NBT.setBoolean(aNBT,"ktfru.turbine.checked",usingCheckedTurbine);
+		UT.NBT.setBoolean(aNBT,"ktfru.turbine.overclock",mOverclock);
 	}
 	@Override
 	public boolean checkStructure2() {
@@ -162,11 +164,15 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 
 		updateClientData();
 		if(!mActive&&mTurbineEfficiency==0&&slotHas(0)) mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(slot(0).getItemDamage()));
-		float factor = mOverclock? (float) (mTurbineEfficiency / Math.floor(mTurbineEfficiency)) :Math.min(mTurbineEfficiency,2);
-		setActive(ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), mOverclock? (long) Math.floor(mTurbineEfficiency) :1, this, getEmittingTileEntity()) > 0);
-		if(mActive) mEnergyStored-= (long) (mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1));
-		if(mForcedStopped)return;
 		doConversion(aTimer);
+		float factor = mOverclock? (float) (mTurbineEfficiency / Math.floor(mTurbineEfficiency)) :Math.min(mTurbineEfficiency,2);
+		if(mEnergyStored > mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1)){
+			setActive(true);
+			ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), mOverclock? (long) Math.floor(mTurbineEfficiency) :1, this, getEmittingTileEntity());
+			mEnergyStored-= (long) (mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1));
+		}else setActive(false);
+		if(mEnergyStored<0)mEnergyStored=0;
+		if(mForcedStopped)return;
 	}
 	public ITileEntityUnloadable mEmittingTo = null;
 
@@ -178,7 +184,9 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	
 	@Override public boolean isEnergyType                   (TagData aEnergyType, byte aSide, boolean aEmitting) {return aEmitting && mEnergyTypeEmitted.equals(aEnergyType);}
 	@Override public boolean isEnergyAcceptingFrom          (TagData aEnergyType, byte aSide, boolean aTheoretical) {return F;}
-	
+
+	@Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {return isEnergyType(aEnergyType, aSide, T);}
+
 	@Override public boolean canDrop(int aInventorySlot) {return T;}
 	//inventory
 	@Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
@@ -243,8 +251,6 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		return new ContainerCommonTurbine(aPlayer.inventory, this, aGUIID);
 	}
 
-	@Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {
-		return aSide == SIDE_TOP && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);}
 	@Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return mRate;}
 	@Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return mRate;}
 	@Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {return mRateMax;}

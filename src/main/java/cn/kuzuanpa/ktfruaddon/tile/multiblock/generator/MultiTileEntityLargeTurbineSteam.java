@@ -22,7 +22,6 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.generator;
 import cn.kuzuanpa.ktfruaddon.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.material.prefix.prefixList;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -37,7 +36,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -106,14 +104,13 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 			mEnergyStored += mEnergyProducedNextTick;
 			mEnergyProducedNextTick = 0;
 		} else if (!mForcedStopped && slotHas(0) &&  mTanks[0].has(getEnergySizeInputMin(mEnergyTypeEmitted, SIDE_ANY) * 2)) {
-			long tSteam = (long) (mRate*(mOverclock?mTurbineEfficiency:Math.min(mTurbineEfficiency,2)));
-			FMLLog.log(Level.FATAL,tSteam+"");
+			long tSteam = (long) Math.min(mRate*2*(mOverclock?mTurbineEfficiency:Math.min(mTurbineEfficiency,2)), mTanks[0].amount());
 			mSteamCounter += tSteam;
 			mEnergyStored += tSteam / 2;
 			damageTurbine((long) (tSteam / (mOverclock?0.25F:2)),TURBINE_STEAM);
 			if(isTurbineAboutToBreak&&getRandomNumber(20)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
 			mEnergyProducedNextTick += tSteam / 2;
-			mTanks[0].setEmpty();
+			mTanks[0].remove(tSteam);
 			if (mSteamCounter >= STEAM_PER_WATER) {
 				mTanks[1].fillAll(flList.HotDistW.make(mSteamCounter / STEAM_PER_WATER));
 				mSteamCounter %= STEAM_PER_WATER;
