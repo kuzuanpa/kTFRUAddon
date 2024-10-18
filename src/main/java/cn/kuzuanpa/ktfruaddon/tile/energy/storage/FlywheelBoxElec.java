@@ -37,10 +37,10 @@ public class FlywheelBoxElec extends FlywheelBox implements IMultiTileEntity.IMT
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass) && isServerSide() && aChatReturn!=null) {
-            aChatReturn.add(LH.get(kMessages.STORED_ENERGY)+": "+mEnergy);
+            aChatReturn.add(LH.get(kMessages.STORED_ENERGY)+": "+mEnergyStored);
             aChatReturn.add(LH.get(kMessages.CAPACITY)+": "+mCapacity);
-            long amount = (long) Math.ceil(mCurrentRPM/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
-            long tSize = (long) Math.floor(mCurrentRPM/amount);
+            long amount = (long) Math.ceil(mCurrentOutput*1F/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
+            long tSize = (long) Math.floor(mCurrentOutput*1F/amount);
             long tOutput = (mMode == 0 ? amount : Math.min(mMode, amount));
             aChatReturn.add(LH.get(kMessages.OUTPUTTING)+": "+tSize+mEnergyTypeOut.getLocalisedChatNameShort()+ LH.Chat.WHITE+"/A * "+tOutput+"A/t");
         }
@@ -54,15 +54,15 @@ public class FlywheelBoxElec extends FlywheelBox implements IMultiTileEntity.IMT
             if (aDoInject) overcharge(aSize, aEnergyType);
             return aAmount;
         }
-        long canReceiveAmount = Math.min( (long) Math.ceil((mCapacity-mEnergy)*1F/aSize) , mMaxAmpere );
+        long canReceiveAmount = Math.min( (long) Math.ceil((mCapacity-mEnergyStored)*1F/aSize) , mMaxAmpere);
         if (aDoInject) {
-            mEnergy += Math.min(canReceiveAmount,aAmount) * aSize;
+            mEnergyStored += Math.min(canReceiveAmount,aAmount) * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, aAmount));
-            if(mEnergy>mCapacity){
-                mEnergy=mCapacity;
+            if(mEnergyStored>mCapacity){
+                mEnergyStored=mCapacity;
             }
         }
-        mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
+        updateCurrentOutput();
         return Math.min(canReceiveAmount,aAmount);
     }
 
@@ -91,7 +91,7 @@ public class FlywheelBoxElec extends FlywheelBox implements IMultiTileEntity.IMT
 
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return aSendAll ? getClientDataPacketByteArray(aSendAll, (byte) UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getVisualData(), getDirectionData(), (byte) (mEnergy>mCapacity*0.99?2:mEnergy>0?1:0)) : getClientDataPacketByte(aSendAll, getVisualData());
+        return aSendAll ? getClientDataPacketByteArray(aSendAll, (byte) UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getVisualData(), getDirectionData(), (byte) (mEnergyStored>mCapacity*0.99?2:mEnergyStored>0?1:0)) : getClientDataPacketByte(aSendAll, getVisualData());
     }
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler){
         capacityState=aData[5];

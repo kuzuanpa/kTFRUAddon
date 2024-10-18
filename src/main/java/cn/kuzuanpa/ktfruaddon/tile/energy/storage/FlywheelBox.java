@@ -24,8 +24,6 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.energy.ITileEntityEnergy;
-import gregapi.tileentity.energy.TileEntityBase10EnergyBatBox;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
@@ -37,13 +35,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 
-import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.LOSS_PERCENT;
-import static cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT.MAX_AMPERE;
 import static gregapi.data.CS.*;
 
-public class FlywheelBox extends TileEntityBase10EnergyBatBox {
-    public long mCapacity=0, mMaxAmpere=1, mOutputMin;
-    public float mMaxRPM=0,mCurrentRPM=0, mLossPercent =0;
+public class FlywheelBox extends AdaptiveOutputBattery {
+    public float mMaxRPM=0;
     public boolean isContentChanged=false,willFlywheelBreak=false;
 
     public FlywheelBox() {
@@ -53,19 +48,12 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey(MAX_AMPERE)) mMaxAmpere = aNBT.getLong(MAX_AMPERE);
-        if (aNBT.hasKey(LOSS_PERCENT)) mLossPercent = aNBT.getFloat(LOSS_PERCENT);
-        if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
-
-        if (aNBT.hasKey(NBT_CAPACITY)) mCapacity = aNBT.getLong(NBT_CAPACITY);
-        if (aNBT.hasKey("ktfru.nbt.maxRPM")) mMaxRPM = aNBT.getFloat("ktfru.nbt.maxRPM");
-
-        mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
+        mInputMin=4;
+        mOutputMin=1;
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         UT.NBT.setNumber(aNBT, NBT_CAPACITY, mCapacity);
-        aNBT.setFloat("ktfru.nbt.maxRPM",mMaxRPM);
     }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
@@ -92,8 +80,15 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                 if(slotHas(i))aChatReturn.add(slot(i).getDisplayName());
             }
         }
-            return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
+
+    @Override
+    protected void updateCurrentOutput() {
+        super.updateCurrentOutput();
+        mCurrentOutput= (long) Math.floor(Math.min(mMaxRPM,mCurrentOutput));
+    }
+
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
@@ -109,35 +104,10 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
                 }
                 if(!isMaxRPMChanged)mMaxRPM=0;
                 mCapacity= (long) (energyPerRotate*mMaxRPM);
-                mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
                 isContentChanged=false;
             }
-
-            mActive = (mEnergy >= mOutput);
-
-            mAmperageLastEmitting=0;
-            if (mActive) {
-                mCurrentRPM=(mEnergy*1F/mCapacity)*mMaxRPM;
-                if (!mStopped) {
-                    long amount = (long) Math.ceil(mCurrentRPM/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
-                    long tSize = (long) Math.floor(mCurrentRPM/amount);
-                    long tOutput = (mMode == 0 ? amount : Math.min(mMode, amount));
-                    if (tOutput > 0&&tSize>4) {
-                        long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, tSize, tOutput, this);
-                        mOutputLast=tSize;
-                        mEmitsEnergy = (tAmountUsed > 0);
-                        mAmperageLastEmitting = tAmountUsed;
-                        mEnergy -= tSize * tAmountUsed;
-                    }
-                }
-                if (mTimer % 600 == 5) doDefaultStructuralChecks();
-                if(mTimer % 200 == 5) mEnergy=(long)Math.floor(mEnergy*(1.0D-(mLossPercent /100D)));
-            }
-
-            receivedEnergyLast.clear();
-            receivedEnergyLast.addAll(receivedEnergy);
-            receivedEnergy.clear();
         }
+        super.onTick2(aTimer,aIsServerSide);
     }
 
     public boolean isInput (byte aSide) {return aSide==OPOS[mFacing];}
@@ -146,17 +116,17 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
     public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
         if(mCapacity==0)return 0;
         aSize = Math.abs(aSize);
-        if (aSize > getEnergySizeInputMax(aEnergyType, aSide)||aAmount>mMaxAmpere) {
+        if (aSize > getEnergySizeInputMax(aEnergyType, aSide) || aAmount>mMaxAmpere) {
             if (aDoInject) overcharge(aSize, aEnergyType);
             return aAmount;
         }
         if (aDoInject) {
-            mEnergy += aAmount * aSize;
+            mEnergyStored += aAmount * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, aAmount));
-            if(mEnergy>mCapacity){
-                willFlywheelBreak=true;
-                overcharge(aSize,aEnergyType);
-            }
+        }
+        if(mEnergyStored>mCapacity){
+            willFlywheelBreak=true;
+            overcharge(aSize,aEnergyType);
         }
         return aAmount;
     }
@@ -171,7 +141,7 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
         for (int i = 0; i < 4; i++) ST.place(worldObj,xCoord,yCoord,zCoord, OP.scrapGt.mat(mMaterial,getRandomNumber(18)));
         setToAir();
         UT.Sounds.send(worldObj, CS.SFX.IC_MACHINE_INTERRUPT , 1, 1, getCoords());
-        DEB.println("Flywheel Box overcharged with: " + aVoltage + " " + aEnergyType.getLocalisedNameLong()+" capacity:"+mCapacity+" storedEnergy:"+mEnergy);
+        DEB.println("Flywheel Box overcharged with: " + aVoltage + " " + aEnergyType.getLocalisedNameLong()+" capacity:"+mCapacity+" storedEnergy:"+mEnergyStored);
     }
 
     @Override
@@ -191,12 +161,6 @@ public class FlywheelBox extends TileEntityBase10EnergyBatBox {
         aList.add(LH.Chat.ORANGE + LH.get(LH.NO_GUI_CLICK_TO_INVENTORY));
         super.addToolTips(aList, aStack, aF3_H);
     }
-    @Override public long getEnergySizeOutputMax            (TagData aEnergyType, byte aSide) {return mOutput * 2;}
-
-    public String getLocalisedInputSide () {return LH.get(LH.FACE_BACK);}
-    @Override
-    public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return 4;}
-    public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return mOutputMin;}
 
     @Override public boolean canInsertItem2 (int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return !mActive && aStack != null && prefixList.flywheel.contains(aStack);}
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {isContentChanged=true; return !mActive;}
