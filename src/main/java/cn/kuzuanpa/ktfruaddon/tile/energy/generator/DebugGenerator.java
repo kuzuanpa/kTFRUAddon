@@ -35,7 +35,7 @@ import static gregapi.data.CS.*;
 public class DebugGenerator extends TileEntityBase09FacingSingle implements ITileEntityEnergy, IMeterDetectable {
     public long mRate = 0, mAmount = 1;
     public TagData mEnergyTypeEmitted = TD.Energy.EU;
-    public static final TagData[] availEmitEnergy = {TD.Energy.EU,TD.Energy.RU,TD.Energy.KU,TD.Energy.HU,TD.Energy.LU,TD.Energy.QU,TD.Energy.CU,TD.Energy.MU,TD.Energy.TU,TD.Energy.NU,TD.Energy.AU, };
+    public static final TagData[] availEmitEnergy = {TD.Energy.EU,TD.Energy.RU,TD.Energy.KU,TD.Energy.HU,TD.Energy.LU,TD.Energy.RF,TD.Energy.QU,TD.Energy.CU,TD.Energy.MU,TD.Energy.TU,TD.Energy.NU,TD.Energy.AU, };
     public int emitPointer;
 
     @Override

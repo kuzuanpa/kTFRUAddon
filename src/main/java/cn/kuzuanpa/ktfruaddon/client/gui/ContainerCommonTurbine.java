@@ -19,7 +19,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.generator.MultiTileEntityLargeTurbine;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator.MultiTileEntityLargeTurbine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.gui.ContainerCommon;
