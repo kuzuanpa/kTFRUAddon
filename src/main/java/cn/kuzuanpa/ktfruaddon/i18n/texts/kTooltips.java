@@ -54,5 +54,6 @@ public class kTooltips {
             ,TURBINE_DAMAGED="ktfru.tooltip.item.turbine.damaged"
             ,FLYWHEEL_MaxRPM="ktfru.tooltip.item.flywheel.maxRPM"
             ,FLYWHEEL_STORAGE="ktfru.tooltip.item.flywheel.storage"
+            ,MINER=""
     ;
 }

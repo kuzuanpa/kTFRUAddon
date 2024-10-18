@@ -143,23 +143,24 @@ public class OreScanner {
                 int yPos=timerA % this.yPos;
                 int zPos=zChunkPos * 16 + z;
                 Block block = world.getBlock(xPos,yPos,zPos);
+                if(!(block instanceof IPrefixBlock))continue;
                 if (MD.TFC.mLoaded&&isTFCOre(block,xPos,yPos,zPos)) {
                     addDiscoveredOres(getMaterialIDForTFCOre(block,xPos,yPos,zPos), xPos,yPos,zPos, 4);
                     continue;
                 }
-                if (includeBedRockOre && block instanceof IPrefixBlock&&block.getUnlocalizedName().startsWith("gt.meta.ore.normal.bedrock")) {
+                if (includeBedRockOre && block.getUnlocalizedName().startsWith("gt.meta.ore.normal.bedrock")) {
                     addDiscoveredOres(block.getDamageValue(world, xPos,yPos,zPos), xPos,yPos,zPos, 2);
                     continue;
                 }
-                if (includeBedRockOre && block instanceof IPrefixBlock&&block.getUnlocalizedName().startsWith("gt.meta.ore.small.bedrock")) {
+                if (includeBedRockOre &&block.getUnlocalizedName().startsWith("gt.meta.ore.small.bedrock")) {
                     addDiscoveredOres(block.getDamageValue(world, xPos,yPos,zPos), xPos,yPos,zPos, 3);
                     continue;
                 }
-                if (block instanceof IPrefixBlock&&block.getUnlocalizedName().startsWith("gt.meta.ore.normal")) {
+                if (block.getUnlocalizedName().startsWith("gt.meta.ore.normal")) {
                     addDiscoveredOres(block.getDamageValue(world, xPos,yPos,zPos), xPos,yPos,zPos, 0);
                     continue;
                 }
-                if (includeSmallOre && block instanceof IPrefixBlock&&block.getUnlocalizedName().startsWith("gt.meta.ore.small")) {
+                if (includeSmallOre &&block.getUnlocalizedName().startsWith("gt.meta.ore.small")) {
                     addDiscoveredOres(block.getDamageValue(world, xPos,yPos,zPos), xPos,yPos,zPos, 1);
                     continue;
                 }
