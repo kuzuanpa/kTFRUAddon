@@ -31,6 +31,7 @@ import gregapi.util.WD;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -138,6 +139,11 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,4,1), this.yCoord , utils.getRealZ(mFacing,zCoord,4,1), FACING_ROTATIONS[mFacing][SIDE_RIGHT], false);
         if(te == null || te.mTileEntity == null) return this.delegator(SIDE_INVALID);
         return new DelegatorTileEntity<>(te.mTileEntity,SIDE_INSIDE);
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return AxisAlignedBB.getBoundingBox((double)(this.xCoord - machineX), (double)(this.yCoord - 1), (double)(this.zCoord - machineZ), (double)(this.xCoord + machineX), (double)(this.yCoord + machineY), (double)(this.zCoord + machineZ));
     }
 
     @Override

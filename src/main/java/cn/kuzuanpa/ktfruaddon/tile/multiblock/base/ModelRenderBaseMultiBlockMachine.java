@@ -26,6 +26,9 @@ public abstract class ModelRenderBaseMultiBlockMachine extends TileEntityBase10M
             return false;
         }return true;
     }
+    @Override public boolean shouldRenderInPass(int pass) {
+        return pass == 1;
+    }
 
     @Override public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         return mStructureOkay?null:super.getTexture2(aBlock, aRenderPass, aSide, aShouldSideBeRendered);
