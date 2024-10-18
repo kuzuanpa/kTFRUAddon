@@ -152,7 +152,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
                 mEnergy -= mRate;
             }
             //doRecipe
-            if (!changingStaticTank&&mEnergy < mRate * 2 && !mStopped &&slot(0)!=null&&slot(1)!=null) {
+            if (!changingStaticTank&&mEnergy < mRate * 2 && !mStopped &&slot(0)!=null&&slot(1)!=null && mTankStatic.amount() >= 1000) {
                 mActivity.mActive = F;
                 Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, T, Long.MAX_VALUE, NI, mTanksRecipe, slot(0),slot(1));
                 if (tRecipe != null) {

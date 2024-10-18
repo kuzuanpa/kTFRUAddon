@@ -43,10 +43,11 @@ public class Chemistry {
         RM.ImplosionCompressor.addRecipeX(F,64,1,ST.array(matList.HensSoPretty.getDust(9),ST.make(MD.MC,"tnt",16),ST.tag(0)),ZL_FS,ZL_FS, ST.make(MD.MC,"spawn_egg",1,93));
 
         //fuel battery
-        recipeMaps.LaserCutter.addRecipe1(F,300,80,OP.plate.mat(MT.Ni,8),ZL_FS,ZL_FS,ItemList.BatteryPoleNickel.get(1));
-        recipeMaps.LaserCutter.addRecipe1(F,300,80,OP.plate.mat(MT.Au,8),ZL_FS,ZL_FS,ItemList.BatteryPoleCarbon.get(1));
-        recipeMaps.LaserCutter.addRecipe1(F,300,80,OP.plate.mat(MT.Pt,8),ZL_FS,ZL_FS,ItemList.BatteryPolePlatinum.get(1));
-        RM.        BurnMixer .addRecipe2(F,300,400,OP.dust.mat(MT.Y,4),OP.dust.mat(MT.Zr,4),FL.array(FL.Oxygen.make(4000)),FL.array(),ItemList.BatteryPoleCaTiO3.get(1));
+        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Ni,8),ZL_FS,ZL_FS,ItemList.BatteryPoleNickel.get(1));
+        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Au,8),ZL_FS,ZL_FS,ItemList.BatteryPoleCarbon.get(1));
+        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Pt,8),ZL_FS,ZL_FS,ItemList.BatteryPolePlatinum.get(1));
+        RM.        BurnMixer  .addRecipe2(F,200,480,OP.dust.mat(MT.Ca,4),OP.dust.mat(MT.Ti,4),FL.array(FL.Oxygen.make(4000)),ZL_FS,ItemList.BatteryPoleCaTiO3.get(1));
+        recipeMaps.HeatMixer  .addRecipe2(F,500,800,OP.dust.mat(MT.Y,4),OP.dust.mat(MT.Zr,4),FL.array(FL.Oxygen.make(4000)),FL.array(flList.YttriumZirconiumOxide.make(1000)));
 
 
         recipeMaps.FuelBattery.addRecipe2(F,-384,9, ItemList.BatteryPoleNickel.get(0),ItemList.BatteryPoleCaTiO3.get(0),FL.array(FL.Methane.make(20)           ,FL.Air.make(80),flList.YttriumZirconiumOxide.make(0)),FL.array(FL.CarbonDioxide.make(20), FL.DistW.make(40)),ZL_IS);
