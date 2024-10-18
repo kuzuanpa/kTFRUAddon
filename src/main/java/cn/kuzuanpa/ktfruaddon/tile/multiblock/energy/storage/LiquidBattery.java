@@ -62,7 +62,8 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public int[] boundForSink = new int[]{Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE};
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
+        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE));
+
         super.addToolTips(aList, aStack, aF3_H);
     }
 
@@ -218,8 +219,13 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     }
 
     public utils.GTTileEntity[] getAvailableTiles() {
-        return new utils.GTTileEntity[]{ new utils.GTTileEntity(g,18002,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN)};
-    };
+        return new utils.GTTileEntity[]{
+                new utils.GTTileEntity(k,31033,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
+                new utils.GTTileEntity(k,31034,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
+                new utils.GTTileEntity(k,31035,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
+                new utils.GTTileEntity(k,31036,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
+        };
+    }
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {

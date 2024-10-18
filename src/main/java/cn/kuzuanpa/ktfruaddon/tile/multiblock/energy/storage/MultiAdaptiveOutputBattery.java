@@ -11,6 +11,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 
 import gregapi.code.TagData;
+import gregapi.data.LH;
 import gregapi.tileentity.energy.IMeterDetectable;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.util.UT;

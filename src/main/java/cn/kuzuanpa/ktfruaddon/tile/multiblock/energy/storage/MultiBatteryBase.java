@@ -12,6 +12,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 
 import gregapi.code.ArrayListNoNulls;
 import gregapi.code.TagData;
+import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.gui.ContainerCommonDefault;
@@ -49,6 +50,12 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
 
     public TagData mEnergyType = TD.Energy.QU;
     public TagData mEnergyTypeOut = TD.Energy.QU;
+
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        super.addToolTips(aList, aStack, aF3_H);
+        LH.addEnergyToolTips(this, aList, mEnergyType, mEnergyTypeOut, LH.get(LH.FACE_ANYBUT_FRONT), LH.get(LH.FACE_FRONT));
+    }
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {

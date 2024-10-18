@@ -23,13 +23,13 @@ More efficient power generator
 MultiBlock Machine in IV or later
 
 
-**Current development Focusing**
+**Recently Updates**
 ![](libs/readme1.png)
-A Large and Powerful Heat Source use SunLight. THE POWER OF SUN!
+What does Flywheel and Water have in common? They can both store energy! Use those flywheel box and large water sink to store your RU!
 
 **Internationalization && Localization**
 
-Unlike GtegTech6 itself,kTFRUAddon use internal language files. If you are good at English and another language, feel free to PR!
+Unlike GregTech6 itself,kTFRUAddon use internal language files. If you are good at English and another language, feel free to PR!
 
 zh_CN:
 
@@ -57,7 +57,7 @@ zh_CN:
 
 不像GregTech本身，kTFRUAddon使用mod内置的语言文件进行本地化工作，如果你擅长英语和另一门语言，欢迎提交PR
 
-**当前开发重点：**
+**最近更新：**
 
 ![](libs/readme1.png)
-由阳光驱动的大型热源，使用太阳之力!
+飞轮与淡水有什么共同点?它们都可以存储能量!使用飞轮组和水库存储RU!
