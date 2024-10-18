@@ -32,9 +32,11 @@ import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -52,7 +54,7 @@ import static gregapi.data.CS.*;
 public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEnergy, IFluidHandler, IMultiTileEntity.IMTE_SyncDataByteArray {
     public TagData mEnergyTypeAccepted = TD.Energy.RF;
     public long mEnergyStored=0, mInput=0,mInputMin=0,mInputMax=0;
-    public int mRange=0, mSpeed=2,mMaxHardness=10, BreakingPosX=0, BreakingPosY=0, BreakingPosZ=0, BreakingRemain=0;
+    public int mRange=0, mSpeed=2,mMaxHardness=10, BreakingPosX=Integer.MIN_VALUE, BreakingPosY=Integer.MIN_VALUE, BreakingPosZ=Integer.MIN_VALUE, BreakingRemain=0;
     public FakePlayer fakePlayer = null;
     public final static byte STATE_IDLE=0,STATE_FINDING=1,STATE_BREAKING=2, STATE_FINISHED =3, STATE_NOT_INIT=4;
     public byte mState=STATE_NOT_INIT;
@@ -72,17 +74,28 @@ public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEn
         if (aNBT.hasKey(NBT_INPUT)) {mInput = aNBT.getLong(NBT_INPUT); mInputMin = mInput / 2; mInputMax = mInput * 2;}
         if (aNBT.hasKey(NBT_INPUT_MIN)) {mInputMin = aNBT.getLong(NBT_INPUT_MIN);}
         if (aNBT.hasKey(NBT_INPUT_MAX)) {mInputMax = aNBT.getLong(NBT_INPUT_MAX);}
-        if (aNBT.hasKey(NBT_ENERGY)) {mEnergyStored = aNBT.getLong(NBT_ENERGY);}
         if (aNBT.hasKey(NBT_ENERGY_ACCEPTED)) mEnergyTypeAccepted = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED));
         if (aNBT.hasKey(kTileNBT.MINER_RANGE)) {mRange = aNBT.getInteger(kTileNBT.MINER_RANGE);}
         if (aNBT.hasKey(kTileNBT.MINER_SPEED)) {mSpeed = aNBT.getInteger(kTileNBT.MINER_SPEED);}
         if (aNBT.hasKey(kTileNBT.MINER_MAX_HARDNESS)) {mMaxHardness = aNBT.getInteger(kTileNBT.MINER_MAX_HARDNESS);}
-    }
 
+        if (aNBT.hasKey(NBT_ENERGY)) {mEnergyStored = aNBT.getLong(NBT_ENERGY);}
+        if (aNBT.hasKey(NBT_PROGRESS+".x")) {BreakingPosX = aNBT.getInteger(NBT_PROGRESS+".x");}
+        if (aNBT.hasKey(NBT_PROGRESS+".y")) {BreakingPosY = aNBT.getInteger(NBT_PROGRESS+".y");}
+        if (aNBT.hasKey(NBT_PROGRESS+".z")) {BreakingPosZ = aNBT.getInteger(NBT_PROGRESS+".z");}
+    }
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+        UT.NBT.setNumber(aNBT,NBT_ENERGY,mEnergyStored);
+        UT.NBT.setNumber(aNBT,NBT_PROGRESS+".x",BreakingPosX);
+        UT.NBT.setNumber(aNBT,NBT_PROGRESS+".y",BreakingPosY);
+        UT.NBT.setNumber(aNBT,NBT_PROGRESS+".z",BreakingPosZ);
+    }
     public void init(){
-        BreakingPosX=-mRange;
-        BreakingPosZ=-mRange;
-        BreakingPosY=-1;
+        if(BreakingPosX == Integer.MIN_VALUE)BreakingPosX=-mRange;
+        if(BreakingPosZ == Integer.MIN_VALUE)BreakingPosZ=-mRange;
+        if(BreakingPosY == Integer.MIN_VALUE)BreakingPosY=-1;
         BreakingRemain=0;
         if(isServerSide() && getWorldObj()!=null && fakePlayer==null){
             fakePlayer = new FakePlayer((WorldServer) getWorldObj(),new GameProfile(new UUID(0,0),"ktfruaddon Miner Fake Player"));
@@ -106,11 +119,6 @@ public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEn
             BreakingPosZ=-mRange;
             BreakingPosY-=1;
         }
-    }
-    @Override
-    public void writeToNBT2(NBTTagCompound aNBT) {
-        super.writeToNBT2(aNBT);
-        UT.NBT.setNumber(aNBT,NBT_ENERGY,mEnergyStored);
     }
 
     public void absorbItemAroundPos(int x,int y,int z){
@@ -181,6 +189,7 @@ public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEn
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
         aList.add(LH.Chat.CYAN    + LH.get(kTooltips.MINER));
+        aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_RESET_SOFT_HAMMER));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
 
@@ -242,6 +251,16 @@ public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEn
         return true;
     }
 
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if(aTool.equals(TOOL_softhammer)){
+            mState=STATE_NOT_INIT;
+            BreakingPosX=Integer.MIN_VALUE;
+            BreakingPosY=Integer.MIN_VALUE;
+            BreakingPosZ=Integer.MIN_VALUE;
+        }
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerClientMiner(aPlayer.inventory, this, aGUIID, "");

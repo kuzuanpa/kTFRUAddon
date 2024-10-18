@@ -69,6 +69,8 @@ public class DebugGenerator extends TileEntityBase09FacingSingle implements ITil
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
         aList.add("Debug use Only");
+        aList.add("Emits selected energy (Front)");
+        aList.add("Absorbs any energy (any but Front)");
         aList.add("Tools:");
         aList.add("screw driver: change energy type");
         aList.add("soft hammer: rate = 0");
@@ -96,7 +98,7 @@ public class DebugGenerator extends TileEntityBase09FacingSingle implements ITil
         if (isClientSide()) return 0;
 
         if(aTool.equals(TOOL_screwdriver)){
-            if(emitPointer < availEmitEnergy.length)emitPointer++;
+            if(emitPointer + 1 < availEmitEnergy.length)emitPointer++;
             else emitPointer=0;
             mEnergyTypeEmitted=availEmitEnergy[emitPointer];
         }
