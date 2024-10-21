@@ -45,6 +45,7 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
+            aChatReturn.add("Capacity: "+mCapacity+" StoredEnergy: "+mEnergyStored);
             IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,mEnergyTypeOut,mOutputVoltageLast,mOutputAmpereLast,aChatReturn);
             return 1;
         }
@@ -52,17 +53,16 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
     }
 
     protected void doOutputEnergy(){
-        long amount = (long) Math.ceil(mCurrentOutput*1F/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
-        long outputVoltage = (long) Math.floor(mCurrentOutput*1F/amount);
+        long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
         long outputAmpere = (mMode == 0 ? amount : Math.min(mMode, amount));
         outputAmpere = Math.min(mMaxAmpere, outputAmpere);
-        if (outputAmpere > 0 && outputVoltage > mOutputMin) {
-            long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, outputVoltage, outputAmpere, this);
+        if (outputAmpere > 0 && mCurrentOutput > mOutputMin) {
+            long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, mCurrentOutput, outputAmpere, this);
             mOutputAmpereLast = tAmountUsed;
-            mOutputVoltageLast = outputVoltage;
-            mEnergyStored -= outputVoltage * tAmountUsed;
+            mOutputVoltageLast = mCurrentOutput;
+            mEnergyStored -= mCurrentOutput * tAmountUsed;
             updateCurrentOutput();
-        }
+        }else mOutputAmpereLast=mOutputVoltageLast=0;
     }
 
     @Override
@@ -73,7 +73,12 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
     }
 
     protected void updateCurrentOutput(){
-        mCurrentOutput = (long) Math.floor(mOutputMin + (mEnergyStored*1F/mCapacity)*(mInputMax-mOutputMin));
+        long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
+        if(mMode != 0 && mMode < amount)mCurrentOutput=mOutputMax;
+        else {
+            long bound = mCapacity/mMaxAmpere;
+            mCurrentOutput = amount*bound == amount? mOutputMax : mOutputMin+ (mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)/bound;
+        }
     }
 
     @Override public long getEnergySizeOutputMin            (TagData aEnergyType, byte aSide) {return mOutputMin;}

@@ -13,9 +13,9 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 import cn.kuzuanpa.ktfruaddon.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.code.codeUtil;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.tile.util.kTileNBT;
 import cn.kuzuanpa.ktfruaddon.tile.util.utils;
 import codechicken.lib.vec.BlockCoord;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
@@ -34,7 +34,6 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -43,7 +42,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import org.apache.logging.log4j.Level;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,6 +69,8 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         if(aNBT.hasKey(NBT_DESIGN)) wallID = aNBT.getShort(NBT_DESIGN);
+        if(aNBT.hasKey(kTileNBT.MAX_LAYER)) maxLayer = aNBT.getShort(kTileNBT.MAX_LAYER);
+        if(aNBT.hasKey(kTileNBT.MAX_RANGE)) maxRange = aNBT.getShort(kTileNBT.MAX_RANGE);
         mTank.readFromNBT(aNBT,NBT_TANK);
         mEnergyType= TD.Energy.RU;
         mEnergyTypeOut= TD.Energy.RU;

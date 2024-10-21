@@ -125,14 +125,15 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
             return aAmount;
         }
         long canReceiveAmount = Math.min( (long) Math.ceil((mCapacity-mEnergyStored)*1F/aSize) , mMaxAmpere);
+        long receiveAmount = Math.min(canReceiveAmount,aAmount);
         if (aDoInject) {
-            mEnergyStored += Math.min(canReceiveAmount,aAmount) * aSize;
-            this.receivedEnergy.add(new MeterData(aEnergyType, aSize, aAmount));
+            mEnergyStored += receiveAmount * aSize;
+            this.receivedEnergy.add(new MeterData(aEnergyType, aSize, receiveAmount));
             if(mEnergyStored>mCapacity){
                 mEnergyStored=mCapacity;
             }
         }
-        return Math.min(canReceiveAmount,aAmount);
+        return receiveAmount;
     }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientDefault(aPlayer.inventory, this, aGUIID);}

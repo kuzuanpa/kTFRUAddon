@@ -104,7 +104,7 @@ public abstract class BatteryBase extends TileEntityBase09FacingSingle implement
             mOutputAmpereLast = tAmountUsed;
             mOutput = outputVoltage;
             mEnergyStored -= outputVoltage * tAmountUsed;
-        }
+        }else mOutputAmpereLast=0;
     }
 
     @Override
@@ -116,14 +116,15 @@ public abstract class BatteryBase extends TileEntityBase09FacingSingle implement
             return aAmount;
         }
         long canReceiveAmount = Math.min( (long) Math.ceil((mCapacity-mEnergyStored)*1F/aSize) , mMaxAmpere);
+        long receiveAmount = Math.min(canReceiveAmount,aAmount);
         if (aDoInject) {
-            mEnergyStored += Math.min(canReceiveAmount,aAmount) * aSize;
-            this.receivedEnergy.add(new MeterData(aEnergyType, aSize, aAmount));
+            mEnergyStored += receiveAmount * aSize;
+            this.receivedEnergy.add(new MeterData(aEnergyType, aSize, receiveAmount));
             if(mEnergyStored>mCapacity){
                 mEnergyStored=mCapacity;
             }
         }
-        return Math.min(canReceiveAmount,aAmount);
+        return receiveAmount;
     }
 
     @Override

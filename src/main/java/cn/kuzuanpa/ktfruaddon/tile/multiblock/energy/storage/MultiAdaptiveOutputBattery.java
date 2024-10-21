@@ -10,6 +10,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 
+import cpw.mods.fml.common.FMLLog;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.tileentity.energy.IMeterDetectable;
@@ -19,6 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -56,15 +58,14 @@ public abstract class MultiAdaptiveOutputBattery extends MultiBatteryBase {
     }
 
     protected void doOutputEnergy(){
-        long amount = (long) Math.ceil(mCurrentOutput*1F/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
-        long outputVoltage = (long) Math.floor(mCurrentOutput*1F/amount);
+        long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
         long outputAmpere = (mMode == 0 ? amount : Math.min(mMode, amount));
         outputAmpere = Math.min(mMaxAmpere, outputAmpere);
-        if (outputAmpere > 0 && outputVoltage > mOutputMin) {
-            long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, outputVoltage, outputAmpere, this);
+        if (outputAmpere > 0 && mCurrentOutput > mOutputMin) {
+            long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, mCurrentOutput, outputAmpere, this);
             mOutputAmpereLast = tAmountUsed;
-            mOutputVoltageLast = outputVoltage;
-            mEnergyStored -= outputVoltage * tAmountUsed;
+            mOutputVoltageLast = mCurrentOutput;
+            mEnergyStored -= mCurrentOutput * tAmountUsed;
             updateCurrentOutput();
         }else mOutputAmpereLast=mOutputVoltageLast=0;
     }
@@ -77,7 +78,13 @@ public abstract class MultiAdaptiveOutputBattery extends MultiBatteryBase {
     }
 
     protected void updateCurrentOutput(){
-        mCurrentOutput = (long) Math.floor(mOutputMin + (mEnergyStored*1F/mCapacity)*(mInputMax-mOutputMin));
+        long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
+        if(mMode != 0 && mMode < amount)mCurrentOutput=mOutputMax;
+        else {
+            long bound = mCapacity/mMaxAmpere;
+            mCurrentOutput = amount*bound == amount? mOutputMax : mOutputMin+ (mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)/bound;
+        }
+        //FMLLog.log(Level.ERROR,"DEBUG: capacity:"+mCapacity+"/maxAmpere:"+mMaxAmpere+"/energyStored"+mEnergyStored+"/amount"+amount+"/bound"+(mCapacity/mMaxAmpere)+"/currentOut"+mCurrentOutput);
     }
 
     @Override public long getEnergySizeOutputMin            (TagData aEnergyType, byte aSide) {return mOutputMin;}

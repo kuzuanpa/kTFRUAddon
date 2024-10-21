@@ -75,7 +75,7 @@ public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEn
         if (aNBT.hasKey(NBT_INPUT_MIN)) {mInputMin = aNBT.getLong(NBT_INPUT_MIN);}
         if (aNBT.hasKey(NBT_INPUT_MAX)) {mInputMax = aNBT.getLong(NBT_INPUT_MAX);}
         if (aNBT.hasKey(NBT_ENERGY_ACCEPTED)) mEnergyTypeAccepted = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED));
-        if (aNBT.hasKey(kTileNBT.MINER_RANGE)) {mRange = aNBT.getInteger(kTileNBT.MINER_RANGE);}
+        if (aNBT.hasKey(kTileNBT.MAX_RANGE)) {mRange = aNBT.getInteger(kTileNBT.MAX_RANGE);}
         if (aNBT.hasKey(kTileNBT.MINER_SPEED)) {mSpeed = aNBT.getInteger(kTileNBT.MINER_SPEED);}
         if (aNBT.hasKey(kTileNBT.MINER_MAX_HARDNESS)) {mMaxHardness = aNBT.getInteger(kTileNBT.MINER_MAX_HARDNESS);}
 

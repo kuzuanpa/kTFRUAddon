@@ -19,9 +19,9 @@ public final class kTileNBT {
     public static final String LOSS_PERCENT ="ktfru.nbt.lossRate";
     public static final String MAX_AMPERE="ktfru.nbt.maxAmpere";
     public static final String CRUCIBLE_MODEL_TIMER ="ktfru.nbt.machine.cruciblemodel.timer";
-    public static final String MINER_RANGE="ktfru.nbt.machine.miner.range";
+    public static final String MAX_RANGE ="ktfru.nbt.machine.range";
+    public static final String MAX_LAYER ="ktfru.nbt.machine.layer";
     public static final String MINER_SPEED="ktfru.nbt.machine.miner.speed";
     public static final String MINER_MAX_HARDNESS="ktfru.nbt.machine.miner.hardness";
-    public static final String MINER_STATE="ktfru.nbt.machine.miner.state";
 }
 
