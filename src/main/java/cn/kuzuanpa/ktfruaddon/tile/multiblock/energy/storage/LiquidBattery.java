@@ -34,11 +34,11 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -51,14 +51,14 @@ import java.util.stream.Collectors;
 import static gregapi.data.CS.*;
 
 public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiBlockFluidHandler, IMultiTileEntity.IMTE_SyncDataByteArray, IMappedStructure {
-    public short maxLayer = 16, maxRange=32, liquidYLevelRender, wallID;
+    public short maxLayer = 16, maxRange=32, liquidYLevelRender=0, wallID=0, oldYLevel=0;
     public FluidTankGT mTank = new FluidTankGT();
     final short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     final short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public boolean isTankChanged = false;
+    public boolean isTankChanged = false, isStructureChanged =false, isStoredEnergyChanged=false;
     public final HashMap<Short,Long> layerLiquidCapacity = new HashMap<>();
-
-    public ArrayList<BlockCoord> spaceListForTESR = new ArrayList<>();
+    public static final int liquidAmountPerBlock = 8000;
+    public final ArrayList<BlockCoord> spaceListForTESR = new ArrayList<>();
     public int[] boundForSink = new int[]{Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE};
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
@@ -84,23 +84,22 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     }
 
     @Override
+    public boolean onTickCheck(long aTimer) {
+        boolean result = super.onTickCheck(aTimer)|| isTankChanged || isStoredEnergyChanged;
+        isTankChanged=false;
+        isStoredEnergyChanged=false;
+        return result;
+    }
+
+    @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if(!aIsServerSide && aTimer <= 1) checkSink(true);
+
+        if(!aIsServerSide && aTimer>5 && isStructureChanged) checkSinkAndUpdateCapacity();
         if(!aIsServerSide)return;
 
-        long tankCapacity = 0;
-        for (short i = 0; i < maxLayer; i++) {
-            Long layerCapacity = layerLiquidCapacity.get(i);
-            if (layerCapacity == null || layerCapacity <= 0) break;
-            tankCapacity += layerCapacity;
-        }
-        mTank.setCapacity(tankCapacity);
+        if(FL.move(mTank, getAdjacentTank(SIDE_BOTTOM))>0) isTankChanged =true;
 
-        if(FL.move(mTank, getAdjacentTank(SIDE_BOTTOM))>0) {
-            isTankChanged=true;
-            if(!mTank.has()) updateClientData();
-        }
         if(!mTank.has()) {
             mCapacity=0;
             return;
@@ -122,7 +121,10 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
             liquidYLevelRender = (short) (100*(yCoord + i));
             remainEnergy -= layerEnergy;
         }
-        updateClientData();
+        if(Math.abs(oldYLevel-liquidYLevelRender)>0) {
+            isStoredEnergyChanged=true;
+            oldYLevel=liquidYLevelRender;
+        }
 
         if(!isTankChanged)return;
         if(FL.acid(mTank) || FL.magic(mTank) || FL.temperature(mTank) > 573)explode();
@@ -136,82 +138,99 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
             if(layerCapacity > remainFluidAmount) {
                 mCapacity+= remainFluidAmount * (i + 1)* fluidDensity;
                 break;
-            }else mCapacity += layerCapacity*(i + 1)* fluidDensity;
+            }else {
+                mCapacity += layerCapacity*(i + 1)* fluidDensity;
+            }
             remainFluidAmount-=layerCapacity;
         }
     }
 
-    public boolean checkSink(boolean isClient){
+    public boolean checkSinkAndUpdateCapacity(){
         final BlockCoord StartPoi = codeUtil.MCCoord2CCCoord(utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, maxRange, -1, 2*maxRange));
         final BlockCoord EndPoi = codeUtil.MCCoord2CCCoord(utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, -maxRange, maxLayer, 0));
         BoundingBox checkRange = new BoundingBox(StartPoi, EndPoi);
-        if(isClient) {
-            //Calculate everything for Client Render
-            spaceListForTESR.clear();
+
+        if (isServerSide()) {
+            ArrayList<BlockCoord> checkedBlock = new ArrayList<>();
+            long tankCapacityOld = mTank.capacity();
+            long tankCapacity = 0;
             for (short layer = 0; layer < maxLayer; layer++) {
                 layerCapacity = 0;
-                if(checkSink2(spaceListForTESR,utils.getRealX(mFacing,xCoord,0,2), utils.getRealZ(mFacing,zCoord,0,2), layer, checkRange))layerLiquidCapacity.put(layer,layerCapacity*4000);
-                else {
-                    if(layer == 0){
-                        spaceListForTESR.clear();
-                        break;
-                    }
-                    int fLayer = layer;
-                    //remove spaces just leaked on top layer
-                    List<BlockCoord> spilledSpace = spaceListForTESR.stream().filter(coord-> coord.y == yCoord + fLayer).collect(Collectors.toList());
-                    spaceListForTESR.removeAll(spilledSpace);
-                    //Calculate Bounds
-                    for (BlockCoord blockCoord : spaceListForTESR) {
-                        boundForSink[0] = Math.min(boundForSink[0],blockCoord.x);
-                        boundForSink[1] = Math.min(boundForSink[1],blockCoord.y);
-                        boundForSink[2] = Math.min(boundForSink[2],blockCoord.z);
-                        boundForSink[3] = Math.max(boundForSink[3],blockCoord.x);
-                        boundForSink[4] = Math.max(boundForSink[4],blockCoord.y);
-                        boundForSink[5] = Math.max(boundForSink[5],blockCoord.z);
-                    }
-                    //only keep top space for render
-                    List<BlockCoord> coveredSpace = spaceListForTESR.stream().filter(coord-> spaceListForTESR.stream().anyMatch(coord1 -> coord1.equals(new BlockCoord(coord.x,coord.y+1,coord.z)))).collect(Collectors.toList());
-                    spaceListForTESR.removeAll(coveredSpace);
+                if (checkSink2(checkedBlock, utils.getRealX(mFacing, xCoord, 0, 2), utils.getRealZ(mFacing, zCoord, 0, 2), layer, checkRange)) {
+                    tankCapacity += layerCapacity * liquidAmountPerBlock;
+                    layerLiquidCapacity.put(layer, layerCapacity * liquidAmountPerBlock);
+                } else break;
+            }
+            if (tankCapacityOld != tankCapacity) {
+                mTank.setCapacity(tankCapacity);
+                if(mTank.amount() > tankCapacity){
+                    mTank.remove(mTank.amount() - tankCapacity);
+                    isTankChanged=true;
+                }
+                isStructureChanged = true;
+                updateClientData();
+            }
+            return tankCapacity>0;
+        }
+
+        //Calculate everything for Client Render
+        spaceListForTESR.clear();
+        for (short layer = 0; layer < maxLayer; layer++) {
+            layerCapacity = 0;
+            if (checkSink2(spaceListForTESR, utils.getRealX(mFacing, xCoord, 0, 2), utils.getRealZ(mFacing, zCoord, 0, 2), layer, checkRange))layerLiquidCapacity.put(layer, layerCapacity * liquidAmountPerBlock);
+            else {
+                if (layer == 0) {
+                    spaceListForTESR.clear();
                     break;
                 }
+                int fLayer = layer;
+                //remove spaces just leaked on top layer
+                List<BlockCoord> spilledSpace = spaceListForTESR.stream().filter(coord -> coord.y == yCoord + fLayer).collect(Collectors.toList());
+                spaceListForTESR.removeAll(spilledSpace);
+                break;
             }
-            if(!spaceListForTESR.isEmpty())mStructureOkay=true;
-            return true;
         }
-        //Server side: just check structure and save capacity for every layer
-        ArrayList<BlockCoord> checkedBlock = new ArrayList<>();
-        for (short layer = 0; layer < maxLayer; layer++) {
-            layerCapacity=0;
-            if(checkSink2(checkedBlock,utils.getRealX(mFacing,xCoord,0,2), utils.getRealZ(mFacing,zCoord,0,2), layer, checkRange))layerLiquidCapacity.put(layer,layerCapacity*4000);
-            else break;
+
+        //Calculate Bounds
+        for (BlockCoord blockCoord : spaceListForTESR) {
+            boundForSink[0] = Math.min(boundForSink[0], blockCoord.x);
+            boundForSink[1] = Math.min(boundForSink[1], blockCoord.y);
+            boundForSink[2] = Math.min(boundForSink[2], blockCoord.z);
+            boundForSink[3] = Math.max(boundForSink[3], blockCoord.x);
+            boundForSink[4] = Math.max(boundForSink[4], blockCoord.y);
+            boundForSink[5] = Math.max(boundForSink[5], blockCoord.z);
         }
-        return !layerLiquidCapacity.isEmpty();
+        //only keep top space for render
+        List<BlockCoord> coveredSpace = spaceListForTESR.stream().filter(coord -> spaceListForTESR.stream().anyMatch(coord1 -> coord1.equals(new BlockCoord(coord.x, coord.y + 1, coord.z)))).collect(Collectors.toList());
+        spaceListForTESR.removeAll(coveredSpace);
+
+        if (!spaceListForTESR.isEmpty()) mStructureOkay = true;
+        isStructureChanged = false;
+        return true;
     }
 
     private long layerCapacity;
-    public boolean checkSink2(List<BlockCoord> checkedBlock,int x,int z, int layer, BoundingBox checkRange){
+    public boolean checkSink2(List<BlockCoord> checkedAirList,int x,int z, int layer, BoundingBox checkRange){
+        if (!checkRange.isCoordInBox(new BlockCoord(x,yCoord+layer,z))) return false;//Out Bound
         //don't allow shapes like hopper, and check floor when layer=0
-        if(!checkedBlock.contains(new BlockCoord(x, yCoord+layer-1, z)) && (layer > 0 || Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, x, yCoord+layer-1, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage)))) return false;
-        //check this layer
-        for (int i = 0; i < 5; i++) {
-            byte[] forX = {0, 1, -1, 0, 0};
-            byte[] forZ = {0, 0, 0, 1, -1};
-            BlockCoord checkingCoord = new BlockCoord(x + forX[i], yCoord + layer, z + forZ[i]);
-
-            if (Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, checkingCoord.x, checkingCoord.y, checkingCoord.z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))) {
-                if (!checkRange.isCoordInBox(checkingCoord)) return false;//Out Bound
-                if (!checkedBlock.contains(checkingCoord)) {//Check next target
-                    checkedBlock.add(checkingCoord);
-                    layerCapacity += 1;
-                    if(!checkSink2(checkedBlock,checkingCoord.x,checkingCoord.z,layer, checkRange)){//This layer failed, return
-                        layerCapacity = -1;
-                        return false;
-                    }
-                }
-            }
+        if(!checkedAirList.contains(new BlockCoord(x, yCoord+layer-1, z)) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, x, yCoord+layer-1, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))) return false;
+        //check this block
+        if (Arrays.stream(getAvailableTiles()).anyMatch(availTile -> utils.checkAndSetTarget(this, x , yCoord + layer, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))){return true;}
+        //If this block isn't valid, add to checked Air list
+        layerCapacity += 1;
+        checkedAirList.add(new BlockCoord(x,yCoord+layer,z));
+        //check blocks around
+        final byte[] forX = {1, -1, 0, 0};
+        final byte[] forZ = {0, 0, 1, -1};
+        boolean result = true;
+        for (int i = 0; i < 4; i++) {
+            BlockCoord coord = new BlockCoord(x + forX[i], yCoord + layer, z + forZ[i]);
+            if(checkedAirList.contains(coord))continue;
+            result = result&&checkSink2(checkedAirList,coord.x,coord.z,layer, checkRange);
         }
-        return true;
+        return result;
     }
+
 
     @Override
     public String getTileEntityName() {
@@ -232,9 +251,12 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
         return true;
     }
 
-    protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {isTankChanged=true; return mTank;}
-    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {isTankChanged=true; return mTank;}
-    protected IFluidTank[] getFluidTanks2(byte aSide) {isTankChanged=true;return mTank.AS_ARRAY;}
+    protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
+        isTankChanged =true; return mTank;}
+    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
+        isTankChanged =true; return mTank;}
+    protected IFluidTank[] getFluidTanks2(byte aSide) {
+        isTankChanged =true;return mTank.AS_ARRAY;}
 
     @Override public boolean shouldRenderInPass(int pass) {
         return pass == 1;
@@ -259,27 +281,50 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return aSendAll ? mTank.getFluid() == null ?
+        IPacket packet = aSendAll ?
+                mTank.getFluid() == null ?
                 getClientDataPacketByteArray(aSendAll, (byte) UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getVisualData(), getDirectionData())
                 :
                 getClientDataPacketByteArray(aSendAll, (byte) UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa), getVisualData(), getDirectionData(),
                         UT.Code.toByteS(liquidYLevelRender,0),UT.Code.toByteS(liquidYLevelRender,1),
                         UT.Code.toByteI(mTank.getFluid().getFluidID(),0), UT.Code.toByteI(mTank.getFluid().getFluidID(),1), UT.Code.toByteI(mTank.getFluid().getFluidID(),2), UT.Code.toByteI(mTank.getFluid().getFluidID(),3)
-        ) : getClientDataPacketByte(aSendAll, getVisualData());
+                )
+
+            : mTank.getFluid() == null ?
+                super.getClientDataPacket(aSendAll)
+                :
+                getClientDataPacketByteArray(aSendAll, getVisualData(),
+                UT.Code.toByteS(liquidYLevelRender,0),UT.Code.toByteS(liquidYLevelRender,1),
+                UT.Code.toByteI(mTank.getFluid().getFluidID(),0), UT.Code.toByteI(mTank.getFluid().getFluidID(),1), UT.Code.toByteI(mTank.getFluid().getFluidID(),2), UT.Code.toByteI(mTank.getFluid().getFluidID(),3),
+                (byte) (isStoredEnergyChanged?1:0)
+        );
+        if(isStructureChanged) isStructureChanged =false;
+        return packet;
     }
 
     public boolean loggedNullFluidErr = false;
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler){
+        Fluid fluid = null;
         if(aData.length == 11){
+            super.receiveDataByteArray(aData, aNetworkHandler);
             liquidYLevelRender = UT.Code.combine(aData[5],aData[6]);
-            Fluid fluid = FluidRegistry.getFluid(UT.Code.combine(aData[7],aData[8],aData[9],aData[10]));
-            if(fluid == null) {
-                if(!loggedNullFluidErr)FMLLog.log(Level.ERROR,"Null Fluid Found for Liquid Battery, You may have mod difference between Server and Client");
-                loggedNullFluidErr=true;
-            }
-            else mTank.fill(new FluidStack(fluid,1));
-        }
-        return super.receiveDataByteArray(aData, aNetworkHandler);
+            fluid = FluidRegistry.getFluid(UT.Code.combine(aData[7],aData[8],aData[9],aData[10]));
+            if(fluid == null)fluid = FL.Water.fluid();
+            mTank.fill(new FluidStack(fluid,1));
+            isStructureChanged=true;
+            return true;
+        } else if (aData.length == 8) {
+            liquidYLevelRender = UT.Code.combine(aData[1],aData[2]);
+            fluid = FluidRegistry.getFluid(UT.Code.combine(aData[3],aData[4],aData[5],aData[6]));
+            if(fluid == null)fluid = FL.Water.fluid();
+            mTank.fill(new FluidStack(fluid,1));
+            if(aData[7]==1) checkSinkAndUpdateCapacity();
+            return super.receiveDataByte(aData[0],aNetworkHandler);
+        }else if (aData.length == 5) {
+            super.receiveDataByteArray(aData, aNetworkHandler);
+            checkSinkAndUpdateCapacity();
+            return true;
+        }else return super.receiveDataByte(aData[0],aNetworkHandler);
     }
 
     public final static short sizeX = 3, sizeY = 2, sizeZ = 1;
@@ -311,7 +356,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,0);
-        if(lastFailedPos==null && checkSink(false)) isStructureComplete = true;
+        if(lastFailedPos==null && checkSinkAndUpdateCapacity()) isStructureComplete = true;
         if(mStructureOkay != isStructureComplete) updateClientData();
         return isStructureComplete;
     }

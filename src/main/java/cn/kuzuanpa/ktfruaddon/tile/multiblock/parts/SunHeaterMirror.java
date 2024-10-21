@@ -15,6 +15,7 @@ import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 import cn.kuzuanpa.ktfruaddon.i18n.texts.kMessages;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator.SunHeater;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -32,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.Level;
 
 import static gregapi.data.CS.*;
 
@@ -90,7 +92,7 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
     @Override
     public void onTick2(long aTimer, boolean isServerside){
         if (!isServerside&&getTimer()%10==0) {
-            if (this.getWorld().getWorldTime() % 24000 < 13800&&targetSunBoilerPos!=null&&isValid) updateRotates();
+            if (this.getWorld().getWorldTime() % getDayTotalTime() < getDayTotalTime()/2 &&targetSunBoilerPos!=null&&isValid) updateRotates();
             else rotateVerticalToMove=0;
         }
         if(isServerside&&target!=null) ITileEntityEnergy.Util.insertEnergyInto(TD.Energy.HU,SIDE_BOTTOM,generateRate,1,this,target);
@@ -108,16 +110,16 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
     }
     @SideOnly(Side.CLIENT)
     public void updateRotates(){
-        long Ti=getWorldObj().getWorldTime()% 24000+1800;
-        double Xn=0,Yn=0,Zn=0,T=24000;
+        long Ti= getWorldObj().getWorldTime() % getDayTotalTime();
+        double Xn=0,Yn=0,Zn=0;
 
-        Ti = Ti>15600?7800:Ti;
+        Ti = Ti > getDayTotalTime()/2 ? getTimeNoon() : Ti;
 
         int X2A = targetSunBoilerPos.posX - xCoord, Y2A = targetSunBoilerPos.posY - yCoord, Z2A = targetSunBoilerPos.posZ - zCoord;
 
         double L = Math.sqrt(X2A * X2A + Y2A * Y2A + Z2A * Z2A);
         double X2 = X2A / L, Y2 = Y2A / L, Z2 = Z2A / L;
-        double alpha = Ti / 15600.0 * 3.14159, theta = 0, phi = 0;
+        double alpha = Ti / (getDayTotalTime() / 2F)  * 3.14159, theta = 0, phi = 0;
         double X1 = Math.cos(alpha), Y1 = Math.sin(alpha);
         double[][] coefficient = {
                 {Y1 * Z2, -X1 * Z2, (-Y1 * X2 + X1 * Y2)},
@@ -163,34 +165,45 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
         rotateVerticalToMove = (float) (phi);
         rotateHorizontalToMove = (float) (theta);
 }
+
+    @Override
+    public boolean isSurfaceOpaque2(byte aSide) {
+        return aSide==SIDE_BOTTOM;
+    }
+
     @Override
     public boolean onTickCheck(long aTimer) {
         super.onTickCheck(aTimer);
-        if(aTimer%50==0&&isServerSide()){
+        if(aTimer%20==0&&isServerSide()){
             if(targetSunBoilerPos!=null&&worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ)instanceof SunHeater)target= (SunHeater) worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ);
             else {
                 targetSunBoilerPos=null;
                 return false;
             }
-            isValid = worldObj.canBlockSeeTheSky(xCoord, yCoord, zCoord);
-            if (isValid&&!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord+1))
-                ||!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord))
-                ||!(worldObj.isAirBlock(xCoord+1,yCoord,zCoord-1))
-                ||!(worldObj.isAirBlock(xCoord,yCoord,zCoord+1))
-                ||!(worldObj.isAirBlock(xCoord,yCoord,zCoord-1))
-                ||!(worldObj.isAirBlock(xCoord-1,yCoord,zCoord+1))
-                ||!(worldObj.isAirBlock(xCoord-1,yCoord,zCoord))
-                ||!(worldObj.isAirBlock(xCoord-1,yCoord,zCoord-1))) isValid=false;
+            isValid = worldObj.canBlockSeeTheSky(xCoord, yCoord+1, zCoord);
             if (target!=null&&!isValid){
                 generateRate=0;return true;
             }
             int dx = targetSunBoilerPos.posX - this.xCoord;
             int dy = targetSunBoilerPos.posY - this.yCoord;
             int dz = targetSunBoilerPos.posY - this.yCoord;
-            int Ti = (int) (getWorldObj().getWorldTime() % 24000 + 1800);
-            generateRate =Ti>15600?0:(int) (16+ 48* (1-(Math.abs(7800f - Ti) / 7800)) - (Math.floor(Math.sqrt(dx * dx + dy * dy + dz * dz) * 0.2f)));
+            int Ti = (int) (getWorldObj().getWorldTime() % getDayTotalTime() + getOffset());
+            generateRate =Ti > getDayTotalTime()/2 ? 0 : (int) (16+ 48* (1-(Math.abs(getTimeNoon() - Ti) / getTimeNoon())) - (Math.floor(Math.sqrt(dx * dx + dy * dy + dz * dz) * 0.2f)));
+
+            FMLLog.log(Level.FATAL,""+getWorldObj().getWorldTime() % getDayTotalTime());
         }
         return isValid;
+    }
+    /**Offset: 2 * Time elapsed from (Sun just raise from horizon) to (Day Time = 0)**/
+    public int getOffset(){
+        return getDayTotalTime()/12;
+    }
+    public int getDayTotalTime(){
+        return 24000;
+    }
+
+    public int getTimeNoon(){
+        return getDayTotalTime()/4+getOffset();
     }
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {

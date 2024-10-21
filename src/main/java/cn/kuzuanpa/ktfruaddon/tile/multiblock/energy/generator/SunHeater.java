@@ -65,9 +65,9 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
 
     //决定机器大小
     //this controls the size of machine.
-    public final short machineX = 5;
-    public final short machineYmax = 16;
-    public final short machineZ = 5;
+    public static final short machineX = 5;
+    public static final short machineYmax = 16;
+    public static final short machineZ = 5;
     public short workingMode=0;
     public long mRate=32,mEnergy=0, maxEnergyStorePerLayer =5000000, maxEmitRatePerLayer =256;
     public double timeRemains=-1;
@@ -90,20 +90,14 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
             {18002, 18002, 18002, 18002, 18002},
     },{
             {18002, 18002,   0  , 18002, 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002,   0  ,   0  ,   0  , 18002},
-            {18002, 18002, 18002, 18002, 18002},
-    },{
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002,   0  , 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
     },{
             {31002, 31002, 31002, 31002, 31002},
             {31002, 31003, 31003, 31003, 31002},
-            {31002, 31003,   0  , 31003, 31002},
+            {31002, 31003, 18002, 31003, 31002},
             {31002, 31003, 31003, 31003, 31002},
             {31002, 31002, 31002, 31002, 31002},
     },{
@@ -128,15 +122,9 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
             {g, g, g, g, g},
             {g, g, g, g, g},
     },{
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-    },{
             {k, k, k, k, k},
             {k, k, k, k, k},
-            {k, k, k, k, k},
+            {k, k, g, k, k},
             {k, k, k, k, k},
             {k, k, k, k, k},
     },{
@@ -152,22 +140,16 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
             {F, F, F, F, F},
             {F, F, F, F, F},
             {F, F, F, F, F},
-    }, {
-            {F, F, T, F, F},
-            {F, T, T, T, F},
-            {F, T, T, T, F},
-            {F, T, T, T, F},
-            {F, F, F, F, F},
     },{
             {F, F, F, F, F},
             {F, F, F, F, F},
-            {F, F, T, F, F},
+            {F, F, F, F, F},
             {F, F, F, F, F},
             {F, F, F, F, F},
     },{
             {F, F, F, F, F},
             {F, F, F, F, F},
-            {F, F, T, F, F},
+            {F, F, F, F, F},
             {F, F, F, F, F},
             {F, F, F, F, F},
     },{
@@ -224,22 +206,44 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
                 tSuccess = F;
             }
             int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < 3 &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) for (checkX = 0; checkX < machineX&&tSuccess; checkX++) if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY -1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
+            for (checkY  = 0; checkY < 2 &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) for (checkX = 0; checkX < machineX&&tSuccess; checkX++) if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY -1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = ignoreMap[checkY][checkZ][checkX];
             if(!tSuccess)return false;
-            for (checkY  = 3; checkY < machineYmax &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++) if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX]))) tSuccess = ignoreMap[3][checkZ][checkX];
-            machineY = (short) (checkY - (tSuccess ? 3 : 4));
+            for (checkY  = 2; checkY < machineYmax &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++) if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[2][checkZ][checkX], registryIDMap[2][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[2][checkZ][checkX]))) tSuccess = ignoreMap[2][checkZ][checkX];
+            machineY = (short) (checkY - (tSuccess ? 2 : 3));
             if (!tSuccess) checkY--;
             tSuccess=T;
-            for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++)if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[4][checkZ][checkX], registryIDMap[4][checkZ][checkX], 0, getUsage(blockIDMap[4][checkZ][checkX], registryIDMap[4][checkZ][checkX]))) tSuccess = ignoreMap[4][checkZ][checkX];
+            for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++)if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX]))) tSuccess = ignoreMap[3][checkZ][checkX];
             return tSuccess;
         }
         return mStructureOkay;
     }
 
     static {
-        LH.add("gt.tooltip.multiblock.example.complex.1", "5x5x2 of Stainless Steel Walls");
-        LH.add("gt.tooltip.multiblock.example.complex.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("gt.tooltip.multiblock.example.complex.3", "Input and Output at any Blocks");
+        LH.add("ktfru.tooltip.multiblock.sunheater.1", "5x2x5 of Stainless Steel Walls");
+        LH.add("ktfru.tooltip.multiblock.sunheater.2", "Main Block centered on Side-Top and facing outwards");
+        LH.add("ktfru.tooltip.multiblock.sunheater.3", "layers of Absorb Layer:");
+        LH.add("ktfru.tooltip.multiblock.sunheater.4", "5x5 Sunlight Absorber as ring and 3x3 Sun Heator Transmitter as ring, centered stainless steel wall");
+        LH.add("ktfru.tooltip.multiblock.sunheater.5", "5x1x5 Sun Heater Top Layer on the top");
+        LH.add("ktfru.tooltip.multiblock.sunheater.6", "Emit HU/Output Liquid from top side of top layer");
+        LH.add("ktfru.tooltip.multiblock.sunheater.7", "Rate: 256x(Num of Absorb Layer) HU/t(HU mode), 8x faster in Hot Liquid mode");
+        LH.add("ktfru.tooltip.multiblock.sunheater.8", "Right click with USB to record coord for mirrors");
+    }
+
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.2"));
+        aList.add(LH.Chat.WHITE + "1 - "+machineYmax+" "+LH.get("ktfru.tooltip.multiblock.sunheater.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.4"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.5"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.6"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.7"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.8"));
+        aList.add(LH.Chat.DRED + LH.get(LH.HAZARD_MELTDOWN));
+        aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_TOGGLE_SCREWDRIVER));
+        aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_MEASURE_THERMOMETER));
+        super.addToolTips(aList, aStack, aF3_H);
     }
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (isServerSide()){
@@ -282,7 +286,7 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
         if (mEnergy < 0) mEnergy = 0;
         //AutoOutput
         for (int x = -1; x < 2; x++) for (int z = 1; z < 4; z++) {
-            FL.move(mTanks[1],WD.te(worldObj,utils.getRealX(mFacing, xCoord, x, z), yCoord + 3 + machineY, utils.getRealZ(mFacing, zCoord, x, z),SIDE_BOTTOM,false));
+            FL.move(mTanks[1],WD.te(worldObj,utils.getRealX(mFacing, xCoord, x, z), yCoord + 2 + machineY, utils.getRealZ(mFacing, zCoord, x, z),SIDE_BOTTOM,false));
         }
         //Do Work
         if(workingMode==0) {
@@ -290,14 +294,14 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
             if (mEnergy <= mRate * 9) return;
             mRate = mEnergy > getMaxEnergyStore() * 0.2 ? getEmitRate() : (int) ((mEnergy / (getMaxEnergyStore() * 0.2f)) * getEmitRate());
             for (int x = -1; x < 2; x++) for (int z = 1; z < 4; z++) {
-                TileEntity tileToEmit = worldObj.getTileEntity(utils.getRealX(mFacing, xCoord, x, z), yCoord + 3 + machineY, utils.getRealZ(mFacing, zCoord, x, z));
+                TileEntity tileToEmit = worldObj.getTileEntity(utils.getRealX(mFacing, xCoord, x, z), yCoord + 2 + machineY, utils.getRealZ(mFacing, zCoord, x, z));
                 if (tileToEmit instanceof ITileEntityEnergy) mEnergy -= mRate * ITileEntityEnergy.Util.insertEnergyInto(TD.Energy.HU, SIDE_BOTTOM, mRate, 1, this, tileToEmit);
             }
         }
         if (workingMode==1) {
             if (mEnergy<16) return;
             //doRecipe
-            int mRateCurrent=(mEnergy > getMaxEnergyStore() * 0.2 ? getEmitRate() : (int) ((mEnergy / (getMaxEnergyStore() * 0.2f)) * getEmitRate()))*10;
+            int mRateCurrent=(mEnergy > getMaxEnergyStore() * 0.2 ? getEmitRate() : (int) ((mEnergy / (getMaxEnergyStore() * 0.2f)) * getEmitRate()))*8;
             if (timeRemains>0){
                 if(mRateCurrent<(float)mLastRecipe.mEUt){
                     //Not Enough Energy
@@ -341,18 +345,9 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
         }
         return super.onTickCheck(aTimer);
     }
-        @Override
-    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.YELLOW+LH.CHEAP_OVERCLOCKING);
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.1"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.2"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
-        super.addToolTips(aList, aStack, aF3_H);
-    }
 
     public void overheat() {
-        for (int x = -2; x < machineX-2; x++)for(int z=0;z<machineZ;z++)for(int y=1;y<machineY+2;y++)worldObj.setBlock(utils.getRealX(mFacing,xCoord,x,z),yCoord+y,utils.getRealZ(mFacing,zCoord,x,z), Blocks.flowing_lava);
+        for (int x = -2; x < machineX-2; x++)for(int z=0;z<machineZ;z++)for(int y=0;y<machineY+1;y++)worldObj.setBlock(utils.getRealX(mFacing,xCoord,x,z),yCoord+y,utils.getRealZ(mFacing,zCoord,x,z), Blocks.flowing_lava);
     }
     public int getEmitRate(){
         return mStructureOkay ? (int) (maxEmitRatePerLayer * machineY) : 0;
@@ -367,7 +362,10 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
             if(mTanks[0].getFluid()!=null)aChatReturn.add("Tanks: " + mTanks[0].getFluid().getUnlocalizedName()+":"+mTanks[0].getFluid().amount);
             if(mTanks[0].getFluid()!=null&&mTanks[1].getFluid()!=null)aChatReturn.add("Tanks: " + mTanks[0].getFluid().getUnlocalizedName()+":"+mTanks[0].getFluid().amount+"/"+mTanks[1].getFluid().getUnlocalizedName()+":"+mTanks[1].getFluid().amount);
         }
-        if (aTool.equals(TOOL_monkeywrench)) workingMode= (short) (workingMode==0?1:0);
+        if (aTool.equals(TOOL_screwdriver)) {
+            workingMode= (short) (workingMode==0?1:0);
+            aChatReturn.add(LH.Chat.ORANGE+"Working Mode:"+(workingMode==0?"Direct HU":"Hot Liquid"));
+        }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
 
