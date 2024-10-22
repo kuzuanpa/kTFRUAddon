@@ -1188,6 +1188,14 @@ ktfru.tooltip.multiblock.sunheater.8=Right click with USB to record coord for mi
 ktfru.tooltip.multiblock.tank.gas.compressed.0=3x3x3 空心的相应材料致密壁板
 ktfru.tooltip.multiblock.tank.gas.compressed.1=这个阀门方块放在结构顶面/底面/侧面的中心, 正面朝外
 ktfru.tooltip.multiblock.tank.gas.compressed.2=只能输入气体且需要通过气体压缩机输入,气体从阀门自动输出
+ktfru.tooltip.multiblock.storage.liquid.1=3x2x1 of Stainless Steel Walls
+ktfru.tooltip.multiblock.storage.liquid.2=Main Block centered on Side-Bottom and facing outwards
+ktfru.tooltip.multiblock.storage.liquid.3=A big sink in back of main block
+ktfru.tooltip.multiblock.storage.liquid.4=max sink size:
+ktfru.tooltip.multiblock.storage.liquid.5=max sink height:
+ktfru.tooltip.multiblock.storage.liquid.6=Emit RU from front of main block
+ktfru.tooltip.multiblock.storage.liquid.7=Accept energies from wall layer 2
+ktfru.tooltip.multiblock.storage.liquid.8=Auto Output Liquid from bottom of main block
 ktfru.tooltip.machine.compressedgasinputer=Works with Compressed Gas Tank, Speed: (Input KU)*10 L/t.
 
 oredict.billetIntellite=Intellite Billet
