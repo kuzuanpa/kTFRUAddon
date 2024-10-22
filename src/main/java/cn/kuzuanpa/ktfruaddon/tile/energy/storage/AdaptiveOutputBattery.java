@@ -60,7 +60,6 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
     protected void doOutputEnergy(){
         long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity)+(mEnergyStored == mCapacity?0:1);
         long outputAmpere = (mMode == 0 ? amount : Math.min(mMode, amount));
-        outputAmpere = Math.min(mMaxAmpere, outputAmpere);
         if (outputAmpere > 0) {
             long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, mCurrentOutput, outputAmpere, this);
             mOutputAmpereLast = tAmountUsed;
@@ -82,7 +81,7 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
         if(mMode != 0 && mMode < amount)mCurrentOutput = mOutputMax;
         else {
             long bound = mCapacity/mMaxAmpere;
-            mCurrentOutput = amount*bound == mEnergyStored ? mOutputMax : mOutputMin+ (mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)/bound;
+            mCurrentOutput = amount*bound == mEnergyStored ? mOutputMax : mOutputMin+ (long) ((mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)*1F/bound);
         }
     }
 

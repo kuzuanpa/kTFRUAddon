@@ -49,7 +49,6 @@ public class FlywheelBox extends AdaptiveOutputBattery {
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         mInputMin=4;
-        mOutputMin=1;
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
@@ -92,7 +91,7 @@ public class FlywheelBox extends AdaptiveOutputBattery {
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
-            if(isContentChanged){
+            if(isContentChanged || aTimer < 3){
                 mMaxRPM=Integer.MAX_VALUE;
                 long energyPerRotate=0;
                 boolean isMaxRPMChanged=false;
@@ -103,6 +102,7 @@ public class FlywheelBox extends AdaptiveOutputBattery {
                     energyPerRotate+= (long) (Math.floor(itemFlywheel.getMaxStorage(ST.meta(slot(i))) / thisMaxRPM));
                 }
                 if(!isMaxRPMChanged)mMaxRPM=0;
+                mMaxRPM=Math.min(mMaxAmpere*mOutputMax,mMaxRPM);
                 mCapacity= (long) (energyPerRotate*mMaxRPM);
                 isContentChanged=false;
             }
