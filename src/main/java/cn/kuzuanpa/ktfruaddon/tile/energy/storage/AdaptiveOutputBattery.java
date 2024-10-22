@@ -11,6 +11,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.energy.storage;
 
 import gregapi.code.TagData;
+import gregapi.data.LH;
 import gregapi.tileentity.energy.IMeterDetectable;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.util.UT;
@@ -26,6 +27,10 @@ import static gregapi.data.CS.*;
 public abstract class AdaptiveOutputBattery extends BatteryBase {
     public long mOutputMin, mCurrentOutput, mOutputMax ,mOutputVoltageLast=0,mOutputAmpereLast=0;
 
+    public void addEnergyToolTips(List<String> aList, ItemStack aStack, boolean aF3_H){
+        aList.add(LH.Chat.GREEN + LH.get(LH.ENERGY_INPUT)  + ": " + LH.Chat.WHITE + mInputMin  + " to " +mInputMax  + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * up to " + LH.Chat.CYAN + mMaxAmpere + "A/t");
+        aList.add(LH.Chat.RED   + LH.get(LH.ENERGY_OUTPUT) + ": " + LH.Chat.WHITE + mOutputMin + " to " +mOutputMax + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * up to " + LH.Chat.CYAN + mMaxAmpere + "A/t");
+    }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -53,10 +58,10 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
     }
 
     protected void doOutputEnergy(){
-        long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
+        long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity)+(mEnergyStored == mCapacity?0:1);
         long outputAmpere = (mMode == 0 ? amount : Math.min(mMode, amount));
         outputAmpere = Math.min(mMaxAmpere, outputAmpere);
-        if (outputAmpere > 0 && mCurrentOutput > mOutputMin) {
+        if (outputAmpere > 0) {
             long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, mCurrentOutput, outputAmpere, this);
             mOutputAmpereLast = tAmountUsed;
             mOutputVoltageLast = mCurrentOutput;
@@ -74,10 +79,10 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
 
     protected void updateCurrentOutput(){
         long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
-        if(mMode != 0 && mMode < amount)mCurrentOutput=mOutputMax;
+        if(mMode != 0 && mMode < amount)mCurrentOutput = mOutputMax;
         else {
             long bound = mCapacity/mMaxAmpere;
-            mCurrentOutput = amount*bound == amount? mOutputMax : mOutputMin+ (mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)/bound;
+            mCurrentOutput = amount*bound == mEnergyStored ? mOutputMax : mOutputMin+ (mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)/bound;
         }
     }
 

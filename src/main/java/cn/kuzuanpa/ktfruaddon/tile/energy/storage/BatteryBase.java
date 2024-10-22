@@ -95,15 +95,12 @@ public abstract class BatteryBase extends TileEntityBase09FacingSingle implement
     }
 
     protected void doOutputEnergy(){
-        long amount = (long) Math.ceil(mOutput*1F/getEnergySizeOutputMax(mEnergyTypeOut,mFacing));
-        long outputVoltage = (long) Math.floor(mOutput*1F/amount);
+        long amount = (long) Math.ceil(mMaxAmpere*mEnergyStored*1F/mCapacity)+ (mEnergyStored==mCapacity?0:1);
         long outputAmpere = (mMode == 0 ? amount : Math.min(mMode, amount));
-        outputAmpere = Math.min(mMaxAmpere, outputAmpere);
-        if (outputAmpere > 0 && outputVoltage > mOutput) {
-            long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, outputVoltage, outputAmpere, this);
+        if (outputAmpere > 0) {
+            long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, mOutput, outputAmpere, this);
             mOutputAmpereLast = tAmountUsed;
-            mOutput = outputVoltage;
-            mEnergyStored -= outputVoltage * tAmountUsed;
+            mEnergyStored -= mOutput * tAmountUsed;
         }else mOutputAmpereLast=0;
     }
 
@@ -130,7 +127,12 @@ public abstract class BatteryBase extends TileEntityBase09FacingSingle implement
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
-        LH.addEnergyToolTips(this, aList, mEnergyType, mEnergyTypeOut, LH.get(LH.FACE_ANYBUT_FRONT), LH.get(LH.FACE_FRONT));
+        addEnergyToolTips(aList, aStack, aF3_H);
+    }
+
+    public void addEnergyToolTips(List<String> aList, ItemStack aStack, boolean aF3_H){
+        aList.add(LH.Chat.GREEN + LH.get(LH.ENERGY_INPUT)  + ": " + LH.Chat.WHITE + mInputMin  + " to " +mInputMax  + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * up to " + LH.Chat.CYAN + mMaxAmpere + "A/t");
+        aList.add(LH.Chat.RED   + LH.get(LH.ENERGY_OUTPUT) + ": " + LH.Chat.WHITE + mOutput + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * up to " + LH.Chat.CYAN + mMaxAmpere + "A/t");
     }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientDefault(aPlayer.inventory, this, aGUIID);}

@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 import static gregapi.data.CS.*;
 
 public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiBlockFluidHandler, IMultiTileEntity.IMTE_SyncDataByteArray, IMappedStructure {
-    public short maxLayer = 16, maxRange=32, liquidYLevelRender=0, wallID=0, oldYLevel=0;
+    public short maxLayer = 8, maxRange=8, liquidYLevelRender=0, wallID=0, oldYLevel=0;
     public FluidTankGT mTank = new FluidTankGT();
     final short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     final short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
@@ -60,11 +60,28 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public int[] boundForSink = new int[]{Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE};
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE));
 
+        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.4")+(maxRange*2)+"x"+(maxRange*2));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.5")+ maxLayer);
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.6"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.7"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.8"));
         super.addToolTips(aList, aStack, aF3_H);
     }
-
+    static {
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.1", "3x2x1 of Stainless Steel Walls");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.2", "Main Block centered on Side-Bottom and facing outwards");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.3", "A big sink in back of main block");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.4", "max sink size: ");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.5", "max sink height: ");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.6", "Emit RU from front of main block");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.7", "Accept energies from wall layer 2");
+        LH.add("ktfru.tooltip.multiblock.storage.liquid.8", "Auto Output Liquid from bottom of main block");
+    }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -304,7 +321,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
     public boolean loggedNullFluidErr = false;
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler){
-        Fluid fluid = null;
+        Fluid fluid;
         if(aData.length == 11){
             super.receiveDataByteArray(aData, aNetworkHandler);
             liquidYLevelRender = UT.Code.combine(aData[5],aData[6]);

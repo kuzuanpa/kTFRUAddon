@@ -222,7 +222,7 @@ public class SunHeater extends TileEntityBase10MultiBlockBase implements IMultiB
         LH.add("ktfru.tooltip.multiblock.sunheater.1", "5x2x5 of Stainless Steel Walls");
         LH.add("ktfru.tooltip.multiblock.sunheater.2", "Main Block centered on Side-Top and facing outwards");
         LH.add("ktfru.tooltip.multiblock.sunheater.3", "layers of Absorb Layer:");
-        LH.add("ktfru.tooltip.multiblock.sunheater.4", "5x5 Sunlight Absorber as ring and 3x3 Sun Heator Transmitter as ring, centered stainless steel wall");
+        LH.add("ktfru.tooltip.multiblock.sunheater.4", "  5x5 Sunlight Absorber as ring and 3x3 Sun Heator Transmitter as ring, centered stainless steel wall");
         LH.add("ktfru.tooltip.multiblock.sunheater.5", "5x1x5 Sun Heater Top Layer on the top");
         LH.add("ktfru.tooltip.multiblock.sunheater.6", "Emit HU/Output Liquid from top side of top layer");
         LH.add("ktfru.tooltip.multiblock.sunheater.7", "Rate: 256x(Num of Absorb Layer) HU/t(HU mode), 8x faster in Hot Liquid mode");
