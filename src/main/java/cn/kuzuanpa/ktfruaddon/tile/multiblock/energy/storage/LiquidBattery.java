@@ -34,6 +34,7 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -56,7 +57,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public boolean isTankChanged = false, isStructureChanged =false, isStoredEnergyChanged=false;
     public final HashMap<Short,Long> layerLiquidCapacity = new HashMap<>();
     public static final int liquidAmountPerBlock = 8000;
-    public final ArrayList<BlockCoord> spaceListForTESR = new ArrayList<>();
+    public final ArrayList<BlockCoord> spaceListForTESR = new ArrayList<>(), topLayerForTESR = new ArrayList<>();
     public int[] boundForSink = new int[]{Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE};
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
@@ -172,10 +173,17 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
             long tankCapacity = 0;
             for (short layer = 0; layer < maxLayer; layer++) {
                 layerCapacity = 0;
+                long time = System.nanoTime();
+                short fLayer = layer;
+                checkedBlock.removeIf(coord->coord.y == yCoord+ fLayer -2);
                 if (checkSink2(checkedBlock, utils.getRealX(mFacing, xCoord, 0, 2), utils.getRealZ(mFacing, zCoord, 0, 2), layer, checkRange)) {
                     tankCapacity += layerCapacity * liquidAmountPerBlock;
                     layerLiquidCapacity.put(layer, layerCapacity * liquidAmountPerBlock);
-                } else break;
+                    System.out.println("layer "+layer+"Used time: "+(System.nanoTime()-time));
+                    continue;
+                }
+                System.out.println("Used time2: "+(System.nanoTime()-time));
+                break;
             }
             if (tankCapacityOld != tankCapacity) {
                 mTank.setCapacity(tankCapacity);
@@ -191,6 +199,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
         //Calculate everything for Client Render
         spaceListForTESR.clear();
+        topLayerForTESR.clear();
         for (short layer = 0; layer < maxLayer; layer++) {
             layerCapacity = 0;
             if (checkSink2(spaceListForTESR, utils.getRealX(mFacing, xCoord, 0, 2), utils.getRealZ(mFacing, zCoord, 0, 2), layer, checkRange))layerLiquidCapacity.put(layer, layerCapacity * liquidAmountPerBlock);
@@ -216,9 +225,9 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
             boundForSink[4] = Math.max(boundForSink[4], blockCoord.y);
             boundForSink[5] = Math.max(boundForSink[5], blockCoord.z);
         }
-        //only keep top space for render
-        List<BlockCoord> coveredSpace = spaceListForTESR.stream().filter(coord -> spaceListForTESR.stream().anyMatch(coord1 -> coord1.equals(new BlockCoord(coord.x, coord.y + 1, coord.z)))).collect(Collectors.toList());
-        spaceListForTESR.removeAll(coveredSpace);
+        List<BlockCoord> coveredSpaces = spaceListForTESR.stream().filter(coord -> spaceListForTESR.stream().anyMatch(coord1 -> coord1.equals(new BlockCoord(coord.x, coord.y + 1, coord.z)))).collect(Collectors.toList());
+        topLayerForTESR.addAll(spaceListForTESR);
+        topLayerForTESR.removeAll(coveredSpaces);
 
         if (!spaceListForTESR.isEmpty()) mStructureOkay = true;
         isStructureChanged = false;
@@ -227,9 +236,8 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
     private long layerCapacity;
     public boolean checkSink2(List<BlockCoord> checkedAirList,int x,int z, int layer, BoundingBox checkRange){
-        if (!checkRange.isCoordInBox(new BlockCoord(x,yCoord+layer,z))) return false;//Out Bound
         //don't allow shapes like hopper, and check floor when layer=0
-        if(!checkedAirList.contains(new BlockCoord(x, yCoord+layer-1, z)) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, x, yCoord+layer-1, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))) return false;
+        if(!checkRange.isCoordInBox(new BlockCoord(x,yCoord+layer,z)) || (!checkedAirList.contains(new BlockCoord(x, yCoord+layer-1, z)) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, x, yCoord+layer-1, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage)))) return false;
         //check this block
         if (Arrays.stream(getAvailableTiles()).anyMatch(availTile -> utils.checkAndSetTarget(this, x , yCoord + layer, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))){return true;}
         //If this block isn't valid, add to checked Air list
@@ -267,12 +275,9 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
         return true;
     }
 
-    protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
-        isTankChanged =true; return mTank;}
-    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
-        isTankChanged =true; return mTank;}
-    protected IFluidTank[] getFluidTanks2(byte aSide) {
-        isTankChanged =true;return mTank.AS_ARRAY;}
+    protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {isTankChanged =true; return mTank;}
+    protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {isTankChanged =true; return mTank;}
+    protected IFluidTank[] getFluidTanks2(byte aSide) {isTankChanged =true;return mTank.AS_ARRAY;}
 
     @Override public boolean shouldRenderInPass(int pass) {
         return pass == 1;

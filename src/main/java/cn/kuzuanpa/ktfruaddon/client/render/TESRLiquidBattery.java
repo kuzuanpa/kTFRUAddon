@@ -11,6 +11,7 @@
 package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
+import codechicken.lib.vec.BlockCoord;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -20,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +69,8 @@ public class TESRLiquidBattery extends TileEntitySpecialRenderer {
         bindTexture(new ResourceLocation("textures/atlas/blocks.png"));
 
         int glListID= iconGLListIds.get(icon);
-        List<Vec3> processedList = tile.spaceListForTESR.stream().map(coord -> Vec3.createVectorHelper(coord.x,Math.min(coord.y, finalMaxYCoord),coord.z)).collect(Collectors.toList());
+
+        List<Vec3> processedList = tile.topLayerForTESR.stream().map(coord -> Vec3.createVectorHelper(coord.x,Math.min(coord.y, finalMaxYCoord),coord.z)).filter(vec->tile.spaceListForTESR.contains(new BlockCoord((int)vec.xCoord,(int)Math.ceil(vec.yCoord),(int)vec.zCoord))).collect(Collectors.toList());
         processedList.forEach(vec -> {
             GL11.glPushMatrix();
             GL11.glTranslatef((float) (vec.xCoord - tile.xCoord), (float) (vec.yCoord -tile.yCoord), (float) (vec.zCoord -tile.zCoord));

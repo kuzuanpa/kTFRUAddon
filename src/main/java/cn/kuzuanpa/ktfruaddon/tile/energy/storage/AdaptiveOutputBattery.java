@@ -78,7 +78,7 @@ public abstract class AdaptiveOutputBattery extends BatteryBase {
 
     protected void updateCurrentOutput(){
         long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity);
-        if(mMode != 0 && mMode < amount)mCurrentOutput = mOutputMax;
+        if(mMode != 0 && mMode < amount+(mEnergyStored == mCapacity?0:1))mCurrentOutput = mOutputMax;
         else {
             long bound = mCapacity/mMaxAmpere;
             mCurrentOutput = amount*bound == mEnergyStored ? mOutputMax : mOutputMin+ (long) ((mOutputMax-mOutputMin)*(mEnergyStored - amount*bound)*1F/bound);
