@@ -34,7 +34,9 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -54,7 +56,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public FluidTankGT mTank = new FluidTankGT();
     final short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
     final short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public boolean isTankChanged = false, isStructureChanged =false, isStoredEnergyChanged=false;
+    public boolean isTankChanged = false, isStructureChanged =false, isStoredEnergyChanged=false, disableTESR=false;
     public final HashMap<Short,Long> layerLiquidCapacity = new HashMap<>();
     public static final int liquidAmountPerBlock = 8000;
     public final ArrayList<BlockCoord> spaceListForTESR = new ArrayList<>(), topLayerForTESR = new ArrayList<>();
@@ -112,7 +114,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
 
-        if(!aIsServerSide && aTimer>5 && isStructureChanged) checkSinkAndUpdateCapacity();
+        if(!aIsServerSide && aTimer>5 && isStructureChanged && !disableTESR) checkStructure2(); //Update Structure for TESR
         if(!aIsServerSide)return;
 
         if(FL.move(mTank, getAdjacentTank(SIDE_BOTTOM))>0) isTankChanged =true;
@@ -179,11 +181,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
                 if (checkSink2(checkedBlock, utils.getRealX(mFacing, xCoord, 0, 2), utils.getRealZ(mFacing, zCoord, 0, 2), layer, checkRange)) {
                     tankCapacity += layerCapacity * liquidAmountPerBlock;
                     layerLiquidCapacity.put(layer, layerCapacity * liquidAmountPerBlock);
-                    System.out.println("layer "+layer+"Used time: "+(System.nanoTime()-time));
-                    continue;
-                }
-                System.out.println("Used time2: "+(System.nanoTime()-time));
-                break;
+                }else break;
             }
             if (tankCapacityOld != tankCapacity) {
                 mTank.setCapacity(tankCapacity);
@@ -234,10 +232,20 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
         return true;
     }
 
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if(!isServerSide() && aTool.equals(TOOL_hammer)){
+            disableTESR=!disableTESR;
+            if(!disableTESR)checkStructure2();
+            aChatReturn.add("Enable Special Render: "+!disableTESR);
+        }
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
+
     private long layerCapacity;
     public boolean checkSink2(List<BlockCoord> checkedAirList,int x,int z, int layer, BoundingBox checkRange){
         //don't allow shapes like hopper, and check floor when layer=0
-        if(!checkRange.isCoordInBox(new BlockCoord(x,yCoord+layer,z)) || (!checkedAirList.contains(new BlockCoord(x, yCoord+layer-1, z)) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, x, yCoord+layer-1, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage)))) return false;
+        if(!checkRange.isCoordInBox(new BlockCoord(x,yCoord+layer,z)) || ((layer==0 || !checkedAirList.contains(new BlockCoord(x, yCoord+layer-1, z))) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> utils.checkAndSetTarget(this, x, yCoord+layer-1, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage)))) return false;
         //check this block
         if (Arrays.stream(getAvailableTiles()).anyMatch(availTile -> utils.checkAndSetTarget(this, x , yCoord + layer, z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))){return true;}
         //If this block isn't valid, add to checked Air list
@@ -263,10 +271,9 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
     public utils.GTTileEntity[] getAvailableTiles() {
         return new utils.GTTileEntity[]{
-                new utils.GTTileEntity(k,31033,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
                 new utils.GTTileEntity(k,31034,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
                 new utils.GTTileEntity(k,31035,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
-                new utils.GTTileEntity(k,31036,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN),
+                new utils.GTTileEntity(k,31036,0, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN)
         };
     }
 
@@ -339,11 +346,11 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
             fluid = FluidRegistry.getFluid(UT.Code.combine(aData[3],aData[4],aData[5],aData[6]));
             if(fluid == null)fluid = FL.Water.fluid();
             mTank.fill(new FluidStack(fluid,1));
-            if(aData[7]==1) checkSinkAndUpdateCapacity();
+            if(aData[7]==1) checkStructure2();
             return super.receiveDataByte(aData[0],aNetworkHandler);
         }else if (aData.length == 5) {
             super.receiveDataByteArray(aData, aNetworkHandler);
-            checkSinkAndUpdateCapacity();
+            checkStructure2();
             return true;
         }else return super.receiveDataByte(aData[0],aNetworkHandler);
     }
@@ -373,6 +380,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     ChunkCoordinates lastFailedPos=null;
     @Override
     public boolean checkStructure2() {
+        if(!isServerSide() && disableTESR)return false;
         boolean isStructureComplete = false;
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
