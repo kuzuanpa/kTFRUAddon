@@ -16,11 +16,11 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseControlledMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IConditionParts;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
@@ -31,7 +31,6 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.ST;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
@@ -64,22 +63,9 @@ public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implement
             {31011, 31011, 31011},
             {31011, 31011, 31011},
     }};
-    public static short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public static short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
+    public short g = GTTileEntityRegistry.gregtech;
+    public short k = GTTileEntityRegistry.ktfruaddon;
 
-    public static final short[][][] registryIDMap = {{
-            {g, k, g},
-            {g, k, g},
-            {g, k, g},
-    },{
-            {g, k, g},
-            {k, k, k},
-            {g, k, g},
-    },{
-            {k, k, k},
-            {k, k, k},
-            {k, k, k},
-    }};
     public int getUsage(int mapX, int mapY, int mapZ){
         int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
         if (registryID==k) switch (blockID){
@@ -102,7 +88,7 @@ public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implement
         return false;
     }
     public short getRegistryID(int x,int y,int z){
-        return registryIDMap[y][z][x];
+        return getBlockID(x,y,z)==18002?g:k;
     }
 
     @Override

@@ -4,6 +4,9 @@ ktfru.projector.cncMachine3=3轴数控车床
 ktfru.projector.oilMiner=油井
 ktfru.projector.MantleHeater=地热站
 ktfru.projector.fuelDeburnFactory=回收燃料厂
+ktfru.projector.block.must.air=必须为空气
+ktfru.projector.block.must.liquid=必须为流体
+ktfru.projector.block.any.solid=任意固体方块
 
 gt.multitileentity.multiblock.autoclave=大型高压釜
 gt.multitileentity.multiblock.bath=大型浸洗器
@@ -80,7 +83,7 @@ ktfru.text.common.done_changing_structure=机器结构调整完成
 ktfru.text.common.data_written_to_usb=该方块的数据已写入USB
 ktfru.text.common.usb_have_data=USB中已存在数据，再次右键以覆盖这些数据
 ktfru.text.common.hint.multi_ampere_input=提示: 需要多A输入
-
+ktfru.text.common.part_share=允许结构共用
 ktfru.text.item.turbine.powerrate=涡轮能量系数:
 ktfru.text.item.turbine.durability=涡轮耐久:
 ktfru.text.item.turbine.unchecked=这个涡轮未经检测, 可能在高速旋转时碎裂并导致爆炸

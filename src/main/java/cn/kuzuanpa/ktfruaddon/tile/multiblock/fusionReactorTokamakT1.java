@@ -16,17 +16,16 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
-import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakT1;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IComputeNode;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakT1;
 import gregapi.block.multitileentity.IMultiTileEntity;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -367,8 +366,8 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public final short machineX = 27, machineY = 14, machineZ = 27;
     public final short xMapOffset = -12,yMapOffset = -1, zMapOffset = 0;
 
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
 
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
@@ -411,7 +410,6 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public boolean checkStructure2() {
         if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
         lastFailedPos = checkMappedStructure(lastFailedPos,machineX,machineY,machineZ,xMapOffset,yMapOffset,zMapOffset);
-        if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+8000);
         return lastFailedPos==null;
     }
 

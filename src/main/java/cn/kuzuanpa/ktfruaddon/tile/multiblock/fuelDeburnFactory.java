@@ -15,13 +15,12 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -32,7 +31,6 @@ import gregapi.tileentity.data.ITileEntityTemperature;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
-import gregapi.util.ST;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -214,8 +212,8 @@ public class fuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
     public final short sizeX = 11, sizeY = 19, sizeZ = 14;
     public final short xMapOffset = -6,yMapOffset=-1, zMapOffset = 0;
 
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
         return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
@@ -246,7 +244,7 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,yMapOffset,zMapOffset);
-        if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+30000);
+
         return lastFailedPos==null;
     }
 

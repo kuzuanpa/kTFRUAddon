@@ -33,6 +33,7 @@ public class i18nPostInit {
         LH.add(I18nHandler.SIDE_RIGHT,"right");
         LH.add(I18nHandler.AUTO,"(auto)");
         LH.add(I18nHandler.HAS_PROJECTOR_STRUCTURE,"See Structure in Projector.");
+        LH.add(I18nHandler.ALLOW_PART_SHARE,"Allow Part Share.");
         LH.add(I18nHandler.USE_MONKEY_WRENCH_CHANGE_STRUCTURE,"Use Monkey Wrench to Change Contents.");
         LH.add(I18nHandler.TANK_GAS_COMPRESSED_INPUTER,"Works with Compressed Gas Tank, Speed: (Input KU)*10 L/t.");
         LH.add(I18nHandler.TURBINE_UNCHECKED,"Unchecked, may break when spinning amd cause explode");

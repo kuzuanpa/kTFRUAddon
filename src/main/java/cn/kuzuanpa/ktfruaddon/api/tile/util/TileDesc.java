@@ -41,4 +41,8 @@ public class TileDesc {
         this(aRegistryID, (short) aRegistryMeta, MultiTileEntityMultiBlockPart.NOTHING, 0);
     }
 
+    @Override
+    public String toString() {
+        return aRegistryID+":"+aRegistryMeta;
+    }
 }

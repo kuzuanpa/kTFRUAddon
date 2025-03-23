@@ -16,6 +16,7 @@
 package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
 import cn.kuzuanpa.ktfruaddon.client.render.*;
 import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
@@ -33,6 +34,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.common.MinecraftForge;
 
+import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.isAdvancedRocketryTFRU;
+
 public class clientProxy extends commonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
@@ -40,6 +43,9 @@ public class clientProxy extends commonProxy {
 
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        if(isAdvancedRocketryTFRU)try{
+            zmaster587.libVulpes.LibVulpes.addDummyMultiBlockRegisterer(new kTFRUAddonARProjectorRegister());
+        }catch (Exception ignored){}
     }
 
     public void postInit(FMLPostInitializationEvent event) {

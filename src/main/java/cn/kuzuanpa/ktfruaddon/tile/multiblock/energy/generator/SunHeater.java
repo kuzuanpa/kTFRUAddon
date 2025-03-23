@@ -16,8 +16,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -32,7 +32,6 @@ import gregapi.tileentity.multiblocks.IMultiBlockFluidHandler;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.OM;
-import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
@@ -90,8 +89,8 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
             {31004, 31004, 31004, 31004, 31004},
             {31004, 31004, 31004, 31004, 31004},
     },};
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
     public short[][][] registryIDMap = {{
             {g, g, g, g, g},
             {g, g, g, g, g},

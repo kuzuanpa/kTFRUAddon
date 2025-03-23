@@ -53,7 +53,6 @@ public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric imp
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
-        System.out.println(aData.length);
         theTree.loadFromArray(aData);
     }
 

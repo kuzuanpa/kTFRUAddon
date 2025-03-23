@@ -37,6 +37,7 @@ public class I18nHandler {
     public static final String OUTPUTTING="ktfru.text.common.outputting";
     public static final String AUTO="ktfru.text.common.auto";
     public static final String HAS_PROJECTOR_STRUCTURE="ktfru.text.common.structure_projector";
+    public static final String ALLOW_PART_SHARE="ktfru.text.common.part_share";
     public static final String HAS_USB_IO_CLICK="ktfru.text.common.usb_io_click";
     public static final String REQUIRE_MANA_BURST="ktfru.text.common.require_mana_burst";
     public static final String USE_MONKEY_WRENCH_CHANGE_STRUCTURE ="ktfru.text.common.monkey_wrench_changing_structure";

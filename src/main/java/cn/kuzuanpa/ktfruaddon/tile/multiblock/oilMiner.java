@@ -18,15 +18,14 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
 import gregapi.fluid.FluidTankGT;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.*;
-import gregapi.util.ST;
 import gregapi.util.WD;
 import gregtech.tileentity.misc.MultiTileEntityFluidSpring;
 import net.minecraft.item.ItemStack;
@@ -40,8 +39,6 @@ import net.minecraftforge.fluids.IFluidTank;
 import java.util.Collection;
 import java.util.List;
 
-import static gregapi.data.CS.SIDE_BOTTOM;
-import static gregapi.data.CS.SIDE_FRONT;
 import static gregapi.data.CS.*;
 
 public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy, IFluidHandler {
@@ -176,9 +173,9 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
             { -1000, -1000, -1000}
     }};
 
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-    public final short[][][] registryIDMap = {{
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
+    public short[][][] registryIDMap = {{
             {g, k, g},
             {k, k, k},
             {k, k, k}

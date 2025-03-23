@@ -16,12 +16,17 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.util;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
+import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.block.multitileentity.MultiTileEntityContainer;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
+import zmaster587.libVulpes.block.BlockMeta;
 
 public class utils {
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
@@ -46,35 +51,37 @@ public class utils {
         return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), availTiles);
     }
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, TileDesc[] availTiles) {
+        return checkAndSetTarget(aController,coord, availTiles, false);
+    }
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, TileDesc[] availTiles, boolean allowPartShare) {
         TileEntity tTileEntity = aController.getTileEntity(coord);
         if (tTileEntity == aController) return true;
 
         if (tTileEntity instanceof MultiTileEntityMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
                 if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
-                return setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage);
+                return setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
             }
         } else if (tTileEntity instanceof IMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
                 if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
-                return setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage);
+                return setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
             }
         }
         return false;
     }
-
-    public static boolean setTarget(ITileEntityMultiBlockController aController, TileEntity tile, int aDesign, int aMode) {
+    public static boolean setTarget(ITileEntityMultiBlockController aController, TileEntity tile, int aDesign, int aMode, boolean allowShare) {
         if(tile instanceof MultiTileEntityMultiBlockPart) {
             MultiTileEntityMultiBlockPart part = (MultiTileEntityMultiBlockPart)tile;
             ITileEntityMultiBlockController tTarget = part.getTarget(false);
-            if (tTarget != aController && tTarget != null) return false;
+            if (tTarget != aController && tTarget != null) return allowShare;
 
             part.setTarget(aController, aDesign, aMode);
             return true;
         }else if (tile instanceof IMultiBlockPart) {
             IMultiBlockPart part = (IMultiBlockPart)tile;
             ITileEntityMultiBlockController tTarget = part.getTarget(false);
-            if (tTarget != aController && tTarget != null) return false;
+            if (tTarget != aController && tTarget != null) return allowShare;
 
             part.setTarget(aController, aDesign, aMode);
             return true;
@@ -176,5 +183,10 @@ public class utils {
         return resultZ[Facing];
     }
 
+    public static BlockMeta getProjectorTile(MultiTileEntityRegistry registry, int id){
+        MultiTileEntityContainer container = registry.getNewTileEntityContainer(id, new NBTTagCompound());
+        ((IMultiTileEntity) container.mTileEntity).setShouldRefresh(false);
+        return new BlockMeta(container.mBlock,container.mTileEntity);
+    }
 }
 

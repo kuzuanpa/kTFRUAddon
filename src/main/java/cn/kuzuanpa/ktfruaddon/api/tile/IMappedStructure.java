@@ -33,6 +33,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile;
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -40,7 +41,9 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface IMappedStructure extends ITileEntityMultiBlockController {
     /**@return null = structure complete**/
@@ -55,7 +58,7 @@ public interface IMappedStructure extends ITileEntityMultiBlockController {
         int mapX, mapY, mapZ;
         for (mapY = 0; mapY < machineY; mapY++) for (mapZ = 0; mapZ < machineZ ; mapZ++) for (mapX = 0; mapX < machineX; mapX++) {
             int realX=utils.getRealX(getFacing(), tX, mapX, mapZ),realY=tY + mapY,realZ=utils.getRealZ(getFacing(), tZ, mapX, mapZ);
-            if (isIgnored(mapX,mapY,mapZ)) continue;
+            if (!(this instanceof ICustomPartValidator) && isIgnored(mapX,mapY,mapZ)) continue;
             ChunkCoordinates realPos = new ChunkCoordinates(realX,realY,realZ);
 
             boolean partValid = false;
@@ -68,12 +71,27 @@ public interface IMappedStructure extends ITileEntityMultiBlockController {
             if(partValid){
                 TileEntity tile = this.getTileEntity(realPos);
                 if(isPartSpecial(tile)) specialBlockList.add(tile);
-            }else if(!onCheckFailed(mapX,mapY,mapZ))return realPos;
+            }else if(!onCheckFailed(mapX,mapY,mapZ)){
+                if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+4000);
+                return realPos;
+            }
         }
         if(!specialBlockList.isEmpty())receiveSpecialBlockList(specialBlockList);
         return null;
     }
 
+    default Object[][][] getProjectorStruture(int sizeX, int sizeY, int sizeZ){
+        Object[][][] structure = new Object[sizeY][sizeZ][sizeX];
+        int tX = getX(), tY = getY(), tZ = getZ();
+        int mapX, mapY, mapZ;
+        for (mapY = 0; mapY < sizeY; mapY++) for (mapZ = 0; mapZ < sizeZ ; mapZ++) for (mapX = 0; mapX < sizeX; mapX++) {
+            if (isIgnored(mapX,mapY,mapZ)) continue;
+
+            if(this instanceof ICustomPartValidator)structure[sizeY - mapY/*Because AR did it reversed...*/][mapZ][mapX] = ((ICustomPartValidator)this).getCustomValidatorPart(new ChunkCoordinates(mapX,mapY,mapZ));
+            else structure[sizeY - mapY/*same*/][mapZ][mapX] = Arrays.stream(getTileDescs(mapX,mapY,mapZ)).map(des-> utils.getProjectorTile(MultiTileEntityRegistry.getRegistry(des.aRegistryID), des.aRegistryMeta)).collect(Collectors.toList());
+        }
+        return structure;
+    }
     /**@return will we ignore this error and continue check**/
     default boolean onCheckFailed(int mapX,int mapY,int mapZ){return false;}
 

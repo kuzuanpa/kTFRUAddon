@@ -37,12 +37,12 @@ public interface IAsyncStructure {
         if (tTileEntity instanceof MultiTileEntityMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
                 if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
-                return utils.setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage);
+                return utils.setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage, false);
             }
         } else if (tTileEntity instanceof IMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
                 if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
-                return utils.setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage);
+                return utils.setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage, false);
             }
         }
         return false;

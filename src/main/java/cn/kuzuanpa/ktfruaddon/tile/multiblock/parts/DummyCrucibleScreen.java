@@ -22,7 +22,6 @@ import gregapi.data.OP;
 import gregapi.data.TD;
 import gregapi.old.Textures;
 import gregapi.oredict.OreDictMaterial;
-import gregapi.oredict.OreDictMaterialStack;
 import gregapi.oredict.OreDictPrefix;
 import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
@@ -33,6 +32,7 @@ import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -41,7 +41,7 @@ import static gregapi.data.CS.*;
 
 public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements IMultiBlockPart {
     IDummyCrucibleMaterialProvider.CrucibleOreDictMaterialStack mContent = null;
-    OreDictPrefix createTo = null;
+    OreDictPrefix createTo = OP.ingot;
     float mTemp = C;
 
     @Override
@@ -52,7 +52,11 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
             return true;
         }
         ITileEntityMultiBlockController controller = getTarget(true);
-        if(controller instanceof IDummyCrucibleMaterialProvider)mContent = ((IDummyCrucibleMaterialProvider) controller).extractMaterial(createTo.mAmount, null);
+        if(controller instanceof IDummyCrucibleMaterialProvider){
+            IDummyCrucibleMaterialProvider provider = (IDummyCrucibleMaterialProvider) controller;
+            mContent = provider.extractMaterial(createTo.mAmount, null);
+            mTemp = provider.getTemperature();
+        }
         return true;
     }
 
@@ -64,11 +68,11 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         }
         return prefix;
     }
-    public void solidifyContent(OreDictMaterialStack aMaterial){
-        if (aMaterial == null || aMaterial.mMaterial == null || aMaterial.mMaterial.mMeltingPoint < mTemp) return;
-        OreDictPrefix tPrefix = getTargetPrefix(aMaterial.mMaterial);
+    public void solidifyContent(){
+        if (mContent == null || mContent.stack == null || mContent.stack.mMaterial == null || mContent.stack.mMaterial.mMeltingPoint < mTemp) return;
+        OreDictPrefix tPrefix = getTargetPrefix(mContent.stack.mMaterial);
         if (tPrefix != null && mContent != null && slot(0) == null && mContent.isEnough) {
-            setInventorySlotContents(0, tPrefix.mat(aMaterial.mMaterial.mTargetSolidifying.mMaterial, 1));
+            setInventorySlotContents(0, tPrefix.mat(mContent.stack.mMaterial.mTargetSolidifying.mMaterial, 1));
             mContent = null;
         }
     }
@@ -105,6 +109,8 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if (aIsServerSide) {
+            mTemp --;
+            solidifyContent();
         }
     }
 
@@ -113,12 +119,6 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         super.writeToNBT2(aNBT);
         IMultiBlockPart.writeToNBT(aNBT,mTargetPos,mDesign);
     }
-
-    @Override
-    public boolean canDrop(int aSlot) {
-        return false;
-    }
-
 
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
@@ -146,6 +146,22 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
     @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.part.dummy_crucible.common";
+    }
+    //Inventory
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
+    @Override public boolean canDrop(int aInventorySlot) {return T;}
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 1;
+    }
+
+    private static final int[] ACCESSIBLE_SLOTS = new int[] {0};
+
+    @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
+
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
+        return true;
     }
 
 }

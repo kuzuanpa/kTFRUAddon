@@ -17,10 +17,10 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -33,7 +33,6 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockFluidHandler;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.ST;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -84,8 +83,8 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
             {  0  , 18004, 31004, 18004,   0  },
             {  0  ,   0  , 18004,   0  ,   0  },
     }};
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
 
     public int getUsage(int mapX, int mapY, int mapZ) {
 int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
@@ -145,7 +144,6 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = checkMappedStructure(lastFailedPos, machineX, machineY, machineZ, xMapOffset,-1,zMapOffset);
-        if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+8000);
         if(lastFailedPos!=null)return false;
 
         tX = utils.getRealX(getFacing(), tX, xMapOffset, -zMapOffset);

@@ -15,13 +15,12 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseRoom;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.ST;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -34,8 +33,8 @@ import static gregapi.data.CS.SIDE_BOTTOM;
 
 public class exampleMachineRoom extends TileEntityBaseRoom {
 
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
     //change value there to set usage of every block.
     public int getUsage(int blockID ,short registryID){
         if (blockID == 18002&&registryID==k) {

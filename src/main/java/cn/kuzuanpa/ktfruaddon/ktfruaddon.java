@@ -128,6 +128,7 @@ PROXY.postInit(aEvent);
         if(!EnvironmentHelper.TFRUVer.equalsIgnoreCase(EnvironmentHelper.checkedTFRUVer) && MinecraftServer.getServer() != null){
             MinecraftServer.getServer().addChatMessage(new ChatComponentText(LH.get("ktfru.msg.outdated")));
         }
+        PROXY.serverStarted(aEvent);
     }
 
     @Override

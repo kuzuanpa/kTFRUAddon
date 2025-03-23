@@ -14,8 +14,12 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ChunkCoordinates;
 
 public interface ICustomPartValidator extends IMappedStructure{
     boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos);
+    default Object getCustomValidatorPart(ChunkCoordinates pos){
+        return Blocks.stone;
+    }
 }

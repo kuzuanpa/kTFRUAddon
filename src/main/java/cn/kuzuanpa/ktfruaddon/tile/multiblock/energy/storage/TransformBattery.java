@@ -14,8 +14,8 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 
-import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.ICustomPartValidator;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
@@ -23,7 +23,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.TransformerPart;
 import gregapi.block.multitileentity.IWailaTile;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.IL;
 import gregapi.data.LH;
@@ -101,8 +100,8 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
                 {mWall, mWall, mWall, mWall},
         }};
     }
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
 
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
@@ -114,7 +113,7 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
         if(getBlockID(mapPos.posX,mapPos.posY,mapPos.posZ) == trans){
             TileEntity tile = getTileEntity(realPos);
             if (tile instanceof TransformerPart) {
-                return utils.setTarget(this, tile, 0, MultiTileEntityMultiBlockPart.NOTHING);
+                return utils.setTarget(this, tile, 0, MultiTileEntityMultiBlockPart.NOTHING, false);
             }else return utils.checkAndSetTarget(this, realPos, new TileDesc[]{new TileDesc(g,mWall,MultiTileEntityMultiBlockPart.NOTHING,0)});
         }
         else return utils.checkAndSetTarget(this, realPos, getTileDescs(mapPos.posX,mapPos.posY,mapPos.posZ));
@@ -204,7 +203,7 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset);
-        if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+30000);
+
         return lastFailedPos==null;
     }
 

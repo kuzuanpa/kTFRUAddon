@@ -17,13 +17,12 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.ICompressGasTank;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.LH;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.ST;
 import gregapi.util.WD;
 import gregtech.tileentity.multiblocks.MultiTileEntityTank;
 import net.minecraft.init.Blocks;
@@ -58,7 +57,7 @@ public class LargeCompressedGasTank extends MultiTileEntityTank implements IComp
                 if (i == 0 && j == 0 && k == 0) {
                     if (getAir(tX+i, tY+j, tZ+k)) worldObj.setBlockToAir(tX+i, tY+j, tZ+k); else tSuccess = F;
                 } else {
-                    if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX+i, tY+j, tZ+k, mTankWalls, ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock), 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
+                    if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX+i, tY+j, tZ+k, mTankWalls, GTTileEntityRegistry.gregtech, 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
                 }
             }
             return tSuccess;
@@ -111,3 +110,5 @@ public class LargeCompressedGasTank extends MultiTileEntityTank implements IComp
     @Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.tank.gas.compressed";}
 
 }
+
+

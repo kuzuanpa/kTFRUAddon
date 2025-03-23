@@ -20,6 +20,7 @@ import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import zmaster587.libVulpes.api.IDummyMultiBlockRegisterer;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -31,7 +32,7 @@ import java.util.List;
 public class kTFRUAddonARProjectorRegister implements IDummyMultiBlockRegisterer {
     static MultiTileEntityRegistry g;
     static MultiTileEntityRegistry k;
-    public List<DummyTileMultiBlock> dummyStructures = new ArrayList<>();
+    public static List<DummyTileMultiBlock> dummyStructures = new ArrayList<>();
     public kTFRUAddonARProjectorRegister(){
         g = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
         k = ktfruaddon.kTileRegistry0;
@@ -51,8 +52,53 @@ public class kTFRUAddonARProjectorRegister implements IDummyMultiBlockRegisterer
         dummyStructures.add(new DummyTileMultiBlock(oilMiner(),"ktfru.projector.oilMiner"));
         dummyStructures.add(new DummyTileMultiBlock(FuelDeburnFactory(),"ktfru.projector.fuelDeburnFactory"));
         dummyStructures.add(new DummyTileMultiBlock(MaskAlignerUVPlus(),"ktfru.projector.maskAlignerUVPlus"));
-
+        dummyStructures.add(new DummyTileMultiBlock(TidalWaveGenerater(),"ktfru.projector.tidalWaveGenerater"));
         return dummyStructures;
+    }
+    static Object[][][] TidalWaveGenerater(){
+        BlockMeta main = tile(k, 30033);
+        BlockMeta wall = tile(g, 18002);
+        BlockMeta blad = tile(k, 31045);
+        BlockMeta aair = new BlockMeta(Blocks.stained_glass,8,"ktfru.projector.block.must.air");
+        BlockMeta aliq = new BlockMeta(Blocks.stained_glass,3,"ktfru.projector.block.must.liquid");
+        BlockMeta asol = new BlockMeta(Blocks.stone,0,"ktfru.projector.block.any.solid");
+        return new Object[][][]{{
+                {null, null, null},
+                {null, null, null},
+                {aair, aair, aair},
+                {aair, aair, aair},
+                {aair, aair, aair},
+                {aair, aair, aair},
+        },{
+                {asol, asol, asol},
+                {wall, main, wall},
+                {wall, null, wall},
+                {wall, null, wall},
+                {wall, null, wall},
+                {blad, blad, blad},
+        },{
+                {asol, asol, asol},
+                {wall, wall, wall},
+                {wall, null, wall},
+                {wall, null, wall},
+                {wall, null, wall},
+                {blad, blad, blad},
+        },{
+                {asol, asol, asol},
+                {wall, wall, wall},
+                {wall, wall, wall},
+                {blad, blad, blad},
+                {blad, blad, blad},
+                {blad, blad, blad},
+        },{
+                {null, null, null},
+                {aliq, aliq, aliq},
+                {aliq, aliq, aliq},
+                {aliq, aliq, aliq},
+                {aliq, aliq, aliq},
+                {aliq, aliq, aliq},
+        }
+        };
     }
     static Object[][][] MaskAlignerUVPlus(){
         BlockMeta main = tile(k, 30009);

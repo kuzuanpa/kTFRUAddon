@@ -20,7 +20,7 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.i18nPostInit;
 import cn.kuzuanpa.ktfruaddon.api.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketSyncDataByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketSyncDataByteArrayLongAndIDs;
-import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.item.ItemPostInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
@@ -36,7 +36,6 @@ import gregapi.network.NetworkHandler;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 
-import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.isAdvancedRocketryTFRU;
 import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.updateTFRUEnvironment;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.*;
 
@@ -69,9 +68,6 @@ public class commonProxy extends Abstract_Proxy {
     public void init(FMLInitializationEvent aEvent) {
         tileEntityInit0.init(aEvent);
         PROXY.registerRenderers();
-        if(isAdvancedRocketryTFRU)try{
-            zmaster587.libVulpes.LibVulpes.addDummyMultiBlockRegisterer(new kTFRUAddonARProjectorRegister());
-        }catch (Exception ignored){}
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
@@ -86,6 +82,7 @@ public class commonProxy extends Abstract_Proxy {
     }
 
     public void serverStarted(FMLServerStartedEvent aEvent) {
+        GTTileEntityRegistry.update();
     }
 
     public void serverStopping(FMLServerStoppingEvent aEvent) {

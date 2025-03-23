@@ -16,9 +16,9 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
-import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IComputeNode;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
@@ -26,7 +26,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakExp;
 import gregapi.block.multitileentity.IMultiTileEntity;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -361,8 +360,8 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public static final short machineX = 17, machineY = 7, machineZ = 18;
     public static final short xMapOffset = -8,yMapOffset = 0, zMapOffset = 0;
 
-    short k = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-    short g = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
+    short k = GTTileEntityRegistry.ktfruaddon;
+    short g = GTTileEntityRegistry.gregtech;
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
         return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
@@ -404,7 +403,6 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public boolean checkStructure2() {
         if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
         lastFailedPos = checkMappedStructure(lastFailedPos,machineX,machineY,machineZ,xMapOffset,yMapOffset,zMapOffset);
-        if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+8000);
         return lastFailedPos==null;
     }
 
