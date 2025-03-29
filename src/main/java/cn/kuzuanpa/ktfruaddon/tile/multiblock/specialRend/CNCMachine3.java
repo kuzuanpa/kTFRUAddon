@@ -13,7 +13,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock.model;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
@@ -40,7 +40,7 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     public final short machineX = 5, machineY = 3, machineZ = 3;
     public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;
     //values used by TESR
-    public int processTime,proTime, headMoveToX, headMoveToZ;
+    public int processTime, proTime, headMoveToX, headMoveToZ;
     public static int[][][] blockIDMap = {{
             {31000, 0    , 31007,31007,31007},
             {31000, 31008, 31007,31007,31007},
@@ -54,8 +54,6 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
             {31000, 31000, 31000,31009,0    },
             {0    , 0    , 0    ,0    ,0    }
     }};
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
     public static boolean[][][] ignoreMap = {{
             {F, T, F, F, F},
             {F, F, F, F, F},
@@ -81,7 +79,7 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     }
 
     public  boolean isIgnored(int checkX, int checkY, int checkZ){ return ignoreMap[checkY][checkZ][checkX];}
-    public short getRegistryID(int x,int y,int z){return k;}
+    public short getRegistryID(int x,int y,int z){return GTTileEntityRegistry.ktfruaddon;}
 
     @Override
     public boolean checkStructure3(boolean shouldPartsTransparent) {
@@ -155,6 +153,6 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     }
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.model.cncmachine3";
+        return "ktfru.multitileentity.multiblock.specialRend.cncmachine3";
     }
 }

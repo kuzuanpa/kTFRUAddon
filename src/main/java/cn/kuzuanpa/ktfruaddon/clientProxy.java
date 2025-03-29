@@ -22,9 +22,10 @@ import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
 import cn.kuzuanpa.ktfruaddon.tile.machine.TFCPresser;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.CNCMachine3;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.circuitAssembler;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.exampleMachineModel;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.CNCMachine3;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.circuitAssembler;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -62,6 +63,7 @@ public class clientProxy extends commonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TFCPresser.class, new TESRTFCPresser());
         ClientRegistry.bindTileEntitySpecialRenderer(CNCMachine3.class, new TESRCNCMachine3());
         ClientRegistry.bindTileEntitySpecialRenderer(LiquidBattery.class, new TESRLiquidBattery());
+        ClientRegistry.bindTileEntitySpecialRenderer(DummyCrucible.class, new TESRDumyCrucible());
 
         MinecraftForge.EVENT_BUS.register(new FxRenderBlockOutline());
         codechicken.nei.api.API.registerNEIGuiHandler(new NeiHiddener());

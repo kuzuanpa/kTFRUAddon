@@ -56,7 +56,7 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	public byte copiedNodeLevel=0,copiedNodeType=0;
 	public int DESTROY_BUTTON_REPEAT_COUNT=10;
 	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/DysonSphere/star.obj"));
-	ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/DysonSphere/star.png");
+	ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/DysonSphere/star.png");
 	private int bodyList,glTextureId=-1;
 	public float rotateAngle=-1;
 	protected float rotateAngleReal=0;

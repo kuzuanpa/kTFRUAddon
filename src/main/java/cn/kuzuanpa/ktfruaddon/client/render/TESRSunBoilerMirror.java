@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class TESRSunBoilerMirror extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/sunboiler/mirror.obj"));
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/sunboiler/mirror.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/sunboiler/mirror.png");
 
     private static int bodyLists;
 
@@ -62,7 +62,7 @@ public class TESRSunBoilerMirror extends TileEntitySpecialRenderer {
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the model into position
+        //Rotate and move the specialRend into position
         GL11.glTranslated(x, y, z );
         GL11.glTranslatef(0.5f, 0, 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];

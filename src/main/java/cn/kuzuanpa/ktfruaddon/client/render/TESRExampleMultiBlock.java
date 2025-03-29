@@ -34,7 +34,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class TESRExampleMultiBlock extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/lathe.obj"));
 
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/lathe.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/lathe.png");
 
     private static int bodyList;
 
@@ -60,7 +60,7 @@ public class TESRExampleMultiBlock extends TileEntitySpecialRenderer {
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the model into position
+        //Rotate and move the specialRend into position
         GL11.glTranslated(x + .5f, y, z + 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[multiBlockTile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
@@ -110,7 +110,7 @@ public class TESRExampleMultiBlock extends TileEntitySpecialRenderer {
                 model.renderPart("body");
 
             model.renderPart("Tray");
-            //model.renderAllExcept("rod", "Cylinder");
+            //specialRend.renderAllExcept("rod", "Cylinder");
         }
         GL11.glPopMatrix();
     }

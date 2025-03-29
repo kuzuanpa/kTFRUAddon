@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.model.CNCMachine3;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -32,7 +32,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/CNCMachine3.obj"));
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/CNCMachine3.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/CNCMachine3.png");
     private static int bodyList;
 
     public TESRCNCMachine3() {
@@ -64,7 +64,7 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the model into position
+        //Rotate and move the specialRend into position
         GL11.glTranslatef((float) utils.getXOffset(tile.mFacing,-1.5D,1D),0,(float)utils.getZOffset(tile.mFacing,-1.5D,1D));
         GL11.glTranslated(x, y, z );
         GL11.glTranslatef(0.5f, 0, 0.5f);

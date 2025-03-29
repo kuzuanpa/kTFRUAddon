@@ -30,9 +30,9 @@ import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TESRWaterMill extends TileEntitySpecialRenderer {
-    /**model come from Create under MIT license**/
+    /**specialRend come from Create under MIT license**/
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/water_wheel.obj"));
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/TFCBrichPlank.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/TFCBrichPlank.png");
 
     private static int bodyLists;
 
@@ -57,7 +57,7 @@ public class TESRWaterMill extends TileEntitySpecialRenderer {
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the model into position
+        //Rotate and move the specialRend into position
         GL11.glTranslated(x, y, z );
         GL11.glTranslatef(0.5f, 0.5f, 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];

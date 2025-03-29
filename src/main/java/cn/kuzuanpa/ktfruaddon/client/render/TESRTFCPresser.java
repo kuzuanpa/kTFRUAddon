@@ -33,7 +33,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class TESRTFCPresser extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/tfc_presser.obj"));
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/model/TFCPresser.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/TFCPresser.png");
 
     private static int bodyLists;
 
@@ -61,7 +61,7 @@ public class TESRTFCPresser extends TileEntitySpecialRenderer {
 
         GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the model into position
+        //Rotate and move the specialRend into position
         GL11.glTranslated(x + .5f, y+ .6f, z + .5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);

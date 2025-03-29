@@ -175,15 +175,6 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
 
     short k = GTTileEntityRegistry.ktfruaddon;
     short g = GTTileEntityRegistry.gregtech;
-    public short[][][] registryIDMap = {{
-            {g, k, g},
-            {k, k, k},
-            {k, k, k}
-    },{
-            {g, g, g},
-            {g, g, g},
-            {g, g, g}
-    }};
 
     public int getUsage(int blockID ,short registryID,int dX,int dY,int dZ){
         if (blockID == wallID&&registryID==g&&dY==0) {
@@ -202,7 +193,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;
     }
-    public short getRegistryID(int checkX, int checkY, int checkZ){return registryIDMap[checkY][checkZ][checkX];}
+    public short getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX, checkY, checkZ)==wallID? g:k;}
 
     @Override
     public boolean checkStructure2() {

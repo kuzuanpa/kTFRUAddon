@@ -35,8 +35,8 @@ public class Chemistry {
         recipeMaps.FluidHeating.addRecipe0(F,50,10,FL.array(MT.D2O.liquid(U100,false)),FL.array(FL.Hot_Heavy_Water.make(10)));
         recipeMaps.FluidHeating.addRecipe0(F,40,10,FL.array(MT.HDO.liquid(U100,false)),FL.array(FL.Hot_Semi_Heavy_Water.make(10)));
         recipeMaps.FluidHeating.addRecipe0(F,60,10,FL.array(MT.T2O.liquid(U100,false)),FL.array(FL.Hot_Tritiated_Water.make(10)));
-        recipeMaps.FluidHeating.addRecipe0(F,15,10,FL.array(MT.CO2.gas(U100,false)),FL.array(FL.Hot_Carbon_Dioxide.make(10)));
-        recipeMaps.FluidHeating.addRecipe0(F,15,10,FL.array(MT.He.gas(U100,false)),FL.array(FL.Hot_Helium.make(10)));
+        recipeMaps.FluidHeating.addRecipe0(F,20,10,FL.array(MT.CO2.gas(U100,false)),FL.array(FL.Hot_Carbon_Dioxide.make(10)));
+        recipeMaps.FluidHeating.addRecipe0(F,30,10,FL.array(MT.He.gas(U100,false)),FL.array(FL.Hot_Helium.make(10)));
 
         FM.Hot.addRecipe0(F,-360,2,FL.array(flList.HotMoltenNaK.make(10)),FL.array(flList.MoltenNaK.make(10)));
 
