@@ -59,7 +59,7 @@ public class ContainerClientDummCrucible extends ContainerClientDefault {
             float h = (Math.abs(amount)/32767F)*height;
             if(mouseY - y < index && mouseY - y>index-h){
                 fontRendererObj.drawStringWithShadow(LH.get(mat.mNameInternal), 112, 48, 0xffffff);
-                fontRendererObj.drawStringWithShadow((Math.abs(amount)/327.67F) + "%", 112, 60, 0xffffff);
+                fontRendererObj.drawStringWithShadow((Math.abs(amount)/327.67F) + "%" + (mat.mMeltingPoint < tile.mTemp?", "+ LH.Chat.ORANGE+"Molten":""), 112, 60, 0xffffff);
             }
             GL11.glColor4f( mat.mRGBaSolid[0]/255F, mat.mRGBaSolid[1]/255F, mat.mRGBaSolid[2]/255F, mat.mRGBaSolid[3]/255F);
             index-=h;

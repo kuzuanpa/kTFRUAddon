@@ -39,6 +39,7 @@ public class itemPreInit {
         new itemCompact();
         new itemChemistry();
         new itemCover();
+        new itemResearch();
 
         new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.blade", prefixList.largeTurbineBlade);
 

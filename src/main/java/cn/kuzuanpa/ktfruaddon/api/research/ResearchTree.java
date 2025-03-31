@@ -51,7 +51,7 @@ public class ResearchTree {
 
     public byte id;
     public void addResearchItem(ResearchItem item) {
-        allResearch.put(item.getName(), item);
+        allResearch.put(item.getId(), item);
     }
 
     public ResearchTree(byte id){
@@ -176,18 +176,10 @@ public class ResearchTree {
                 IResearchTask task = item.tasks.stream().filter(t -> t.getIdentifier().equals(taskName)).findFirst().orElse(skippedDummyTask);
                 byte progressType = dis.readByte();
                 switch (progressType) {
-                    case 1:
-                        task.setProgress(dis.readShort());
-                        break;
-                    case 2:
-                        task.setProgress(dis.readInt());
-                        break;
-                    case 3:
-                        task.setProgress(dis.readLong());
-                        break;
-                    default:
-                        FMLLog.log(Level.ERROR, "Unknown progress type: " + progressType+", packet may corrupted");
-                        break;
+                    case 1: task.setProgress(dis.readShort());break;
+                    case 2: task.setProgress(dis.readInt());break;
+                    case 3: task.setProgress(dis.readLong());break;
+                    default: FMLLog.log(Level.ERROR, "Unknown progress type: " + progressType+", packet may corrupted");break;
                 }
             }
         }
@@ -200,7 +192,17 @@ public class ResearchTree {
         public DummyTask(){}
         @Override public long getMaxProgress() {return 0;}
         @Override public long getProgress() {return 0;}
-        @Override public void setProgress(long progress) {}
+
+        @Override
+        public boolean tryPromoteProgress(Object consumed) {
+            return false;
+        }
+
+        @Override
+        public void setProgress(long progress) {
+
+        }
+
         @Override public IIcon getIcon() {return null;}
         @Override public String getIdentifier() {return "";}
     }

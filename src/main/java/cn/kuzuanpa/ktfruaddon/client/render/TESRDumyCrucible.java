@@ -26,7 +26,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static gregapi.data.CS.PX_P;
@@ -34,7 +33,7 @@ import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TESRDumyCrucible extends TileEntitySpecialRenderer {
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/gui/dummy_crucible.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/DummyCrucible.png");
 
     @Override
     public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f) {
@@ -58,8 +57,7 @@ public class TESRDumyCrucible extends TileEntitySpecialRenderer {
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
         GL11.glTranslated(-.501f, 0, -.5f);
 
-        Map<Short,Short> map = new HashMap<>();
-        map.put((short)120, (short)32767);
+        Map<Short,Short> map = tile.mDisplayContent;
         if(map.isEmpty()) return;
         float index = 0.0f;
         bindTexture(texture);
@@ -68,7 +66,7 @@ public class TESRDumyCrucible extends TileEntitySpecialRenderer {
             if(mat == null) continue;
             GL11.glColor4ub( (byte)mat.mRGBaSolid[0], (byte)mat.mRGBaSolid[1], (byte)mat.mRGBaSolid[2], (byte)mat.mRGBaSolid[3]);
             float height = (Math.abs(entry.getValue())/32767F)*PX_P[9];
-            drawTextureRect(Tessellator.instance, PX_P[8], index + PX_P[4], entry.getValue()>0? 0:0/*todo: different soild and molten*/, 166, -PX_P[4], height);
+            drawTextureRect(Tessellator.instance, PX_P[8], index + PX_P[4], entry.getValue()>0? 0:0/*todo: different soild and molten*/, 0, -PX_P[4], height);
             index+=height;
             GL11.glColor4f(1f, 1f, 1f, 1f);
         }

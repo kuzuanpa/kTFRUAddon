@@ -28,6 +28,10 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
 import zmaster587.libVulpes.block.BlockMeta;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class utils {
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ),aRegistryMeta,aRegistryID,aDesign,aMode);
@@ -187,6 +191,18 @@ public class utils {
         MultiTileEntityContainer container = registry.getNewTileEntityContainer(id, new NBTTagCompound());
         ((IMultiTileEntity) container.mTileEntity).setShouldRefresh(false);
         return new BlockMeta(container.mBlock,container.mTileEntity);
+    }
+    public static byte[] UTFToBytes(String utf) {
+        try{
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(bos);
+        dos.writeUTF(utf);
+        dos.close();
+        return bos.toByteArray();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return new byte[0];
     }
 }
 

@@ -30,9 +30,10 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile;
 
-import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
+import cn.kuzuanpa.ktfruaddon.api.network.PacketFxBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.tileentity.TileEntity;
@@ -45,10 +46,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
+
 public interface IMappedStructure extends ITileEntityMultiBlockController {
     /**@return null = structure complete**/
     default @Nullable ChunkCoordinates checkMappedStructure(ChunkCoordinates lastFailedPos, int machineX, int machineY, int machineZ, int xMapOffset, int yMapOffset, int zMapOffset){
-        if (lastFailedPos != null) FxRenderBlockOutline.removeBlockOutlineToRender(lastFailedPos);
+        if (lastFailedPos != null) kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(lastFailedPos, 0, -1,-1), new NetworkRegistry.TargetPoint(getWorld().provider.dimensionId, lastFailedPos.posX, lastFailedPos.posY, lastFailedPos.posZ, 64));
         int tX = getX(), tY = getY(), tZ = getZ();
         if (!getWorld().blockExists(tX, tY, tZ)) return null;
         List<TileEntity> specialBlockList = new ArrayList<>();
@@ -72,7 +75,7 @@ public interface IMappedStructure extends ITileEntityMultiBlockController {
                 TileEntity tile = this.getTileEntity(realPos);
                 if(isPartSpecial(tile)) specialBlockList.add(tile);
             }else if(!onCheckFailed(mapX,mapY,mapZ)){
-                if(lastFailedPos!=null) FxRenderBlockOutline.addBlockOutlineToRender(lastFailedPos,0xff0000,2,System.currentTimeMillis()+4000);
+                kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(realPos, 0xff0000, 4000,1.0f), new NetworkRegistry.TargetPoint(getWorld().provider.dimensionId, realPos.posX, realPos.posY, realPos.posZ, 64));
                 return realPos;
             }
         }

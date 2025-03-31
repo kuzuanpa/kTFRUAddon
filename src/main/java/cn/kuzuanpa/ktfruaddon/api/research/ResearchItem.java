@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResearchItem {
-    public final String name;
+    public final String id;
     public final String desc;
     public final Item iconItem;
     public final int iconItemMeta;
@@ -36,11 +36,11 @@ public class ResearchItem {
     public boolean isUnlocked = false;
     public boolean isCompleted = false;
 
-    public ResearchItem(ResearchTree tree,String name, String desc) {
-        this(tree, name, desc,null,0);
+    public ResearchItem(ResearchTree tree, String id, String desc) {
+        this(tree, id, desc,null,0);
     }
-    public ResearchItem(ResearchTree tree, String name, String desc, Item icon, int iconMeta) {
-        this.name = name;
+    public ResearchItem(ResearchTree tree, String id, String desc, Item icon, int iconMeta) {
+        this.id = id;
         this.desc = desc;
         this.iconItem = icon;
         this.iconItemMeta = iconMeta;
@@ -56,13 +56,13 @@ public class ResearchItem {
     public IIcon getIcon(){
         return iconItem != null ? iconItem.getIconFromDamage(iconItemMeta) : null;
     }
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
     public ResearchItem addPrerequisite(ResearchItem... prerequisites) {
         for (ResearchItem prerequisite : prerequisites) {
-            if(prerequisite.name.equals("root"))this.layer=Math.max(1,this.layer);
+            if(prerequisite.id.equals("root"))this.layer=Math.max(1,this.layer);
             else this.layer = Math.max(this.layer, prerequisite.layer+1);
             this.prerequisites.add(prerequisite);
         }
@@ -74,7 +74,7 @@ public class ResearchItem {
     }
     /**Range: 0~100, note the progress is ceiled**/
     public byte getProgress(){
-        return (byte)(100 * Math.ceil(tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getMaxProgress).sum())));
+        return (byte)Math.ceil(100 * tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getMaxProgress).sum()));
     }
     public float getProgressF(){
         return (100 * (tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getMaxProgress).sum())));
@@ -115,7 +115,7 @@ public class ResearchItem {
 
         @Override
         public long getMaxProgress() {
-            return 120;
+            return 12000000000000L;
         }
 
         @Override
@@ -124,8 +124,13 @@ public class ResearchItem {
         }
 
         @Override
+        public boolean tryPromoteProgress(Object consumed) {
+            return false;
+        }
+
+        @Override
         public void setProgress(long progress) {
-            this.progress=progress;
+
         }
 
         @Override

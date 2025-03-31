@@ -31,8 +31,8 @@ public class itemResearch extends MultiItemRandom {
         ItemList.FusionTokamakData0.set(addItem(0, "Tokamak Experiment Data (Electric)",  "A common data, do some help in improving tokamak reactor."));
         ItemList.FusionTokamakData1.set(addItem(1, "Tokamak Experiment Data (Heat)",      "A common data, do some help in improving tokamak reactor."));
         ItemList.FusionTokamakData2.set(addItem(2, "Tokamak Experiment Data (Neutron)",   "A rare data, do massive help in improving tokamak reactor."));
-        ItemList.FusionTokamakData2.set(addItem(3, "Tokamak Experiment Data (Proton)",    "A rare data, do massive help in improving tokamak reactor."));
-        ItemList.FusionTokamakData2.set(addItem(4, "Tokamak Experiment Data (Structure)", "A legendary data, can be used to create a fusion reactor."));
+        ItemList.FusionTokamakData3.set(addItem(3, "Tokamak Experiment Data (Proton)",    "A rare data, do massive help in improving tokamak reactor."));
+        ItemList.FusionTokamakData4.set(addItem(4, "Tokamak Experiment Data (Structure)", "A legendary data, can be used to create a fusion reactor."));
 
 
     }

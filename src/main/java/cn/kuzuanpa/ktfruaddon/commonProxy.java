@@ -18,6 +18,8 @@ package cn.kuzuanpa.ktfruaddon;
 import cn.kuzuanpa.ktfruaddon.api.fluid.fluidPreInit;
 import cn.kuzuanpa.ktfruaddon.api.i18n.i18nPostInit;
 import cn.kuzuanpa.ktfruaddon.api.material.materialPreInit;
+import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
+import cn.kuzuanpa.ktfruaddon.api.network.PacketFxBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketSyncDataByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketSyncDataByteArrayLongAndIDs;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
@@ -48,11 +50,11 @@ public class commonProxy extends Abstract_Proxy {
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
         updateTFRUEnvironment(aEvent);
-        kNetworkHandler = new NetworkHandler(MOD_ID, "kAdd"
+        kNetworkHandler = new NetworkHandler(MOD_ID, "kAdd", new PacketFxBlockOutline(), new PacketContainerButtonPressed()
                 , new PacketSyncDataByteArrayLong( 0), new PacketSyncDataByteArrayLong( 1), new PacketSyncDataByteArrayLong( 2), new PacketSyncDataByteArrayLong( 3), new PacketSyncDataByteArrayLong( 4), new PacketSyncDataByteArrayLong( 5), new PacketSyncDataByteArrayLong( 6), new PacketSyncDataByteArrayLong( 7)
                 , new PacketSyncDataByteArrayLongAndIDs( 0), new PacketSyncDataByteArrayLongAndIDs( 1), new PacketSyncDataByteArrayLongAndIDs( 2), new PacketSyncDataByteArrayLongAndIDs( 3), new PacketSyncDataByteArrayLongAndIDs( 4), new PacketSyncDataByteArrayLongAndIDs( 5), new PacketSyncDataByteArrayLongAndIDs( 6), new PacketSyncDataByteArrayLongAndIDs( 7)
         );
-        kNetworkHandler2 = new NetworkHandler(MOD_ID, "kAd2"
+        kNetworkHandler2 = new NetworkHandler(MOD_ID, "kAd2", new PacketFxBlockOutline(), new PacketContainerButtonPressed()
                 , new PacketSyncDataByteArrayLong( 0), new PacketSyncDataByteArrayLong( 1), new PacketSyncDataByteArrayLong( 2), new PacketSyncDataByteArrayLong( 3), new PacketSyncDataByteArrayLong( 4), new PacketSyncDataByteArrayLong( 5), new PacketSyncDataByteArrayLong( 6), new PacketSyncDataByteArrayLong( 7)
                 , new PacketSyncDataByteArrayLongAndIDs( 0), new PacketSyncDataByteArrayLongAndIDs( 1), new PacketSyncDataByteArrayLongAndIDs( 2), new PacketSyncDataByteArrayLongAndIDs( 3), new PacketSyncDataByteArrayLongAndIDs( 4), new PacketSyncDataByteArrayLongAndIDs( 5), new PacketSyncDataByteArrayLongAndIDs( 6), new PacketSyncDataByteArrayLongAndIDs( 7)
         );

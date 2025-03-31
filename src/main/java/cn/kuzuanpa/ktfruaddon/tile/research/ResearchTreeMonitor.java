@@ -14,7 +14,9 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
+import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
+import cn.kuzuanpa.ktfruaddon.api.research.ResearchItem;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonResearchTreeMonitor;
@@ -24,12 +26,17 @@ import gregapi.network.IPacket;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.IBlockAccess;
+import org.jetbrains.annotations.Nullable;
 
-public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric implements ITileSyncByteArrayLong {
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+
+public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick {
     public boolean treeNeedSync = false;
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
     public ResearchTree theTree = new ResearchTree((byte)0);
-
+    public ResearchItem selectedItem = null;
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerClientResearchTreeMonitor(aPlayer.inventory, this, aGUIID, mGUITexture);
     }
@@ -59,5 +66,16 @@ public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric imp
     @Override
     public boolean onTickCheck(long aTimer) {
         return super.onTickCheck(aTimer) || treeNeedSync || rng(10)==0;
+    }
+
+    @Override
+    public void onContainerButtonClick(int buttonID, byte @Nullable [] data) {
+        try {
+            if(data == null)return;
+            ByteArrayInputStream bis = new ByteArrayInputStream(data);
+            DataInputStream dis = new DataInputStream(bis);
+            String id = dis.readUTF();
+            selectedItem = theTree.allResearch.get(id);
+        } catch (IOException e) {}
     }
 }

@@ -22,8 +22,10 @@ import cn.kuzuanpa.kGuiLib.client.anime.shortcut.animeTransparency;
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
+import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchItem;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,6 +35,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -40,9 +43,11 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 @SideOnly(Side.CLIENT)
 public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implements IHiddenNei {
@@ -55,7 +60,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 	}
 	final ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
 	final ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
-
+	final Random rng = new Random();
 	public ResearchItem pointingItem = null;
 	public ResearchItem selectedItem = null;
 	public HoveringPanel hoveringPanel = null;
@@ -132,7 +137,10 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 	public boolean onButtonPressed(GuiButton button, int mouseX, int mouseY) {
 		if(button instanceof researchButton && researchIDToIntIDMap.containsValue(button.id)){
 			selectedItem = ((researchButton)button).researchItem;
+			TileEntity t = (TileEntity) mContainer.mTileEntity;
+			kNetworkHandler.sendToServer(new PacketContainerButtonPressed(t.xCoord,t.yCoord,t.zCoord,button.id, utils.UTFToBytes(selectedItem.getId())));
 		}
+		if(button instanceof SidePanel && ((SidePanel) button).isMouseInButton(mouseX,mouseY))selectedItem = null;
 		return false;
 	}
 
@@ -201,9 +209,9 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 				tessellator.startDrawing(GL11.GL_LINES);
 				GL11.glLineWidth(2f);
 				tessellator.addVertexWithUV(xPosition, yPosition + height/2f , this.zLevel,0 ,0);
-				if(item.name.equals("root")) tessellator.addVertexWithUV(0, mc.currentScreen.height/2f, this.zLevel,0 ,0);
-				else if(researchIDToIntIDMap.get(item.name) != null){
-					kGuiButtonBase b = buttons.get(researchIDToIntIDMap.get(item.name));
+				if(item.id.equals("root")) tessellator.addVertexWithUV(0, mc.currentScreen.height/2f, this.zLevel,0 ,0);
+				else if(researchIDToIntIDMap.get(item.id) != null){
+					kGuiButtonBase b = buttons.get(researchIDToIntIDMap.get(item.id));
 					if (b != null) tessellator.addVertexWithUV(b.xPosition + width, b.yPosition+height/2f, this.zLevel,0 ,0);
 					tessellator.draw();
 					continue;
@@ -246,7 +254,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			drawTextureRect(tessellator, xPosition, yPosition, 20, 40, width, height);
 		}
 		public void drawNameDesc(){
-			mc.fontRenderer.drawStringWithShadow(researchItem.name, xPosition + 22,yPosition+6,0xffffffff);
+			mc.fontRenderer.drawStringWithShadow(researchItem.id, xPosition + 22,yPosition+6,0xffffffff);
 			GL11.glColor4f(1,1,1,1);
 		}
 	}
@@ -350,13 +358,14 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		public ResearchItem researchItem;
 		@Override
 		public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
-			if(!visible || selectedItem==null)return;
+			if(!visible)return;
 			researchItem = selectedItem;
 			float colorTimer = ((float) Math.sin(System.currentTimeMillis()%3141/1000f))/2f+0.5f;
 			Tessellator tessellator = Tessellator.instance;
 
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
 			drawBackground(tessellator,colorTimer);
+			if(researchItem==null)return;
 			drawMainIcon();
 			drawNameDesc();
 			if(!researchItem.isUnlocked)return;
@@ -365,8 +374,12 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			GL11.glColor4f(1,1,1,1);
 		}
 
+		public boolean isMouseInConfirmButton(int mouseX, int mouseY){
+			return mouseX > xPosition && mouseX < xPosition + width && mouseY > yPosition && mouseY < yPosition + height;
+		}
+
 		public void fillColor(float colorTimer){
-			if(!researchItem.isUnlocked)GL11.glColor4f(.5f,.5f,.5f,.4f);
+			if(researchItem==null || !researchItem.isUnlocked)GL11.glColor4f(.5f,.5f,.5f,.4f);
 			else if (!researchItem.isCompleted && researchItem.getProgress() > 0) GL11.glColor4f(0f,colorTimer/2f+0.5f,(1-colorTimer)/4f+0.75f,.9f);
 			else if (!researchItem.isCompleted) GL11.glColor4f(1f,1f-colorTimer/2.5f,0,.9f);
 			else GL11.glColor4f(colorTimer/3f+.1f,.8f,.0f,.9f);
@@ -385,7 +398,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			for (IResearchTask condition : researchItem.tasks) {
 				progress += condition.getProgress()*1f/condition.getMaxProgress();
 			}
-			drawTextureRect(tessellator, xPosition+2, yPosition+height-10, 0, 14, (int) ((width-4) * (progress/researchItem.tasks.size())), 8);
+			drawTextureRect(tessellator, xPosition+2, yPosition+height-30, 0, 14, (int) ((width-4) * (progress/researchItem.tasks.size())), 8);
 		}
 		public void drawConditionIcon(){
 			AtomicInteger i = new AtomicInteger();
@@ -401,11 +414,11 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 
 				mc.getTextureManager().bindTexture(main);
 				GL11.glColor4f(1,1,1,1);
-				drawTextureRect(tessellator, xPosition + 12 ,yPosition + height - 9 - i.get() * 9,0, 8,width -14, 6);
+				drawTextureRect(tessellator, xPosition + 12 ,yPosition + height - 29 - i.get() * 9,0, 8,width -14, 6);
 
 				GL11.glColor4f(0.0f,0.8f,0.0f,colorTimer/4+0.75f);
 				float progress = condition.getProgress()*1f/condition.getMaxProgress();
-				drawTextureRect(tessellator, xPosition + 12 ,yPosition + height - 9 - i.get() * 9,60, 8, (int) ((width -14)*progress), 6);
+				drawTextureRect(tessellator, xPosition + 12 ,yPosition + height - 29 - i.get() * 9,60, 8, (int) ((width -14)*progress), 6);
 
 			}
 		}
@@ -416,7 +429,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		}
 
 		public void drawNameDesc(){
-			mc.fontRenderer.drawStringWithShadow(researchItem.name, xPosition + 22,yPosition+6,0xffffffff);
+			mc.fontRenderer.drawStringWithShadow(researchItem.id, xPosition + 22,yPosition+6,0xffffffff);
 			String current = "";
 			String last = researchItem.desc;
 			int i =0;

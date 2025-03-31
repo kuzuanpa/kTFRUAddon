@@ -14,45 +14,56 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research.task;
 
-import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
+import gregapi.util.ST;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ItemConsumeTask implements IResearchTask{
-    public @NotNull Item item;
-    public short meta = 0;
-    public @Nullable NBTTagCompound nbt = null;
-    public ItemConsumeTask(@NotNull Item needItem){
+    public @NotNull ItemStack item;
+    public long requiredCount;
+    public long finishedCount;
+    public ItemConsumeTask(@NotNull ItemStack needItem){
         this.item = needItem;
+        requiredCount = needItem.stackSize;
     }
-    public ItemConsumeTask(@NotNull Item needItem, short meta){
+    public ItemConsumeTask(@NotNull ItemStack needItem, long requiredCount){
         this.item = needItem;
-        this.meta = meta;
+        this.requiredCount = requiredCount;
     }
     @Override
     public long getMaxProgress() {
-        return 0;
+        return requiredCount;
     }
 
     @Override
     public long getProgress() {
-        return 0;
+        return finishedCount;
+    }
+
+    @Override
+    public boolean tryPromoteProgress(Object consume) {
+        boolean isEqual = consume instanceof ItemStack && isItemStackEqual(item, ((ItemStack) consume));
+        if(isEqual)finishedCount += ((ItemStack) consume).stackSize;
+        return isEqual;
     }
 
     @Override
     public void setProgress(long progress) {
-
+        finishedCount = progress;
     }
 
     @Override
     public IIcon getIcon() {
-        return null;
+        return item.getIconIndex();
     }
 
     @Override
     public String getIdentifier() {
-        return "";
+        return ST.id(item) +"."+ ST.meta(item);
+    }
+
+    public static boolean isItemStackEqual(ItemStack need, ItemStack received) {
+        return need.isItemEqual(received) && ((!need.hasTagCompound()) || need.getTagCompound().equals(received.getTagCompound()));
     }
 }
