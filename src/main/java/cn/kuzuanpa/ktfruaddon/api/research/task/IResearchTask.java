@@ -17,8 +17,8 @@ package cn.kuzuanpa.ktfruaddon.api.research.task;
 import net.minecraft.util.IIcon;
 
 public interface IResearchTask {
-    default boolean isCompleted() {return getMaxProgress() <= getProgress(); }
-    long getMaxProgress();
+    default boolean isCompleted() {return getRequiredProgress() <= getProgress(); }
+    long getRequiredProgress();
     long getProgress();
     boolean tryPromoteProgress(Object consumed);
     void setProgress(long progress);

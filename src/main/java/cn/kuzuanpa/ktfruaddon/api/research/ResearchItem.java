@@ -74,10 +74,10 @@ public class ResearchItem {
     }
     /**Range: 0~100, note the progress is ceiled**/
     public byte getProgress(){
-        return (byte)Math.ceil(100 * tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getMaxProgress).sum()));
+        return (byte)Math.ceil(100 * tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getRequiredProgress).sum()));
     }
     public float getProgressF(){
-        return (100 * (tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getMaxProgress).sum())));
+        return (100 * (tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getRequiredProgress).sum())));
     }
     public List<ResearchItem> getPrerequisites() {
         return prerequisites;
@@ -114,7 +114,7 @@ public class ResearchItem {
         long progress = 20;
 
         @Override
-        public long getMaxProgress() {
+        public long getRequiredProgress() {
             return 12000000000000L;
         }
 

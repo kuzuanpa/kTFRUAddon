@@ -190,7 +190,7 @@ public class ResearchTree {
     public static DummyTask skippedDummyTask = new DummyTask();
     public static class DummyTask implements IResearchTask{
         public DummyTask(){}
-        @Override public long getMaxProgress() {return 0;}
+        @Override public long getRequiredProgress() {return 0;}
         @Override public long getProgress() {return 0;}
 
         @Override

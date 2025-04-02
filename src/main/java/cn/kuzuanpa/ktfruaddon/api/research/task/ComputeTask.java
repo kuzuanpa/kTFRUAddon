@@ -14,26 +14,24 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research.task;
 
-import gregapi.util.ST;
-import net.minecraft.item.ItemStack;
+import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import gregapi.data.IL;
 import net.minecraft.util.IIcon;
-import org.jetbrains.annotations.NotNull;
 
-public class ItemConsumeTask implements IResearchTask{
-    public @NotNull ItemStack item;
-    public long requiredCount;
+public class ComputeTask implements IResearchTask{
+    public ComputePower type;
+    public long requiredAmount;
+    public long requiredPower;
     public long finishedCount;
-    public ItemConsumeTask(@NotNull ItemStack needItem){
-        this.item = needItem;
-        requiredCount = needItem.stackSize;
-    }
-    public ItemConsumeTask(@NotNull ItemStack needItem, long requiredCount){
-        this.item = needItem;
-        this.requiredCount = requiredCount;
+    public ComputeTask(ComputePower type, long requiredAmount, long minimumPower) {
+        this.type = type;
+        this.requiredAmount = requiredAmount;
+        this.requiredPower = minimumPower;
     }
     @Override
     public long getRequiredProgress() {
-        return requiredCount;
+        return requiredAmount;
     }
 
     @Override
@@ -43,8 +41,8 @@ public class ItemConsumeTask implements IResearchTask{
 
     @Override
     public boolean tryPromoteProgress(Object consume) {
-        boolean isEqual = consume instanceof ItemStack && isItemStackEqual(item, ((ItemStack) consume));
-        if(isEqual)finishedCount += ((ItemStack) consume).stackSize;
+        boolean isEqual = consume instanceof SingleEntry && ((SingleEntry<?,?>) consume).getKey() instanceof ComputePower && ((SingleEntry<?,?>) consume).getValue() instanceof Long;
+        if(isEqual)finishedCount += (Long) ((SingleEntry<?, ?>) consume).getValue();
         return isEqual;
     }
 
@@ -55,15 +53,11 @@ public class ItemConsumeTask implements IResearchTask{
 
     @Override
     public IIcon getIcon() {
-        return item.getIconIndex();
+        return IL.Circuit_Elite.getItem().getIconFromDamage(30304);
     }
 
     @Override
     public String getIdentifier() {
-        return ST.id(item) +"."+ ST.meta(item);
-    }
-
-    public static boolean isItemStackEqual(ItemStack need, ItemStack received) {
-        return need.isItemEqual(received) && ((!need.hasTagCompound()) || need.getTagCompound().equals(received.getTagCompound()));
+        return String.valueOf(type.ordinal());
     }
 }
