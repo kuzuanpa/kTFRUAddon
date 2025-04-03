@@ -35,7 +35,7 @@ import java.util.List;
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
+public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
 
     public final short machineX = 5, machineY = 3, machineZ = 3;
     public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;

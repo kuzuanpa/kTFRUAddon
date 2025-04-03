@@ -233,7 +233,7 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         int tX = getOffsetXN(mFacing), tY = yCoord, tZ = getOffsetZN(mFacing);
-        return aX >= tX - 1 && aY >= tY - 1 && aZ >= tZ - 1 && aX <= tX + 1 && aY <= tY + 7 && aZ <= tZ + 1;
+        return aX >= tX - 1 && aY >= tY - 1 && aZ >= tZ - 1 && aX <= tX + 1 && aY <= tY + 8 && aZ <= tZ + 1;
     }
 
     @Override

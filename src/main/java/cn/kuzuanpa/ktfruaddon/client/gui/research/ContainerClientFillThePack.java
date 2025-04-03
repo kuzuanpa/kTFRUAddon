@@ -81,18 +81,14 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     }
     public void onLeftHoldReleased(int mouseX,int mouseY){
         if(selectedButton==null)return;
-        if(selectedButton.shape.placedOnX != -1 && isPosInGround(mouseX,mouseY)) returnShapeToQueue();
+        if(selectedButton.shape.placedOnX != -1 && !isPosInGround(mouseX,mouseY)) expireSelectedButton(4, 4);
         else tryPlaceShapeOnGround();
     }
 
     public boolean isPosInGround(int x,int y){
-        return (x < (width-totalSize)/2 || x > (width+totalSize)/2 || y < 16 || y > 16 + totalSize);
+        return (x >= (width - totalSize) / 2 && x <= (width + totalSize) / 2 && y >= 16 && y <= 16 + totalSize);
     }
 
-    public void returnShapeToQueue(){
-        theGame.removeTile(selectedButton.shape);
-        expireSelectedButton(4, 4);
-    }
     public void tryPlaceShapeOnGround(){
         if(theGame.placeTile(selectedButton.shape, currentFocusX, currentFocusY)) {
             expireSelectedButton((width-totalSize)/2 + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize);
