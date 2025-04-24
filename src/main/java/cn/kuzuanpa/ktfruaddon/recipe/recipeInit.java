@@ -32,6 +32,7 @@ public class recipeInit {
         CompactItem.init();
         Fusion.init();
         FakeRecipe.init();
+        Graphene.init();
         if(Loader.isModLoaded("terrafirmacraft"))TFCRecipe.init();
     }
 }
