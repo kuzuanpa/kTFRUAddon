@@ -16,9 +16,10 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTurbine;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTurbine;
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.code.TagData;
@@ -43,6 +44,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.Collection;
@@ -83,7 +85,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		UT.NBT.setBoolean(aNBT,"ktfru.turbine.overclock",mOverclock);
 	}
 	@Override
-	public boolean checkStructure2() {
+	public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
 		int
 		tMinX = xCoord-(SIDE_X_NEG==mFacing?0:SIDE_X_POS==mFacing?3:1),
 		tMinY = yCoord-(SIDE_Y_NEG==mFacing?0:SIDE_Y_POS==mFacing?3:1),
@@ -109,7 +111,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 						tBits = (tY == tMinY ? MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_OUT : MultiTileEntityMultiBlockPart.NOTHING);
 					}
 				}
-				if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX, tY, tZ, mTurbineWalls, getMultiTileEntityRegistryID(), tX == tOutX && tY == tOutY && tZ == tOutZ ? 3 : 0, tBits)) tSuccess = F;
+				if (!utils.checkAndSetTarget(this, tX, tY, tZ, aClickedAt, aPlayer, aInventory, mTurbineWalls, getMultiTileEntityRegistryID(), tX == tOutX && tY == tOutY && tZ == tOutZ ? 3 : 0, tBits)) tSuccess = F;
 			}
 			return tSuccess;
 		}

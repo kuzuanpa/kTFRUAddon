@@ -19,13 +19,14 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -120,10 +121,10 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
 
     ChunkCoordinates lastFailedPos=null;
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset);
+        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset, aClickedAt, aPlayer, aInventory);
 
         return lastFailedPos==null;
     }

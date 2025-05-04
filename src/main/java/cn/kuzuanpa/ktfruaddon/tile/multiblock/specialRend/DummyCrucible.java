@@ -31,7 +31,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMeterDetectable;
 import cn.kuzuanpa.ktfruaddon.api.tile.crucible.IDummyCrucibleMaterialProvider;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
@@ -58,7 +58,9 @@ import gregapi.util.OM;
 import gregapi.util.UT;
 import gregtech.tileentity.multiblocks.MultiTileEntityCrucible;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
@@ -248,10 +250,10 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
 
     ChunkCoordinates lastFailedPos=null;
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset);
+        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset, aClickedAt, aPlayer, aInventory);
         return lastFailedPos==null;
     }
     @Override

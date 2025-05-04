@@ -17,12 +17,15 @@ package cn.kuzuanpa.ktfruaddon.client.gui.research;
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
+import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableFillInPack;
 import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -32,27 +35,32 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 public class ContainerClientFillThePack extends kGuiContainerBase implements IHiddenNei {
     private final ContainerCommonFillThePack mContainer;
-    private ResearchTableFillInPack.PuzzleGame theGame = new ResearchTableFillInPack.PuzzleGame(12,5);
-    public ContainerClientFillThePack(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID, String aGUITexture) {
+    public ResearchTableFillInPack.PuzzleGame theGame;
+    public ContainerClientFillThePack(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID) {
         super(new ContainerCommonFillThePack(aInventoryPlayer, aTileEntity,aGUIID));
-
         this.mContainer= (ContainerCommonFillThePack) inventorySlots;
+        theGame = ((ResearchTableFillInPack) mContainer.mTileEntity).theGameClient;
+        puzzleSize =  totalSize/(theGame.size+1);
     }
     final ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
     final ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
     final Random rng = new Random();
     protected int totalSize = 180;
-    protected int puzzleSize = totalSize/(theGame.size+1);
+    protected int puzzleSize;
     ShapeButton selectedButton, selectedButtonOld;
+    float buttonX = -1 , buttonY = -1, buttonToGoX = -1, buttonToGoY = -1, buttonOldX= -1, buttonOldY = -1, buttonOldToGoX = -1, buttonOldToGoY = -1;
+    int mouseStartX=-1,mouseStartY=-1, buttonOriginX = -1, buttonOriginY= -1, currentFocusX = -1, currentFocusY = -1;
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         mc.getTextureManager().bindTexture(background);
         GL11.glColor4f(1,1,1,0.1f);
+        currentFocusX = -1; currentFocusY = -1;
         this.drawTexturedModalRect(0,0, 0, 14, width, height);
     }
 
@@ -65,8 +73,6 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         super.drawScreen2(p_73863_1_, p_73863_2_, p_73863_3_);
     }
 
-    float buttonX = -1 , buttonY = -1, buttonToGoX = -1, buttonToGoY = -1, buttonOldX= -1, buttonOldY = -1, buttonOldToGoX = -1, buttonOldToGoY = -1;
-    int mouseStartX=-1,mouseStartY=-1, buttonOriginX = -1, buttonOriginY= -1, currentFocusX = -1, currentFocusY = -1;
     @Override
     public void handleMouseInput2(int mouseX,int mouseY) {
         super.handleMouseInput2(mouseX, mouseY);
@@ -81,21 +87,21 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     }
     public void onLeftHoldReleased(int mouseX,int mouseY){
         if(selectedButton==null)return;
-        if(selectedButton.shape.placedOnX != -1 && !isPosInGround(mouseX,mouseY)) expireSelectedButton(4, 4);
-        else tryPlaceShapeOnGround();
+        if(!tryPlaceShapeOnGround()) expireSelectedButton(mouseX<width/2?4:width-4-selectedButton.width, mouseY);
     }
 
     public boolean isPosInGround(int x,int y){
         return (x >= (width - totalSize) / 2 && x <= (width + totalSize) / 2 && y >= 16 && y <= 16 + totalSize);
     }
 
-    public void tryPlaceShapeOnGround(){
-        if(theGame.placeTile(selectedButton.shape, currentFocusX, currentFocusY)) {
-            expireSelectedButton((width-totalSize)/2 + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize);
-            theGame.checkWin();
-        }else{
-            expireSelectedButton(buttonOriginX, buttonOriginY);
-        }
+    public boolean tryPlaceShapeOnGround(){
+        if(currentFocusX == -1)return false;
+        TileEntity t = (TileEntity) mContainer.mTileEntity;
+        if (!((ResearchTableFillInPack) t).theGameClient.placeTile(selectedButton.shape, currentFocusX, currentFocusY, false)) return false;
+
+        kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,1, (byte) selectedButton.shapeID, (byte)currentFocusX, (byte)currentFocusY)) ;
+        expireSelectedButton((width-totalSize)/2 + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize);
+        return true;
     }
 
     public void tickSelectedButton(){
@@ -119,26 +125,37 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     @Override
     public void addButtons() {
         AtomicInteger i = new AtomicInteger();
-        for (int x = 0; x < theGame.size; x++) for (int y = 0; y < theGame.size; y++) buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 + x*puzzleSize,16 + y*puzzleSize,puzzleSize, x,y));
-        for (ResearchTableFillInPack.PuzzleGame.PuzzleShape shape : theGame.shuffledTiles)buttons.add(new ShapeButton(i.getAndIncrement(), 8, 8, puzzleSize, shape ));
+        buttons.add(new kGuiButtonBase(i.getAndIncrement(),0,0,20,20,"x"));
+        //for (byte x = 0; x < theGame.size; x++) for (byte y = 0; y < theGame.size; y++) buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 + x*puzzleSize,16 + y*puzzleSize,puzzleSize, x,y));
+        buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 ,16, totalSize));
+
+        for (byte j = 0;j < theGame.tiles.size(); j++) {
+            ResearchTableFillInPack.PuzzleGame.PuzzleShape shape = theGame.tiles.get(j);
+            buttons.add(new ShapeButton(i.getAndIncrement(), shape.placedOnX == -1? 8 : (width-totalSize)/2 + shape.placedOnX*puzzleSize, shape.placedOnY == -1 ? 8: 16 + shape.placedOnY*puzzleSize, puzzleSize, shape, j));
+        }
     }
 
     @Override
     public boolean onButtonPressed(GuiButton button, int mouseX, int mouseY) {
+        TileEntity t = (TileEntity) mContainer.mTileEntity;
+        if(button.id<1)kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,button.id));
         if(button instanceof ShapeButton){
-            selectButton((ShapeButton) button);
+            selectButton((ShapeButton) button, mouseX, mouseY);
             mouseStartX=mouseX;
             mouseStartY=mouseY;
             return true;
         }
         return false;
     }
-    public void selectButton(ShapeButton button){
+    public void selectButton(ShapeButton button, int mouseX, int mouseY){
         selectedButton = button;
         buttonX = buttonOriginX = selectedButton.xPosition;
         buttonY = buttonOriginY = selectedButton.yPosition;
-
-        if(selectedButton.shape.placedOnX > -1)theGame.removeTile(selectedButton.shape);
+        TileEntity t = (TileEntity) mContainer.mTileEntity;
+        if(isPosInGround(mouseX, mouseY)){
+            ((ResearchTableFillInPack) t).theGameClient.removeTile(selectedButton.shape);
+            kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord, -1, (byte)button.shapeID));
+        }
     }
     public void tryDisposeOldSelectedButton(){
         if(Math.abs(selectedButtonOld.xPosition - buttonOriginX)<2 && Math.abs(selectedButtonOld.yPosition - buttonOriginY)<2 && !Mouse.isButtonDown(0)){
@@ -173,59 +190,88 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         tessellator.draw();
     }
     public class SlotButton extends kGuiButtonBase {
-        public SlotButton(int id, int drawPosX, int drawPosY, int size, int x, int y) {
+        public SlotButton(int id, int drawPosX, int drawPosY, int size) {
             super(id, drawPosX, drawPosY, size, size, "");
-            this.x=x;
-            this.y=y;
             setAnimatedInFBO(true);
+            GL11.glNewList(glListID =GL11.glGenLists(1), GL11.GL_COMPILE);
+            Tessellator tessellator = Tessellator.instance;
+            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GL11.glColor4f(1, 1, 1, 1);
+            for (byte x = 0; x < theGame.size; x++) for (byte y = 0; y < theGame.size; y++) drawTextureRect(tessellator, xPosition +  x*puzzleSize, yPosition +  y*puzzleSize, 8, 8, puzzleSize, puzzleSize);
+            GL11.glEndList();
         }
 
-        public final int x, y;
-        public boolean isTaken =false;
+        public final int glListID;
 
         @Override
         public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
             if (!visible) return;
 
-            Tessellator tessellator = Tessellator.instance;
-
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
             mc.getTextureManager().bindTexture(main);
 
-            GL11.glColor4f(1, 1, 1, 1);
-            if(selectedButton!=null && selectedButton.shape.content.stream().anyMatch(pos->this.isMouseInButton(selectedButton.xPosition+pos.x*puzzleSize+puzzleSize/2,selectedButton.yPosition+pos.y*puzzleSize+puzzleSize/2)))GL11.glColor4f(0.8F,1.0F,0.8F,1.0F);
-            if(selectedButton!=null && this.isMouseInButton(selectedButton.xPosition+puzzleSize/2,selectedButton.yPosition+puzzleSize/2)) {
-                currentFocusX = x;
-                currentFocusY = y;
+            GL11.glCallList(glListID);
+
+            if(selectedButton != null)for (byte x = 0; x < theGame.size; x++) for (byte y = 0; y < theGame.size; y++) {
+                int focusScreenX = selectedButton.xPosition+puzzleSize/2;
+                int focusScreenY = selectedButton.yPosition+puzzleSize/2;
+                if(xPosition + x*puzzleSize < focusScreenX && xPosition +  x*puzzleSize + puzzleSize >= focusScreenX && yPosition +  y*puzzleSize < focusScreenY && yPosition +  y*puzzleSize + puzzleSize >= focusScreenY){
+                    currentFocusX = x;
+                    currentFocusY = y;
+                }
             }
-            drawTextureRect(tessellator, xPosition, yPosition, 8,8, puzzleSize,puzzleSize);
 
             GL11.glColor4f(1, 1, 1, 1);
+        }
+
+        @Override
+        public void destroy() {
+            super.destroy();
+            GL11.glDeleteLists(glListID, 1);
         }
     }
     public class ShapeButton extends kGuiButtonBase {
-        public ShapeButton(int id, int drawPosX, int drawPosY, int size, ResearchTableFillInPack.PuzzleGame.PuzzleShape shape) {
+        public ShapeButton(int id, int drawPosX, int drawPosY, int size, ResearchTableFillInPack.PuzzleGame.PuzzleShape shape, int shapeID) {
             super(id, drawPosX, drawPosY, size * shape.width, size * shape.height, "");
             this.shape=shape;
+            this.shapeID=shapeID;
             setAnimatedInFBO(true);
-        }
-
-        public final ResearchTableFillInPack.PuzzleGame.PuzzleShape shape;
-        public boolean isTaken =false;
-
-        @Override
-        public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
-            if (!visible) return;
+            GL11.glNewList(glListID =GL11.glGenLists(1), GL11.GL_COMPILE);
 
             Tessellator tessellator = Tessellator.instance;
 
             GL11.glEnable(GL11.GL_ALPHA_TEST);
+
+            shape.content.forEach(p->drawTextureRect(tessellator,  p.x*puzzleSize, p.y*puzzleSize, 0,0, puzzleSize,puzzleSize));
+
+            GL11.glEndList();
+        }
+
+        public final ResearchTableFillInPack.PuzzleGame.PuzzleShape shape;
+        public final int shapeID, glListID;
+
+        @Override
+        public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
+            if (!visible) return;
             mc.getTextureManager().bindTexture(main);
-            GL11.glColor4f(1, 1, 1, 1);
+            if(currentFocusX!=-1 && selectedButton == this && theGame.placeTile(selectedButton.shape, currentFocusX, currentFocusY, true)){
+                GL11.glPushMatrix();
+                GL11.glTranslatef((mc.currentScreen.width-totalSize)/2F + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize,0);
+                GL11.glColor4f(0.4F, 1.0F, 0.4F, 0.7F);
+                GL11.glCallList(glListID);
+                GL11.glColor4f(1, 1, 1, 1);
+                GL11.glPopMatrix();
+            }
 
-            shape.content.forEach(p->drawTextureRect(tessellator, xPosition + p.x*puzzleSize, yPosition + p.y*puzzleSize, 0,0, puzzleSize,puzzleSize));
-
+            GL11.glPushMatrix();
+            GL11.glTranslatef(xPosition,yPosition,0);
+            GL11.glCallList(glListID);
             GL11.glColor4f(1, 1, 1, 1);
+            GL11.glPopMatrix();
+        }
+        @Override
+        public void destroy() {
+            super.destroy();
+            GL11.glDeleteLists(glListID, 1);
         }
     }
 

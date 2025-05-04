@@ -16,8 +16,8 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.ICustomPartValidator;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.ICustomPartValidator;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
@@ -56,8 +56,8 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
 
     public boolean sealed = false;
 
-    public final short sizeX = 4, sizeY = 7, sizeZ = 4;
-    public final short xMapOffset = 0, zMapOffset = 0;
+    public static final short sizeX = 4, sizeY = 7, sizeZ = 4;
+    public static final short xMapOffset = 0, zMapOffset = 0;
     public int invSize = 8;
 
     public int mWall = 18006, mCoil = 18041, mCond = 31040, mBatt = 31041, trans = 32767;
@@ -109,14 +109,13 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
     }
 
     @Override
-    public boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos) {
+    public boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         if(getBlockID(mapPos.posX,mapPos.posY,mapPos.posZ) == trans){
             TileEntity tile = getTileEntity(realPos);
-            if (tile instanceof TransformerPart) {
-                return utils.setTarget(this, tile, 0, MultiTileEntityMultiBlockPart.NOTHING, false);
-            }else return utils.checkAndSetTarget(this, realPos, new TileDesc[]{new TileDesc(g,mWall,MultiTileEntityMultiBlockPart.NOTHING,0)});
+            if (tile instanceof TransformerPart) {return utils.setTarget(this, aClickedAt, aPlayer, aInventory, tile, 0, MultiTileEntityMultiBlockPart.NOTHING, false);
+            }else return utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, new TileDesc[]{new TileDesc(g,mWall,MultiTileEntityMultiBlockPart.NOTHING,0)});
         }
-        else return utils.checkAndSetTarget(this, realPos, getTileDescs(mapPos.posX,mapPos.posY,mapPos.posZ));
+        else return utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, getTileDescs(mapPos.posX,mapPos.posY,mapPos.posZ));
     }
 
     @Override
@@ -199,12 +198,11 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
 
     ChunkCoordinates lastFailedPos=null;
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset);
-
-        return lastFailedPos==null;
+        lastFailedPos = checkMappedStructure(lastFailedPos, sizeX, sizeY + 2, sizeZ + 2, xMapOffset ,-3,zMapOffset + 1, aClickedAt, aPlayer, aInventory);
+        return lastFailedPos == null;
     }
 
     public void onTick2(long aTimer, boolean aIsServerSide) {

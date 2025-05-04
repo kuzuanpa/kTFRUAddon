@@ -17,9 +17,9 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseControlledMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IConditionParts;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.cover.ICover;
 import gregapi.data.CS;
@@ -33,6 +33,7 @@ import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -102,10 +103,10 @@ public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implement
     }
     ChunkCoordinates lastFailedPos=null;
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,0);
+        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,0, aClickedAt, aPlayer, aInventory);
         return lastFailedPos==null;
     }
     //这是设置主方块的物品提示

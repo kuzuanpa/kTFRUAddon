@@ -28,9 +28,12 @@ import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.*;
 import gregapi.util.WD;
 import gregtech.tileentity.misc.MultiTileEntityFluidSpring;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -196,7 +199,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     public short getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX, checkY, checkZ)==wallID? g:k;}
 
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
@@ -207,7 +210,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
                         if(!isIgnored(cX,cY,cZ)) {
-                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cX,cY,cZ)))
+                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory, getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cX,cY,cZ)))
                                 tSuccess = F;
                         }
                     }

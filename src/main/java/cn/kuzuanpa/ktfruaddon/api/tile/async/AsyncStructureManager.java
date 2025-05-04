@@ -16,7 +16,10 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.async;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -48,8 +51,8 @@ public class AsyncStructureManager {
         CompletedTaskList.remove(taskID);
     }
 
-    public static void addStructureComputeTask(UUID taskID, World world, IAsyncStructure structure){
-        addStructureComputeTask(new StructureComputeData(taskID,world,structure));
+    public static void addStructureComputeTask(UUID taskID, World world, IAsyncStructure structure, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
+        addStructureComputeTask(new StructureComputeData(taskID,world,structure, aClickedAt, aPlayer, aInventory));
     }
     public static void addStructureComputeTask(StructureComputeData data){
         taskList.put(data.uuid,data);
@@ -62,7 +65,7 @@ public class AsyncStructureManager {
                 runningTask=k;
                 try {
                     StructureComputeData v = taskList.get(k);
-                    v.isStructureValid = v.structure.asyncCheckStructure(new WorldContainer(v.world));
+                    v.isStructureValid = v.structure.asyncCheckStructure(new WorldContainer(v.world), v.aClickedAt, v.aPlayer, v.aInventory);
                     System.out.println("Completed Structure Compute for: "+v.uuid+" "+v.desc+", takes"+(System.nanoTime()-time));
                     CompletedTaskList.put(k,v);
                     taskList.remove(k);
@@ -79,19 +82,27 @@ public class AsyncStructureManager {
             });
         }
     }
-    public static class StructureComputeData{
+    public static class StructureComputeData {
         boolean isStructureValid;
         IAsyncStructure structure;
         World world;
         UUID uuid;
         String desc = "";
-        public StructureComputeData(UUID taskID, World world, IAsyncStructure structure){
-            this.uuid=taskID;
-            this.world=world;
-            this.structure=structure;
+        public ChunkCoordinates aClickedAt;
+        public Entity aPlayer;
+        public IInventory aInventory;
+
+        public StructureComputeData(UUID taskID, World world, IAsyncStructure structure, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+            this.uuid = taskID;
+            this.world = world;
+            this.structure = structure;
+            this.aClickedAt = aClickedAt;
+            this.aPlayer = aPlayer;
+            this.aInventory = aInventory;
         }
-        public StructureComputeData setDesc(String desc){
-            this.desc=desc;
+
+        public StructureComputeData setDesc(String desc) {
+            this.desc = desc;
             return this;
         }
     }

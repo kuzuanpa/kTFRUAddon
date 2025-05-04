@@ -18,7 +18,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.code.TagData;
@@ -35,7 +35,9 @@ import gregapi.tileentity.multiblocks.IMultiBlockFluidHandler;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -140,10 +142,10 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
     }
 
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos, machineX, machineY, machineZ, xMapOffset,-1,zMapOffset);
+        lastFailedPos = checkMappedStructure(lastFailedPos, machineX, machineY, machineZ, xMapOffset,-1,zMapOffset, aClickedAt, aPlayer, aInventory);
         if(lastFailedPos!=null)return false;
 
         tX = utils.getRealX(getFacing(), tX, xMapOffset, -zMapOffset);
@@ -152,7 +154,7 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
         int mapX=utils.getRealX(getFacing(), tX, 2, 2), mapZ=utils.getRealZ(getFacing(), tZ, 2, 2);
         for (int i = 1; i < yCoord; i++) {
             int mapY=tY - i;
-            if (!utils.checkAndSetTarget(this, mapX, mapY, mapZ, 31039, k, 0, MultiTileEntityMultiBlockPart.NOTHING) && !(worldObj.getBlock(mapX, mapY, mapZ) == Blocks.bedrock)){
+            if (!utils.checkAndSetTarget(this, mapX, mapY, mapZ, aClickedAt, aPlayer, aInventory, 31039, k, 0, MultiTileEntityMultiBlockPart.NOTHING) && !(worldObj.getBlock(mapX, mapY, mapZ) == Blocks.bedrock)){
                 FxRenderBlockOutline.addBlockOutlineToRender(new ChunkCoordinates(mapX, mapY, mapZ),0xff0000,2,System.currentTimeMillis()+8000);
                 return false;
             }

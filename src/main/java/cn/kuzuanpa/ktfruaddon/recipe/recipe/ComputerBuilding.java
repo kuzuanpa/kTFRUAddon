@@ -62,12 +62,12 @@ public class ComputerBuilding {
         recipeMaps.EDA.addRecipeX(T,16,36000, ST.array(IL.Circuit_Advanced.get(0),ItemList.SiliconBoulePure.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.DiodePhotomask28um.get(1));
 
 
-        recipeMaps.EDA.addRecipeX(T,16,144000, ST.array(IL.Circuit_Elite.get(0), gRegistry.getItem(10104,0),gRegistry.getItem(10114,0),gRegistry.getItem(10043,0),ItemList.CPUGT1090.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),ZL_FS,ItemList.CPUPhotomask28um.get(1));
+        recipeMaps.EDA.addRecipeX(T,16,144000, ST.array(IL.Circuit_Elite.get(0), gRegistry.getItem(10104,0),gRegistry.getItem(10114,0),gRegistry.getItem(10043,0),ItemList.CPUTF3586S.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),ZL_FS,ItemList.CPUPhotomask28um.get(1));
         recipeMaps.EDA.addRecipeX(T,16, 72000, ST.array(IL.Circuit_Elite.get(0),IL.Circuit_Part_Elite.get(0),ItemList.ResistanceT2.get(1),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.CircuitPartPhotomaskT5.get(1));
         recipeMaps.EDA.addRecipeX(T,16,108000, ST.array(IL.Circuit_Elite.get(0),ST.make(MD.AE,"item.ItemMultiMaterial",0,10),gRegistry.getItem(6019,0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.RAMPhotomask28um.get(1));
 
 
-        recipeMaps.EDA.addRecipeX(T,16,288000, ST.array(IL.Circuit_Master.get(0), gRegistry.getItem(10105,0),gRegistry.getItem(10115,0),gRegistry.getItem(10044,0),ItemList.CPUGT2090.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),ZL_FS,ItemList.CPUPhotomask8um.get(1));
+        recipeMaps.EDA.addRecipeX(T,16,288000, ST.array(IL.Circuit_Master.get(0), gRegistry.getItem(10105,0),gRegistry.getItem(10115,0),gRegistry.getItem(10044,0),ItemList.CPUGT1090.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),ZL_FS,ItemList.CPUPhotomask8um.get(1));
         recipeMaps.EDA.addRecipeX(T,16,144000, ST.array(IL.Circuit_Master.get(0),IL.Circuit_Part_Master.get(0),ItemList.ResistanceT2.get(1),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.CircuitPartPhotomaskT6.get(1));
         recipeMaps.EDA.addRecipeX(T,16,216000, ST.array(IL.Circuit_Master.get(0),ST.make(MD.AE,"item.ItemMultiMaterial",0,23),ST.make(MD.AE,"item.ItemMultiMaterial",0,24),ST.make(MD.AE,"item.ItemMultiMaterial",0,22),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.RAMPhotomask8um.get(1));
 

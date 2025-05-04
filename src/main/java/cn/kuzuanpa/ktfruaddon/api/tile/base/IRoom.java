@@ -24,6 +24,9 @@ import codechicken.lib.vec.BlockCoord;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
@@ -40,7 +43,7 @@ public interface IRoom extends ITileEntityMultiBlockController{
      * @param checkRange           Max range when checking
      * @param shouldCornerBeSealed Should every corner be filled,or just the blocks next to RoomSpace
      */
-    static List<BlockCoord> checkAndGetRoom(TileDesc[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange, boolean shouldCornerBeSealed) {
+    static List<BlockCoord> checkAndGetRoom(TileDesc[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange, boolean shouldCornerBeSealed, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         ConcurrentHashMap<Integer, BlockCoord> checkingBlockCoords = new ConcurrentHashMap<Integer, BlockCoord>();
         ArrayList<BlockCoord> roomSpace = new ArrayList<BlockCoord>();
         //Starting from TOP
@@ -57,7 +60,7 @@ public interface IRoom extends ITileEntityMultiBlockController{
             //Check blocks at every side
             for (int i = 0; i < forCount; i++) {
                 BlockCoord checkingCoord = new BlockCoord(coord.x + forX[i], coord.y + forY[i], coord.z + forZ[i]);
-                if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController, checkingCoord.x, checkingCoord.y, checkingCoord.z, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))) {
+                if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController, checkingCoord.x, checkingCoord.y, checkingCoord.z, aClickedAt, aPlayer, aInventory, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))) {
                     if (!checkRange.isCoordInBox(checkingCoord)) {
                         FMLLog.log(Level.INFO, "Err: Out of range:" + checkingCoord.x + checkingCoord.y + checkingCoord.z);
                         checkingBlockCoords.clear();
@@ -76,11 +79,11 @@ public interface IRoom extends ITileEntityMultiBlockController{
         return roomSpace;
     }
 
-    default void checkRoomDefault(boolean startFromTopOrBack, int[] checkRange2, boolean shouldCornerBeSealed){
+    default void checkRoomDefault(boolean startFromTopOrBack, int[] checkRange2, boolean shouldCornerBeSealed, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
         final BlockCoord StartPoi = codeUtil.MCCoord2CCCoord(utils.getRealCoord((byte)getFacing(), getX(), getY(), getZ(), checkRange2[0], checkRange2[1], checkRange2[2]));
         final BlockCoord EndPoi = codeUtil.MCCoord2CCCoord(utils.getRealCoord((byte)getFacing(), getX(), getY(), getZ(), checkRange2[3], checkRange2[4], checkRange2[5]));
         BoundingBox checkRange = new BoundingBox(StartPoi, EndPoi);
-        checkAndGetRoom(getAvailableTiles(), this, startFromTopOrBack, checkRange, shouldCornerBeSealed);
+        checkAndGetRoom(getAvailableTiles(), this, startFromTopOrBack, checkRange, shouldCornerBeSealed, aClickedAt, aPlayer, aInventory);
     }
     TileDesc[] getAvailableTiles();
     short getFacing();

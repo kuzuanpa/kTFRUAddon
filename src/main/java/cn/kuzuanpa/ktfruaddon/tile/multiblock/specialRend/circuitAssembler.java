@@ -24,9 +24,11 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -120,7 +122,7 @@ public class circuitAssembler extends ModelRenderBaseMultiBlockMachine {
     public short getRegistryID(int x,int y,int z){return k;}
 
     @Override
-    public boolean checkStructure3(boolean shouldPartsTransparent) {
+    public boolean checkStructure3(boolean shouldPartsTransparent, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
@@ -130,7 +132,7 @@ public class circuitAssembler extends ModelRenderBaseMultiBlockMachine {
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
+                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory,getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
                             tSuccess = F;
                             //FMLLog.log(Level.FATAL, "failed");
                         }

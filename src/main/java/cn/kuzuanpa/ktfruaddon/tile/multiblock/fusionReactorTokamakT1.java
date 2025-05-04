@@ -19,8 +19,8 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IComputeNode;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
@@ -46,7 +46,9 @@ import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -407,9 +409,9 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
     private ChunkCoordinates lastFailedPos=null;
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos,machineX,machineY,machineZ,xMapOffset,yMapOffset,zMapOffset);
+        lastFailedPos = checkMappedStructure(lastFailedPos,machineX,machineY,machineZ,xMapOffset,yMapOffset,zMapOffset, aClickedAt, aPlayer, aInventory);
         return lastFailedPos==null;
     }
 
