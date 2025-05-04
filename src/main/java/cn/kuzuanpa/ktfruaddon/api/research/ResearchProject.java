@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResearchItem {
+public class ResearchProject {
     public final String id;
     public final String desc;
     public final Item iconItem;
@@ -31,22 +31,22 @@ public class ResearchItem {
     public int posX = 0;
     public int posY = 0;
     public int layer = 0;
-    public final List<ResearchItem> prerequisites = new ArrayList<>();
+    public final List<ResearchProject> prerequisites = new ArrayList<>();
     public final List<IResearchTask> tasks = new ArrayList<>();
     public boolean isUnlocked = false;
     public boolean isCompleted = false;
 
-    public ResearchItem(ResearchTree tree, String id, String desc) {
+    public ResearchProject(ResearchTree tree, String id, String desc) {
         this(tree, id, desc,null,0);
     }
-    public ResearchItem(ResearchTree tree, String id, String desc, Item icon, int iconMeta) {
+    public ResearchProject(ResearchTree tree, String id, String desc, Item icon, int iconMeta) {
         this.id = id;
         this.desc = desc;
         this.iconItem = icon;
         this.iconItemMeta = iconMeta;
         if(tree != null)tree.addResearchItem(this);
     }
-    public ResearchItem setPos(int x,int y){
+    public ResearchProject setPos(int x, int y){
         this.posX=x;
         this.posY=y;
         return this;
@@ -60,8 +60,8 @@ public class ResearchItem {
         return id;
     }
 
-    public ResearchItem addPrerequisite(ResearchItem... prerequisites) {
-        for (ResearchItem prerequisite : prerequisites) {
+    public ResearchProject addPrerequisite(ResearchProject... prerequisites) {
+        for (ResearchProject prerequisite : prerequisites) {
             if(prerequisite.id.equals("root"))this.layer=Math.max(1,this.layer);
             else this.layer = Math.max(this.layer, prerequisite.layer+1);
             this.prerequisites.add(prerequisite);
@@ -69,7 +69,7 @@ public class ResearchItem {
         return this;
     }
 
-    public boolean removePrerequisite(ResearchItem prerequisite) {
+    public boolean removePrerequisite(ResearchProject prerequisite) {
         return prerequisites.remove(prerequisite);
     }
     /**Range: 0~100, note the progress is ceiled**/
@@ -79,7 +79,7 @@ public class ResearchItem {
     public float getProgressF(){
         return (100 * (tasks.stream().mapToLong(IResearchTask::getProgress).sum()*1.0f/(tasks.stream().mapToLong(IResearchTask::getRequiredProgress).sum())));
     }
-    public List<ResearchItem> getPrerequisites() {
+    public List<ResearchProject> getPrerequisites() {
         return prerequisites;
     }
 
@@ -95,6 +95,9 @@ public class ResearchItem {
         return tasks;
     }
 
+    public boolean tryPromoteResearchProgress(Object consume) {
+        return tasks.stream().anyMatch(task->task.tryPromoteProgress(consume));
+    }
     public boolean areAllTasksCompleted() {
         for (IResearchTask task : tasks) {
             if (!task.isCompleted()) {

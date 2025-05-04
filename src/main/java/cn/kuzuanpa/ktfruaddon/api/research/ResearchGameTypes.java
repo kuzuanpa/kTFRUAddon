@@ -12,17 +12,8 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.api.research.task;
+package cn.kuzuanpa.ktfruaddon.api.research;
 
-import net.minecraft.util.IIcon;
-import org.jetbrains.annotations.Nullable;
-
-public interface IResearchTask {
-    default boolean isCompleted() {return getRequiredProgress() <= getProgress(); }
-    long getRequiredProgress();
-    long getProgress();
-    boolean tryPromoteProgress(@Nullable Object consumed);
-    void setProgress(long progress);
-    IIcon getIcon();
-    String getIdentifier();
+public enum ResearchGameTypes {
+    FillPack,ColorIdentify
 }

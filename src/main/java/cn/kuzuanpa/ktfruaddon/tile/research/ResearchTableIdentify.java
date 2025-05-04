@@ -21,23 +21,24 @@ import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonFillThePack;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
-public class ResearchTableFillInPack extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
-    public ResearchTableFillInPack.PuzzleGame theGame= new PuzzleGame(0,0);
-    public ResearchTableFillInPack.PuzzleGame theGameClient = new PuzzleGame(0,0);
-    public boolean theGameNeedSync = true;
-
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.fill_pack";}
+public class ResearchTableIdentify extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
+    public ColorGame theGame;
+    public ColorGame theGameClient;
+    public ResearchTableIdentify(){
+        theGame = new ColorGame((byte) 6, (byte) 4);
+        theGame.initializeGame();
+    }
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.identify";}
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerClientFillThePack(aPlayer.inventory, this, aGUIID);
     }
@@ -61,35 +62,22 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
-        PuzzleGame theGame = PuzzleGame.loadFromByteArray(aData);
-        if(theGame != null)theGameClient = theGame;
+        theGameClient = ColorGame.loadFromByteArray(aData);
     }
 
     @Override
     public boolean onTickCheck(long aTimer) {
-        boolean isGameNeedSync = theGameNeedSync;
-        theGameNeedSync=false;
-        return super.onTickCheck(aTimer) || isGameNeedSync;
+        return super.onTickCheck(aTimer) || rng(10)==0;
     }
 
     @Override
     public void onContainerButtonClick(int buttonID, byte @Nullable [] data) {
-        if(data == null)return;
-        if(buttonID == 0){
-            theGame = new PuzzleGame((byte)16,(byte)4);
-            theGame.initializeGame();
-            theGameNeedSync=true;
-        }
-        if(buttonID == -1)theGame.removeTile(theGame.tiles.get(data[0]));
-        if(buttonID == 1)theGame.placeTile(theGame.tiles.get(data[0]), data[1], data[2], false);
+        if(data == null || data.length == 0)return;
+        if(data[0] == -1)theGame.removeTile(theGame.tiles.get((byte)buttonID));
+        if(data[0] == 1)theGame.placeTile(theGame.tiles.get((byte)buttonID), data[1], data[2]);
     }
 
-    @Override
-    public boolean allowInteraction(Entity aEntity) {
-        return super.allowInteraction(aEntity);
-    }
-
-    public static class PuzzleGame {
+    public static class ColorGame {
 
         private static final int MIN_TILE_SIZE = 2;
         private static final int MAX_ATTEMPTS = 5;
@@ -97,35 +85,13 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
         public byte tileCount;
         public HashMap<Byte, PuzzleShape> tiles;
         public Set<Point> placedPoints;
-        public PuzzleGame(int size, int tileCount){
-            this((byte)size,(byte)tileCount);
-        }
-        public PuzzleGame(byte size, byte tileCount) {
+
+        public ColorGame(byte size, byte tileCount) {
             if (tileCount > size * size) throw new IllegalArgumentException("X 不能超过场地格子总数");
             this.size = size;
             this.tileCount = tileCount;
             this.tiles = new HashMap<>();
             this.placedPoints = new HashSet<>();
-        }
-        public double calculateScore() {
-            if (!checkWin()) return 0; // 仅当游戏成功时计分
-
-            final double baseComplexity = Math.pow(size, 2); // 基础复杂度与尺寸相关
-            final double optimalRatio = 0.3; // 最佳图块数量占比经验值
-            final double penaltyFactor = 2.5; // 偏离最佳值的惩罚系数
-
-            double totalCells = size * size;
-            double actualRatio = tileCount / totalCells;
-
-            // 核心评分公式
-            double score = baseComplexity *
-                    Math.exp(-penaltyFactor * Math.pow(actualRatio - optimalRatio, 2)) *
-                    (1 - Math.exp(-tileCount / (size * 0.8))); // 数量不足惩罚项
-
-            // 限制极值情况
-            double minScore = Math.sqrt(size + tileCount/4f);
-            double maxScore = baseComplexity * 10;
-            return Math.max(minScore, Math.min(score, maxScore));
         }
         public byte[] saveToByteArray() {
             try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -140,8 +106,6 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                     PuzzleShape tile = entry.getValue();
                     // 写入当前图块点数
                     dos.writeByte(entry.getKey());
-                    dos.writeByte(tile.placedOnX);
-                    dos.writeByte(tile.placedOnY);
                     dos.writeByte(tile.content.size());
                     // 写入每个点的坐标
                     for (Point p : tile.content) {
@@ -157,20 +121,18 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                 return new byte[0];
             }
         }
-        public static PuzzleGame loadFromByteArray(byte[] data) {
+        public static ColorGame loadFromByteArray(byte[] data) {
             try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
                  DataInputStream dis = new DataInputStream(bis)) {
 
                 // 读取基础信息
                 byte size = dis.readByte();
                 byte tileCount = dis.readByte();
-                PuzzleGame game = new PuzzleGame(size, tileCount);
+                ColorGame game = new ColorGame(size, tileCount);
                 // 读取图块数据
                 game.tiles = new HashMap<>();
                 for (int i = 0; i < tileCount; i++) {
                     byte puzzleID = dis.readByte();
-                    byte pX = dis.readByte();
-                    byte pY = dis.readByte();
                     byte pointCount = dis.readByte();
                     Set<Point> tile = new HashSet<>();
                     for (int j = 0; j < pointCount; j++) {
@@ -178,7 +140,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                         int y = dis.readByte();
                         tile.add(new Point(x, y));
                     }
-                    game.tiles.put(puzzleID, new PuzzleShape(tile).setPlacedOnX(pX).setPlacedOnY(pY));
+                    game.tiles.put(puzzleID, new PuzzleShape(tile));
                 }
                 return game;
             }catch (IOException e){
@@ -325,7 +287,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             return visited.size() == region.size();
         }
 
-        public boolean placeTile(PuzzleShape tile, int offsetX, int offsetY, boolean dryRun) {
+        public boolean placeTile(PuzzleShape tile, int offsetX, int offsetY) {
             Set<Point> displaced = new HashSet<>();
 
             // 检查边界和冲突
@@ -341,7 +303,6 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                 }
                 displaced.add(displacedPoint);
             }
-            if(dryRun) return true;
             tile.placedOnX = offsetX;
             tile.placedOnY = offsetY;
             placedPoints.addAll(displaced);
@@ -356,8 +317,6 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                 Point displacedPoint = new Point(newX, newY);
                 placedPoints.remove(displacedPoint);
             }
-            tile.placedOnX=-1;
-            tile.placedOnY=-1;
         }
 
         public boolean checkWin() {
@@ -368,13 +327,9 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             public Set<Point> content;
             public int width;
             public int height;
-            public int placedOnX = -1;
-            public int placedOnY = -1;
+            public int placedOnX;
+            public int placedOnY;
             public PuzzleShape(Set<Point> content){
-                this.content = content;
-                normalize();
-            }
-            public void normalize(){
                 int minX = Integer.MAX_VALUE;
                 int minY = Integer.MAX_VALUE;
                 int maxX = Integer.MIN_VALUE;
@@ -393,30 +348,6 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                 this.content=normalized;
                 width = maxX - minX + 1;
                 height = maxY - minY + 1;
-            }
-
-            public void rotateClockwise90() {
-                Set<Point> rotated = new HashSet<>();
-
-                for (Point p : content) {
-                    // 顺时针旋转90度的变换公式：(x, y) → (y, -x)
-                    int newX = p.y;
-                    int newY = -p.x;
-                    rotated.add(new Point(newX, newY));
-                }
-
-                content = rotated;
-
-                normalize();
-            }
-
-            public PuzzleShape setPlacedOnX(int placedOnX) {
-                this.placedOnX = placedOnX;
-                return this;
-            }
-            public PuzzleShape setPlacedOnY(int placedOnY) {
-                this.placedOnY = placedOnY;
-                return this;
             }
         }
     }

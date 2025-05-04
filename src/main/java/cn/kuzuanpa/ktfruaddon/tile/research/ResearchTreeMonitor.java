@@ -16,36 +16,58 @@ package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
-import cn.kuzuanpa.ktfruaddon.api.research.ResearchItem;
+import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
-import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMonitor;
+import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreMonitor;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
+import gregapi.render.ITexture;
+import gregapi.tileentity.base.TileEntityBase09FacingSingle;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 
-public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick {
+public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick {
     public boolean treeNeedSync = false;
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
     public ResearchTree theTree = new ResearchTree((byte)0);
-    public ResearchItem selectedItem = null;
+    public ResearchProject currentProject = null;
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerClientResearchTreeMonitor(aPlayer.inventory, this, aGUIID, mGUITexture);
+        return new ContainerClientResearchTreMonitor(aPlayer.inventory, this, aGUIID);
     }
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerCommonResearchTreeMonitor(aPlayer.inventory, this,aGUIID);
     }
     @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide()) {
+            openGUI(aPlayer, aSide);
+            return true;
+        }
+        return false;
+    }
+    @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArrayLong(aSendAll, theTree.saveToArray());
+        byte[] data;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             DataOutputStream dos = new DataOutputStream(bos)){
+            byte[] treeData = theTree.saveToArray();
+            dos.writeInt(treeData.length);
+            dos.write(treeData);
+            dos.writeUTF(currentProject==null?"null":currentProject.id);
+
+            dos.flush();
+            data = bos.toByteArray();
+        }catch (IOException e){
+            e.printStackTrace();
+            data = new byte[0];
+        }
+        return getClientDataPacketByteArrayLong(aSendAll, data);
     }
 
     @Override
@@ -60,12 +82,25 @@ public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric imp
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
-        theTree.loadFromArray(aData);
+        try(ByteArrayInputStream bis = new ByteArrayInputStream(aData);
+        DataInputStream dis = new DataInputStream(bis)){
+            byte[] treeData = new byte[dis.readInt()];
+            dis.readFully(treeData);
+            theTree.loadFromArray(treeData);
+            currentProject = theTree.allResearch.get(dis.readUTF());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean onTickCheck(long aTimer) {
         return super.onTickCheck(aTimer) || treeNeedSync || rng(10)==0;
+    }
+
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        return null;
     }
 
     @Override
@@ -75,7 +110,13 @@ public class ResearchTreeMonitor extends MultiTileEntityBasicMachineElectric imp
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             DataInputStream dis = new DataInputStream(bis);
             String id = dis.readUTF();
-            selectedItem = theTree.allResearch.get(id);
+            currentProject = theTree.allResearch.get(id);
+            if(currentProject != null && !currentProject.isUnlocked)currentProject = null;
         } catch (IOException e) {}
+    }
+
+    @Override
+    public boolean canDrop(int aSlot) {
+        return false;
     }
 }

@@ -47,10 +47,10 @@ import java.util.Map;
 
 public class ResearchTree {
 
-    public Map<String, ResearchItem> allResearch = new HashMap<>();
+    public Map<String, ResearchProject> allResearch = new HashMap<>();
 
     public byte id;
-    public void addResearchItem(ResearchItem item) {
+    public void addResearchItem(ResearchProject item) {
         allResearch.put(item.getId(), item);
     }
 
@@ -60,12 +60,12 @@ public class ResearchTree {
     }
     public void putTestValues(){
 
-        ResearchItem a = new ResearchItem(this, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，找回地球上最实用的工具：芯片", AdvancedRocketryItems.itemIC, 0).setPos(60,130);
-        ResearchItem b = new ResearchItem(this, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0).setPos(60,20);
-        ResearchItem c = new ResearchItem(this, "芯片理论", "研究半导体特性，了解其在芯片制造中的关键作用", Items.paper, 0).setPos(180,10);
-        ResearchItem d = new ResearchItem(this, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si,0).getItem(), MT.Si.mID).setPos(180,130);
-        ResearchItem e = new ResearchItem(this, "半导体电路设计", "是时候设计一个基本的计算器了，它将你从繁重的笔算心算中解放出来", Items.paper, 0).setPos(320,130);
-        ResearchItem f = new ResearchItem(this, "进阶电路设计", "利用计算器进一步改进电路，你认为你离真正的发电机不远了", Items.paper, 0).setPos(340,10);
+        ResearchProject a = new ResearchProject(this, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，找回地球上最实用的工具：芯片", AdvancedRocketryItems.itemIC, 0).setPos(60,130);
+        ResearchProject b = new ResearchProject(this, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0).setPos(60,20);
+        ResearchProject c = new ResearchProject(this, "芯片理论", "研究半导体特性，了解其在芯片制造中的关键作用", Items.paper, 0).setPos(180,10);
+        ResearchProject d = new ResearchProject(this, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si,0).getItem(), MT.Si.mID).setPos(180,130);
+        ResearchProject e = new ResearchProject(this, "半导体电路设计", "是时候设计一个基本的计算器了，它将你从繁重的笔算心算中解放出来", Items.paper, 0).setPos(320,130);
+        ResearchProject f = new ResearchProject(this, "进阶电路设计", "利用计算器进一步改进电路，你认为你离真正的发电机不远了", Items.paper, 0).setPos(340,10);
         a.addPrerequisite(rootItem);
         b.addPrerequisite(rootItem);
 
@@ -81,19 +81,19 @@ public class ResearchTree {
         b.isUnlocked =true;
         c.isUnlocked =true;
 
-        a.tasks.add(new ResearchItem.TestTask(Items.iron_ingot));
-        b.tasks.add(new ResearchItem.TestTask(Items.glowstone_dust));
-        b.tasks.add(new ResearchItem.TestTask(Items.glass_bottle));
-        c.tasks.add(new ResearchItem.TestTask(Items.glass_bottle));
-        d.tasks.add(new ResearchItem.TestTask(Items.water_bucket));
-        e.tasks.add(new ResearchItem.TestTask(Items.paper));
+        a.tasks.add(new ResearchProject.TestTask(Items.iron_ingot));
+        b.tasks.add(new ResearchProject.TestTask(Items.glowstone_dust));
+        b.tasks.add(new ResearchProject.TestTask(Items.glass_bottle));
+        c.tasks.add(new ResearchProject.TestTask(Items.glass_bottle));
+        d.tasks.add(new ResearchProject.TestTask(Items.water_bucket));
+        e.tasks.add(new ResearchProject.TestTask(Items.paper));
     }
-    public ResearchItem rootItem = new ResearchItem(this,"计算学","算力的提升是万物的基础");
+    public ResearchProject rootItem = new ResearchProject(this,"计算学","算力的提升是万物的基础");
 
-    private void removeChildRecursively(ResearchItem current, ResearchItem target) {
-        List<ResearchItem> children = current.getPrerequisites();
+    private void removeChildRecursively(ResearchProject current, ResearchProject target) {
+        List<ResearchProject> children = current.getPrerequisites();
         children.remove(target);
-        for (ResearchItem child : new ArrayList<>(children)) {
+        for (ResearchProject child : new ArrayList<>(children)) {
             removeChildRecursively(child, target);
         }
     }
@@ -122,13 +122,12 @@ public class ResearchTree {
         }));
     }
     public byte[] saveToArray() {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(bos);
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos)){
             dos.writeByte(id);
-            for (Map.Entry<String, ResearchItem> entry : allResearch.entrySet()) {
+            for (Map.Entry<String, ResearchProject> entry : allResearch.entrySet()) {
                 String name = entry.getKey();
-                ResearchItem item = entry.getValue();
+                ResearchProject item = entry.getValue();
                 //ONLY save task progress when research not completed
                 if (!item.isUnlocked || item.getProgress() == 0) continue;
                 dos.writeUTF(name);
@@ -158,14 +157,13 @@ public class ResearchTree {
         }
     }
     public void loadFromArray(byte[] bytes) {
-        try {
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        DataInputStream dis = new DataInputStream(bis);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        DataInputStream dis = new DataInputStream(bis)){;
         id = dis.readByte();
         while (dis.available() > 0) {
             String name = dis.readUTF();
-            ResearchItem item = allResearch.get(name);
-            if(item == null)item = new ResearchItem(null, "","");
+            ResearchProject item = allResearch.get(name);
+            if(item == null)item = new ResearchProject(null, "","");
             short taskCount = dis.readShort();
             if (taskCount == -1) {
                 item.isCompleted = true;
