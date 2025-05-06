@@ -28,16 +28,13 @@
  */
 package cn.kuzuanpa.ktfruaddon.client.gui.research;
 
-import cn.kuzuanpa.kGuiLib.client.anime.animeMoveLinear;
-import cn.kuzuanpa.kGuiLib.client.anime.animeMoveSlowIn;
-import cn.kuzuanpa.kGuiLib.client.anime.animeScaleLinear;
-import cn.kuzuanpa.kGuiLib.client.anime.animeScaleQuad;
+import cn.kuzuanpa.kGuiLib.client.anime.*;
 import cn.kuzuanpa.kGuiLib.client.anime.shortcut.animeTransparency;
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
-import cn.kuzuanpa.ktfruaddon.api.research.ResearchItem;
+import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
@@ -64,10 +61,10 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 @SideOnly(Side.CLIENT)
-public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implements IHiddenNei {
+public class ContainerClientResearchTreMonitor extends kGuiContainerBase implements IHiddenNei {
 	private ContainerCommonResearchTreeMonitor mContainer;
 
-	public ContainerClientResearchTreeMonitor(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID, String aGUITexture) {
+	public ContainerClientResearchTreMonitor(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID) {
 		super(new ContainerCommonResearchTreeMonitor(aInventoryPlayer, aTileEntity,aGUIID));
 
 		this.mContainer=(ContainerCommonResearchTreeMonitor)inventorySlots;
@@ -75,10 +72,11 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 	final ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
 	final ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
 	final Random rng = new Random();
-	public ResearchItem pointingItem = null;
-	public ResearchItem selectedItem = null;
+	public ResearchProject pointingItem = null;
+	public ResearchProject selectedItem = null;
 	public HoveringPanel hoveringPanel = null;
-	public SidePanel sidePanel = null;
+	public SidePanel sidePanelA = null;
+	public SidePanel sidePanelB = null;
 	public float xOffset=0, yOffset=0, xOld=0, yOld =0;
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
@@ -98,10 +96,10 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		super.drawScreen2(p_73863_1_, p_73863_2_, p_73863_3_);
 
 		//Just pointed on some item
-		if(hoveringPanel.researchItem == null && pointingItem != null)hoveringPanel.join(p_73863_1_,p_73863_2_);
+		if(hoveringPanel.researchProject == null && pointingItem != null)hoveringPanel.join(p_73863_1_,p_73863_2_);
 		//Just not point on any item
-		if(hoveringPanel.researchItem != null && pointingItem == null)hoveringPanel.quit(p_73863_1_, p_73863_2_);
-		hoveringPanel.researchItem = pointingItem;
+		if(hoveringPanel.researchProject != null && pointingItem == null)hoveringPanel.quit(p_73863_1_, p_73863_2_);
+		hoveringPanel.researchProject = pointingItem;
 
 		hoveringPanel.update();
 	}
@@ -143,16 +141,30 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 
 		hoveringPanel = new HoveringPanel(i.getAndIncrement());
 		buttons.add(hoveringPanel);
-		sidePanel = (SidePanel) new SidePanel(i.getAndIncrement(),96).setJoinLeaveTime(1000,Integer.MAX_VALUE).addAnime(new animeTransparency(1000,2000,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(1000,2000, -120,0,3f));
-		buttons.add(sidePanel);
+		buttons.add(new CurrentPanel(i.getAndIncrement(), 96).setJoinLeaveTime(800,Integer.MAX_VALUE).addAnime(new animeTransparency(800,1500,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(800,1500, -120,0,3f)));
+		sidePanelA = (SidePanel) new SidePanel(i.getAndIncrement(),96, 48).setJoinLeaveTime(1000,Integer.MAX_VALUE).addAnime(new animeTransparency(1000,2000,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(1000,2000, -120,0,3f));
+		sidePanelB = (SidePanel) new SidePanel(i.getAndIncrement(),96, 48).setJoinLeaveTime(-1,0);
+		buttons.add(sidePanelA);
+		buttons.add(sidePanelB);
 	}
 
 	@Override
 	public boolean onButtonPressed(GuiButton button, int mouseX, int mouseY) {
 		if(button instanceof researchButton && researchIDToIntIDMap.containsValue(button.id)){
-			selectedItem = ((researchButton)button).researchItem;
 			TileEntity t = (TileEntity) mContainer.mTileEntity;
-			if(rng.nextBoolean())kNetworkHandler.sendToServer(new PacketContainerButtonPressed(t.xCoord,t.yCoord,t.zCoord,button.id, utils.UTFToBytes(selectedItem.getId())));
+			if(selectedItem == ((researchButton)button).researchProject){
+				if(selectedItem.isUnlocked)kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,button.id, utils.UTFToBytes(selectedItem.getId())));
+				return true;
+			}
+			selectedItem = ((researchButton)button).researchProject;
+			SidePanel panelOld = sidePanelA;
+			sidePanelB.getGuiAnimeList().clear();
+			sidePanelA.getGuiAnimeList().clear();
+			sidePanelB.setJoinLeaveTime(getTimer(), Integer.MAX_VALUE).addAnime(new animeMoveSlowIn(getTimer(), getTimer() +1000, mc.currentScreen.width-96 - button.xPosition,48- button.yPosition, 4)).addAnime(new animeMoveLinear(0,0, button.xPosition, button.yPosition)).addAnime(new animeScaleLinear(0,0,0.1F)).addAnime(new animeScaleQuad(getTimer(), getTimer() +1000, 10.0F,4)).addAnime(new animeMoveLinear(0,0,-sidePanelB.xPosition, -sidePanelB.yPosition)).addAnime(new animeTransparency(getTimer(), getTimer() +700, 0,255));
+			sidePanelA.setJoinLeaveTime(0, getTimer() +1000).addAnime(new animeMoveSlowIn(getTimer(), getTimer() +1000, 96,0, 4));
+			sidePanelB.researchProject = selectedItem;
+			sidePanelA = sidePanelB;
+			sidePanelB = panelOld;
 		}
 		if(button instanceof SidePanel && ((SidePanel) button).isMouseInButton(mouseX,mouseY))selectedItem = null;
 		return false;
@@ -172,18 +184,18 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		tessellator.addVertexWithUV(x, y, this.zLevel, (u * f), v * f1);
 		tessellator.draw();
 	}
-	public void drawResearchProgressBar(ResearchItem researchItem, Tessellator tessellator, int x, int y){
+	public void drawResearchProgressBar(ResearchProject researchProject, Tessellator tessellator, int x, int y){
 		mc.getTextureManager().bindTexture(background);
 		GL11.glColor4f(1, 1, 1, 1f);
 		float progress = 0.0f;
-		for (IResearchTask condition : researchItem.tasks) {
+		for (IResearchTask condition : researchProject.tasks) {
 			progress += condition.getProgress()*1f/condition.getRequiredProgress();
 		}
-		drawTextureRect(tessellator, x, y, 0, 14, (int) ((width-4) * (progress/researchItem.tasks.size())), 8);
+		drawTextureRect(tessellator, x, y, 0, 14, (int) ((width-4) * (progress/ researchProject.tasks.size())), 8);
 	}
-	public void drawResearchConditionIcon(ResearchItem researchItem, int x, int y){
+	public void drawResearchConditionIcon(ResearchProject researchProject, int x, int y){
 		AtomicInteger i = new AtomicInteger();
-		for (IResearchTask condition : researchItem.tasks) {
+		for (IResearchTask condition : researchProject.tasks) {
 			if (i.get() > 6) {
 				mc.fontRenderer.drawStringWithShadow("…", x + i.get() * 10, y, 0xffffffff);
 				GL11.glColor4f(1, 1, 1, 1);
@@ -194,50 +206,50 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			else drawTexturedModelRectFromIcon(x + i.getAndIncrement() * 10, y, Items.book.getIconFromDamage(0), 8, 8);
 		}
 	}
-	public void drawResearchMainIcon(ResearchItem researchItem, int x, int y){
+	public void drawResearchMainIcon(ResearchProject researchProject, int x, int y){
 		mc.getTextureManager().bindTexture(mc.getTextureManager().getResourceLocation(Items.book.getSpriteNumber()));
-		if(researchItem.getIcon() != null)drawTexturedModelRectFromIcon(x,y, researchItem.getIcon(), 16,16);
+		if(researchProject.getIcon() != null)drawTexturedModelRectFromIcon(x,y, researchProject.getIcon(), 16,16);
 		else drawTexturedModelRectFromIcon(x,y, Items.book.getIconFromDamage(0), 16,16);
 	}
-	public void drawResearchNameDesc(ResearchItem researchItem, int x, int y){
-		mc.fontRenderer.drawStringWithShadow(researchItem.id, x,y,0xffffffff);
+	public void drawResearchNameDesc(ResearchProject researchProject, int x, int y){
+		mc.fontRenderer.drawStringWithShadow(researchProject.id, x,y,0xffffffff);
 		GL11.glColor4f(1,1,1,1);
 	}
 	public class researchButton extends kGuiButtonBase {
-		public researchButton(int id, ResearchItem researchItem) {
-			super(id, researchItem.posX, researchItem.posY, 80, 32, "");
-			this.researchItem=researchItem;
+		public researchButton(int id, ResearchProject researchProject) {
+			super(id, researchProject.posX, researchProject.posY, 80, 32, "");
+			this.researchProject = researchProject;
 			setAnimatedInFBO(true);
 		}
-		public final ResearchItem researchItem;
+		public final ResearchProject researchProject;
 		@Override
 		public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
 			if(!visible)return;
 			float colorTimer = ((float) Math.sin(System.currentTimeMillis()%3141/1000f))/2f+0.5f;
 			Tessellator tessellator = Tessellator.instance;
 
-			xPosition = (int) (researchItem.posX + xOld);
-			yPosition = (int) (researchItem.posY + yOld);
+			xPosition = (int) (researchProject.posX + xOld);
+			yPosition = (int) (researchProject.posY + yOld);
 
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
 			drawBackground(tessellator,colorTimer);
-			drawResearchMainIcon(researchItem, xPosition + 3, yPosition + 3);
-			drawResearchNameDesc(researchItem, xPosition + 22, yPosition + 6);
+			drawResearchMainIcon(researchProject, xPosition + 3, yPosition + 3);
+			drawResearchNameDesc(researchProject, xPosition + 22, yPosition + 6);
 			drawLockedMask(tessellator);
 			if(mouseX>xPosition && mouseY>yPosition && mouseX<xPosition+width && mouseY<yPosition+height){
-				pointingItem=researchItem;
+				pointingItem= researchProject;
 			}
-			if(!researchItem.isUnlocked)return;
-			drawResearchProgressBar(researchItem, tessellator, xPosition+2, yPosition+height-10);
-			drawResearchConditionIcon(researchItem, xPosition + 2, yPosition + height - 14);
+			if(!researchProject.isUnlocked)return;
+			drawResearchProgressBar(researchProject, tessellator, xPosition+2, yPosition+height-10);
+			drawResearchConditionIcon(researchProject, xPosition + 2, yPosition + height - 14);
 
 			GL11.glColor4f(1,1,1,1);
 		}
 
 		public void fillColor(float colorTimer){
-			if(!researchItem.isUnlocked)GL11.glColor4f(.5f,.5f,.5f,.4f);
-			else if (!researchItem.isCompleted && researchItem.getProgress() > 0) GL11.glColor4f(0f,colorTimer/2f+0.5f,(1-colorTimer)/4f+0.75f,.9f);
-			else if (!researchItem.isCompleted) GL11.glColor4f(1f,1f-colorTimer/2.5f,0,.9f);
+			if(!researchProject.isUnlocked)GL11.glColor4f(.5f,.5f,.5f,.4f);
+			else if (!researchProject.isCompleted && researchProject.getProgress() > 0) GL11.glColor4f(0f,colorTimer/2f+0.5f,(1-colorTimer)/4f+0.75f,.9f);
+			else if (!researchProject.isCompleted) GL11.glColor4f(1f,1f-colorTimer/2.5f,0,.9f);
 			else GL11.glColor4f(colorTimer/3f+.1f,.8f,.0f,.9f);
 		}
 		public void drawBackground(Tessellator tessellator, float colorTimer){
@@ -250,7 +262,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 
 		public void drawDependsLine(Tessellator tessellator, float colorTimer){
 
-			for (ResearchItem item : researchItem.prerequisites){
+			for (ResearchProject item : researchProject.prerequisites){
 				tessellator.startDrawing(GL11.GL_LINES);
 				GL11.glLineWidth(2f);
 				tessellator.addVertexWithUV(xPosition, yPosition + height/2f , this.zLevel,0 ,0);
@@ -266,7 +278,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			GL11.glColor4f(1,1,1,1);
 		}
 		public void drawLockedMask(Tessellator tessellator){
-			if(researchItem.isUnlocked) return;
+			if(researchProject.isUnlocked) return;
 			mc.getTextureManager().bindTexture(background);
 			GL11.glColor4f(1, 1, 1, 0.5f);
 			drawTextureRect(tessellator, xPosition, yPosition, 20, 40, width, height);
@@ -278,32 +290,32 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			super(id, 0, 0, 128, 48, "");
 			setAnimatedInFBO(true);
 		}
-		public ResearchItem researchItem;
-		public ResearchItem renderedResearchItem;
+		public ResearchProject researchProject;
+		public ResearchProject renderedResearchProject;
 		public int animeDuration = 200;
 
 		public long quitTime = 0;
 		public void update(){
-			if(researchItem != null){
+			if(researchProject != null){
 				visible=true;
-				renderedResearchItem =researchItem;
+				renderedResearchProject = researchProject;
 			}
-			if(researchItem == null && quitTime + animeDuration < getTimer())visible=false;
+			if(researchProject == null && quitTime + animeDuration < getTimer())visible=false;
 			if(!visible)getGuiAnimeList().clear();
 		}
 		public void join(int mouseX, int mouseY){
 			if(quitTime+ animeDuration >= getTimer()) getGuiAnimeList().clear();//terminates Quit anime when player rapidly switch between items.
-			addAnime(new animeMoveLinear(-1,0,mouseX,mouseY)).addAnime(new animeScaleLinear(-1,0,0.1f,1,1)).addAnime(new animeScaleQuad((int)getTimer(),(int)getTimer()+animeDuration,10f,3,1,1)).addAnime(new animeMoveLinear(-1,0,-mouseX,-mouseY)).addAnime(new animeTransparency((int)getTimer(),(int)getTimer()+animeDuration,0,255));
+			addAnime(new animeMoveLinear(-1,0,mouseX,mouseY)).addAnime(new animeScaleLinear(-1,0,0.1f,1,1)).addAnime(new animeScaleQuad(getTimer(), getTimer() +animeDuration,10f,3,1,1)).addAnime(new animeMoveLinear(-1,0,-mouseX,-mouseY)).addAnime(new animeTransparency(getTimer(), getTimer() +animeDuration,0,255));
 		}
 
 		public void quit(int mouseX, int mouseY){
 			quitTime = getTimer();
 			getGuiAnimeList().clear();
-			addAnime(new animeMoveLinear(-1,0,mouseX,mouseY)).addAnime(new animeScaleQuad((int)getTimer(),(int)getTimer()+animeDuration,0.01f,3)).addAnime(new animeMoveLinear(-1,0,-mouseX,-mouseY)).addAnime(new animeTransparency((int)getTimer(),(int)getTimer()+animeDuration,255,-255 ));
+			addAnime(new animeMoveLinear(-1,0,mouseX,mouseY)).addAnime(new animeScaleQuad(getTimer(), getTimer() +animeDuration,0.01f,3)).addAnime(new animeMoveLinear(-1,0,-mouseX,-mouseY)).addAnime(new animeTransparency(getTimer(), getTimer() +animeDuration,255,-255 ));
 		}
 		@Override
 		public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
-			if(!visible || renderedResearchItem == null)return;
+			if(!visible || renderedResearchProject == null)return;
 
 			xPosition = mouseX + 6;
 			yPosition = mouseY - 4;
@@ -318,7 +330,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			drawHoverDetail(i,xPosition,yPosition, colorTimer);
 
 			GL11.glColor4f(1,1,1,1);
-			if(renderedResearchItem.isUnlocked)for (IResearchTask condition : renderedResearchItem.tasks) {
+			if(renderedResearchProject.isUnlocked)for (IResearchTask condition : renderedResearchProject.tasks) {
 				i.getAndIncrement();
 				drawBackground(tessellator,i.get(),colorTimer, false);
 
@@ -338,7 +350,8 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			}
 			i.getAndIncrement();
 			drawBackground(tessellator,i.get(),colorTimer, true);
-			mc.fontRenderer.drawStringWithShadow(renderedResearchItem.isUnlocked?"Click to see details.":"Complete dependencies first",xPosition+2,yPosition - 9 + i.get() * 9, 0xffffffff);
+			String str = !renderedResearchProject.isUnlocked?"Complete dependencies first" : selectedItem == renderedResearchProject? "Click again to research" : "Click to see details." ;
+			mc.fontRenderer.drawStringWithShadow(str,xPosition+2,yPosition - 9 + i.get() * 9, 0xffffffff);
 
 			GL11.glColor4f(1,1,1,1);
 		}
@@ -350,7 +363,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		}
 		public void drawHoverDetail(AtomicInteger i, int x, int y, float colorTimer){
 			String current = "";
-			String last = renderedResearchItem.desc;
+			String last = renderedResearchProject.desc;
 			while (true){
 				current = mc.fontRenderer.trimStringToWidth(last,width-4);
 				i.getAndIncrement();
@@ -365,59 +378,44 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		}
 	}
 	public class SidePanel extends kGuiButtonBase {
-		public SidePanel(int id, int width) {
-			super(id, mc.currentScreen.width - width, 0, width, 256, "");
+		public SidePanel(int id, int width, int y) {
+			super(id, mc.currentScreen.width - width, y, width, 211, "");
 			setAnimatedInFBO(true);
 		}
 
-		public ResearchItem researchItem;
+		public ResearchProject researchProject;
 
 		@Override
 		public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
 			if (!visible) return;
-			researchItem = selectedItem;
 			float colorTimer = ((float) Math.sin(System.currentTimeMillis() % 3141 / 1000f)) / 2f + 0.5f;
 			Tessellator tessellator = Tessellator.instance;
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
 			drawBackground(tessellator, colorTimer);
-			ResearchItem item = ((ResearchTreeMonitor) mContainer.mTileEntity).selectedItem;
-			String str = "Current Project";
-			mc.fontRenderer.drawStringWithShadow(str, xPosition + 48  - fontRendererObj.getStringWidth(str)/2,yPosition+1,0xffffffff);
-			if (item != null) {
-				drawResearchMainIcon(item, xPosition + 3, yPosition + 13);
-				drawResearchNameDesc(item, xPosition + 22, yPosition + 16);
-				drawResearchConditionIcon(item, xPosition + 2, yPosition + 28);
-				drawResearchProgressBar(item, tessellator, xPosition+2, yPosition + 32);
-			}
-
-			str = researchItem == null?"Select to View Details":"Selected Project";
-			mc.fontRenderer.drawStringWithShadow(str, xPosition + 48 - fontRendererObj.getStringWidth(str)/2,yPosition+46,0xffffffff);
-			if(researchItem == null)return;
-			drawResearchMainIcon(researchItem, xPosition + 3, yPosition + 58);
-			drawResearchNameDesc(researchItem, xPosition + 22, yPosition + 62);
-			drawDesc(researchItem, xPosition + 2, yPosition + 66);
-			if (!researchItem.isUnlocked) return;
+			String str = researchProject == null?"Select to View Details":"Selected Project";
+			mc.fontRenderer.drawStringWithShadow(str, xPosition + 48 - fontRendererObj.getStringWidth(str)/2,yPosition,0xffffffff);
+			if(researchProject == null)return;
+			drawResearchMainIcon(researchProject, xPosition + 3, yPosition + 12);
+			drawResearchNameDesc(researchProject, xPosition + 22, yPosition + 16);
+			drawDesc(researchProject, xPosition + 2, yPosition + 20);
+			if (!researchProject.isUnlocked) return;
 			drawProgressBar(tessellator);
 			drawConditionIcon();
 			GL11.glColor4f(1, 1, 1, 1);
 		}
 
-		public boolean isMouseInConfirmButton(int mouseX, int mouseY) {
-			return mouseX > xPosition && mouseX < xPosition + width && mouseY > yPosition && mouseY < yPosition + height;
-		}
-
 		public void fillColor(float colorTimer) {
-			if (researchItem == null || !researchItem.isUnlocked) GL11.glColor4f(.5f, .5f, .5f, .4f);
-			else if (!researchItem.isCompleted && researchItem.getProgress() > 0)
+			if (researchProject == null || !researchProject.isUnlocked) GL11.glColor4f(.5f, .5f, .5f, .4f);
+			else if (!researchProject.isCompleted && researchProject.getProgress() > 0)
 				GL11.glColor4f(0f, colorTimer / 2f + 0.5f, (1 - colorTimer) / 4f + 0.75f, .9f);
-			else if (!researchItem.isCompleted) GL11.glColor4f(1f, 1f - colorTimer / 2.5f, 0, .9f);
+			else if (!researchProject.isCompleted) GL11.glColor4f(1f, 1f - colorTimer / 2.5f, 0, .9f);
 			else GL11.glColor4f(colorTimer / 3f + .1f, .8f, .0f, .9f);
 		}
 
 		public void drawBackground(Tessellator tessellator, float colorTimer) {
 			fillColor(colorTimer);
 			mc.getTextureManager().bindTexture(main);
-			drawTextureRect(tessellator, xPosition, yPosition, 160, 0, width, height);
+			drawTextureRect(tessellator, xPosition, yPosition, 160, 45, width, height);
 			GL11.glColor4f(1, 1, 1, 1);
 		}
 
@@ -425,15 +423,15 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			mc.getTextureManager().bindTexture(background);
 			GL11.glColor4f(1, 1, 1, 1f);
 			float progress = 0.0f;
-			for (IResearchTask condition : researchItem.tasks) {
+			for (IResearchTask condition : researchProject.tasks) {
 				progress += condition.getProgress() * 1f / condition.getRequiredProgress();
 			}
-			drawTextureRect(tessellator, xPosition + 2, yPosition + height - 30, 0, 14, (int) ((width - 4) * (progress / researchItem.tasks.size())), 8);
+			drawTextureRect(tessellator, xPosition + 2, yPosition + height - 30, 0, 14, (int) ((width - 4) * (progress / researchProject.tasks.size())), 8);
 		}
 
 		public void drawConditionIcon() {
 			AtomicInteger i = new AtomicInteger();
-			for (IResearchTask condition : researchItem.tasks) {
+			for (IResearchTask condition : researchProject.tasks) {
 				i.getAndIncrement();
 				float colorTimer = ((float) Math.sin(System.currentTimeMillis() % 3141 / 1000f)) / 2f + 0.5f;
 				Tessellator tessellator = Tessellator.instance;
@@ -453,9 +451,9 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 
 			}
 		}
-		public void drawDesc(ResearchItem researchItem, int x,int y){
+		public void drawDesc(ResearchProject researchProject, int x, int y){
 			String current = "";
-			String last = researchItem.desc;
+			String last = researchProject.desc;
 			int i =0;
 			while (true){
 				current = mc.fontRenderer.trimStringToWidth(last,width-4);
@@ -467,6 +465,48 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			}
 
 			GL11.glColor4f(1,1,1,1);
+		}
+	}
+	public class CurrentPanel extends kGuiButtonBase {
+		public CurrentPanel(int id, int width) {
+			super(id, mc.currentScreen.width - width, 0, width, 44, "");
+			setAnimatedInFBO(true);
+		}
+
+		public ResearchProject researchProject;
+
+		@Override
+		public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
+			if (!visible) return;
+			float colorTimer = ((float) Math.sin(System.currentTimeMillis() % 3141 / 1000f)) / 2f + 0.5f;
+			Tessellator tessellator = Tessellator.instance;
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			ResearchProject project = ((ResearchTreeMonitor) mContainer.mTileEntity).currentProject;
+			drawBackground(tessellator, colorTimer, project);
+			String str = "Current Project";
+			mc.fontRenderer.drawStringWithShadow(str, xPosition + 48  - fontRendererObj.getStringWidth(str)/2,yPosition+1,0xffffffff);
+			if (project != null) {
+				drawResearchMainIcon(project, xPosition + 3, yPosition + 13);
+				drawResearchNameDesc(project, xPosition + 22, yPosition + 16);
+				drawResearchConditionIcon(project, xPosition + 2, yPosition + 28);
+				drawResearchProgressBar(project, tessellator, xPosition+2, yPosition + 32);
+			}
+			GL11.glColor4f(1, 1, 1, 1);
+		}
+
+		public void fillColor(float colorTimer, ResearchProject project) {
+			if (project == null || !project.isUnlocked) GL11.glColor4f(.5f, .5f, .5f, .4f);
+			else if (!project.isCompleted && project.getProgress() > 0)
+				GL11.glColor4f(0f, colorTimer / 2f + 0.5f, (1 - colorTimer) / 4f + 0.75f, .9f);
+			else if (!project.isCompleted) GL11.glColor4f(1f, 1f - colorTimer / 2.5f, 0, .9f);
+			else GL11.glColor4f(colorTimer / 3f + .1f, .8f, .0f, .9f);
+		}
+
+		public void drawBackground(Tessellator tessellator, float colorTimer, ResearchProject project) {
+			fillColor(colorTimer, project);
+			mc.getTextureManager().bindTexture(main);
+			drawTextureRect(tessellator, xPosition, yPosition, 160, 0, width, height);
+			GL11.glColor4f(1, 1, 1, 1);
 		}
 	}
 }

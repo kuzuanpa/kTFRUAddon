@@ -38,6 +38,7 @@ import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import zmaster587.advancedRocketry.api.dimension.solar.StellarBody;
 import zmaster587.advancedRocketry.api.stations.DysonSphere;
 import zmaster587.advancedRocketry.dimension.DimensionManager;
 
@@ -57,7 +58,8 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	public int DESTROY_BUTTON_REPEAT_COUNT=10;
 	IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/DysonSphere/star.obj"));
 	ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/DysonSphere/star.png");
-	private int bodyList,glTextureId=-1;
+	private final int bodyList;
+    private int glTextureId=-1;
 	public float rotateAngle=-1;
 	protected float rotateAngleReal=0;
 
@@ -66,23 +68,24 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 
 	public int selectedStarID =-1;
 	public boolean enableCopyPasteMode=false,drawNodesCoord=false;
-
-	@Override
-	public void initGui() {
+	public byte currentState = 0;
+	public ContainerClientDysonSphereMonitor(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, RecipeMap aRecipes, int aGUIID, String aGUITexture) {
+		super(new ContainerCommonDysonSphereMonitor(aInventoryPlayer, aTileEntity, aGUIID), aGUITexture);
 		GL11.glNewList(bodyList = GL11.glGenLists(1), GL11.GL_COMPILE);
 		model.renderPart("Cube");
 		GL11.glEndList();
+		loadTexture();
+	}
+	@Override
+	public void initGui() {
 		super.initGui();
 		mBackground = new ResourceLocation(MOD_ID,"textures/gui/DysonSphere/space.png");
 		AtomicInteger atomIndex= new AtomicInteger();
 		DimensionManager.getInstance().getStars().forEach(star -> buttonList.add(new StarButton(atomIndex.get(), -4,atomIndex.getAndIncrement()*64,star.getName(),star.getColor(),star.getId())));
 		starButtonsEnd=atomIndex.get();
-		int index = atomIndex.get();
-		//buttonList.add(new ArrowRight(0,  x+54,y+46,""));
-		//buttonList.add(new ArrowDown(1,  x+53,y+16,""));
-		//buttonList.add(new DataBar(2,  x+32,y+15,38,""));
-		loadTexture();
+		if(selectedStarID!=-1)onStarChanged(false);
 	}
+
 	public void loadTexture(){
 		try (InputStream inputstream = Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream())
 		{
@@ -97,10 +100,6 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 			FMLLog.log(Level.WARN,"Failed to load texture: " + texture.toString());
 			ioexception.printStackTrace();
 		}
-	}
-	public ContainerClientDysonSphereMonitor(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, RecipeMap aRecipes, int aGUIID, String aGUITexture) {
-		super(new ContainerCommonDysonSphereMonitor(aInventoryPlayer, aTileEntity, aGUIID), aGUITexture);
-
 	}
 	protected void drawGuiContainerForegroundLayer2(int par1, int par2) {
 		tickMouseOffset();
@@ -122,26 +121,24 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	@Override
 	protected void drawGuiContainerBackgroundLayer2(float par1, int par2, int par3) {
 		GL11.glPushMatrix();
-		this.drawTexturedModalRect(0,0, 0, 0, (int) (width*0.6), height);
-		GL11.glPopMatrix();
 
 		if(DimensionManager.getInstance().getStar(selectedStarID)!=null)drawStar(width/3, height/3);
 
-		GL11.glPushMatrix();
 		drawRect((int) (width*0.6), 0, width, height, 0xbb383838);
 		GL11.glPopMatrix();
 	}
 	public void drawStar(int x ,int y){
-		DysonSphere theDysonSphere =DimensionManager.getInstance().getStar(selectedStarID).dysonSphere;
+		StellarBody star = DimensionManager.getInstance().getStar(selectedStarID);
+		if(star == null)return;
+		DysonSphere theDysonSphere = star.dysonSphere;
 
-		if(theDysonSphere!=null)theDysonSphere.drawBehindLayer(x,y+1,50,300,0,0.12F,0.4F,rotateAngleReal);
-
-		if(theDysonSphere!=null)theDysonSphere.drawFrontLayer(x,y+1,50,300,0,0.12F,0.4F,rotateAngleReal);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		if(theDysonSphere!=null)theDysonSphere.draw(x,y+1,50,300,0,0.12F,0.4F,rotateAngleReal);
 
 		GL11.glPushMatrix();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
-		GL11.glTranslatef(x,y,290);
-		float[] color = DimensionManager.getInstance().getStar(selectedStarID).getColor();
+		GL11.glTranslatef(x,y,300);
+		float[] color = star.getColor();
 		GL11.glColor4f(color[0],color[1], color[2], 1.0F);
 		GL11.glScalef(40,40,1);
 		GL11.glRotatef(rotateAngleReal, 0, 1, 0);
@@ -154,9 +151,11 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		GL11.glColor4f(color[0],color[1], color[2], 0.8F);
 		GL11.glTranslatef(x,y,0);
 		GL11.glScalef(0.5F,0.5F,1);
-		GL11.glTranslatef(-128,-128,290);
-		this.drawTexturedModalRect(0,0, 0, 0, 256, 256);
+		GL11.glTranslatef(-128,-128,300);
+		drawTexturedModalRect(0,0, 0, 0, 0, 256, 256);
+
 		GL11.glPopMatrix();
+
 		if(theDysonSphere!=null)drawDysonSphereNodePointer(x,y,theDysonSphere);
 	}
 
@@ -164,7 +163,7 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		if(selectedNodeY>=0) {
 			if(nodePointerClock<height)nodePointerClock+=2;
 
-			float f2 = y - (1.4F * (70 + (theDysonSphere.size * 0.6F)) * (float) Math.cos(3.14 * (selectedNodeY + 11F) / (21 + DysonSphere.lengthYFromSize[theDysonSphere.size])));
+			float f2 = y - (1.5F * (70 + (theDysonSphere.size * 0.6F)) * (float) Math.cos(3.14 * (selectedNodeY + 11F) / (21 + DysonSphere.lengthYFromSize[theDysonSphere.size])));
 
 			GL11.glPushMatrix();
 			GL11.glColor4f(1,1,1,1);
@@ -274,7 +273,7 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		if(button.id==-2){
 			button.displayString=LH.Chat.RED+"Click "+(DESTROY_BUTTON_REPEAT_COUNT-destroyCount)+" times more to confirm";
 			destroyCount++;
-			if(destroyCount>DESTROY_BUTTON_REPEAT_COUNT) {
+			if(destroyCount>0) {
 				DimensionManager.getInstance().getStar(selectedStarID).dysonSphere=null;
 				onStarChanged(false);
 			}
@@ -294,6 +293,9 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 	@Override
 	public boolean onNoButtonPressed() {
 		rotateAngle=selectedNodeYPre=selectedNodeY=nodePointerClock=-1;
+		buttonList.removeAll(nodeLevelChoosingButtons);
+		starButtons.removeAll(nodeLevelChoosingButtons);
+		nodeLevelChoosingButtons.clear();
 		return true;
 	}
 
@@ -385,5 +387,16 @@ public class ContainerClientDysonSphereMonitor extends ContainerClientbase imple
 		buttonList.addAll(nodeLevelChoosingButtons);
 		starButtons.addAll(nodeLevelChoosingButtons);
 	}
-
+	public void drawTexturedModalRect(int x, int y, int z, int u, int v, int w, int h)
+	{
+		float f = 0.00390625F;
+		float f1 = 0.00390625F;
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV((x + 0), (y + h), z, ((float)(u + 0) * f), ((float)(v + h) * f1));
+		tessellator.addVertexWithUV((x + w), (y + h), z, ((float)(u + w) * f), ((float)(v + h) * f1));
+		tessellator.addVertexWithUV((x + w), (y + 0), z, ((float)(u + w) * f), ((float)(v + 0) * f1));
+		tessellator.addVertexWithUV((x + 0), (y + 0), z, ((float)(u + 0) * f), ((float)(v + 0) * f1));
+		tessellator.draw();
+	}
 }

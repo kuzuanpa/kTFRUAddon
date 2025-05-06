@@ -17,9 +17,11 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.async;
 
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
-import cn.kuzuanpa.ktfruaddon.api.tile.ICustomPartValidator;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.ICustomPartValidator;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +31,7 @@ import java.util.List;
 
 public interface IMappedStructureAsync extends IMappedStructure {
     /**@return null = structure complete**/
-    default @Nullable ChunkCoordinates checkMappedStructure(AsyncStructureManager.WorldContainer worldContainer, ChunkCoordinates lastFailedPos, int machineX, int machineY, int machineZ, int xMapOffset, int yMapOffset, int zMapOffset, boolean loadChunk){
+    default @Nullable ChunkCoordinates checkMappedStructure(AsyncStructureManager.WorldContainer worldContainer, ChunkCoordinates lastFailedPos, int machineX, int machineY, int machineZ, int xMapOffset, int yMapOffset, int zMapOffset, boolean loadChunk, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
         if (lastFailedPos != null) FxRenderBlockOutline.removeBlockOutlineToRender(lastFailedPos);
         int tX = getX(), tY = getY(), tZ = getZ();
         if (!worldContainer.isBlockExist(tX, tY, tZ) && !loadChunk) return null;
@@ -46,9 +48,9 @@ public interface IMappedStructureAsync extends IMappedStructure {
             boolean partValid = false;
 
             if(this instanceof ICustomPartValidator){
-                if(((ICustomPartValidator) this).isPartValid(realPos, new ChunkCoordinates(mapX,mapY,mapZ))) partValid = true;
+                if(((ICustomPartValidator) this).isPartValid(realPos, new ChunkCoordinates(mapX,mapY,mapZ), aClickedAt, aPlayer, aInventory)) partValid = true;
             }
-            else if (utils.checkAndSetTarget(this, realPos, getTileDescs(mapX,mapY,mapZ))) partValid = true;
+            else if (utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, getTileDescs(mapX,mapY,mapZ))) partValid = true;
 
             if(partValid){
                 TileEntity tile = worldContainer.getTileEntity(realX,realY,realZ);

@@ -16,17 +16,19 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.base;
 
-import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.code.codeUtil;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import codechicken.lib.vec.BlockCoord;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ChunkCoordinates;
 import org.apache.logging.log4j.Level;
 
@@ -49,7 +51,7 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
      * @param checkRange Max range when checking
      * @param shouldCornerBeSealed Should every corner be filled,or just the blocks next to RoomSpace
      */
-    public static void checkAndGetRoom(TileDesc[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange, boolean shouldCornerBeSealed){
+    public static void checkAndGetRoom(TileDesc[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange, boolean shouldCornerBeSealed, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
         checkingBlockCoords  = new ConcurrentHashMap<Integer,BlockCoord>(){};
         roomSpace = new ArrayList<BlockCoord>();
         walls = new ArrayList<BlockCoord>();
@@ -75,7 +77,7 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
             //Check blocks at every side
             for (int i = 0; i < fori; i++) {
                 BlockCoord checkingCoord=new BlockCoord(coord.x+forX[i],coord.y+forY[i],coord.z+forZ[i]);
-                if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController,checkingCoord.x,checkingCoord.y,checkingCoord.z,availTile.aRegistryMeta,availTile.aRegistryID,availTile.aDesign, availTile.aUsage))){
+                if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController,checkingCoord.x,checkingCoord.y,checkingCoord.z,aClickedAt,aPlayer,aInventory,availTile.aRegistryMeta,availTile.aRegistryID,availTile.aDesign, availTile.aUsage))){
                     if (!checkRange.isCoordInBox(checkingCoord)) {
                         FMLLog.log(Level.INFO,"Err: Out of range:"+checkingCoord.x+checkingCoord.y+checkingCoord.z);
                         checkingBlockCoords.clear();
@@ -107,12 +109,12 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
     public final static boolean shouldCornerBeSealed=true;
 
     public abstract int[] getCheckRange2();
-    public boolean checkStructure2(){
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
         final int[] checkRange2= getCheckRange2();
         final BlockCoord StartPoi= codeUtil.MCCoord2CCCoord(utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[0],checkRange2[1],checkRange2[2]));
         final BlockCoord EndPoi= codeUtil.MCCoord2CCCoord(utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[3],checkRange2[4],checkRange2[5]));
         BoundingBox checkRange=new BoundingBox(StartPoi,EndPoi);
-        checkAndGetRoom(getAvailableTiles(),this,startFromTopOrBack,checkRange,shouldCornerBeSealed);
+        checkAndGetRoom(getAvailableTiles(),this,startFromTopOrBack,checkRange,shouldCornerBeSealed, aClickedAt, aPlayer, aInventory);
         return !walls.isEmpty();
     }
     @Override

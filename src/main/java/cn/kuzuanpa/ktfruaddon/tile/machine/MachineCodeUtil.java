@@ -13,14 +13,16 @@
  *
  */
 
-
-
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.api.code.OreScanner;
 import cn.kuzuanpa.ktfruaddon.api.tile.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.BlockTypePredicate;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
@@ -28,8 +30,8 @@ import gregapi.tileentity.base.TileEntityBase01Root;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -41,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import static gregapi.data.CS.PX_P;
+import static gregapi.data.CS.SIDES_VALID;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICircuitChangeableTileEntity {
     public OreScanner oreVeinScanner;
@@ -55,17 +58,38 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
         super.writeToNBT2(aNBT);
         ICircuitChangeableTileEntity.saveCircuitInfo(aNBT,getComputers());
     }
-
+    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AXB")
+            .layer( 'A',new FixedLayer()
+                    .blockRule(
+                            "XX XX",
+                            " XXX ",
+                            " X XX"
+                    )
+            ).layer('X',new FixedLayer()
+                    .blockRule(
+                            "XX XX",
+                            " XXX ",
+                            "XX XX"
+                    )
+            ).layer('B',new FixedLayer()
+                    .blockRule(
+                            "X    ",
+                            " XXX ",
+                            "XX XX"
+                    )
+            )
+            .where('X', new BlockTypePredicate(Blocks.glowstone));
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (isServerSide()) {
-        openGUI(aPlayer, aSide);
+        //openGUI(aPlayer, aSide);
         try {
-            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
+            structure.checkStructure(new StructureContext(worldObj, xCoord, yCoord, zCoord, mFacing));
+            //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
            // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
-            for (ItemStack computer : getComputers()) {
-                worldObj.spawnEntityInWorld(new EntityItem(worldObj,xCoord,yCoord + 2,zCoord,computer));
-            }
+            //for (ItemStack computer : getComputers()) {
+            //    worldObj.spawnEntityInWorld(new EntityItem(worldObj,xCoord,yCoord + 2,zCoord,computer));
+            //}
         }catch (Throwable ignored) {}
     }
     if(aPlayer.isSneaking()) oreVeinScanner.clearRendedOres();
@@ -135,5 +159,10 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
     @Override
     public void setComputers(List<ItemStack> computers) {
         computerList = computers;
+    }
+
+    @Override
+    public boolean[] getValidSides() {
+        return SIDES_VALID;
     }
 }

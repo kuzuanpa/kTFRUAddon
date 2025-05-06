@@ -12,14 +12,16 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.api.tile;
+package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.util.ChunkCoordinates;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
 
-public interface ICustomPartValidator extends IMappedStructure{
-    boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos);
-    default Object getCustomValidatorPart(ChunkCoordinates pos){
-        return Blocks.stone;
-    }
+import java.util.Map;
+
+public interface IStringBaseStructure {
+    boolean checkStructure(StructureContext context);
+    Map<Character, IStructurePredicate> getPredicates();
+
 }
+
+

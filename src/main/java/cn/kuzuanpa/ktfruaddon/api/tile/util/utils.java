@@ -15,26 +15,33 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.util;
 
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
+import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 import zmaster587.libVulpes.block.BlockMeta;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class utils {
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ),aRegistryMeta,aRegistryID,aDesign,aMode);
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
+        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, aRegistryMeta,aRegistryID,aDesign,aMode);
     }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
@@ -48,56 +55,71 @@ public class utils {
         } catch (Throwable ignored){}
         return true;
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        return checkAndSetTarget(aController,coord, new TileDesc[] {new TileDesc(aRegistryMeta, aRegistryID, aMode, aDesign)});
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
+        return checkAndSetTarget(aController,coord, aClickedAt, aPlayer, aInventory, new TileDesc[] {new TileDesc(aRegistryID, aRegistryMeta, aMode, aDesign)});
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, TileDesc[] availTiles) {
-        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), availTiles);
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles) {
+        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, availTiles);
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, TileDesc[] availTiles) {
-        return checkAndSetTarget(aController,coord, availTiles, false);
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles) {
+        return checkAndSetTarget(aController,coord, aClickedAt, aPlayer, aInventory, availTiles, false);
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, TileDesc[] availTiles, boolean allowPartShare) {
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles, boolean allowPartShare) {
+         debugLog("checking "+coord+ "  Allow:"+Arrays.toString(availTiles)+"  gID"+ GTTileEntityRegistry.gregtech+"  kID"+GTTileEntityRegistry.ktfruaddon);
         TileEntity tTileEntity = aController.getTileEntity(coord);
         if (tTileEntity == aController) return true;
 
         if (tTileEntity instanceof MultiTileEntityMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
-                if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
-                return setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
+                if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()){
+                    debugLog("allowed aRegistryMeta "+tTile.aRegistryMeta+ "  allowed aRegistryID:"+tTile.aRegistryID+"  realMeta"+ ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID()+"  realID"+((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID());
+                    continue;
+                }
+                return setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
             }
         } else if (tTileEntity instanceof IMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
-                if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
-                return setTarget(aController, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
+                if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) {
+                    debugLog("allowed aRegistryMeta "+tTile.aRegistryMeta+ "  allowed aRegistryID:"+tTile.aRegistryID+"  realMeta"+ ((IMultiBlockPart) tTileEntity).getMultiTileEntityID()+"  realID"+((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID());
+                    continue;
+                }
+                return setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
             }
         }
+        debugLog("none matched");
         return false;
     }
-    public static boolean setTarget(ITileEntityMultiBlockController aController, TileEntity tile, int aDesign, int aMode, boolean allowShare) {
+    public static boolean setTarget(ITileEntityMultiBlockController aController, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileEntity tile, int aDesign, int aMode, boolean allowShare) {
         if(tile instanceof MultiTileEntityMultiBlockPart) {
             MultiTileEntityMultiBlockPart part = (MultiTileEntityMultiBlockPart)tile;
             ITileEntityMultiBlockController tTarget = part.getTarget(false);
-            if (tTarget != aController && tTarget != null) return allowShare;
+            if (tTarget != aController && tTarget != null) {
+                if(!allowShare) debugLog("not share");
+                return allowShare;
+            }
 
             part.setTarget(aController, aDesign, aMode);
             return true;
         }else if (tile instanceof IMultiBlockPart) {
             IMultiBlockPart part = (IMultiBlockPart)tile;
             ITileEntityMultiBlockController tTarget = part.getTarget(false);
-            if (tTarget != aController && tTarget != null) return allowShare;
+            if (tTarget != aController && tTarget != null) {
+                if(!allowShare) debugLog("not share");
+                return allowShare;
+            }
 
             part.setTarget(aController, aDesign, aMode);
             return true;
         }
+        debugLog("not valid gt tile");
         return false;
+    }
+    public static final boolean debug = false;
+    public static void debugLog(String str){
+        if(debug)FMLLog.log(Level.FATAL,"[kTFRUAddon] "+str);
     }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,ChunkCoordinates coord, int aDesign, int aMode) {
         return resetTarget(aController,coord.posX,coord.posY, coord.posZ, aDesign);
-    }
-    @Deprecated
-    public static boolean checkAndSetTargetEnergyConsumerPermitted(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        return checkAndSetTarget(aController, aX, aY, aZ, aRegistryMeta, aRegistryID, aDesign, aMode);
     }
 
     public static String getTargetTileEntityName(TileEntity tile) {
@@ -203,6 +225,9 @@ public class utils {
             e.printStackTrace();
         }
         return new byte[0];
+    }
+    public static int dimID(World world){
+        return world.provider.dimensionId;
     }
 }
 

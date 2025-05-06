@@ -23,10 +23,12 @@ import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -35,7 +37,7 @@ import java.util.List;
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
+public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
 
     public final short machineX = 5, machineY = 3, machineZ = 3;
     public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;
@@ -82,7 +84,7 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     public short getRegistryID(int x,int y,int z){return GTTileEntityRegistry.ktfruaddon;}
 
     @Override
-    public boolean checkStructure3(boolean shouldPartsTransparent) {
+    public boolean checkStructure3(boolean shouldPartsTransparent, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (worldObj.blockExists(tX, tY, tZ)) {
             boolean tSuccess = T;
@@ -91,7 +93,7 @@ public class CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
             tY+=yMapOffset;
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY&&tSuccess; cY++) for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
+                if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory, getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
                     tSuccess = F;
                 }
             }

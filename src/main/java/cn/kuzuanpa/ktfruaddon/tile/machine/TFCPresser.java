@@ -62,7 +62,7 @@ public class TFCPresser extends TileEntityBase09FacingSingle implements ITileEnt
     public void onTick2(long aTimer, boolean isServerside) {
         //auto output
         if(OP.plate.contains(slot(0)) && WD.te(worldObj,xCoord,yCoord-2,zCoord,false)!=null && ST.move(delegator(SIDE_BOTTOM), new DelegatorTileEntity<>(WD.te(worldObj,xCoord,yCoord-2,zCoord,false),SIDE_TOP)) != 0) slotKill(0);
-        mEnergy -= mCost;
+        if(mEnergy>mCost)mEnergy -= mCost;
         if(raisingTimer > 0){
             if(mEnergy < mCost)return;
             displayedParticles = false;
@@ -98,7 +98,7 @@ public class TFCPresser extends TileEntityBase09FacingSingle implements ITileEnt
     public void processItem(int anvilLevel){
         if(OP.ingotDouble.contains(slot(0)) && anvilLevel >= GTRecipes.getAnvilReqFromMaterial(OM.data(slot(0)).mMaterial.mMaterial).Tier){
             setInventorySlotContents(0, OP.plate.mat(OM.data(slot(0)).mMaterial.mMaterial, 1));
-            UT.Sounds.send(SFX.MC_BREAK, this);
+            UT.Sounds.send(SFX.MC_BREAK, (TileEntity) this);
         }
     }
 

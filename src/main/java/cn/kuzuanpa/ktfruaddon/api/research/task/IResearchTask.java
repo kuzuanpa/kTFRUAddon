@@ -15,12 +15,13 @@
 package cn.kuzuanpa.ktfruaddon.api.research.task;
 
 import net.minecraft.util.IIcon;
+import org.jetbrains.annotations.Nullable;
 
 public interface IResearchTask {
     default boolean isCompleted() {return getRequiredProgress() <= getProgress(); }
     long getRequiredProgress();
     long getProgress();
-    boolean tryPromoteProgress(Object consumed);
+    boolean tryPromoteProgress(@Nullable Object consumed);
     void setProgress(long progress);
     IIcon getIcon();
     String getIdentifier();

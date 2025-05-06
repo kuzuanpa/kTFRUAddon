@@ -19,14 +19,17 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.ICompressGasTank;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.FL;
 import gregapi.data.LH;
-import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import gregtech.tileentity.multiblocks.MultiTileEntityTank;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -49,7 +52,7 @@ public class LargeCompressedGasTank extends MultiTileEntityTank implements IComp
         LH.add(I18nHandler.TANK_GAS_COMPRESSED_NEED_INPUTER,"Needs Gas Compressor to work!");
     }
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = getOffsetXN(mFacing), tY = getOffsetYN(mFacing), tZ = getOffsetZN(mFacing);
         if (worldObj.blockExists(tX-1, tY, tZ-1) && worldObj.blockExists(tX+1, tY, tZ-1) && worldObj.blockExists(tX-1, tY, tZ+1) && worldObj.blockExists(tX+1, tY, tZ+1)) {
             boolean tSuccess = T;
@@ -57,7 +60,7 @@ public class LargeCompressedGasTank extends MultiTileEntityTank implements IComp
                 if (i == 0 && j == 0 && k == 0) {
                     if (getAir(tX+i, tY+j, tZ+k)) worldObj.setBlockToAir(tX+i, tY+j, tZ+k); else tSuccess = F;
                 } else {
-                    if (!ITileEntityMultiBlockController.Util.checkAndSetTarget(this, tX+i, tY+j, tZ+k, mTankWalls, GTTileEntityRegistry.gregtech, 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
+                    if (!utils.checkAndSetTarget(this, tX+i, tY+j, tZ+k, aClickedAt, aPlayer, aInventory, mTankWalls, GTTileEntityRegistry.gregtech, 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
                 }
             }
             return tSuccess;

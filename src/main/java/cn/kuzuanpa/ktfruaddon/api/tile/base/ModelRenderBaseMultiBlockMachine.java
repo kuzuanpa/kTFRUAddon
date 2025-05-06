@@ -20,14 +20,17 @@ import gregapi.data.CS;
 import gregapi.render.ITexture;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ChunkCoordinates;
 
 import static gregapi.data.CS.T;
 
 public abstract class ModelRenderBaseMultiBlockMachine extends TileEntityBase10MultiBlockMachine {
     public boolean usingModelRender = false;
     @Override
-    public boolean checkStructure2(){
-        if (!checkStructure3(true)){
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
+        if (!checkStructure3(true, aClickedAt, aPlayer, aInventory)){
             resetParts();
             return false;
         }return true;
@@ -39,7 +42,7 @@ public abstract class ModelRenderBaseMultiBlockMachine extends TileEntityBase10M
     @Override public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         return mStructureOkay?null:super.getTexture2(aBlock, aRenderPass, aSide, aShouldSideBeRendered);
     }
-    public abstract boolean checkStructure3(boolean shouldPartsTransparent);
+    public abstract boolean checkStructure3(boolean shouldPartsTransparent, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory);
 
     @Override
     public boolean breakBlock() {

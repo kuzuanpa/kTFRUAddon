@@ -32,6 +32,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -102,7 +103,7 @@ public abstract class HeaterBase extends TileEntityBase10MultiBlockBase implemen
                 if(mRateCurrent<(float)mLastRecipe.mEUt){
                     //Not Enough Energy
                     mActivity.mActive = F;
-                    UT.Sounds.send(SFX.MC_FIZZ, this);
+                    UT.Sounds.send(SFX.MC_FIZZ, (TileEntity) this);
                     timeRemains=mLastRecipe.mDuration;
                     return;
                 }

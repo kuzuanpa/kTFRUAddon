@@ -17,8 +17,8 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.ICustomPartValidator;
-import cn.kuzuanpa.ktfruaddon.api.tile.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.ICustomPartValidator;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cpw.mods.fml.common.FMLLog;
@@ -32,7 +32,9 @@ import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -70,9 +72,7 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
 
     //Structure
     public ChunkCoordinates lastFailedPos;
-    public static final short machineX = 3;
-    public static final short machineY = 3;
-    public static final short machineZ = 5;
+    public static final short sizeX = 3, sizeY = 3, sizeZ = 5;
 
     public final short xMapOffset = -1, zMapOffset = 0;
 
@@ -129,13 +129,11 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
     }
 
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos, machineX, machineY + 2, machineZ + 2, xMapOffset ,-3,zMapOffset + 1);
-        if(lastFailedPos!=null)return false;
-
-        return true;
+        lastFailedPos = checkMappedStructure(lastFailedPos, sizeX, sizeY + 2, sizeZ + 2, xMapOffset ,-3,zMapOffset + 1, aClickedAt, aPlayer, aInventory);
+        return lastFailedPos == null;
     }
 
 
@@ -146,18 +144,15 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
     }
 
     @Override
-    public boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos) {
-        if(mapPos.posZ == 0) return mapPos.posY == 0 || mapPos.posY == machineY + 1 || worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ).isOpaqueCube();
-        else if(mapPos.posY == machineY + 1) return mapPos.posZ <= 1 || worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ).equals(Blocks.air);
-        else if (mapPos.posY == 0 || mapPos.posZ == machineZ + 1)return (worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ) instanceof BlockLiquid);
-        else {
-            log(realPos+", mapPos:"+mapPos+", Should be part at"+new ChunkCoordinates(mapPos.posX  , mapPos.posY -1, mapPos.posZ -1));
-            return isIgnored(mapPos.posX , mapPos.posY - 1, mapPos.posZ - 1) || utils.checkAndSetTarget(this, realPos, getTileDescs(mapPos.posX , mapPos.posY - 1, mapPos.posZ - 1), true);
-        }
+    public boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        if(mapPos.posZ == 0) return mapPos.posY == 0 || mapPos.posY == sizeY + 1 || worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ).isOpaqueCube();
+        else if(mapPos.posY == sizeY + 1) return mapPos.posZ <= 1 || worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ).equals(Blocks.air);
+        else if (mapPos.posY == 0 || mapPos.posZ == sizeZ + 1)return (worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ) instanceof BlockLiquid);
+        else return isIgnored(mapPos.posX , mapPos.posY - 1, mapPos.posZ - 1) || utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, getTileDescs(mapPos.posX , mapPos.posY - 1, mapPos.posZ - 1), true);
     }
     public void log(String msg){
         FMLLog.log(Level.FATAL, "Checking block: " + msg);

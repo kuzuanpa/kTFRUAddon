@@ -21,6 +21,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
+ */
+
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
 
  * kTFRUAddon is Open Source and distributed under the
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
@@ -28,7 +42,7 @@
  */
 
 
-package cn.kuzuanpa.ktfruaddon.api.tile;
+package cn.kuzuanpa.ktfruaddon.api.tile.structure;
 
 import cn.kuzuanpa.ktfruaddon.api.network.PacketFxBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
@@ -36,6 +50,8 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -50,7 +66,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 public interface IMappedStructure extends ITileEntityMultiBlockController {
     /**@return null = structure complete**/
-    default @Nullable ChunkCoordinates checkMappedStructure(ChunkCoordinates lastFailedPos, int machineX, int machineY, int machineZ, int xMapOffset, int yMapOffset, int zMapOffset){
+    default @Nullable ChunkCoordinates checkMappedStructure(ChunkCoordinates lastFailedPos, int machineX, int machineY, int machineZ, int xMapOffset, int yMapOffset, int zMapOffset, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
         if (lastFailedPos != null) kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(lastFailedPos, 0, -1,-1), new NetworkRegistry.TargetPoint(getWorld().provider.dimensionId, lastFailedPos.posX, lastFailedPos.posY, lastFailedPos.posZ, 64));
         int tX = getX(), tY = getY(), tZ = getZ();
         if (!getWorld().blockExists(tX, tY, tZ)) return null;
@@ -67,9 +83,9 @@ public interface IMappedStructure extends ITileEntityMultiBlockController {
             boolean partValid = false;
 
             if(this instanceof ICustomPartValidator){
-                if(((ICustomPartValidator) this).isPartValid(realPos, new ChunkCoordinates(mapX,mapY,mapZ))) partValid = true;
+                if(((ICustomPartValidator) this).isPartValid(realPos, new ChunkCoordinates(mapX,mapY,mapZ), aClickedAt, aPlayer, aInventory)) partValid = true;
             }
-            else if (utils.checkAndSetTarget(this, realPos, getTileDescs(mapX,mapY,mapZ))) partValid = true;
+            else if (utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, getTileDescs(mapX,mapY,mapZ))) partValid = true;
 
             if(partValid){
                 TileEntity tile = this.getTileEntity(realPos);

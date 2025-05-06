@@ -28,6 +28,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -126,18 +127,18 @@ public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMac
     ChunkCoordinates lastFailedPos=null;
 
     @Override
-    public boolean checkStructure2() {
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        AsyncStructureManager.addStructureComputeTask(asyncTaskID,worldObj,this);
+        AsyncStructureManager.addStructureComputeTask(asyncTaskID,worldObj,this, aClickedAt, aPlayer, aInventory);
         return false;
     }
 
     @Override
-    public boolean asyncCheckStructure(AsyncStructureManager.WorldContainer world) {
+    public boolean asyncCheckStructure(AsyncStructureManager.WorldContainer world, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (world.getBlock(tX, tY, tZ) == null) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(world,null, sizeX, sizeY, sizeZ,xMapOffset,yMapOffset,zMapOffset,true);
+        lastFailedPos = checkMappedStructure(world,null, sizeX, sizeY, sizeZ,xMapOffset,yMapOffset,zMapOffset,true, aClickedAt, aPlayer, aInventory);
         return lastFailedPos==null;
     }
 

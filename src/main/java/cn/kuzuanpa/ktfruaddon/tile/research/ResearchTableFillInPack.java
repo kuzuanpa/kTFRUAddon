@@ -21,31 +21,32 @@ import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonFillThePack;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
-import gregapi.tileentity.machines.MultiTileEntityBasicMachineElectric;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.awt.Point;
+import java.io.*;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class ResearchTableFillInPack extends MultiTileEntityBasicMachineElectric implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
+public class ResearchTableFillInPack extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
+    public ResearchTableFillInPack.PuzzleGame theGame= new PuzzleGame(0,0);
+    public ResearchTableFillInPack.PuzzleGame theGameClient = new PuzzleGame(0,0);
+    public boolean theGameNeedSync = true;
+
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.fill_pack";}
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerClientFillThePack(aPlayer.inventory, this, aGUIID, mGUITexture);
+        return new ContainerClientFillThePack(aPlayer.inventory, this, aGUIID);
     }
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerCommonFillThePack(aPlayer.inventory, this,aGUIID);
     }
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArrayLong(aSendAll, new byte[0]);
+        return getClientDataPacketByteArrayLong(aSendAll, theGame.saveToByteArray());
     }
 
     @Override
@@ -60,41 +61,130 @@ public class ResearchTableFillInPack extends MultiTileEntityBasicMachineElectric
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
+        PuzzleGame theGame = PuzzleGame.loadFromByteArray(aData);
+        if(theGame != null)theGameClient = theGame;
     }
 
     @Override
     public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer) || rng(10)==0;
+        boolean isGameNeedSync = theGameNeedSync;
+        theGameNeedSync=false;
+        return super.onTickCheck(aTimer) || isGameNeedSync;
     }
 
     @Override
     public void onContainerButtonClick(int buttonID, byte @Nullable [] data) {
-        try {
-            if(data == null)return;
-            ByteArrayInputStream bis = new ByteArrayInputStream(data);
-            DataInputStream dis = new DataInputStream(bis);
-            String id = dis.readUTF();
-        } catch (IOException e) {}
+        if(data == null)return;
+        if(buttonID == 0){
+            theGame = new PuzzleGame((byte)16,(byte)4);
+            theGame.initializeGame();
+            theGameNeedSync=true;
+        }
+        if(buttonID == -1)theGame.removeTile(theGame.tiles.get(data[0]));
+        if(buttonID == 1)theGame.placeTile(theGame.tiles.get(data[0]), data[1], data[2], false);
+    }
+
+    @Override
+    public boolean allowInteraction(Entity aEntity) {
+        return super.allowInteraction(aEntity);
     }
 
     public static class PuzzleGame {
 
         private static final int MIN_TILE_SIZE = 2;
         private static final int MAX_ATTEMPTS = 5;
-        public int size;
-        public int tileCount;
-        public List<PuzzleShape> originalTiles;
-        public List<PuzzleShape> shuffledTiles;
+        public byte size;
+        public byte tileCount;
+        public HashMap<Byte, PuzzleShape> tiles;
         public Set<Point> placedPoints;
-
-        public PuzzleGame(int size, int tileCount) {
+        public PuzzleGame(int size, int tileCount){
+            this((byte)size,(byte)tileCount);
+        }
+        public PuzzleGame(byte size, byte tileCount) {
             if (tileCount > size * size) throw new IllegalArgumentException("X 不能超过场地格子总数");
             this.size = size;
             this.tileCount = tileCount;
-            this.originalTiles = new ArrayList<>();
-            this.shuffledTiles = new ArrayList<>();
+            this.tiles = new HashMap<>();
             this.placedPoints = new HashSet<>();
-            initializeGame();
+        }
+        public double calculateScore() {
+            if (!checkWin()) return 0; // 仅当游戏成功时计分
+
+            final double baseComplexity = Math.pow(size, 2); // 基础复杂度与尺寸相关
+            final double optimalRatio = 0.3; // 最佳图块数量占比经验值
+            final double penaltyFactor = 2.5; // 偏离最佳值的惩罚系数
+
+            double totalCells = size * size;
+            double actualRatio = tileCount / totalCells;
+
+            // 核心评分公式
+            double score = baseComplexity *
+                    Math.exp(-penaltyFactor * Math.pow(actualRatio - optimalRatio, 2)) *
+                    (1 - Math.exp(-tileCount / (size * 0.8))); // 数量不足惩罚项
+
+            // 限制极值情况
+            double minScore = Math.sqrt(size + tileCount/4f);
+            double maxScore = baseComplexity * 10;
+            return Math.max(minScore, Math.min(score, maxScore));
+        }
+        public byte[] saveToByteArray() {
+            try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos)) {
+
+                // 写入基础信息
+                dos.writeByte(size);        // 场地尺寸
+                dos.writeByte(tileCount);   // 图块总数
+
+                // 写入每个图块数据
+                for (Map.Entry<Byte, PuzzleShape> entry : tiles.entrySet() ) {
+                    PuzzleShape tile = entry.getValue();
+                    // 写入当前图块点数
+                    dos.writeByte(entry.getKey());
+                    dos.writeByte(tile.placedOnX);
+                    dos.writeByte(tile.placedOnY);
+                    dos.writeByte(tile.content.size());
+                    // 写入每个点的坐标
+                    for (Point p : tile.content) {
+                        dos.writeByte(p.x);
+                        dos.writeByte(p.y);
+                    }
+                }
+
+                dos.flush();
+                return bos.toByteArray();
+            }catch (IOException e){
+                e.printStackTrace();
+                return new byte[0];
+            }
+        }
+        public static PuzzleGame loadFromByteArray(byte[] data) {
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                 DataInputStream dis = new DataInputStream(bis)) {
+
+                // 读取基础信息
+                byte size = dis.readByte();
+                byte tileCount = dis.readByte();
+                PuzzleGame game = new PuzzleGame(size, tileCount);
+                // 读取图块数据
+                game.tiles = new HashMap<>();
+                for (int i = 0; i < tileCount; i++) {
+                    byte puzzleID = dis.readByte();
+                    byte pX = dis.readByte();
+                    byte pY = dis.readByte();
+                    byte pointCount = dis.readByte();
+                    Set<Point> tile = new HashSet<>();
+                    for (int j = 0; j < pointCount; j++) {
+                        int x = dis.readByte();
+                        int y = dis.readByte();
+                        tile.add(new Point(x, y));
+                    }
+                    game.tiles.put(puzzleID, new PuzzleShape(tile).setPlacedOnX(pX).setPlacedOnY(pY));
+                }
+                return game;
+            }catch (IOException e){
+                e.printStackTrace();
+                return null;
+            }
         }
 
         private void initializeGame() {
@@ -128,10 +218,10 @@ public class ResearchTableFillInPack extends MultiTileEntityBasicMachineElectric
                     regions.addAll(forceSplit(splittable.get(), random));
                 }
             }
+            byte i = 0;
+            tiles = new HashMap<>();
+            for (Set<Point> region : regions) tiles.put(i++, new PuzzleShape(region));
 
-            originalTiles = regions.stream().map(PuzzleGame::postProcess).collect(Collectors.toList());
-            shuffledTiles = new ArrayList<>(originalTiles);
-            Collections.shuffle(shuffledTiles);
         }
 
         private Set<Point> findLargestRegion(List<Set<Point>> regions) {
@@ -235,7 +325,7 @@ public class ResearchTableFillInPack extends MultiTileEntityBasicMachineElectric
             return visited.size() == region.size();
         }
 
-        public boolean placeTile(PuzzleShape tile, int offsetX, int offsetY) {
+        public boolean placeTile(PuzzleShape tile, int offsetX, int offsetY, boolean dryRun) {
             Set<Point> displaced = new HashSet<>();
 
             // 检查边界和冲突
@@ -251,6 +341,7 @@ public class ResearchTableFillInPack extends MultiTileEntityBasicMachineElectric
                 }
                 displaced.add(displacedPoint);
             }
+            if(dryRun) return true;
             tile.placedOnX = offsetX;
             tile.placedOnY = offsetY;
             placedPoints.addAll(displaced);
@@ -258,51 +349,74 @@ public class ResearchTableFillInPack extends MultiTileEntityBasicMachineElectric
         }
 
         public void removeTile(PuzzleShape tile) {
+            if(tile.placedOnX == -1)return;
             for (Point p : tile.content) {
                 int newX = p.x + tile.placedOnX;
                 int newY = p.y + tile.placedOnY;
                 Point displacedPoint = new Point(newX, newY);
                 placedPoints.remove(displacedPoint);
             }
+            tile.placedOnX=-1;
+            tile.placedOnY=-1;
         }
 
         public boolean checkWin() {
             return placedPoints.size() == size * size;
         }
 
-        public static PuzzleShape postProcess(Set<Point> original) {
-            if (original.isEmpty()) {
-                return new PuzzleShape(new HashSet<>());
-            }
-
-            int minX = Integer.MAX_VALUE;
-            int minY = Integer.MAX_VALUE;
-            int maxX = Integer.MIN_VALUE;
-            int maxY = Integer.MIN_VALUE;
-            for (Point p : original) {
-                minX = Math.min(minX, p.x);
-                minY = Math.min(minY, p.y);
-                maxX = Math.max(maxX, p.x);
-                maxY = Math.max(maxY, p.y);
-            }
-
-            Set<Point> normalized = new HashSet<>();
-            for (Point p : original) {
-                normalized.add(new Point(p.x - minX, p.y - minY));
-            }
-            PuzzleShape shape = new PuzzleShape(normalized);
-            shape.width = maxX - minX + 1;
-            shape.height = maxY - minY + 1;
-            return shape;
-        }
         public static class PuzzleShape {
             public Set<Point> content;
             public int width;
             public int height;
-            public int placedOnX;
-            public int placedOnY;
+            public int placedOnX = -1;
+            public int placedOnY = -1;
             public PuzzleShape(Set<Point> content){
-                this.content= content;
+                this.content = content;
+                normalize();
+            }
+            public void normalize(){
+                int minX = Integer.MAX_VALUE;
+                int minY = Integer.MAX_VALUE;
+                int maxX = Integer.MIN_VALUE;
+                int maxY = Integer.MIN_VALUE;
+                for (Point p : content) {
+                    minX = Math.min(minX, p.x);
+                    minY = Math.min(minY, p.y);
+                    maxX = Math.max(maxX, p.x);
+                    maxY = Math.max(maxY, p.y);
+                }
+
+                Set<Point> normalized = new HashSet<>();
+                for (Point p : content) {
+                    normalized.add(new Point(p.x - minX, p.y - minY));
+                }
+                this.content=normalized;
+                width = maxX - minX + 1;
+                height = maxY - minY + 1;
+            }
+
+            public void rotateClockwise90() {
+                Set<Point> rotated = new HashSet<>();
+
+                for (Point p : content) {
+                    // 顺时针旋转90度的变换公式：(x, y) → (y, -x)
+                    int newX = p.y;
+                    int newY = -p.x;
+                    rotated.add(new Point(newX, newY));
+                }
+
+                content = rotated;
+
+                normalize();
+            }
+
+            public PuzzleShape setPlacedOnX(int placedOnX) {
+                this.placedOnX = placedOnX;
+                return this;
+            }
+            public PuzzleShape setPlacedOnY(int placedOnY) {
+                this.placedOnY = placedOnY;
+                return this;
             }
         }
     }
