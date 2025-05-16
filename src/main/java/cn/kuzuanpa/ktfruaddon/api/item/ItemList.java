@@ -151,8 +151,8 @@ public enum ItemList implements IItemContainer {
     PropertiesFilter,
     //itemBatteryPole
     BatteryPoleNickel, BatteryPoleCaTiO3, BatteryPolePlatinum, BatteryPoleCarbon,
-    //itemGrapheneCatalyst
-    GrapheneCatalyst, GrapheneCatalystWithGraphene, GrapheneMixture,
+    //itemSeawaterProcess
+    MagnesiumDihydroxide/**Mg(OH)2**/
     ;
 
     //Copied from gt6

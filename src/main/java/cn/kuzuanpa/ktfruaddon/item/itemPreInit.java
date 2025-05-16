@@ -40,7 +40,7 @@ public class itemPreInit {
         new itemChemistry();
         new itemCover();
         new itemResearch();
-        new itemGraphene();
+        new itemSeawaterProcess();
 
         new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.blade", prefixList.largeTurbineBlade);
 
