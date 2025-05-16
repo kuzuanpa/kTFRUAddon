@@ -22,8 +22,8 @@ import gregapi.item.multiitem.MultiItemRandom;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class itemChemistry extends MultiItemRandom {
-    public itemChemistry() {
+public class itemSeawaterProcess extends MultiItemRandom {
+    public itemSeawaterProcess() {
         super(MOD_ID, "ktfru.item.seawaterprocess");
         setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: SeaWater Process", this, (short) 0));
     }
