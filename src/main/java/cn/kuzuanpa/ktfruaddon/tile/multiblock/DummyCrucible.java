@@ -12,32 +12,20 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-/*
- * This class was created by <kuzuanpa>. It is distributed as
- * part of the kTFRUAddon Mod. Get the Source Code in github:
- * https://github.com/kuzuanpa/kTFRUAddon
- *
- * kTFRUAddon is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * kTFRUAddon is Open Source and distributed under the
- * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
- */
-
-package cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMeterDetectable;
 import cn.kuzuanpa.ktfruaddon.api.tile.crucible.IDummyCrucibleMaterialProvider;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientDummCrucible;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
+import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.ArrayListNoNulls;
 import gregapi.code.TagData;
 import gregapi.data.LH;
@@ -49,20 +37,22 @@ import gregapi.network.IPacket;
 import gregapi.oredict.OreDictItemData;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.oredict.OreDictMaterialStack;
-import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.OM;
 import gregapi.util.UT;
+import gregapi.util.WD;
 import gregtech.tileentity.multiblocks.MultiTileEntityCrucible;
-import net.minecraft.block.Block;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
@@ -72,14 +62,14 @@ import java.util.*;
 
 import static gregapi.data.CS.*;
 
-public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMappedStructure, ITileEntityEnergy, IMultiBlockEnergy, IDummyCrucibleMaterialProvider, ITileSyncByteArrayLong {
+public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMappedStructure, ITileEntityEnergy, IMultiBlockEnergy, IDummyCrucibleMaterialProvider, ITileSyncByteArrayLong, IWailaTile {
     public boolean mStopped = false, mContentChanged = true, mTempChanged = true;
     public long mEnergy = 0, mInputMax = 1024, mEnergyBaseConsume = 100, mMassSelf = 3200, mMassTotal = mMassSelf;
     public float mTemp = 0.0F, oldTemp = 0.0F, mTempMax = 32768.0F;
     public List<IMeterDetectable.MeterData> receivedEnergy = new ArrayList<>(), receivedEnergyLast = new ArrayList<>();
     public TagData mEnergyType = TD.Energy.EU;
     protected List<OreDictMaterialStack> mContent = new ArrayListNoNulls<>();
-    public static long MAX_AMOUNT = 16*3*3*3*U;
+    public static long MAX_AMOUNT = 320*U;
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -126,9 +116,12 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
         if(!aIsServerSide)return;
         receivedEnergyLast = receivedEnergy;
         receivedEnergy = new ArrayList<>();
+        mMassTotal = mMassSelf;
 
-        if(mEnergy > mEnergyBaseConsume){
-            mTemp += (mEnergy - mEnergyBaseConsume) * MultiTileEntityCrucible.KG_PER_ENERGY * 2F / mMassTotal;
+        for (OreDictMaterialStack tMaterial : mContent) mMassTotal += (long) tMaterial.weight();
+
+        if(mEnergy > mEnergyBaseConsume && mTemp <= mTempMax){
+            mTemp += (mEnergy - mEnergyBaseConsume) / ( 1 + mMassTotal * 1F / MultiTileEntityCrucible.KG_PER_ENERGY);
             mTempChanged=true;
         }
         mEnergy = 0;
@@ -146,6 +139,8 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
         }
 
         oldTemp=mTemp;
+
+        mTemp = Math.max(WD.envTemp(worldObj, xCoord,yCoord,zCoord), mTemp - 0.2F);
         if(!slotHas(0))return;
         OreDictItemData tData = OM.anydata_(slot(0));
         long tTemperature = C;
@@ -178,6 +173,7 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
         if (mStopped) return 0;
         aSize = Math.abs(aSize);
         if (aEnergyType == mEnergyType) {
+            if(mTemp >= mTempMax && mEnergy > 0)return 0;
             if(aSize > mInputMax && aDoInject){
                 explode(false);
                 return aAmount;
@@ -325,11 +321,6 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
         return super.onTickCheck(aTimer)|| mContentChanged || mTempChanged;
     }
 
-    @Override
-    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return super.getTexture2(aBlock, aRenderPass, aSide, aShouldSideBeRendered);
-    }
-
     public byte[] saveToArray(boolean aSendAll) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -349,7 +340,7 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
             dos.writeInt(mContent.size());
             for (OreDictMaterialStack stack : mContent) {
                 dos.writeShort(stack.mMaterial.mTargetSmelting.mMaterial.mID);
-                short amount = (short)(32767 * stack.mAmount/MAX_AMOUNT);
+                short amount = (short)(100 * stack.mAmount / U);
                 dos.writeShort(stack.mMaterial.mMeltingPoint < mTemp ? -amount : amount);
             }
             }
@@ -389,5 +380,18 @@ public class DummyCrucible extends TileEntityBase10MultiBlockBase implements IMa
         }
     }
 
+    @Override
+    public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+        IWailaTile.super.getWailaNBT(te, aNBT);
+        aNBT.setInteger("mTemp.c", (int)Math.floor(mTemp));
+        return aNBT;
+    }
+
+    @Override
+    public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        IWailaTile.super.getWailaBody(currentTip, accessor, config);
+        currentTip.add(LH.get(I18nHandler.TEMPERATURE+".core")+ " " + LH.Chat.WHITE + accessor.getNBTData().getInteger("mTemp.c"));
+        return currentTip;
+    }
     @Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.dummy_crucible";}
 }
