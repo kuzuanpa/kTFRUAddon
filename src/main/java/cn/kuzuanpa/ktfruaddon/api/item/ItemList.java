@@ -150,9 +150,9 @@ public enum ItemList implements IItemContainer {
     //itemTechnological
     PropertiesFilter,
     //itemBatteryPole
-    BatteryPoleNickel, BatteryPoleCaTiO3, BatteryPolePlatinum, BatteryPoleCarbon,
-    //itemSeawaterProcess
-    MagnesiumDihydroxide/**Mg(OH)2**/
+    BatteryPoleNickel, BatteryPoleCaTiO3, BatteryPolePlatinum, BatteryPoleCarbon
+
+
     ;
 
     //Copied from gt6

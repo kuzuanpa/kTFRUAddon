@@ -32,7 +32,7 @@ public class recipeInit {
         CompactItem.init();
         Fusion.init();
         FakeRecipe.init();
-        SeawaterProcess.init();
+
         if(Loader.isModLoaded("terrafirmacraft"))TFCRecipe.init();
     }
 }
