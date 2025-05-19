@@ -201,7 +201,7 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos, sizeX, sizeY + 2, sizeZ + 2, xMapOffset ,-3,zMapOffset + 1, aClickedAt, aPlayer, aInventory);
+        lastFailedPos = checkMappedStructure(lastFailedPos, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset, aClickedAt, aPlayer, aInventory);
         return lastFailedPos == null;
     }
 
