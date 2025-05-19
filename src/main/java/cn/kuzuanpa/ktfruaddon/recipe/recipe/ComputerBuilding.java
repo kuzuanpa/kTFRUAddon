@@ -79,7 +79,7 @@ public class ComputerBuilding {
     //Method2
         recipeMaps.HeatMixer.addRecipe0(F,290,10,FL.array(MT.H2SiF6.liquid(3*U,false)),FL.array(flList.SiliconTetrafluoride.make(1000),MT.HF.gas(2*U,false)),ZL_IS);
         RM           .Mixer    .addRecipe2(F,380,20,OP.dust.mat(MT.Na,1),OP.dust.mat(MT.Al,1),FL.array(FL.Hydrogen.make(2000)),FL.array(flList.SodiumAluminate.make(1000)),OP.dust.mat(matList.SodiumAluminiumHydride.mat, 1));
-        recipeMaps.HeatMixer.addRecipe1(F,410,40,matList.SodiumAluminiumHydride.getDust(1),FL.array(flList.SiliconTetrafluoride.make(1000)),FL.array(flList.Silane.make(1000)/*TODO:1*NaAlF4*/),ZL_IS);
+        recipeMaps.HeatMixer.addRecipe1(F,410,40,matList.SodiumAluminiumHydride.getDust(1),FL.array(flList.SiliconTetrafluoride.make(1000)),FL.array(flList.Silane.make(1000)), OP.dust.mat(MT.Na3AlF6,1));
 
 //Make Boule 制作单晶硅 HU
         RM.CrystallisationCrucible.addRecipe1(T,16,36000,OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Nitrogen.make(80000),MT.Si.liquid(U*4,false)),FL.array(ZL_FS),OP.bouleGt.mat(MT.Si,1));

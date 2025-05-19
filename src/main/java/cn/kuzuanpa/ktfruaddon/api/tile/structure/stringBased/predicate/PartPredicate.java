@@ -15,19 +15,31 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
-import net.minecraft.block.Block;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 
-public class BlockTypePredicate implements IStructurePredicate {
-    private final Block expected;
+public class PartPredicate implements IStructurePredicate {
+    private final TileDesc[] expected;
+    private boolean allowPartShare = false;
 
-    public BlockTypePredicate(Block expected) {
+    public PartPredicate(TileDesc expected) {
+        this.expected = new TileDesc[]{expected};
+    }
+    public PartPredicate(TileDesc... expected) {
         this.expected = expected;
+    }
+    public PartPredicate allowShare(){
+        allowPartShare = true;
+        return this;
     }
 
     @Override
     public boolean matches(StructureContext ctx, int x, int y, int z) {
-        ctx.world.setBlock(x,y, z, expected);
-        return true;
+        return utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare);
+    }
+    @Override
+    public boolean set(StructureContext ctx, int x, int y, int z) {
+        return utils.checkAndSetTarget(ctx.controller, x,y,z, null, ctx.player, ctx.inventory, expected, allowPartShare);
     }
 }
 

@@ -25,14 +25,13 @@ public class FixedLayer implements IStructureLayer {
     IStringBaseStructure structure;
     private StructureContext.Axis layerAxis;
 
-    // 示例：Y轴层时输入XZ平面布局
     public FixedLayer blockRule(String... rows) {
         this.rows.addAll(Arrays.asList(rows));
         return this;
     }
 
     @Override
-    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ) {
+    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ, boolean tryAutoBuild, boolean fastAutoBuild) {
         for(int rowIdx=0; rowIdx<rows.size(); rowIdx++) {
             String row = rows.get(rowIdx);
             for(int colIdx=0; colIdx<row.length(); colIdx++) {
@@ -42,7 +41,13 @@ public class FixedLayer implements IStructureLayer {
                 int[] absCoords = convertAxis(ctx, mainAxis, rowIdx, colIdx);
 
                 IStructurePredicate condition = structure.getPredicates().get(expected);
-                if (condition == null || !condition.matches(ctx, absCoords[0], absCoords[1], absCoords[2])) return 0;
+
+                if(condition == null)throw new IllegalArgumentException("condition can not be null!");
+
+                if (!condition.matches(ctx, absCoords[0], absCoords[1], absCoords[2])) {
+                    if(!tryAutoBuild)return 0;
+                    if(!condition.set(ctx, absCoords[0], absCoords[1], absCoords[2]) || !fastAutoBuild) return 0;
+                }
             }
         }
         return 1;

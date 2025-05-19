@@ -14,7 +14,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.DummyCrucible;
 import gregapi.data.LH;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.oredict.OreDictMaterial;
@@ -56,10 +56,10 @@ public class ContainerClientDummCrucible extends ContainerClientDefault {
             Short amount = entry.getValue();
             OreDictMaterial mat = OreDictMaterial.get(matID);
             if(mat == null) continue;
-            float h = (Math.abs(amount)/32767F)*height;
+            float h = (Math.abs(amount)/32000F)*height;
             if(mouseY - y < index && mouseY - y>index-h){
                 fontRendererObj.drawStringWithShadow(LH.get(mat.mNameInternal), 112, 48, 0xffffff);
-                fontRendererObj.drawStringWithShadow((Math.abs(amount)/327.67F) + "%" + (mat.mMeltingPoint < tile.mTemp?", "+ LH.Chat.ORANGE+"Molten":""), 112, 60, 0xffffff);
+                fontRendererObj.drawStringWithShadow((Math.abs(amount)/100F) + "U" + (mat.mMeltingPoint < tile.mTemp?", "+ LH.Chat.ORANGE+"Molten":""), 112, 60, 0xffffff);
             }
             GL11.glColor4f( mat.mRGBaSolid[0]/255F, mat.mRGBaSolid[1]/255F, mat.mRGBaSolid[2]/255F, mat.mRGBaSolid[3]/255F);
             index-=h;

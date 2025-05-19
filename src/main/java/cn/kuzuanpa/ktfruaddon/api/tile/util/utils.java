@@ -15,17 +15,22 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.util;
 
-import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import gregapi.data.CS;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import gregapi.util.ST;
+import gregapi.util.UT;
+import gregapi.util.WD;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -37,7 +42,9 @@ import zmaster587.libVulpes.block.BlockMeta;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+
+import static gregapi.data.CS.T;
+import static gregapi.data.CS.W;
 
 public class utils {
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
@@ -58,35 +65,81 @@ public class utils {
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
         return checkAndSetTarget(aController,coord, aClickedAt, aPlayer, aInventory, new TileDesc[] {new TileDesc(aRegistryID, aRegistryMeta, aMode, aDesign)});
     }
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles, boolean allowPartShare) {
+        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, availTiles, allowPartShare);
+    }
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles) {
         return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, availTiles);
     }
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles) {
         return checkAndSetTarget(aController,coord, aClickedAt, aPlayer, aInventory, availTiles, false);
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles, boolean allowPartShare) {
-         debugLog("checking "+coord+ "  Allow:"+Arrays.toString(availTiles)+"  gID"+ GTTileEntityRegistry.gregtech+"  kID"+GTTileEntityRegistry.ktfruaddon);
-        TileEntity tTileEntity = aController.getTileEntity(coord);
-        if (tTileEntity == aController) return true;
 
-        if (tTileEntity instanceof MultiTileEntityMultiBlockPart) {
-            for (TileDesc tTile : availTiles) {
-                if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()){
-                    debugLog("allowed aRegistryMeta "+tTile.aRegistryMeta+ "  allowed aRegistryID:"+tTile.aRegistryID+"  realMeta"+ ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID()+"  realID"+((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID());
-                    continue;
-                }
-                return setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
+    public static boolean tryPlaceTile(TileDesc tTile, ITileEntityMultiBlockController aController, ChunkCoordinates coord, Entity aPlayer, IInventory aInventory){
+        ItemStack aStack = ST.make(tTile.aRegistryID, 1, tTile.aRegistryMeta);
+        if (!WD.easyRep(aController.getWorld(), coord.posX, coord.posY, coord.posZ) || !UT.Entities.canEdit(aPlayer, coord.posX, coord.posY, coord.posZ, aStack)) return false;
+        if (aInventory == null || UT.Entities.hasInfiniteItems(aPlayer)) {// is Player in creative
+            if (WD.set(aController.getWorld(), coord.posX, coord.posY, coord.posZ, aStack)) {
+                UT.Sounds.send(CS.SFX.MC_XP, aController.getWorld(), coord.posX, coord.posY, coord.posZ);
+                return true;
             }
-        } else if (tTileEntity instanceof IMultiBlockPart) {
-            for (TileDesc tTile : availTiles) {
-                if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) {
-                    debugLog("allowed aRegistryMeta "+tTile.aRegistryMeta+ "  allowed aRegistryID:"+tTile.aRegistryID+"  realMeta"+ ((IMultiBlockPart) tTileEntity).getMultiTileEntityID()+"  realID"+((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID());
-                    continue;
+        } else for (int i = aInventory.getSizeInventory() - 1; i >= 0; i--) {
+            ItemStack tStack = aInventory.getStackInSlot(i);
+            if (ST.equal(aStack, tStack, T) && ST.use(aPlayer, T, T, tStack, 1)) {
+                if (WD.set(aController.getWorld(), coord.posX, coord.posY, coord.posZ, tStack) && aPlayer != null) {
+                    UT.Sounds.send(CS.SFX.MC_XP, aController.getWorld(), coord.posX, coord.posY, coord.posZ);
                 }
-                return setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, tTile.aDesign, tTile.aUsage, allowPartShare);
+                return true;
             }
         }
-        debugLog("none matched");
+        return false;
+    }
+    public static boolean tryPlaceBlock(Block block, World world, ChunkCoordinates coord, Entity aPlayer, IInventory aInventory) {
+        return tryPlaceBlock(block, 0, world, coord, aPlayer, aInventory);
+    }
+    public static boolean tryPlaceBlock(Block block, int blockMeta, World world, ChunkCoordinates coord, Entity aPlayer, IInventory aInventory){
+        ItemStack aStack = ST.make(block, 1, blockMeta);
+        if (!WD.easyRep(world, coord.posX, coord.posY, coord.posZ) || !UT.Entities.canEdit(aPlayer, coord.posX, coord.posY, coord.posZ, aStack)) return false;
+        if (aInventory == null || UT.Entities.hasInfiniteItems(aPlayer)) {// is Player in creative
+            if (WD.set(world, coord.posX, coord.posY, coord.posZ, blockMeta == W ? ST.make(block, 1, 0) : aStack)) {
+                UT.Sounds.send(CS.SFX.MC_XP, world, coord.posX, coord.posY, coord.posZ);
+                return true;
+            }
+        } else for (int i = aInventory.getSizeInventory() - 1; i >= 0; i--) {
+            ItemStack tStack = aInventory.getStackInSlot(i);
+            if (ST.equal(aStack, tStack, T) && ST.use(aPlayer, T, T, tStack, 1)) {
+                if (WD.set(world, coord.posX, coord.posY, coord.posZ, tStack) && aPlayer != null) {
+                    UT.Sounds.send(CS.SFX.MC_XP, world, coord.posX, coord.posY, coord.posZ);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles, boolean allowPartShare) {
+        TileEntity tTileEntity = aController.getTileEntity(coord);
+        if (tTileEntity == aController) return true;
+        TileDesc result = null;
+
+        if (tTileEntity instanceof MultiTileEntityMultiBlockPart) for (TileDesc tTile : availTiles) {
+            if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID())continue;
+            result = tTile;
+            break;
+        }
+        else if (tTileEntity instanceof IMultiBlockPart) for (TileDesc tTile : availTiles) {
+            if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
+            result = tTile;
+            break;
+        }
+
+        if(result == null && (aInventory != null || aPlayer != null))for (TileDesc tTile : availTiles) {
+            if(!tryPlaceTile(tTile, aController, coord, aPlayer, aInventory))continue;
+            result = tTile;
+            tTileEntity = aController.getTileEntity(coord);
+            break;
+        }
+
+        if(result != null)return setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, result.aDesign, result.aUsage, allowPartShare);
         return false;
     }
     public static boolean setTarget(ITileEntityMultiBlockController aController, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileEntity tile, int aDesign, int aMode, boolean allowShare) {
@@ -116,7 +169,7 @@ public class utils {
     }
     public static final boolean debug = false;
     public static void debugLog(String str){
-        if(debug)FMLLog.log(Level.FATAL,"[kTFRUAddon] "+str);
+        if(debug)FMLLog.log(Level.FATAL,"[kTFRUAddon] Structure Check: "+str);
     }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,ChunkCoordinates coord, int aDesign, int aMode) {
         return resetTarget(aController,coord.posX,coord.posY, coord.posZ, aDesign);

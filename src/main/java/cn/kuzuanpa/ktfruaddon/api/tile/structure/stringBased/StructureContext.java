@@ -14,24 +14,34 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased;
 
+import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.world.World;
 
 public class StructureContext {
-    public final World world; // 您的游戏世界对象
+    public final World world;
     public int addX,addY,addZ, oX,oY,oZ;
-    public byte facing;
-
-    public StructureContext(World world) {
-        this.world = world;
+    public final byte facing;
+    public final ITileEntityMultiBlockController controller;
+    public final Entity player;
+    public final IInventory inventory;
+    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing) {
+        this(controller, world, oX, oY, oZ, facing, null, null);
     }
-    public StructureContext(World world, int oX,int oY, int oZ, byte facing) {
+    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing, Entity player, IInventory inventory) {
+        this.controller = controller;
         this.world = world;
         this.oX=oX;
         this.oY=oY;
         this.oZ=oZ;
-        this.facing=facing;
+        this.facing = facing;
+        this.player = player;
+        this.inventory = inventory;
+
     }
-    public int[] getMapCoord() {
+
+        public int[] getMapCoord() {
         return convertCoord(facing, oX, oY, oZ, addX, addY, addZ);
     }
     public static int[] convertCoord(byte facing, int oX, int oY, int oZ, int addX, int addY, int addZ) {

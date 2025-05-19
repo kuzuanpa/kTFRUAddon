@@ -18,4 +18,5 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 
 public interface IStructurePredicate {
     boolean matches(StructureContext ctx, int x, int y, int z);
+    boolean set(StructureContext ctx, int x, int y, int z);
 }

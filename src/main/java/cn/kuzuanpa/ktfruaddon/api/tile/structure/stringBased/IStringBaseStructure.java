@@ -19,7 +19,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructur
 import java.util.Map;
 
 public interface IStringBaseStructure {
-    boolean checkStructure(StructureContext context);
+    boolean checkStructure(StructureContext context, boolean tryAutoBuild);
     Map<Character, IStructurePredicate> getPredicates();
 
 }

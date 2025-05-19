@@ -18,7 +18,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructur
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 
 public interface IStructureLayer {
-    public int validate(StructureContext ctx, StructureContext.Axis axis, int baseX, int baseY, int baseZ);
+    public int validate(StructureContext ctx, StructureContext.Axis axis, int baseX, int baseY, int baseZ, boolean tryAutoBuild, boolean fastAutoBuild);
     public void setStructure(IStringBaseStructure structure);
-
 }

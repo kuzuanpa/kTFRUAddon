@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.DummyCrucible;
 import gregapi.oredict.OreDictMaterial;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -43,6 +43,8 @@ public class TESRDumyCrucible extends TileEntitySpecialRenderer {
             if (tile.shouldSideBeRendered(i)) rendNow = true;
         }
         if (!rendNow||!tile.checkStructure(false))return;
+        Map<Short,Short> map = tile.mDisplayContent;
+        if(map.isEmpty()) return;
 
         GL11.glPushMatrix();
 
@@ -57,15 +59,13 @@ public class TESRDumyCrucible extends TileEntitySpecialRenderer {
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
         GL11.glTranslated(-.501f, 0, -.5f);
 
-        Map<Short,Short> map = tile.mDisplayContent;
-        if(map.isEmpty()) return;
         float index = 0.0f;
         bindTexture(texture);
         for (Map.Entry<Short, Short> entry : map.entrySet()) {
             OreDictMaterial mat = OreDictMaterial.get(entry.getKey());
             if(mat == null) continue;
             GL11.glColor4ub( (byte)mat.mRGBaSolid[0], (byte)mat.mRGBaSolid[1], (byte)mat.mRGBaSolid[2], (byte)mat.mRGBaSolid[3]);
-            float height = (Math.abs(entry.getValue())/32767F)*PX_P[9];
+            float height = (Math.abs(entry.getValue())/32000F)*PX_P[9];
             drawTextureRect(Tessellator.instance, PX_P[8], index + PX_P[4], entry.getValue()>0? 0:0/*todo: different soild and molten*/, 0, -PX_P[4], height);
             index+=height;
             GL11.glColor4f(1f, 1f, 1f, 1f);

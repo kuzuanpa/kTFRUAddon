@@ -37,7 +37,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.TransformBattery;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.*;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.DummyCrucible;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableFillInPack;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.tile.space.dysonSphere.dysonSphereMonitor;
@@ -422,6 +422,7 @@ public class tileEntityInit0 {
         aMat = MT.Steel;           kRegistry0.add("Steel Compressed Gas Tank Main Valve"               , "kTFRUAddon: Multiblock", 30100, 17200, LargeCompressedGasTank.class      , aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.0F, NBT_RESISTANCE, 6.0F, NBT_TEXTURE, "tankmetal"               , NBT_TANK_CAPACITY,    6912000000L, NBT_DESIGN, 18029, NBT_GASPROOF, T, NBT_ACIDPROOF, F, NBT_PLASMAPROOF, F  ), " R ", "hMs", " R ", 'M', gRegistry.getItem(18029), 'R', OP.ring.dat(aMat));
         aMat = MT.StainlessSteel;  kRegistry0.add("Stainless Steel Compressed Gas Tank Main Valve"     , "kTFRUAddon: Multiblock", 30101, 17200, LargeCompressedGasTank.class      , aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.0F, NBT_RESISTANCE, 6.0F, NBT_TEXTURE, "tankmetal"               , NBT_TANK_CAPACITY,    6912000000L, NBT_DESIGN, 18022, NBT_GASPROOF, T, NBT_ACIDPROOF, T, NBT_PLASMAPROOF, F  ), " R ", "hMs", " R ", 'M', gRegistry.getItem(18022), 'R', OP.ring.dat(aMat));
 
+        aMat = MT.Ti;              kRegistry0.add("Test Controller"                  , "kTFRUAddon: Multiblock", 30132, 17200, exampleMappedStructureMachine.class        , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "dummycrucible"),"SCS","wMh","WPW", 'S', gRegistry.getItem(29269), 'P', OP.plateDouble.dat(aMat), 'M', OP.casingMachineDouble.dat(aMat), 'W', gRegistry.getItem(24900), 'C', "ktfruAdvancedComputer");
         //parts
         aClass = CommonPart.class;
         aMat = MT.Al;              kRegistry0.add("Aluminium Wall"  , "kTFRUAddon: Multiblock", 31000, 17200, aClass , aMat.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, MT.Al, NBT_HARDNESS,   4.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "wall" , NBT_DESIGNS, 7),"wPP", "hPP", 'P', OP.plate.dat(aMat)); RM.Welder.addRecipe2(F, 16, 256, OP.plate.mat(aMat, 4), ST.tag(10), kRegistry0.getItem());

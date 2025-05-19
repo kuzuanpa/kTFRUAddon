@@ -19,6 +19,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructur
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.IStructureLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
+import net.minecraft.util.ChunkCoordinates;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,13 +29,25 @@ public class LayerStructure implements IStringBaseStructure {
     private String layerSequence;
     private final Map<Character, IStructureLayer> layers = new HashMap<>();
     private final Map<Character, IStructurePredicate> predicates = new HashMap<>();
+    public ChunkCoordinates controllerOffsetPos = null;
+    public boolean fastAutoBuild;
 
     public LayerStructure(StructureContext.Axis expandAxis) {
         this.expandAxis = expandAxis;
+        fastAutoBuild = false;
     }
 
+    public LayerStructure setFastAutoBuild(boolean fastAutoBuild) {
+        this.fastAutoBuild = fastAutoBuild;
+        return this;
+    }
     public LayerStructure layerRule(String sequence) {
         this.layerSequence = sequence;
+        return this;
+    }
+
+    public LayerStructure setOffset(int x, int y, int z) {
+        this.controllerOffsetPos = new ChunkCoordinates(x,y,z);
         return this;
     }
 
@@ -54,12 +67,15 @@ public class LayerStructure implements IStringBaseStructure {
         return this;
     }
     @Override
-    public boolean checkStructure(StructureContext ctx) {
+    public boolean checkStructure(StructureContext ctx, boolean tryAutoBuild) {
+        ctx.addX += controllerOffsetPos.posX;
+        ctx.addY += controllerOffsetPos.posY;
+        ctx.addZ += controllerOffsetPos.posZ;
         for(char c : layerSequence.toCharArray()) {
             IStructureLayer layer = layers.get(c);
             if(layer == null) return false;
 
-            int step = validateLayer(ctx, layer,ctx.getMapCoord());
+            int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2], tryAutoBuild, fastAutoBuild);
             if(step == 0)return false;
             promoteContext(ctx, expandAxis, step);
         }
@@ -71,13 +87,6 @@ public class LayerStructure implements IStringBaseStructure {
         return predicates;
     }
 
-    private int validateLayer(StructureContext ctx, IStructureLayer layer, int[] base) {
-        return layer.validate(ctx, expandAxis,
-             base[0],
-             base[1],
-             base[2]
-        );
-    }
     public void promoteContext(StructureContext ctx, StructureContext.Axis axis, int num){
         int aX = axis == StructureContext.Axis.X ? num : 0;
         int aY = axis == StructureContext.Axis.Y ? num : 0;

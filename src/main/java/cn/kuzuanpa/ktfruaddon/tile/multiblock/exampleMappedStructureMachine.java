@@ -20,12 +20,15 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
-import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -36,97 +39,38 @@ import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
-import static gregapi.data.CS.*;
+import static gregapi.data.CS.SIDES_VALID;
+import static gregapi.data.CS.SIDE_BOTTOM;
 
-public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMachine implements IMappedStructure {
-
+public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMachine {
+    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AA")
+            .layer( 'A',new FixedLayer()
+                    .blockRule(
+                            "CXXX",
+                            "CXXX",
+                            " XXX",
+                            "CXXX",
+                            "CXXX"
+                    )
+            )
+            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
+            .setOffset(-2,0,0)
+            .setFastAutoBuild(true);
     //决定机器大小
     //this controls the size of machine.
     public final short sizeX = 5, sizeY = 1, sizeZ = 4;
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
-    //映射表方向:
-    //                 |
-    //                 |
-    //            ( tX ,tZ-1)
-    //(tX-1, tZ );( tX , tZ );(tX+1, tZ )---->
-    //            ( tX ,tZ+1)             x轴
-    //                 | z轴
-    //                 v
-    //y轴为一张新的表格，代码中位于最上的表是最底下一层
-    //默认情况(不改动偏移量)下主方块位于tX,tZ,如下所示
-    // ^^^^
-    //{main,part},
-    //{part,part}
-    //Map direction:
-    //                 |
-    //                 |
-    //            ( tX ,tZ-1)
-    //(tX-1, tZ );( tX , tZ );(tX+1, tZ )---->
-    //            ( tX ,tZ+1)             axisX
-    //                 | axisZ
-    //                 v
-    //In default (didn't modify offset),main block is on tX,tZ.For example:
-    // ^^^^
-    //{main,part},
-    //{part,part}
-    //这里决定每个参与构成本机器的方块的子id
-    //Controls every block needed to build the machine
-    public static int[][][] blockIDMap = {{
-            {18002, 18006, 0, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-    }};
-    //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
-    public short[][][] registryIDMap = {{
-            {g, g, k, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-    }};
-    //T是忽略此位置的方块 ,F是正常检测
-    //T = ignore ,F = normally check
-    public static boolean[][][] ignoreMap = {{
-            {T, T, T, T, T},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F},
-    }};
-    @Override
-    public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
-        return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
-    }
-
-    public int getUsage(int mapX, int mapY, int mapZ) {
-        int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
-        if (blockID == 18002&&registryID==k) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else if (blockID == 18002||blockID==18022&&registryID==g) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
-        }else{return MultiTileEntityMultiBlockPart.NOTHING;}
-    }
-
-    public int getBlockID(int checkX, int checkY, int checkZ){
-        return blockIDMap[checkY][checkZ][checkX];
-    }
-
-    public  boolean isIgnored(int checkX, int checkY, int checkZ){
-        return ignoreMap[checkY][checkZ][checkX];
-    }
-    public short getRegistryID(int checkX, int checkY, int checkZ){return registryIDMap[checkY][checkZ][checkX];}
 
     ChunkCoordinates lastFailedPos=null;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset, aClickedAt, aPlayer, aInventory);
+        return structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord,zCoord,mFacing, aPlayer, aInventory), aPlayer != null || aInventory != null);
 
-        return lastFailedPos==null;
     }
 
     //这是设置主方块的物品提示
@@ -172,6 +116,12 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
     public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
         return null;
     }
+
+    @Override
+    public boolean[] getValidSides() {
+        return SIDES_VALID;
+    }
+
     //这里填写多方块结构的名称
     @Override
     public String getTileEntityName() {

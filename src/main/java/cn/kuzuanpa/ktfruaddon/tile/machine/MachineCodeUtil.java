@@ -22,7 +22,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructur
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.BlockTypePredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.BlockPredicate;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
@@ -58,33 +58,12 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
         super.writeToNBT2(aNBT);
         ICircuitChangeableTileEntity.saveCircuitInfo(aNBT,getComputers());
     }
-    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AXB")
-            .layer( 'A',new FixedLayer()
-                    .blockRule(
-                            "XX XX",
-                            " XXX ",
-                            " X XX"
-                    )
-            ).layer('X',new FixedLayer()
-                    .blockRule(
-                            "XX XX",
-                            " XXX ",
-                            "XX XX"
-                    )
-            ).layer('B',new FixedLayer()
-                    .blockRule(
-                            "X    ",
-                            " XXX ",
-                            "XX XX"
-                    )
-            )
-            .where('X', new BlockTypePredicate(Blocks.glowstone));
+
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (isServerSide()) {
         //openGUI(aPlayer, aSide);
         try {
-            structure.checkStructure(new StructureContext(worldObj, xCoord, yCoord, zCoord, mFacing));
             //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
            // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
             //for (ItemStack computer : getComputers()) {
