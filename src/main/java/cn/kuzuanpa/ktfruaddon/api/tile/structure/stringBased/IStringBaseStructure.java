@@ -15,11 +15,12 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
+import net.minecraft.util.ChunkCoordinates;
 
 import java.util.Map;
 
 public interface IStringBaseStructure {
-    boolean checkStructure(StructureContext context, boolean tryAutoBuild);
+    ChunkCoordinates checkStructure(StructureContext context);
     Map<Character, IStructurePredicate> getPredicates();
 
 }

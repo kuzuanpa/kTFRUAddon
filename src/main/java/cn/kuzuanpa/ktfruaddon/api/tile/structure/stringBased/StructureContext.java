@@ -23,19 +23,21 @@ public class StructureContext {
     public final World world;
     public int addX,addY,addZ, oX,oY,oZ;
     public final byte facing;
+    public final boolean tryAutoBuild;
     public final ITileEntityMultiBlockController controller;
     public final Entity player;
     public final IInventory inventory;
-    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing) {
-        this(controller, world, oX, oY, oZ, facing, null, null);
+    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing, boolean tryAutoBuild) {
+        this(controller, world, oX, oY, oZ, facing, tryAutoBuild, null, null);
     }
-    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing, Entity player, IInventory inventory) {
+    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing, boolean tryAutoBuild, Entity player, IInventory inventory) {
         this.controller = controller;
         this.world = world;
         this.oX=oX;
         this.oY=oY;
         this.oZ=oZ;
         this.facing = facing;
+        this.tryAutoBuild=tryAutoBuild;
         this.player = player;
         this.inventory = inventory;
 

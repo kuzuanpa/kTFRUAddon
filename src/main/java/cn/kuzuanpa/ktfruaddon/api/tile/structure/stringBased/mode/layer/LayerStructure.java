@@ -17,6 +17,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.IStructureLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
 import net.minecraft.util.ChunkCoordinates;
@@ -56,6 +57,14 @@ public class LayerStructure implements IStringBaseStructure {
         layers.put(symbol, layer);
         return this;
     }
+
+    /**alia**/
+    public LayerStructure fixedLayer(char symbol, String... rows) {
+        FixedLayer layer = new FixedLayer().blockRule(rows);
+        layer.setStructure(this);
+        layers.put(symbol, layer);
+        return this;
+    }
     /**
      * 绑定符号与方块条件
      * @param symbol 结构模式中的字符
@@ -67,19 +76,19 @@ public class LayerStructure implements IStringBaseStructure {
         return this;
     }
     @Override
-    public boolean checkStructure(StructureContext ctx, boolean tryAutoBuild) {
+    public ChunkCoordinates checkStructure(StructureContext ctx) {
         ctx.addX += controllerOffsetPos.posX;
         ctx.addY += controllerOffsetPos.posY;
         ctx.addZ += controllerOffsetPos.posZ;
         for(char c : layerSequence.toCharArray()) {
             IStructureLayer layer = layers.get(c);
-            if(layer == null) return false;
+            if(layer == null) throw new IllegalArgumentException("Invalid Layer config");
 
-            int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2], tryAutoBuild, fastAutoBuild);
-            if(step == 0)return false;
+            int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2], ctx.tryAutoBuild, fastAutoBuild);
+            if(step == 0)return new ChunkCoordinates(ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
             promoteContext(ctx, expandAxis, step);
         }
-        return true;
+        return null;
     }
 
     @Override
@@ -88,11 +97,8 @@ public class LayerStructure implements IStringBaseStructure {
     }
 
     public void promoteContext(StructureContext ctx, StructureContext.Axis axis, int num){
-        int aX = axis == StructureContext.Axis.X ? num : 0;
-        int aY = axis == StructureContext.Axis.Y ? num : 0;
-        int aZ = axis == StructureContext.Axis.Z ? num : 0;
-        ctx.addX += aX;
-        ctx.addY += aY;
-        ctx.addZ += aZ;
+        ctx.addX += axis == StructureContext.Axis.X ? num : 0;
+        ctx.addY += axis == StructureContext.Axis.Y ? num : 0;
+        ctx.addZ += axis == StructureContext.Axis.Z ? num : 0;
     }
 }

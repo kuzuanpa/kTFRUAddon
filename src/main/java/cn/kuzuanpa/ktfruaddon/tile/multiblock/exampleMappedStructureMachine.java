@@ -23,7 +23,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
@@ -43,15 +43,20 @@ import static gregapi.data.CS.SIDES_VALID;
 import static gregapi.data.CS.SIDE_BOTTOM;
 
 public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMachine {
-    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AA")
-            .layer( 'A',new FixedLayer()
-                    .blockRule(
-                            "CXXX",
-                            "CXXX",
-                            " XXX",
-                            "CXXX",
-                            "CXXX"
-                    )
+    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("A")
+            .layer('A',
+                    new ExpandableLayer(6)
+                            .variation("CXXX",
+                                    "CXXX",
+                                    " XXX",
+                                    "CXXX",
+                                    "CXXX"
+                            ).variation("CCCC",
+                                    "CXXX",
+                                    " CXX",
+                                    "CXXX",
+                                    "CCCC"
+                            )
             )
             .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
@@ -69,8 +74,8 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        return structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord,zCoord,mFacing, aPlayer, aInventory), aPlayer != null || aInventory != null);
-
+        lastFailedPos = structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord,zCoord,mFacing, (aPlayer != null || aInventory != null), aPlayer, aInventory));
+        return lastFailedPos == null;
     }
 
     //这是设置主方块的物品提示
