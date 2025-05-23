@@ -49,6 +49,8 @@ public enum matList {
     ,/**CaiXuKunMeme**/ HensSoPretty
 
     ,/**智金**/Ij
+
+    ,/**Mg(OH)2**/MagnesiumDihydroxide
     ;
     //PC,聚碳酸酯/工程塑料: MT.Polycarbonate
 
