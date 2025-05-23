@@ -246,5 +246,11 @@ public class fluidPreInit {
         flList.CrackedPetrolLow.register("CrackedPetrolLow","Cracked Petrol (Low Temperature)",null, LIQUID);
         flList.CrackedPetrolMedium.register("CrackedPetrolMedium","Cracked Petrol (Medium Temperature)",null, LIQUID);
         flList.CrackedPetrolHigh.register("CrackedPetrolHigh","Cracked Petrol (High Temperature)",null, LIQUID);
+
+        flList.Bittern.register("Bittern","Bittern",null,LIQUID);
+        flList.Brine.register("Brine","Brine",null,LIQUID);
+        flList.BrineMgFree.register("BrineMgFree","Magnesium Free Brine",null,LIQUID);
+        flList.BrineBrRich.register("BrineBrRich","Bromine Rich Brine",null,LIQUID);
+        flList.BrineWaste.register("BrineWaste","Waste Brine",null,LIQUID);
     }
 }

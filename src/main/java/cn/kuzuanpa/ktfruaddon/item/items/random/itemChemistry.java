@@ -14,7 +14,6 @@
  */
 
 
-
 package cn.kuzuanpa.ktfruaddon.item.items.random;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
@@ -34,6 +33,5 @@ public class itemChemistry extends MultiItemRandom {
     public void addItems() {
 
         ItemList.ProtonExchangeMembrane.set(addItem(0, "Proton Exchange Membrane", ""));
-
     }
 }
