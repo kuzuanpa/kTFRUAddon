@@ -96,19 +96,19 @@ public class Chemistry {
         FM.Burn.addRecipe0(F,-32986,8,FL.array(flList.RecycledFuel4.make(10)),FL.array(FL.Steam.make(64000), FL.CarbonDioxide.make(1600), FL.Nitrogen.make(400)));
 
         //seawater main process
-        recipeMaps. DistillTower.       addrecipe0(F, 64, 20, FL.array(FL.Ocean.make(1000)), OP.dustSmall.mat(MT.NaCl, 1), FL.array(flList.Bittern.make(100), FL.DistW.make(500)));
-        recipeMaps. SmallDistillTower.  addrecipe0(F, 64, 30, FL.array(FL.Ocean.make(1000)), OP.dustSmall.mat(MT.NaCl, 1), FL.array(flList.Bittern.make(100), FL.DistW.make(500)));
-        recipeMaps. TinyDistillTower.   addrecipe0(F, 64, 40, FL.array(FL.Ocean.make(1000)), OP.dustSmall.mat(MT.NaCl, 1), FL.array(flList.Bittern.make(100), FL.DistW.make(500)));
-        RM.         Distillery.         addrecipe0(F, 64, 100, FL.array(FL.Ocean.make(1000)), OP.dustSmall.mat(MT.NaCl, 1), FL.array(flList.Bittern.make(50), FL.DistW.make(200)));
+        recipeMaps. DistillTower.       addRecipe0(F, 64,  20, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
+        recipeMaps. SmallDistillTower.  addRecipe0(F, 64,  30, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
+        recipeMaps. TinyDistillTower.   addRecipe0(F, 64,  40, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
+        RM.         Distillery.         addRecipe0(F, 64, 100, FL.array(FL.Ocean.make(400)), FL.array(flList.Bittern.make(50), FL.DistW.make(200)), OP.dustSmall.mat(MT.NaCl, 1));
 
-        RM.         Bath.               addrecipe1(T, 0, 20, OP.dust.mat(MT.Zeolite, 0), FL.array(flList.Bittern.make(1000)), FL.array(flList.Brine.make(800), MT.SaltedWater.liquid(U5, T)));
-        RM.         Bath.               addrecipe1(T, 0, 40, OP.dust.mat(MT.QuickLime, 1), FL.array(flList.Brine.make(1000)), FL.array(flList.BrineMgFree.make(1000)), ItemList.MagnesiumDihydroxide.get(2));
-        RM.         Bath.               addrecipe0(T, 0, 40, FL.array(FL.CarbonDioxide.make(1000), flList.BrineMgFree.make(1000)), FL.array(flList.BrineBrRich.make(1000), OP.dust.mat(MT.CaCO3, 1)));
-        RM.         Bath.               addrecipe0(T, 0, 100, FL.array(MT.Cl.gas(U5, F), flList.BrineBrRich.make(1000)), FL.array(MT.Br.liquid(U5, F), flList.BrineWaste.make(1000)));
+        RM.         Bath.               addRecipe1(T, 0, 20, OP.dust.mat(MT.OREMATS.Zeolite, 0), FL.array(flList.Bittern.make(1000)), FL.array(flList.Brine.make(800), MT.SaltedWater.liquid(U5, T)));
+        RM.         Bath.               addRecipe1(T, 0, 40, OP.dust.mat(MT.Quicklime, 1), FL.array(flList.Brine.make(1000)), FL.array(flList.BrineMgFree.make(1000)), OP.dust.mat(matList.MagnesiumDihydroxide.get(), 2));
+        RM.         Bath.               addRecipe0(T, 0, 40, FL.array(FL.CarbonDioxide.make(1000), flList.BrineMgFree.make(1000)), FL.array(flList.BrineBrRich.make(1000)), OP.dust.mat(MT.CaCO3, 1));
+        RM.         Bath.               addRecipe0(T, 0, 100, FL.array(MT.Cl.gas(U5, F), flList.BrineBrRich.make(1000)), FL.array(MT.Br.liquid(U5, F), flList.BrineWaste.make(1000)));
 
         // chemical recycling
-        RM.         Bath.               addrecipe1(T, 16, 80, ItemList.MagnesiumDihydroxide.get(5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(MT.H2O.liquid(U * 6)), OP.dust.mat(MT.MgCl2, 1));
-        RM.         Roasting.           addrecipe1(F, 256, 100, OP.dust.mat(MT.CaCO3, 5), OP.dust.mat(MT.QuickLime, 2));
+        RM.         Bath.               addRecipe1(T, 16, 80, OP.dust.mat(matList.MagnesiumDihydroxide.get(), 5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(FL.Water.make(6000)), OP.dust.mat(MT.MgCl2, 1));
+        RM.         Roasting.           addRecipe1(F, 256, 100, OP.dust.mat(MT.CaCO3, 5), OP.dust.mat(MT.Quicklime, 2));
 
 
     }

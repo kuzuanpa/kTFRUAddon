@@ -315,7 +315,9 @@ public class materialPreInit {
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES,TD.ItemGenerator.ORES,TD.Processing.EXTRUDER_SIMPLE)
                 .ores(MT.Ag, MT.OREMATS.Ilmenite);
 
-        matList.MagnesiumDihydroxide.registerC(22102,"MagnesiumDihydroxide","MagnesiumDihydroxide",350,2804,255,255,255,60,"Mg(OH)2"); // i don't know which color is better so i put a random number in
         //氢氧化镁
+        matList.MagnesiumDihydroxide.registerC(22102,"MagnesiumDihydroxide","MagnesiumDihydroxide",350,2804,255,255,255,60,"Mg(OH)2") // i don't know which color is better so i put a random number in
+                  .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS);
+
     }
 }
