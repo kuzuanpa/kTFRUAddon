@@ -36,7 +36,8 @@ import static gregapi.data.CS.*;
 public class recipeMaps {
     public static final Recipe.RecipeMap
               LightMixer              = new Recipe.RecipeMap(null, "ktfru.recipe.lightmixer"             , "Light Mixer"               , null, 0, 1, RES_PATH_GUI + "machines/LightMixer",               6, 3, 0, 6, 6, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
-            , HeatMixer               = new Recipe.RecipeMap(null, "ktfru.recipe.heatmixer"              , "Heat Mixer"                , null, 0, 1, RES_PATH_GUI + "machines/HeatMixer",                6, 2, 0, 6, 2, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
+            , HeatMixer               = new Recipe.RecipeMap(null, "ktfru.recipe.heatmixer"              , "Heat Mixer"                , null, 0, 1, RES_PATH_GUI + "machines/HeatMixer",                6, 3, 0, 6, 2, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
+            , UltrasonicMixer         = new Recipe.RecipeMap(null, "ktfru.recipe.ultrasonicmixer"        , "Ultrasonic Mixer"          , null, 0, 1, RES_PATH_GUI + "machines/UltrasonicMixer",          6, 3, 0, 6, 2, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , Assembler               = new Recipe.RecipeMap(null, "ktfru.recipe.assembler"              , "Circuit Assembler"         , null, 0, 1, RES_PATH_GUI + "machines/Assembler",                9, 1, 1, 1, 0, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , LaserCutter             = new Recipe.RecipeMap(null, "ktfru.recipe.lasercutter"            , "Laser Cutter"              , null, 0, 1, RES_PATH_GUI + "machines/LaserCutter",              2, 3, 1, 1, 0, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , MaskAligner             = new Recipe.RecipeMap(null, "ktfru.recipe.maskaligner"            , "Mask Aligner"              , null, 2, 1, RES_PATH_GUI + "machines/MaskAligner",              3, 3, 1, 3, 0, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)

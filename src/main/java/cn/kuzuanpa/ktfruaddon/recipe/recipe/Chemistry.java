@@ -107,9 +107,23 @@ public class Chemistry {
         RM.         Bath.               addRecipe0(T, 0, 100, FL.array(MT.Cl.gas(U5, F), flList.BrineBrRich.make(1000)), FL.array(MT.Br.liquid(U5, F), flList.BrineWaste.make(1000)));
 
         // chemical recycling
-        RM.         Bath.               addRecipe1(T, 16, 80, OP.dust.mat(matList.MagnesiumDihydroxide.get(), 5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(FL.Water.make(6000)), OP.dust.mat(MT.MgCl2, 1));
+        RM.         Bath.               addRecipe1(T, 0, 80, OP.dust.mat(matList.MagnesiumDihydroxide.get(), 5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(FL.Water.make(6000)), OP.dust.mat(MT.MgCl2, 1));
         RM.         Roasting.           addRecipe1(F, 256, 100, OP.dust.mat(MT.CaCO3, 5), OP.dust.mat(MT.Quicklime, 2));
 
+        //Graphene
+        RM.        BurnMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.Cu, 0), FL.array(flList.Acetylene.make(1000), flList.Formaldehyde.make(2000)), FL.array(flList.Butynediol.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.Pd, 0), FL.array(flList.Butynediol.make(1000), FL.Hydrogen.make(1000)), FL.array(flList.Butanediol.make(1000)), ZL_IS);
+        RM.        BurnMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.Cu, 0), FL.array(flList.Butanediol.make(1000)), FL.array(flList.Butyrolactone.make(1000), FL.Hydrogen.make(2000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe0(F, 120, 80, FL.array(MT.NH3.gas(U, true), flList.Methanol.make(1000)), FL.array(flList.Methylamine.make(1000), FL.Water.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe0(F, 120, 80, FL.array(flList.Methylamine.make(1000), flList.Butyrolactone.make(1000)), FL.array(flList.Methylpyrrolidone.make(1000), FL.Water.make(1000)), ZL_IS);
+        RM.        Mixer    .addRecipe1(F, 400, 800,OP.dust.mat(MT.Graphite, 7), FL.array(flList.Methylpyrrolidone.make(4000)), FL.array(flList.Graphite_Methylpyrrolidone.make(4000)), ZL_IS);
+        recipeMaps.UltrasonicMixer.addRecipe1(F, 800, 3600, ST.tag(0), FL.array(flList.Graphite_Methylpyrrolidone.make(4000)), FL.array(flList.Methylpyrrolidone.make(4000)), OP.dust.mat(MT.Graphite, 6), OP.foil.mat(MT.Graphene, 4));
+        recipeMaps.UltrasonicMixer.addRecipe1(F, 600, 18000, ST.tag(1), FL.array(flList.Graphite_Methylpyrrolidone.make(16000)), FL.array(flList.Methylpyrrolidone.make(16000)), OP.dust.mat(MT.Graphite, 24), OP.plate.mat(MT.Graphene, 4));
+
+        recipeMaps.CVD.addRecipe1(F, 500, 1200, ST.tag(0), FL.array(MT.CH4.gas( 3*U, true), FL.Hydrogen.make( 3000)), ZL_FS, OP.foil .mat(MT.Graphene, 1), OP.dust.mat(MT.Graphite, 2));
+        recipeMaps.CVD.addRecipe1(F, 500, 4800, ST.tag(1), FL.array(MT.CH4.gas(12*U, true), FL.Hydrogen.make(12000)), ZL_FS, OP.plate.mat(MT.Graphene, 1), OP.dust.mat(MT.Graphite, 8));
+
+        recipeMaps.LaserCutter.addRecipe1(F, 500, 200, OP.plate.mat(MT.Graphene, 1), ZL_FS, ZL_FS, OP.stick.mat(MT.Graphene, 2));
 
     }
 }

@@ -120,7 +120,7 @@ public enum ItemList implements IItemContainer{
     EngineTurbo1, EngineTurbo2,EngineTurbo3, EngineTurbo4,EngineTurbo5, EngineTurbo6,EngineTurbo7, EngineTurbo8, EngineTurboCr,
 
 
-    VibrateDetector,
+    VibrateDetector,UltrasonicGenerator,PiezoelectricCeramicPlate,
     //Chemistry
     ProtonExchangeMembrane,
 

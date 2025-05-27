@@ -117,7 +117,9 @@ public class itemCompact extends MultiItemRandom {
         ItemList.EngineTurbo8 .set(addItem(2407, "Engine Turbo (Iridium)"       , ""),new OreDictItemData(MT.Ir           ,6*U+U4));
         ItemList.EngineTurboCr.set(addItem(2408, "Engine Turbo (Chromium)"      , ""),new OreDictItemData(MT.Cr           ,6*U+U4));
 
-        ItemList.VibrateDetector.set(addItem(2500, "Vibrate Detector"       , ""),new OreDictItemData(MT.StainlessSteel,U+U9));
+        ItemList.VibrateDetector        .set(addItem(2500, "Vibrate Detector"       , ""),new OreDictItemData(MT.StainlessSteel,U+U9));
+        ItemList.UltrasonicGenerator    .set(addItem(2501, "Ultrasonic Generator"       , ""));
+        ItemList.PiezoelectricCeramicPlate    .set(addItem(2502, "Piezoelectric Ceramic Plate"       , ""));
 
     }
 }

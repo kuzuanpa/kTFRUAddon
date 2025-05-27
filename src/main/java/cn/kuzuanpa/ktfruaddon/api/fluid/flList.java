@@ -60,7 +60,7 @@ public enum flList {
     ,RecycledFuel0 ,RecycledFuel1 ,RecycledFuel2 ,RecycledFuel3 ,RecycledFuel4
     ,CrackedNaphthaLow,CrackedNaphthaMedium,CrackedNaphthaHigh, CrackedPetrolLow, CrackedPetrolMedium, CrackedPetrolHigh
     ,MoltenTeflon,MoltenBakelite,MoltenNaK,HotMoltenNaK, MoltenPolycarbonate
-    ,/**苦卤**/Bittern,/**卤水**/Brine,/**除镁卤水**/BrineMgFree,/**富溴卤水**/BrineBrRich,/**废卤**/BrineWaste
+    ,/**苦卤**/Bittern,/**卤水**/Brine,/**除镁卤水**/BrineMgFree,/**富溴卤水**/BrineBrRich,/**废卤**/BrineWaste, /**丁炔二醇**/Butynediol, /**丁二醇**/Butanediol, /**γ-丁内酯**/Butyrolactone,/**一甲胺**/Methylamine, /**甲基吡咯烷酮**/Methylpyrrolidone, /**石墨-甲基吡咯烷酮**/Graphite_Methylpyrrolidone
     ;
     public Fluid fluid;
     public String name;

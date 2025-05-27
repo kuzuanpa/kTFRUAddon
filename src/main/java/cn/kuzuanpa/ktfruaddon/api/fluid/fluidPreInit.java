@@ -252,5 +252,12 @@ public class fluidPreInit {
         flList.BrineMgFree.register("BrineMgFree","Magnesium Free Brine",null,LIQUID);
         flList.BrineBrRich.register("BrineBrRich","Bromine Rich Brine",null,LIQUID);
         flList.BrineWaste.register("BrineWaste","Waste Brine",null,LIQUID);
+
+        flList.Butynediol.register("Butynediol","Butynediol", null, LIQUID);
+        flList.Butanediol.register("Butanediol","Butanediol", null, LIQUID);
+        flList.Butyrolactone.register("Butyrolactone" ,"Butyrolactone" , null, LIQUID);
+        flList.Methylamine.register("Methylamine" ,"Methylamine" , null, LIQUID);
+        flList.Methylpyrrolidone.register("Methylpyrrolidone" ,"Methylpyrrolidone" , null, LIQUID);
+        flList.Graphite_Methylpyrrolidone.register("Graphite_Methylpyrrolidone","Graphite_Methylpyrrolidone", null, LIQUID);
     }
 }

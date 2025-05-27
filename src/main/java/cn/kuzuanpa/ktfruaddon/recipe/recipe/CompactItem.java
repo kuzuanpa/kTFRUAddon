@@ -121,6 +121,10 @@ public class CompactItem {
         CR.shaped(ItemList.VibrateDetector.get(1),CR.DEF,"hR ","RBR"," Rw",'R', OP.ring.mat(MT.StainlessSteel,1),'B',OP.nugget.mat(MT.StainlessSteel   ,1));
         recipeMaps.Assembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
 
+        recipeMaps.HeatMixer.addRecipe2(F, 240, 64, OP.dust.mat(MT.Ba, 1), OP.dust.mat(MT.TiO2, 1), FL.array(FL.CarbonDioxide.make(1000)), ZL_FS, OP.dust.mat(matList.BariumTitanate.get(), 1));
+        RM.Lightning.addRecipe2(F, 240, 64, ST.tag(3), OP.plateTiny.mat(matList.BariumTitanate.get(), 1), FL.array(FL.DistW.make(100)), ZL_FS, ItemList.PiezoelectricCeramicPlate.get(1));
+        recipeMaps.Assembler.addRecipe2(F, 240, 64, ItemList.PiezoelectricCeramicPlate.get(1), OP.wireFine.mat(MT.Ag, 1), FL.array(MT.SolderingAlloy.liquid(U10, true)), ZL_FS, ItemList.UltrasonicGenerator.get(1));
+
         RM.Canner.addRecipe2(F, 16, 16, OP.bolt.mat(MT.Co, 4), IL.Reactor_Rod_Empty.get(1), kRegistry.getItem(9980));
     }
 }

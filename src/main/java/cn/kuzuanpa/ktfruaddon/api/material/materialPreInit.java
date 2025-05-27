@@ -296,19 +296,19 @@ public class materialPreInit {
         matList.PitchblendeCinder.registerC(22095,"PitchblendeCinder","Pitchblende Cinder",1505,3871,145, 240,  50,160,"")
                 .put(TD.ItemGenerator.DUSTS);
         //硅烷
-        matList.Silane.registerC(22096,"Silane","Silane",-185,-112,255,255,255,130,"H4Si")
+        matList.Silane.registerC(22096,"Silane","Silane",-185,-112,255,255,255,130,"H"+NUM_SUB[4]+"Si")
                 .put();
         //硅化镁
-        matList.MagnesiumSilicide.registerC(22097,"MagnesiumSilicide","MagnesiumSilicide",1102,1200,255,255,255,130,"Mg2Si")
+        matList.MagnesiumSilicide.registerC(22097,"MagnesiumSilicide","MagnesiumSilicide",1102,1200,255,255,255,130,"Mg"+NUM_SUB[2]+"Si")
                 .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
         //氯化铵
-        matList.AmmoniumChloride.registerC(22098,"AmmoniumChloride","AmmoniumChloride",340,653,255,255,255,130,"NH4Cl")
+        matList.AmmoniumChloride.registerC(22098,"AmmoniumChloride","AmmoniumChloride",340,653,255,255,255,130,"NH"+NUM_SUB[4]+"Cl")
                 .put(TD.ItemGenerator.DUSTS);
         //四氟化硅
-        matList.SiliconTetrafluoride.registerC(22099,"SiliconTetrafluoride","SiliconTetrafluoride",-90,-86,255,255,255,130,"SiF4")
+        matList.SiliconTetrafluoride.registerC(22099,"SiliconTetrafluoride","SiliconTetrafluoride",-90,-86,255,255,255,130,"SiF"+NUM_SUB[4])
                 .put(TD.ItemGenerator.GASES);
         //四氢铝钠
-        matList.SodiumAluminiumHydride.registerC(22100,"SodiumAluminiumHydride","SodiumAluminiumHydride",178,231,255,255,255,130,"NaAlH4")
+        matList.SodiumAluminiumHydride.registerC(22100,"SodiumAluminiumHydride","SodiumAluminiumHydride",178,231,255,255,255,130,"NaAlH"+NUM_SUB[4])
                 .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
         //智金
         matList.Ij.registerC(22101,"intellite","Intellite",118,132,213,221,255,255,"Ij")
@@ -316,8 +316,11 @@ public class materialPreInit {
                 .ores(MT.Ag, MT.OREMATS.Ilmenite);
 
         //氢氧化镁
-        matList.MagnesiumDihydroxide.registerC(22102,"MagnesiumDihydroxide","MagnesiumDihydroxide",350,2804,255,255,255,60,"Mg(OH)2") // i don't know which color is better so i put a random number in
-                  .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS);
+        matList.MagnesiumDihydroxide.registerC(22102,"MagnesiumDihydroxide","MagnesiumDihydroxide",350,2804,255,255,255,150,"Mg(OH)"+NUM_SUB[2]) // i don't know which color is better so i put a random number in
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS);
+        //钛酸钡
+        matList.BariumTitanate.registerC(22103,"BariumTitanate","BariumTitanate",2100,3205,230,255,180,150,"BaTiO"+NUM_SUB[3])
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES);
 
     }
 }
