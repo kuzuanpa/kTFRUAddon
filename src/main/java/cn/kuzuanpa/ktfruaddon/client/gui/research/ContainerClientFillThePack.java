@@ -15,11 +15,14 @@
 package cn.kuzuanpa.ktfruaddon.client.gui.research;
 
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
+import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableFillInPack;
+import gregapi.data.LH;
 import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -31,7 +34,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
@@ -46,14 +48,20 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         theGame = ((ResearchTableFillInPack) mContainer.mTileEntity).theGameClient;
         puzzleSize =  totalSize/(theGame.size+1);
     }
+    public void reinitGame(){
+        theGame = ((ResearchTableFillInPack) mContainer.mTileEntity).theGameClient;
+        puzzleSize =  totalSize/(theGame.size+1);
+        initGui();
+    }
     final ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
     final ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
-    final Random rng = new Random();
+
     protected int totalSize = 180;
     protected int puzzleSize;
     ShapeButton selectedButton, selectedButtonOld;
     float buttonX = -1 , buttonY = -1, buttonToGoX = -1, buttonToGoY = -1, buttonOldX= -1, buttonOldY = -1, buttonOldToGoX = -1, buttonOldToGoY = -1;
     int mouseStartX=-1,mouseStartY=-1, buttonOriginX = -1, buttonOriginY= -1, currentFocusX = -1, currentFocusY = -1;
+    public Text text = null;
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         GL11.glEnable(GL11.GL_BLEND);
@@ -69,6 +77,10 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         if(selectedButton != null) tickSelectedButton();
         if(selectedButtonOld != null) tickSelectedButtonOld();
         if(selectedButtonOld != null) tryDisposeOldSelectedButton();
+        if(((ResearchTableFillInPack) mContainer.mTileEntity).clientGameUpdated && ((ResearchTableFillInPack) mContainer.mTileEntity).theGameClient.size>0){
+            reinitGame();
+            ((ResearchTableFillInPack) mContainer.mTileEntity).clientGameUpdated = false;
+        }
         GL11.glColor4f(1,1,1,1);
         super.drawScreen2(p_73863_1_, p_73863_2_, p_73863_3_);
     }
@@ -97,10 +109,11 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     public boolean tryPlaceShapeOnGround(){
         if(currentFocusX == -1)return false;
         TileEntity t = (TileEntity) mContainer.mTileEntity;
-        if (!((ResearchTableFillInPack) t).theGameClient.placeTile(selectedButton.shape, currentFocusX, currentFocusY, false)) return false;
+        if (!theGame.placeTile(selectedButton.shape, currentFocusX, currentFocusY, false)) return false;
 
         kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,1, (byte) selectedButton.shapeID, (byte)currentFocusX, (byte)currentFocusY)) ;
         expireSelectedButton((width-totalSize)/2 + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize);
+        if(theGame.checkWin(true) && text != null)text.text = LH.get(I18nHandler.RESEARCH_TABLE_FILL_WIN) +": "+ theGame.calculateScore();
         return true;
     }
 
@@ -121,11 +134,12 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         selectedButtonOld.xPosition = (int)buttonOldX;
         selectedButtonOld.yPosition = (int)buttonOldY;
     }
-
     @Override
     public void addButtons() {
         AtomicInteger i = new AtomicInteger();
         buttons.add(new kGuiButtonBase(i.getAndIncrement(),0,0,20,20,"x"));
+        text = new Text(i.getAndIncrement(),LH.get(I18nHandler.RESEARCH_TABLE_FILL_TITLE) +": "+ theGame.calculateScore(),(width-120)/2, (int) (height*0.9));
+        buttons.add(text);
         //for (byte x = 0; x < theGame.size; x++) for (byte y = 0; y < theGame.size; y++) buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 + x*puzzleSize,16 + y*puzzleSize,puzzleSize, x,y));
         buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 ,16, totalSize));
 
@@ -138,7 +152,7 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     @Override
     public boolean onButtonPressed(GuiButton button, int mouseX, int mouseY) {
         TileEntity t = (TileEntity) mContainer.mTileEntity;
-        if(button.id<1)kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,button.id));
+        if(button.id==0)kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,button.id));
         if(button instanceof ShapeButton){
             selectButton((ShapeButton) button, mouseX, mouseY);
             mouseStartX=mouseX;
@@ -153,7 +167,7 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         buttonY = buttonOriginY = selectedButton.yPosition;
         TileEntity t = (TileEntity) mContainer.mTileEntity;
         if(isPosInGround(mouseX, mouseY)){
-            ((ResearchTableFillInPack) t).theGameClient.removeTile(selectedButton.shape);
+            theGame.removeTile(selectedButton.shape);
             kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord, -1, (byte)button.shapeID));
         }
     }
@@ -226,6 +240,9 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         @Override
         public void destroy() {
             super.destroy();
+            TileEntity t = (TileEntity) mContainer.mTileEntity;
+            if(theGame.ended)kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,-100));
+
             GL11.glDeleteLists(glListID, 1);
         }
     }

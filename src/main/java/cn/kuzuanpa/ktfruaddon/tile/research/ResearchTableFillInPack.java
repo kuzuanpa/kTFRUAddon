@@ -19,10 +19,20 @@ import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientFillThePack;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonFillThePack;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
+import gregapi.data.CS;
+import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,10 +42,30 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
+import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.RESEARCH_TABLE_FILL_SCORES;
+
 public class ResearchTableFillInPack extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
     public ResearchTableFillInPack.PuzzleGame theGame= new PuzzleGame(0,0);
     public ResearchTableFillInPack.PuzzleGame theGameClient = new PuzzleGame(0,0);
-    public boolean theGameNeedSync = true;
+    public boolean theGameNeedSync = true, clientGameUpdated = false;
+    public long scores = 0;
+    public byte size = 5, tileCount = 10;
+
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if(isServerSide())switch (aTool) {
+            case CS.TOOL_magnifyingglass:
+                aChatReturn.add(LH.get(RESEARCH_TABLE_FILL_SCORES) + ": " + scores);
+                return 1;
+            case CS.TOOL_screwdriver:
+                size = (byte) Math.max(4,Math.min(24, Math.abs(size + (aPlayer.isSneaking() ? -1 : 1))));
+                return 1;
+            case CS.TOOL_monkeywrench:
+                tileCount = (byte) Math.max(4,Math.min(63, Math.abs(tileCount + (aPlayer.isSneaking() ? -1 : 1))));
+                return 1;
+        }
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
 
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.fill_pack";}
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
@@ -62,7 +92,10 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
         PuzzleGame theGame = PuzzleGame.loadFromByteArray(aData);
-        if(theGame != null)theGameClient = theGame;
+        if(theGame != null){
+            theGameClient = theGame;
+            clientGameUpdated = true;
+        }
     }
 
     @Override
@@ -74,25 +107,45 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
 
     @Override
     public void onContainerButtonClick(int buttonID, byte @Nullable [] data) {
-        if(data == null)return;
+        if(buttonID == -100){
+            theGame = new PuzzleGame(0,0);
+            theGameNeedSync=true;
+        }
         if(buttonID == 0){
-            theGame = new PuzzleGame((byte)16,(byte)4);
+            theGame = new PuzzleGame(size, tileCount);
             theGame.initializeGame();
             theGameNeedSync=true;
         }
+        if(data == null)return;
         if(buttonID == -1)theGame.removeTile(theGame.tiles.get(data[0]));
-        if(buttonID == 1)theGame.placeTile(theGame.tiles.get(data[0]), data[1], data[2], false);
+        if(buttonID == 1){
+            theGame.placeTile(theGame.tiles.get(data[0]), data[1], data[2], false);
+            if(theGame.checkWin(true))scores += theGame.calculateScore();
+        }
     }
 
     @Override
     public boolean allowInteraction(Entity aEntity) {
         return super.allowInteraction(aEntity);
     }
+    // Icons
+    public final static IIconContainer
+            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/research/table/fill/base"),
+            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/research/table/fill/front");
+
+
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if(aSide==mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlayStop ));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
+    }
 
     public static class PuzzleGame {
 
-        private static final int MIN_TILE_SIZE = 2;
+        private static final int MIN_TILE_SIZE = 1;
         private static final int MAX_ATTEMPTS = 5;
+        public boolean ended = false;
         public byte size;
         public byte tileCount;
         public HashMap<Byte, PuzzleShape> tiles;
@@ -107,12 +160,10 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             this.tiles = new HashMap<>();
             this.placedPoints = new HashSet<>();
         }
-        public double calculateScore() {
-            if (!checkWin()) return 0; // 仅当游戏成功时计分
-
-            final double baseComplexity = Math.pow(size, 2); // 基础复杂度与尺寸相关
-            final double optimalRatio = 0.3; // 最佳图块数量占比经验值
-            final double penaltyFactor = 2.5; // 偏离最佳值的惩罚系数
+        public long calculateScore() {
+            final double baseComplexity = Math.pow(size, 1.8); // 基础复杂度与尺寸相关
+            final double optimalRatio = 0.25; // 最佳情况下的区块平均大小倒数
+            final double penaltyFactor = 8; // 偏离最佳值的惩罚系数
 
             double totalCells = size * size;
             double actualRatio = tileCount / totalCells;
@@ -125,7 +176,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             // 限制极值情况
             double minScore = Math.sqrt(size + tileCount/4f);
             double maxScore = baseComplexity * 10;
-            return Math.max(minScore, Math.min(score, maxScore));
+            return Math.round(Math.pow(Math.max(minScore, Math.min(score, maxScore)),1.3));
         }
         public byte[] saveToByteArray() {
             try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -202,7 +253,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             while (regions.size() < tileCount) {
                 // 优先选择最大的区域进行分裂
                 Set<Point> largest = findLargestRegion(regions);
-                if (largest == null || largest.size() < MIN_TILE_SIZE * 2) break;
+                if (largest == null || largest.size() <= 1) break;
 
                 List<Set<Point>> splitResult = splitRegion(largest, random);
                 if (splitResult != null) {
@@ -211,7 +262,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                 } else {
                     // 尝试强制分裂较小的区域
                     Optional<Set<Point>> splittable = regions.stream()
-                            .filter(r -> r.size() >= MIN_TILE_SIZE * 2)
+                            .filter(r -> r.size() > 1)
                             .findFirst();
                     if (!splittable.isPresent()) break;
                     regions.remove(splittable.get());
@@ -241,7 +292,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
                 int maxSplit = (int)(region.size() * 0.6);
                 minSplit = Math.max(MIN_TILE_SIZE, minSplit);
                 maxSplit = Math.min(region.size() - MIN_TILE_SIZE, maxSplit);
-                if (minSplit > maxSplit) return null;
+                if (minSplit > maxSplit) return Collections.singletonList(region);
 
                 int targetSize = minSplit + random.nextInt(maxSplit - minSplit + 1);
 
@@ -287,7 +338,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
         }
 
         private boolean isValidSplit(Set<Point> a, Set<Point> b) {
-            return a.size() >= MIN_TILE_SIZE && b.size() >= MIN_TILE_SIZE &&
+            return !a.isEmpty() && !b.isEmpty() &&
                     isConnected(a) && isConnected(b);
         }
 
@@ -360,8 +411,10 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             tile.placedOnY=-1;
         }
 
-        public boolean checkWin() {
-            return placedPoints.size() == size * size;
+        public boolean checkWin(boolean terminateGame) {
+            boolean result = !ended && placedPoints.size() == size * size;
+            if(result && terminateGame)ended = true;
+            return result;
         }
 
         public static class PuzzleShape {

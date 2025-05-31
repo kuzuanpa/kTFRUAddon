@@ -23,6 +23,10 @@ import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonResearchTreeMon
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import net.minecraft.block.Block;
@@ -34,6 +38,7 @@ import java.io.*;
 
 public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick {
     public boolean treeNeedSync = false;
+    @Override public boolean isUseableByPlayerGUI(EntityPlayer aPlayer) {return !isDead() && allowInteraction(aPlayer);}
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
     public ResearchTree theTree = new ResearchTree((byte)0);
     public ResearchProject currentProject = null;
@@ -45,7 +50,7 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()) {
+        if (isServerSide() && !aPlayer.isSneaking()) {
             openGUI(aPlayer, aSide);
             return true;
         }
@@ -99,11 +104,6 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     }
 
     @Override
-    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return null;
-    }
-
-    @Override
     public void onContainerButtonClick(int buttonID, byte @Nullable [] data) {
         try {
             if(data == null)return;
@@ -114,7 +114,18 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
             if(currentProject != null && !currentProject.isUnlocked)currentProject = null;
         } catch (IOException e) {}
     }
+    // Icons
+    public final static IIconContainer
+            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/research/monitor/base"),
+            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/research/monitor/front");
 
+
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if(aSide==mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlayStop ));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
+    }
     @Override
     public boolean canDrop(int aSlot) {
         return false;
