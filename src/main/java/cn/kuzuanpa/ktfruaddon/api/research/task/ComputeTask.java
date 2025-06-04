@@ -40,10 +40,13 @@ public class ComputeTask implements IResearchTask{
     }
 
     @Override
-    public boolean tryPromoteProgress(Object consume) {
-        boolean isEqual = consume instanceof SingleEntry && ((SingleEntry<?,?>) consume).getKey() instanceof ComputePower && ((SingleEntry<?,?>) consume).getValue() instanceof Long;
-        if(isEqual)finishedCount += (Long) ((SingleEntry<?, ?>) consume).getValue();
-        return isEqual;
+    public long tryPromoteProgress(Object consume, boolean dryRun) {
+        if(!(consume instanceof SingleEntry && ((SingleEntry<?,?>) consume).getKey() instanceof ComputePower && ((SingleEntry<?,?>) consume).getValue() instanceof Long))return 0;
+        long avail = (Long) ((SingleEntry<?, ?>) consume).getValue();
+        if(requiredPower > avail)return 0;
+        long consumeAmount = Math.min(avail, requiredAmount - finishedCount);
+        if(!dryRun)finishedCount += consumeAmount;
+        return consumeAmount;
     }
 
     @Override

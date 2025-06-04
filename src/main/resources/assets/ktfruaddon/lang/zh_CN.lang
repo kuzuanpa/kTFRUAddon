@@ -114,6 +114,17 @@ ktfru.text.machine.tfc.watermill.2=每根木头都在正确的位置上, 看起�
 ktfru.text.machine.tfc.watermill.3=你箍紧了一些木头, 水车又恢复了工作.
 ktfru.text.machine.fuelbattery.0=需求电解质量: %sL
 
+ktfru.ui.research.viewer.selected.empty=选择一个项目以显示详情
+ktfru.ui.research.viewer.selected=项目详情
+ktfru.ui.research.viewer.current=当前项目
+ktfru.ui.research.viewer.click.view=点击显示详情
+ktfru.ui.research.viewer.click.research=再次点击开始研究此项目
+ktfru.ui.research.viewer.click.locked=请先完成前置项目
+ktfru.ui.research.table.fill.title=将芯片填入电路板!完成此电路将获得空间规划点数
+ktfru.ui.research.table.fill.win=电路运行顺利!你获得了空间规划点数
+ktfru.ui.research.table.fill.scores=当前可用的空间规划点数
+ktfru.ui.research.table.fill.reload=更换新的电路板
+
 ktfru.msg.outdated=检测到TFRU有更新, 请及时升级! 如果遇到bug, 请升级重新测试后再反馈!
 
 ktfru.tooltip.multiblock.distilltower.1=3x1x3 热吸收装置

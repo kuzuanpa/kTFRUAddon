@@ -15,12 +15,16 @@
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
+import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.data.CS;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +40,21 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        monitorCoord = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, -1,0,0);
+    }
+
+    @Override
+    public boolean[] getValidSides() {
+        return CS.SIDES_HORIZONTAL;
+    }
+    @Override
+    public byte getDefaultSide() {
+        return CS.SIDE_FRONT;
     }
 
     @Override
@@ -64,18 +83,18 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle {
         super.onTick2(aTimer, aIsServerSide);
     }
 
-    public void updateMonitorCoord(){
-    }
+    public void updateMonitorCoord(){}
 
     public void checkMonitor(long aTimer){
         if(monitorCoord == null || aTimer % 10 != 0)return;
         TileEntity tile = WD.te(getWorldObj(),monitorCoord, false);
         if(tile instanceof ResearchTreeMonitor) monitor = ((ResearchTreeMonitor) tile);
+        else if(tile instanceof ResearchTableBase) monitor = ((ResearchTableBase) tile).monitor;
         else monitor = null;
     }
 
-    public boolean tryPromoteProjectProgress(@Nullable Object consume){
-        return getCurrentProject() != null && getCurrentProject().tasks.stream().anyMatch(task -> task.tryPromoteProgress(consume));
+    public long tryPromoteCurrentProjectProgress(Class<? extends IResearchTask> taskType, @Nullable Object consume, boolean dryRun){
+        return getCurrentProject() == null?0: getCurrentProject().tryPromoteResearchProgress(taskType,consume, dryRun);
     }
 
     public @Nullable ResearchProject getCurrentProject(){

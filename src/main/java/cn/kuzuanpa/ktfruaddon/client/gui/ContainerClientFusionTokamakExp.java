@@ -16,7 +16,7 @@ package cn.kuzuanpa.ktfruaddon.client.gui;
 
 import cn.kuzuanpa.ktfruaddon.client.gui.button.CommonGuiButton;
 import cn.kuzuanpa.ktfruaddon.api.code.codeUtil;
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUserInterface;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -52,11 +52,11 @@ public class ContainerClientFusionTokamakExp extends ContainerClientbase {
 		ContainerCommonFusionTokamakExp container = (ContainerCommonFusionTokamakExp) mContainer;
 		fontRendererObj.drawString(LH.get("ktfru.ui.multiblock.fusion.tokamak.exp.0"), 84,  1, 4210752);
 		switch (container.mState){
-			case STATE_STOPPED      : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_STOPPED   ), 84,  9, 4210752); break;
-			case STATE_CHARGING     : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_CHARGING  ), 84,  9, 0x77eeee);break;
-			case STATE_RUNNING      : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_RUNNING   ), 84,  9, 0x00ffff);break;
-			case STATE_ERROR        : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_ERROR     ), 84,  9, 0xff0000);break;
-			case STATE_VOID_CHARGING: fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_VOIDCHARGE), 84,  9, 0xffff00);break;
+			case STATE_STOPPED      : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_STOPPED   ), 84,  9, 4210752); break;
+			case STATE_CHARGING     : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_CHARGING  ), 84,  9, 0x77eeee);break;
+			case STATE_RUNNING      : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_RUNNING   ), 84,  9, 0x00ffff);break;
+			case STATE_ERROR        : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_ERROR     ), 84,  9, 0xff0000);break;
+			case STATE_VOID_CHARGING: fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_VOIDCHARGE), 84,  9, 0xffff00);break;
 		}
 		fontRendererObj.drawString(LH.get("ktfru.ui.multiblock.fusion.tokamak.exp.1"), 84,  17, 4210752);
 		int color = container.mState==STATE_STOPPED?4210752: container.mFieldStrength==400? 0x00ff00:container.mFieldStrength>300? 0xfffff: container.mFieldStrength>100? 0xffff00 :0xff0000;

@@ -17,7 +17,7 @@ package cn.kuzuanpa.ktfruaddon.client.gui;
 
 import cn.kuzuanpa.ktfruaddon.client.gui.button.CommonGuiButton;
 import cn.kuzuanpa.ktfruaddon.api.code.codeUtil;
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUserInterface;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -53,11 +53,11 @@ public class ContainerClientFusionTokamakT1 extends ContainerClientbase {
 		ContainerCommonFusionTokamakT1 container = (ContainerCommonFusionTokamakT1) mContainer;
 		fontRendererObj.drawString(LH.get("ktfru.ui.multiblock.fusion.tokamak.t1.0"), 120- fontRendererObj.getStringWidth(LH.get("ktfru.ui.multiblock.fusion.tokamak.t1.0"))/2,  10, 4210752);
 		switch (container.mState){
-			case STATE_STOPPED      : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_STOPPED   ), 120- fontRendererObj.getStringWidth(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_STOPPED   ))/2,  19, 0xffffff); break;
-			case STATE_CHARGING     : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_CHARGING  ), 120- fontRendererObj.getStringWidth(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_CHARGING  ))/2,  19, 0x77eeee);break;
-			case STATE_RUNNING      : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_RUNNING   ), 120- fontRendererObj.getStringWidth(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_RUNNING   ))/2,  19, 0x00ffff);break;
-			case STATE_ERROR        : fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_ERROR     ), 120- fontRendererObj.getStringWidth(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_ERROR     ))/2,  19, 0xff0000);break;
-			case STATE_VOID_CHARGING: fontRendererObj.drawString(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_VOIDCHARGE), 120- fontRendererObj.getStringWidth(LH.get(kUserInterface.FUSION_TOKAMAK_STATE_VOIDCHARGE))/2,  19, 0xffff00);break;
+			case STATE_STOPPED      : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_STOPPED   ), 120- fontRendererObj.getStringWidth(LH.get(kUII18n.FUSION_TOKAMAK_STATE_STOPPED   ))/2,  19, 0xffffff); break;
+			case STATE_CHARGING     : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_CHARGING  ), 120- fontRendererObj.getStringWidth(LH.get(kUII18n.FUSION_TOKAMAK_STATE_CHARGING  ))/2,  19, 0x77eeee);break;
+			case STATE_RUNNING      : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_RUNNING   ), 120- fontRendererObj.getStringWidth(LH.get(kUII18n.FUSION_TOKAMAK_STATE_RUNNING   ))/2,  19, 0x00ffff);break;
+			case STATE_ERROR        : fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_ERROR     ), 120- fontRendererObj.getStringWidth(LH.get(kUII18n.FUSION_TOKAMAK_STATE_ERROR     ))/2,  19, 0xff0000);break;
+			case STATE_VOID_CHARGING: fontRendererObj.drawString(LH.get(kUII18n.FUSION_TOKAMAK_STATE_VOIDCHARGE), 120- fontRendererObj.getStringWidth(LH.get(kUII18n.FUSION_TOKAMAK_STATE_VOIDCHARGE))/2,  19, 0xffff00);break;
 		}
 
 		fontRendererObj.drawString(LH.get("ktfru.ui.multiblock.fusion.tokamak.t1.2"), 120- fontRendererObj.getStringWidth(LH.get("ktfru.ui.multiblock.fusion.tokamak.t1.2"))/2,  31, 4210752);

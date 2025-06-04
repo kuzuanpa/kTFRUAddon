@@ -14,16 +14,14 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research.task.minigame;
 
-import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchGameTypes;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
+import net.minecraft.util.IIcon;
 
-public abstract class MiniGameTaskBase implements IResearchTask {
-    public ResearchGameTypes type;
+public class MiniGameFillTask implements IResearchTask {
     public long requiredAmount;
     public long finishedCount;
-    public MiniGameTaskBase(ResearchGameTypes type, long requiredAmount) {
-        this.type = type;
+    public MiniGameFillTask(long requiredAmount) {
         this.requiredAmount = requiredAmount;
     }
     @Override
@@ -37,10 +35,10 @@ public abstract class MiniGameTaskBase implements IResearchTask {
     }
 
     @Override
-    public boolean tryPromoteProgress(Object consume) {
-        boolean isEqual = consume instanceof SingleEntry && ((SingleEntry<?,?>) consume).getKey() instanceof ResearchGameTypes && ((SingleEntry<?,?>) consume).getValue() instanceof Long;
-        if(isEqual)finishedCount += (Long) ((SingleEntry<?, ?>) consume).getValue();
-        return isEqual;
+    public long tryPromoteProgress(Object consume, boolean dryRun) {
+        long consumeAmount = Math.min((long)consume, requiredAmount - finishedCount);
+        if(!dryRun)finishedCount += consumeAmount;
+        return consumeAmount;
     }
 
     @Override
@@ -49,7 +47,12 @@ public abstract class MiniGameTaskBase implements IResearchTask {
     }
 
     @Override
+    public IIcon getIcon() {
+        return null;
+    }
+
+    @Override
     public String getIdentifier() {
-        return String.valueOf(type.ordinal());
+        return String.valueOf(ResearchGameTypes.FillPack.ordinal());
     }
 }

@@ -32,18 +32,21 @@ public class ResearchProject {
     public int posY = 0;
     public int layer = 0;
     public final List<ResearchProject> prerequisites = new ArrayList<>();
+    public final List<ResearchProject> postResearches = new ArrayList<>();
     public final List<IResearchTask> tasks = new ArrayList<>();
+    public final short printItemMeta;
     public boolean isUnlocked = false;
     public boolean isCompleted = false;
 
-    public ResearchProject(ResearchTree tree, String id, String desc) {
-        this(tree, id, desc,null,0);
+    public ResearchProject(ResearchTree tree, String id, String desc, int printItemMeta) {
+        this(tree, id, desc,null,0, printItemMeta);
     }
-    public ResearchProject(ResearchTree tree, String id, String desc, Item icon, int iconMeta) {
+    public ResearchProject(ResearchTree tree, String id, String desc, Item icon, int iconMeta, int printItemMeta) {
         this.id = id;
         this.desc = desc;
         this.iconItem = icon;
         this.iconItemMeta = iconMeta;
+        this.printItemMeta=(short)printItemMeta;
         if(tree != null)tree.addResearchItem(this);
     }
     public ResearchProject setPos(int x, int y){
@@ -64,6 +67,7 @@ public class ResearchProject {
         for (ResearchProject prerequisite : prerequisites) {
             if(prerequisite.id.equals("root"))this.layer=Math.max(1,this.layer);
             else this.layer = Math.max(this.layer, prerequisite.layer+1);
+            prerequisite.postResearches.add(this);
             this.prerequisites.add(prerequisite);
         }
         return this;
@@ -94,18 +98,28 @@ public class ResearchProject {
     public List<IResearchTask> getTasks() {
         return tasks;
     }
-
-    public boolean tryPromoteResearchProgress(Object consume) {
-        return tasks.stream().anyMatch(task->task.tryPromoteProgress(consume));
-    }
-    public boolean areAllTasksCompleted() {
-        for (IResearchTask task : tasks) {
-            if (!task.isCompleted()) {
-                return false;
-            }
+    public boolean tryUnlock(){
+        if(getPrerequisites().stream().allMatch(project -> project.isCompleted)){
+            isUnlocked = true;
+            return true;
         }
-        return true;
+        return false;
     }
+    public long tryPromoteResearchProgress(Class<? extends IResearchTask> taskType, Object consume, boolean dryRun) {
+        if(this.isCompleted)return 0;
+        long consumeAmount = 0;
+        for (IResearchTask task : tasks) if (taskType.isInstance(task) && !task.isCompleted()) {
+            consumeAmount = task.tryPromoteProgress(consume, dryRun);
+            break;
+        }
+        if(consumeAmount > 0 && tasks.stream().allMatch(IResearchTask::isCompleted))onCompleted();
+        return consumeAmount;
+    }
+    public void onCompleted(){
+        isCompleted = true;
+        postResearches.forEach(ResearchProject::tryUnlock);
+    }
+
     public static class TestTask implements IResearchTask {
 
         public TestTask(Item item){
@@ -118,7 +132,7 @@ public class ResearchProject {
 
         @Override
         public long getRequiredProgress() {
-            return 12000000000000L;
+            return 120L;
         }
 
         @Override
@@ -127,8 +141,8 @@ public class ResearchProject {
         }
 
         @Override
-        public boolean tryPromoteProgress(Object consumed) {
-            return false;
+        public long tryPromoteProgress(Object consumed, boolean dryRun) {
+            return 1;
         }
 
         @Override

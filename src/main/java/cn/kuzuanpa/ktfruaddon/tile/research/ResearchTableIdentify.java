@@ -22,6 +22,7 @@ import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +50,10 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
     public IPacket getClientDataPacket(boolean aSendAll) {
         return getClientDataPacketByteArrayLong(aSendAll, theGame.saveToByteArray());
     }
-
+    @Override
+    public void updateMonitorCoord() {
+        monitorCoord = new ChunkCoordinates(xCoord, yCoord -1, zCoord);
+    }
     @Override
     public INetworkHandler getNetworkHandler() {
         return ktfruaddon.kNetworkHandler;

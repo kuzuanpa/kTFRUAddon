@@ -29,9 +29,11 @@
 package cn.kuzuanpa.ktfruaddon.api.research;
 
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
+import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTask;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.data.MT;
 import gregapi.data.OP;
+import gregapi.util.ST;
 import gregapi.util.UT;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,12 +62,12 @@ public class ResearchTree {
     }
     public void putTestValues(){
 
-        ResearchProject a = new ResearchProject(this, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，找回地球上最实用的工具：芯片", AdvancedRocketryItems.itemIC, 0).setPos(60,130);
-        ResearchProject b = new ResearchProject(this, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0).setPos(60,20);
-        ResearchProject c = new ResearchProject(this, "芯片理论", "研究半导体特性，了解其在芯片制造中的关键作用", Items.paper, 0).setPos(180,10);
-        ResearchProject d = new ResearchProject(this, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si,0).getItem(), MT.Si.mID).setPos(180,130);
-        ResearchProject e = new ResearchProject(this, "半导体电路设计", "是时候设计一个基本的计算器了，它将你从繁重的笔算心算中解放出来", Items.paper, 0).setPos(320,130);
-        ResearchProject f = new ResearchProject(this, "进阶电路设计", "利用计算器进一步改进电路，你认为你离真正的发电机不远了", Items.paper, 0).setPos(340,10);
+        ResearchProject a = new ResearchProject(this, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，找回地球上最实用的工具：芯片", AdvancedRocketryItems.itemIC, 0, 1).setPos(60,130);
+        ResearchProject b = new ResearchProject(this, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, 2).setPos(60,20);
+        ResearchProject c = new ResearchProject(this, "芯片理论", "研究半导体特性，了解其在芯片制造中的关键作用", Items.paper, 0, 3).setPos(180,10);
+        ResearchProject d = new ResearchProject(this, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si,0).getItem(), MT.Si.mID, 4).setPos(180,130);
+        ResearchProject e = new ResearchProject(this, "半导体电路设计", "是时候设计一个基本的计算器了，它将你从繁重的笔算心算中解放出来", Items.paper, 0, 5).setPos(320,130);
+        ResearchProject f = new ResearchProject(this, "进阶电路设计", "利用计算器进一步改进电路，你认为你离真正的发电机不远了", Items.paper, 0, 6).setPos(340,10);
         a.addPrerequisite(rootItem);
         b.addPrerequisite(rootItem);
 
@@ -77,18 +79,14 @@ public class ResearchTree {
         e.addPrerequisite(d);
         f.addPrerequisite(e);
 
-        a.isUnlocked =true;
-        b.isUnlocked =true;
-        c.isUnlocked =true;
-
-        a.tasks.add(new ResearchProject.TestTask(Items.iron_ingot));
-        b.tasks.add(new ResearchProject.TestTask(Items.glowstone_dust));
-        b.tasks.add(new ResearchProject.TestTask(Items.glass_bottle));
+        a.tasks.add(new ItemConsumeTask(ST.make(Items.iron_ingot, 32, 0)));
+        b.tasks.add(new ItemConsumeTask(ST.make(Items.iron_ingot, 32, 0)));
         c.tasks.add(new ResearchProject.TestTask(Items.glass_bottle));
         d.tasks.add(new ResearchProject.TestTask(Items.water_bucket));
         e.tasks.add(new ResearchProject.TestTask(Items.paper));
+        init();
     }
-    public ResearchProject rootItem = new ResearchProject(this,"计算学","算力的提升是万物的基础");
+    public ResearchProject rootItem = new ResearchProject(this,"计算学","算力的提升是万物的基础", -1);
 
     private void removeChildRecursively(ResearchProject current, ResearchProject target) {
         List<ResearchProject> children = current.getPrerequisites();
@@ -97,15 +95,20 @@ public class ResearchTree {
             removeChildRecursively(child, target);
         }
     }
+    public void init(){
+        rootItem.isUnlocked = true;
+        rootItem.isCompleted = true;
+        rootItem.onCompleted();
+    }
     public NBTTagCompound save(){
         NBTTagCompound tag = new NBTTagCompound();
         allResearch.forEach(((name, item) -> {
             //ONLY save task progress when research not completed
-            if(item.getProgress() == 0)return;
             if(item.isCompleted){
                 tag.setBoolean(name+".c", true);
                 return;
             }
+            if(item.getProgress() == 0)return;
             NBTTagCompound list = new NBTTagCompound();
             item.tasks.forEach(task-> UT.NBT.setNumber(list, task.getIdentifier(), task.getProgress()));
             tag.setTag(name, list);
@@ -114,7 +117,7 @@ public class ResearchTree {
     }
     public void load(NBTTagCompound tag){
         allResearch.forEach(((name, item) -> {
-            if(tag.hasKey(name+".c"))item.isCompleted = true;
+            if(tag.hasKey(name+".c")) item.onCompleted();
             else if(tag.hasKey(name)){
                 NBTTagCompound list = tag.getCompoundTag(name);
                 item.tasks.forEach(task-> task.setProgress(list.getLong(task.getIdentifier())));
@@ -129,7 +132,7 @@ public class ResearchTree {
                 String name = entry.getKey();
                 ResearchProject item = entry.getValue();
                 //ONLY save task progress when research not completed
-                if (!item.isUnlocked || item.getProgress() == 0) continue;
+                if (!item.isUnlocked || (!item.isCompleted && item.getProgress() == 0)) continue;
                 dos.writeUTF(name);
                 dos.writeShort(item.isCompleted ? -1 : item.tasks.size());
                 if (item.isCompleted) continue;
@@ -163,7 +166,8 @@ public class ResearchTree {
         while (dis.available() > 0) {
             String name = dis.readUTF();
             ResearchProject item = allResearch.get(name);
-            if(item == null)item = new ResearchProject(null, "","");
+            if(item == null)item = new ResearchProject(null, "","", -1);
+            item.isUnlocked = true;
             short taskCount = dis.readShort();
             if (taskCount == -1) {
                 item.isCompleted = true;
@@ -190,18 +194,11 @@ public class ResearchTree {
         public DummyTask(){}
         @Override public long getRequiredProgress() {return 0;}
         @Override public long getProgress() {return 0;}
-
         @Override
-        public boolean tryPromoteProgress(Object consumed) {
-            return false;
-        }
-
+        public long tryPromoteProgress(Object consumed, boolean dryRun) {return 0;}
         @Override
-        public void setProgress(long progress) {
-
-        }
-
+        public void setProgress(long progress) {}
         @Override public IIcon getIcon() {return null;}
-        @Override public String getIdentifier() {return "";}
+        @Override public String getIdentifier() {return "d";}
     }
 }

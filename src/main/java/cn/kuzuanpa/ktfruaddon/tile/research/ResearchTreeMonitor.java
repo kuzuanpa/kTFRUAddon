@@ -18,9 +18,10 @@ import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
-import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreMonitor;
+import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
+import gregapi.data.CS;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
 import gregapi.old.Textures;
@@ -31,6 +32,7 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,8 +44,33 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
     public ResearchTree theTree = new ResearchTree((byte)0);
     public ResearchProject currentProject = null;
+
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+        aNBT.setTag("researchTree",  theTree.save());
+        aNBT.setString("current", currentProject==null?"null":currentProject.id);
+    }
+
+    @Override
+    public boolean[] getValidSides() {
+        return CS.SIDES_HORIZONTAL;
+    }
+
+    @Override
+    public byte getDefaultSide() {
+        return CS.SIDE_FRONT;
+    }
+
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        if(aNBT.hasKey("researchTree"))theTree.load(aNBT.getCompoundTag("researchTree"));
+        if(aNBT.hasKey("current")) currentProject = theTree.allResearch.get(aNBT.getString("current"));
+    }
+
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerClientResearchTreMonitor(aPlayer.inventory, this, aGUIID);
+        return new ContainerClientResearchTreeMonitor(aPlayer.inventory, this, aGUIID);
     }
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerCommonResearchTreeMonitor(aPlayer.inventory, this,aGUIID);
@@ -61,6 +88,8 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
         byte[] data;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              DataOutputStream dos = new DataOutputStream(bos)){
+            dos.writeByte(getDirectionData());
+
             byte[] treeData = theTree.saveToArray();
             dos.writeInt(treeData.length);
             dos.write(treeData);
@@ -89,6 +118,8 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
         try(ByteArrayInputStream bis = new ByteArrayInputStream(aData);
         DataInputStream dis = new DataInputStream(bis)){
+            setDirectionData(dis.readByte());
+
             byte[] treeData = new byte[dis.readInt()];
             dis.readFully(treeData);
             theTree.loadFromArray(treeData);
@@ -110,8 +141,9 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             DataInputStream dis = new DataInputStream(bis);
             String id = dis.readUTF();
-            currentProject = theTree.allResearch.get(id);
-            if(currentProject != null && !currentProject.isUnlocked)currentProject = null;
+            ResearchProject project = theTree.allResearch.get(id);
+            if(project == null || !project.isUnlocked)return;
+            currentProject = project;
         } catch (IOException e) {}
     }
     // Icons

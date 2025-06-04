@@ -16,6 +16,7 @@ package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
+import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameFillTask;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientFillThePack;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonFillThePack;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
@@ -33,16 +34,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Point;
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
-import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.RESEARCH_TABLE_FILL_SCORES;
+import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n.RESEARCH_TABLE_FILL_SCORES;
 
 public class ResearchTableFillInPack extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
     public ResearchTableFillInPack.PuzzleGame theGame= new PuzzleGame(0,0);
@@ -67,6 +69,22 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
 
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+        aNBT.setLong("scores", scores);
+        aNBT.setByte("size", size);
+        aNBT.setByte("count", tileCount);
+    }
+
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        if(aNBT.hasKey("scores"))scores = aNBT.getLong("scores");
+        if(aNBT.hasKey("size"))size = aNBT.getByte("size");
+        if(aNBT.hasKey("count"))tileCount = aNBT.getByte("count");
+    }
+
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.fill_pack";}
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerClientFillThePack(aPlayer.inventory, this, aGUIID);
@@ -76,7 +94,7 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
     }
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArrayLong(aSendAll, theGame.saveToByteArray());
+        return getClientDataPacketByteArrayLong(aSendAll, saveToByteArray());
     }
 
     @Override
@@ -91,11 +109,70 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
-        PuzzleGame theGame = PuzzleGame.loadFromByteArray(aData);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(aData);
+             DataInputStream dis = new DataInputStream(bis)) {
+            //tile info
+            setDirectionData(dis.readByte());
+
+            //game info
+            byte size = dis.readByte();
+            byte tileCount = dis.readByte();
+            PuzzleGame game = new PuzzleGame(size, tileCount);
+            game.tiles = new HashMap<>();
+            for (int i = 0; i < tileCount; i++) {
+                byte puzzleID = dis.readByte();
+                byte pX = dis.readByte();
+                byte pY = dis.readByte();
+                byte pointCount = dis.readByte();
+                Set<Point> tile = new HashSet<>();
+                for (int j = 0; j < pointCount; j++) {
+                    int x = dis.readByte();
+                    int y = dis.readByte();
+                    tile.add(new Point(x, y));
+                }
+                game.tiles.put(puzzleID, new PuzzleGame.PuzzleShape(tile).setPlacedOnX(pX).setPlacedOnY(pY));
+            }
+            theGame = game;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
         if(theGame != null){
             theGameClient = theGame;
             clientGameUpdated = true;
         }
+    }
+
+    public byte[] saveToByteArray() {
+        try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos)) {
+            //Tile info
+            dos.writeByte(getDirectionData());
+
+            //game info
+            dos.writeByte(size);
+            dos.writeByte(tileCount);
+
+            for (Map.Entry<Byte, PuzzleGame.PuzzleShape> entry : theGame.tiles.entrySet() ) {
+                PuzzleGame.PuzzleShape tile = entry.getValue();
+                dos.writeByte(entry.getKey());
+                dos.writeByte(tile.placedOnX);
+                dos.writeByte(tile.placedOnY);
+                dos.writeByte(tile.content.size());
+                for (Point p : tile.content) {
+                    dos.writeByte(p.x);
+                    dos.writeByte(p.y);
+                }
+            }
+
+            dos.flush();
+            return bos.toByteArray();
+        }catch (IOException e){
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
+    public static void loadFromByteArray(byte[] data) {
+
     }
 
     @Override
@@ -141,6 +218,12 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
         return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
 
+    @Override
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        super.onTick2(aTimer, aIsServerSide);
+        if(aIsServerSide && scores > 0) scores -= tryPromoteCurrentProjectProgress(MiniGameFillTask.class, scores, false);
+    }
+
     public static class PuzzleGame {
 
         private static final int MIN_TILE_SIZE = 1;
@@ -177,65 +260,6 @@ public class ResearchTableFillInPack extends ResearchTableBase implements ITileR
             double minScore = Math.sqrt(size + tileCount/4f);
             double maxScore = baseComplexity * 10;
             return Math.round(Math.pow(Math.max(minScore, Math.min(score, maxScore)),1.3));
-        }
-        public byte[] saveToByteArray() {
-            try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(bos)) {
-
-                // 写入基础信息
-                dos.writeByte(size);        // 场地尺寸
-                dos.writeByte(tileCount);   // 图块总数
-
-                // 写入每个图块数据
-                for (Map.Entry<Byte, PuzzleShape> entry : tiles.entrySet() ) {
-                    PuzzleShape tile = entry.getValue();
-                    // 写入当前图块点数
-                    dos.writeByte(entry.getKey());
-                    dos.writeByte(tile.placedOnX);
-                    dos.writeByte(tile.placedOnY);
-                    dos.writeByte(tile.content.size());
-                    // 写入每个点的坐标
-                    for (Point p : tile.content) {
-                        dos.writeByte(p.x);
-                        dos.writeByte(p.y);
-                    }
-                }
-
-                dos.flush();
-                return bos.toByteArray();
-            }catch (IOException e){
-                e.printStackTrace();
-                return new byte[0];
-            }
-        }
-        public static PuzzleGame loadFromByteArray(byte[] data) {
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                 DataInputStream dis = new DataInputStream(bis)) {
-
-                // 读取基础信息
-                byte size = dis.readByte();
-                byte tileCount = dis.readByte();
-                PuzzleGame game = new PuzzleGame(size, tileCount);
-                // 读取图块数据
-                game.tiles = new HashMap<>();
-                for (int i = 0; i < tileCount; i++) {
-                    byte puzzleID = dis.readByte();
-                    byte pX = dis.readByte();
-                    byte pY = dis.readByte();
-                    byte pointCount = dis.readByte();
-                    Set<Point> tile = new HashSet<>();
-                    for (int j = 0; j < pointCount; j++) {
-                        int x = dis.readByte();
-                        int y = dis.readByte();
-                        tile.add(new Point(x, y));
-                    }
-                    game.tiles.put(puzzleID, new PuzzleShape(tile).setPlacedOnX(pX).setPlacedOnY(pY));
-                }
-                return game;
-            }catch (IOException e){
-                e.printStackTrace();
-                return null;
-            }
         }
 
         private void initializeGame() {

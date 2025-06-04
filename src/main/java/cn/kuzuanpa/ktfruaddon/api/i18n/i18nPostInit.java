@@ -18,7 +18,7 @@
 package cn.kuzuanpa.ktfruaddon.api.i18n;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUserInterface;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import gregapi.data.LH;
@@ -90,40 +90,56 @@ public class i18nPostInit {
         LH.add(I18nHandler.COMPUTE_TILE_COMPUTERS,"Computers: ");
         LH.add(I18nHandler.COMPUTE_TILE_SHIFT_SHOW_COMPUTERS,"Hold [LSHIFT] to show computers");
 
-        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_STOPPED,"Stopped");
-        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_CHARGING,"Charging");
-        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_RUNNING,"Running");
-        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_ERROR,"ERROR");
-        LH.add(kUserInterface.FUSION_TOKAMAK_STATE_VOIDCHARGE,"Void Charging");
+        LH.add(kUII18n.FUSION_TOKAMAK_STATE_STOPPED,"Stopped");
+        LH.add(kUII18n.FUSION_TOKAMAK_STATE_CHARGING,"Charging");
+        LH.add(kUII18n.FUSION_TOKAMAK_STATE_RUNNING,"Running");
+        LH.add(kUII18n.FUSION_TOKAMAK_STATE_ERROR,"ERROR");
+        LH.add(kUII18n.FUSION_TOKAMAK_STATE_VOIDCHARGE,"Void Charging");
 
 
 
-        LH.add(kUserInterface.TYPE ,"Type");
-        LH.add(kUserInterface.COMPUTECLUSTER_CLIENT              ,"Client");
-        LH.add(kUserInterface.COMPUTECLUSTER_CLUSTER             ,"Cluster");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER          ,"Controller");
-        LH.add(kUserInterface.COMPUTECLUSTER_CLUSTER_STATE_OFFLINE           ,"Offline");
-        LH.add(kUserInterface.COMPUTECLUSTER_CLUSTER_STATE_NORMAL            ,"§2Normal" );
-        LH.add(kUserInterface.COMPUTECLUSTER_CLUSTER_STATE_WARNING           ,"§eWarning");
-        LH.add(kUserInterface.COMPUTECLUSTER_CLUSTER_STATE_ERROR             ,"§4ERROR"  );
-        LH.add(kUserInterface.COMPUTECLUSTER_CLUSTER_OVERVIEW                ,"Cluster View");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_STATE_OFFLINE        ,"Offline");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_STATE_NORMAL         ,"§2Normal" );
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_STATE_WARNING        ,"§eWarning");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_STATE_ERROR          ,"§4ERROR"  );
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_STATE_ERR_BELONG     ,"§cBelong Error");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_INFO                 ,"Info");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_PROVIDING            ,"Providing");
-        LH.add(kUserInterface.COMPUTECLUSTER_CONTROLLER_LIST                 ,"Controllers");
-        LH.add(kUserInterface.COMPUTECLUSTER_CLIENT_LIST                     ,"Clients");
-        LH.add(kUserInterface.COMPUTECLUSTER_RECENT_EVENTS                   ,"Events");
+        LH.add(kUII18n.TYPE ,"Type");
+        LH.add(kUII18n.COMPUTECLUSTER_CLIENT              ,"Client");
+        LH.add(kUII18n.COMPUTECLUSTER_CLUSTER             ,"Cluster");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER          ,"Controller");
+        LH.add(kUII18n.COMPUTECLUSTER_CLUSTER_STATE_OFFLINE           ,"Offline");
+        LH.add(kUII18n.COMPUTECLUSTER_CLUSTER_STATE_NORMAL            ,"§2Normal" );
+        LH.add(kUII18n.COMPUTECLUSTER_CLUSTER_STATE_WARNING           ,"§eWarning");
+        LH.add(kUII18n.COMPUTECLUSTER_CLUSTER_STATE_ERROR             ,"§4ERROR"  );
+        LH.add(kUII18n.COMPUTECLUSTER_CLUSTER_OVERVIEW                ,"Cluster View");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_STATE_OFFLINE        ,"Offline");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_STATE_NORMAL         ,"§2Normal" );
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_STATE_WARNING        ,"§eWarning");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_STATE_ERROR          ,"§4ERROR"  );
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_STATE_ERR_BELONG     ,"§cBelong Error");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_INFO                 ,"Info");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_PROVIDING            ,"Providing");
+        LH.add(kUII18n.COMPUTECLUSTER_CONTROLLER_LIST                 ,"Controllers");
+        LH.add(kUII18n.COMPUTECLUSTER_CLIENT_LIST                     ,"Clients");
+        LH.add(kUII18n.COMPUTECLUSTER_RECENT_EVENTS                   ,"Events");
 
 
-        LH.add(kUserInterface.COMPUTE_POWER                   ,"Computer Power");
-        LH.add(kUserInterface.COMPUTE_POWER_LOGIC             ,"Logic");
-        LH.add(kUserInterface.COMPUTE_POWER_BIOLOGY           ,"Biology");
-        LH.add(kUserInterface.COMPUTE_POWER_QUANTUM           ,"Quantum");
-        LH.add(kUserInterface.COMPUTE_POWER_SPACETIME         ,"Spacetime");
+        LH.add(kUII18n.COMPUTE_POWER                   ,"Computer Power");
+        LH.add(kUII18n.COMPUTE_POWER_LOGIC             ,"Logic");
+        LH.add(kUII18n.COMPUTE_POWER_BIOLOGY           ,"Biology");
+        LH.add(kUII18n.COMPUTE_POWER_QUANTUM           ,"Quantum");
+        LH.add(kUII18n.COMPUTE_POWER_SPACETIME         ,"Spacetime");
+
+
+
+        LH.add(kUII18n.RESEARCH_VIEWER_SELECTED_EMPTY ,"Select to view details");
+        LH.add(kUII18n.RESEARCH_VIEWER_SELECTED       ,"Selected Project");
+        LH.add(kUII18n.RESEARCH_VIEWER_CURRENT        ,"Current Project");
+        LH.add(kUII18n.RESEARCH_VIEWER_CLICK_VIEW     ,"Click to view details");
+        LH.add(kUII18n.RESEARCH_VIEWER_CLICK_RESEARCH ,"Click again to research");
+        LH.add(kUII18n.RESEARCH_VIEWER_CLICK_LOCKED   ,"Complete others first");
+
+        LH.add(kUII18n.RESEARCH_TABLE_FILL_TITLE ,"Fill this circuit! You will get Space point: ");
+        LH.add(kUII18n.RESEARCH_TABLE_FILL_WIN   ,"The circuit is completed! You got Space point: ");
+        LH.add(kUII18n.RESEARCH_TABLE_FILL_SCORES,"Amount of Space point: ");
+        LH.add(kUII18n.RESEARCH_TABLE_FILL_RELOAD,"change another circuit");
+
+
 
         itemPreInit.turbineLargeGas         .addTooltips(LH.Chat.RED+LH.get(I18nHandler.TURBINE_UNCHECKED));
         itemPreInit.turbineLargeGasChecked  .addTooltips(LH.Chat.RED+LH.get(I18nHandler.TURBINE_UNCHECKED));

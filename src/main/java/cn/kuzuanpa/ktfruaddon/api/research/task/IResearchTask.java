@@ -21,7 +21,8 @@ public interface IResearchTask {
     default boolean isCompleted() {return getRequiredProgress() <= getProgress(); }
     long getRequiredProgress();
     long getProgress();
-    boolean tryPromoteProgress(@Nullable Object consumed);
+    /**@return amount consumed**/
+    long tryPromoteProgress(@Nullable Object consumed, boolean dryRun);
     void setProgress(long progress);
     IIcon getIcon();
     String getIdentifier();

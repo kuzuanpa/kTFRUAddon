@@ -91,10 +91,6 @@ public class I18nHandler {
             , TFC_WATERMILL_2 ="ktfru.text.machine.tfc.watermill.2"
             , TFC_WATERMILL_3 ="ktfru.text.machine.tfc.watermill.3"
 
-            , RESEARCH_TABLE_FILL_TITLE="ktfru.text.research.table.fill.title"
-            , RESEARCH_TABLE_FILL_WIN="ktfru.text.research.table.fill.win"
-            , RESEARCH_TABLE_FILL_SCORES="ktfru.text.research.table.fill.scores"
-            , RESEARCH_TABLE_FILL_RELOAD="ktfru.text.research.table.fill.reload"
     ;
     
 }

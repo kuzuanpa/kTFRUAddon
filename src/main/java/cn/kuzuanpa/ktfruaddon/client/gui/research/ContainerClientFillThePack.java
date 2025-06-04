@@ -14,10 +14,13 @@
 
 package cn.kuzuanpa.ktfruaddon.client.gui.research;
 
+import cn.kuzuanpa.kGuiLib.client.anime.animeMoveLinear;
+import cn.kuzuanpa.kGuiLib.client.anime.animeMoveSlowIn;
+import cn.kuzuanpa.kGuiLib.client.anime.shortcut.animeTransparency;
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
@@ -59,6 +62,8 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     protected int totalSize = 180;
     protected int puzzleSize;
     ShapeButton selectedButton, selectedButtonOld;
+    public ResearchCommonElements.CurrentPanel currentPanel= null;
+
     float buttonX = -1 , buttonY = -1, buttonToGoX = -1, buttonToGoY = -1, buttonOldX= -1, buttonOldY = -1, buttonOldToGoX = -1, buttonOldToGoY = -1;
     int mouseStartX=-1,mouseStartY=-1, buttonOriginX = -1, buttonOriginY= -1, currentFocusX = -1, currentFocusY = -1;
     public Text text = null;
@@ -82,6 +87,8 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
             ((ResearchTableFillInPack) mContainer.mTileEntity).clientGameUpdated = false;
         }
         GL11.glColor4f(1,1,1,1);
+
+        currentPanel.currentProject = ((ResearchTableFillInPack) mContainer.mTileEntity).getCurrentProject();
         super.drawScreen2(p_73863_1_, p_73863_2_, p_73863_3_);
     }
 
@@ -113,7 +120,7 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
 
         kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,1, (byte) selectedButton.shapeID, (byte)currentFocusX, (byte)currentFocusY)) ;
         expireSelectedButton((width-totalSize)/2 + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize);
-        if(theGame.checkWin(true) && text != null)text.text = LH.get(I18nHandler.RESEARCH_TABLE_FILL_WIN) +": "+ theGame.calculateScore();
+        if(theGame.checkWin(true) && text != null)text.text = LH.get(kUII18n.RESEARCH_TABLE_FILL_WIN) +": "+ theGame.calculateScore();
         return true;
     }
 
@@ -138,8 +145,11 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
     public void addButtons() {
         AtomicInteger i = new AtomicInteger();
         buttons.add(new kGuiButtonBase(i.getAndIncrement(),0,0,20,20,"x"));
-        text = new Text(i.getAndIncrement(),LH.get(I18nHandler.RESEARCH_TABLE_FILL_TITLE) +": "+ theGame.calculateScore(),(width-120)/2, (int) (height*0.9));
+        text = new Text(i.getAndIncrement(),LH.get(kUII18n.RESEARCH_TABLE_FILL_TITLE) +": "+ theGame.calculateScore(),20, (int) (height*0.9));
         buttons.add(text);
+
+        currentPanel = (ResearchCommonElements.CurrentPanel) new ResearchCommonElements.CurrentPanel(this,i.getAndIncrement(), 96).setJoinLeaveTime(200,Integer.MAX_VALUE).addAnime(new animeTransparency(200,800,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(200,800, -120,0,3f));
+        buttons.add(currentPanel);
         //for (byte x = 0; x < theGame.size; x++) for (byte y = 0; y < theGame.size; y++) buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 + x*puzzleSize,16 + y*puzzleSize,puzzleSize, x,y));
         buttons.add(new SlotButton(i.getAndIncrement(), (width-totalSize)/2 ,16, totalSize));
 

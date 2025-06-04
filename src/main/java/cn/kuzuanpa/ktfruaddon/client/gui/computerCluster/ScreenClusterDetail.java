@@ -25,7 +25,7 @@ import cn.kuzuanpa.kGuiLib.client.objects.gui.ButtonList;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.CommonTexturedButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUserInterface;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerClusterClientData;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants;
@@ -149,7 +149,7 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
         for (ComputePower computePower : ComputePower.values()){
             if(clusterAvailPowers.get(computePower)==null || clusterAvailPowers.get(computePower)==0)continue;
             addOrUpdateTooltip(index+ computePower.ordinal(),
-                    new String[]{LH.get(kUserInterface.TYPE)+": "+LH.get(kUserInterface.COMPUTE_POWER+"."+ computePower.ordinal()),
+                    new String[]{LH.get(kUII18n.TYPE)+": "+LH.get(kUII18n.COMPUTE_POWER+"."+ computePower.ordinal()),
                             "Avail: "+clusterAvailPowers.get(computePower)+", Used: "+ clusterUsedPowers.getOrDefault(computePower,0L)},
                     vector2-> (2<vector2.x&&vector2.x<166&& 109+ 8*(computePower.ordinal()) < vector2.y && vector2.y <= 121 + 8*(computePower.ordinal())));
         }

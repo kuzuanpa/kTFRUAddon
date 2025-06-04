@@ -89,7 +89,7 @@ public class TileOreScanner extends TileEntityBase09FacingSingle implements ITil
         if(aNBT.hasKey(NBT_ENERGY_ACCEPTED))mEnergyTypeAccepted= TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED));
         if(aNBT.hasKey(kTileNBT.MAX_RANGE))range = aNBT.getShort(kTileNBT.MAX_RANGE);
         if(aNBT.hasKey(kTileNBT.INTERVAL))interval = aNBT.getShort(kTileNBT.INTERVAL);
-        if(aNBT.hasKey(kTileNBT.MINER_SPEED))speed = aNBT.getShort(kTileNBT.MINER_SPEED);
+        if(aNBT.hasKey(kTileNBT.SPEED))speed = aNBT.getShort(kTileNBT.SPEED);
         if(mScanner!=null)mScanner.setScanner(this);
     }
 

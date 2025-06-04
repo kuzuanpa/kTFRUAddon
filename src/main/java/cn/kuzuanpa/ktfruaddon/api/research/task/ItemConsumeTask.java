@@ -42,10 +42,11 @@ public class ItemConsumeTask implements IResearchTask{
     }
 
     @Override
-    public boolean tryPromoteProgress(Object consume) {
-        boolean isEqual = consume instanceof ItemStack && isItemStackEqual(item, ((ItemStack) consume));
-        if(isEqual)finishedCount += ((ItemStack) consume).stackSize;
-        return isEqual;
+    public long tryPromoteProgress(Object consume, boolean dryRun) {
+        if(!(consume instanceof ItemStack && isItemStackEqual(item, ((ItemStack) consume))))return 0;
+        long consumeAmount = Math.min(((ItemStack) consume).stackSize, requiredCount - finishedCount);
+        if(!dryRun)finishedCount += consumeAmount;
+        return consumeAmount;
     }
 
     @Override
