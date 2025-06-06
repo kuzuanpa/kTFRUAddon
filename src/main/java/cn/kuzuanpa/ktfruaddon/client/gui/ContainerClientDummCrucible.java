@@ -14,7 +14,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.DummyCrucible;
 import gregapi.data.LH;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.oredict.OreDictMaterial;

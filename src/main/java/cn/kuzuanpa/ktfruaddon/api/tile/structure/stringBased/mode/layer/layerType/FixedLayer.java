@@ -50,6 +50,7 @@ public class FixedLayer implements IStructureLayer {
                 }
             }
         }
+        promoteContext(ctx, mainAxis, 1);
         return 1;
     }
 
@@ -58,6 +59,11 @@ public class FixedLayer implements IStructureLayer {
         this.structure=structure;
     }
 
+    public void promoteContext(StructureContext ctx, StructureContext.Axis axis, int num){
+        ctx.addX += axis == StructureContext.Axis.X ? num : 0;
+        ctx.addY += axis == StructureContext.Axis.Y ? num : 0;
+        ctx.addZ += axis == StructureContext.Axis.Z ? num : 0;
+    }
     private int[] convertAxis(StructureContext ctx, StructureContext.Axis axis, int row, int col) {
         int[] current = ctx.getMapCoord();
         switch (axis) {

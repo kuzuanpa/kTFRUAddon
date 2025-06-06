@@ -14,7 +14,7 @@
  */
 
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
-public class fusionReactorZPinch {
+public class fusionReactorLaserExp {
 }

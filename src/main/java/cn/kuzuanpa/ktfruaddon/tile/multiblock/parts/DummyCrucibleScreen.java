@@ -44,12 +44,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
 public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements IMultiBlockPart, IMultiTileEntity.IMTE_SyncDataByteArray, IWailaTile {
     private IDummyCrucibleMaterialProvider.CrucibleOreDictMaterialStack mContent = null;
+    public OreDictPrefix[] validPrefix = new OreDictPrefix[]{OP.ingot, OP.ingotDouble, OP.ingotTriple, OP.ingotQuadruple, OP.ingotQuintuple, OP.plate, OP.plateDouble, OP.plateTriple, OP.plateQuadruple, OP.plateQuintuple, OP.chunkGt, OP.plateTiny, OP.bolt, OP.stick, OP.stickLong, OP.casingSmall, OP.ring, OP.gearGt, OP.gearGtSmall, OP.toolHeadRawSaw , OP.toolHeadRawChisel, OP.toolHeadRawSword , OP.toolHeadRawPickaxe , OP.toolHeadRawShovel, OP.toolHeadRawSpade , OP.toolHeadRawUniversalSpade, OP.toolHeadRawAxe , OP.toolHeadRawAxeDouble , OP.toolHeadRawHoe , OP.toolHeadRawSense , OP.toolHeadRawPlow, OP.toolHeadRawArrow, OP.nugget, OP.billet, OP.round};
     private OreDictPrefix createTo = OP.ingot;
     public boolean clientMolten = false, clientMatChanged=false;
     public OreDictMaterial clientMat = null;
@@ -192,7 +194,7 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
     }
 
     public boolean updateCreateTo(ItemStack stack){
-        for (OreDictPrefix value : OreDictPrefix.sPrefixes.values()) if(value.contains(stack))  {
+        for (OreDictPrefix value : OreDictPrefix.sPrefixes.values()) if(value.contains(stack) && Arrays.asList(validPrefix).contains(value))  {
             setCreateTo(value);
             updateClientData();
             return true;
@@ -248,3 +250,5 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         return currentTip;
     }
 }
+
+

@@ -13,7 +13,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 //This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 

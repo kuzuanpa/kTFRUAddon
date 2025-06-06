@@ -139,6 +139,9 @@ public enum ItemList implements IItemContainer{
     PropertiesFilter,
     //itemBatteryPole
     BatteryPoleNickel, BatteryPoleCaTiO3, BatteryPolePlatinum,BatteryPoleCarbon,
+    //itemDevice
+    AsteroidMinerRocketT1, AsteroidMinerRocketT1Fast, AsteroidMinerRocketT2, AsteroidMinerRocketT2Fast, AsteroidMinerRocketT3, AsteroidMinerRocketT3Fast, AsteroidMinerRocketT4, AsteroidMinerRocketT4Fast, AsteroidMinerRocketT5, AsteroidMinerRocketT5Fast,
+    DeprecatedAsteroidMinerRocketT1, DeprecatedAsteroidMinerRocketT1Fast, DeprecatedAsteroidMinerRocketT2, DeprecatedAsteroidMinerRocketT2Fast, DeprecatedAsteroidMinerRocketT3, DeprecatedAsteroidMinerRocketT3Fast, DeprecatedAsteroidMinerRocketT4, DeprecatedAsteroidMinerRocketT4Fast, DeprecatedAsteroidMinerRocketT5, DeprecatedAsteroidMinerRocketT5Fast,
     ;
 
     //Copied from gt6

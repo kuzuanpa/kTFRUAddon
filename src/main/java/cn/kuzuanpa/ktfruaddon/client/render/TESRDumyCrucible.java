@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.DummyCrucible;
 import gregapi.oredict.OreDictMaterial;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;

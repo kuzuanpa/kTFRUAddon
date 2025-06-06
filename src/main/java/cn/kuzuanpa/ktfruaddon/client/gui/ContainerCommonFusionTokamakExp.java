@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.fusionReactorTokamakExp;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.fusionReactorTokamakExp;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.data.LH;

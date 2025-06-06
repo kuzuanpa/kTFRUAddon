@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.CNCMachine3;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

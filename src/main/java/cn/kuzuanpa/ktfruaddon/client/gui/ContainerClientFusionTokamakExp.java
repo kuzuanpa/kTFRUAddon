@@ -32,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
-import static cn.kuzuanpa.ktfruaddon.tile.multiblock.fusionReactorTokamakExp.*;
+import static cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.fusionReactorTokamakExp.*;
 
 @SideOnly(Side.CLIENT)
 public class ContainerClientFusionTokamakExp extends ContainerClientbase {

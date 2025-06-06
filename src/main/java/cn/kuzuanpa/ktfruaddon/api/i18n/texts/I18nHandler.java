@@ -45,8 +45,10 @@ public class I18nHandler {
             , DONE_CHANGING_STRUCTURE ="ktfru.text.common.done_changing_structure"
             , CHANGING_STRUCTURE ="ktfru.text.common.changing_structure"
             , DATA_WRITE_TO_USB ="ktfru.text.common.data_written_to_usb"
+            , DATA_READ_FROM_USB ="ktfru.text.common.data_read_from_usb"
             , USB_ALREAY_HAVE_DATA ="ktfru.text.common.usb_have_data"
             , HINT_NEED_MULTI_AMPERE_INPUT = "ktfru.text.common.hint.multi_ampere_input"
+            , STRUCTURE_ERR ="ktfru.text.common.structure.err"
 
             , COMPUTE_POWER  = "ktfru.text.compute.power"
             , COMPUTE_POWER_NORMAL   = "ktfru.text.compute.power.0"
@@ -62,7 +64,6 @@ public class I18nHandler {
             , CRUCIBLE_MODEL_1 ="ktfru.text.machine.cruciblemodel.1"
             , SUN_BOILER_MIRROR="ktfru.text.multiblock.sunboiler.mirror"
             , SUN_BOILER_MIRROR_ERR="ktfru.text.multiblock.sunboiler.mirror.err"
-            , SUN_BOILER_ERR="ktfru.text.multiblock.sunboiler.err"
             , COMPUTE_CLUSTER_0="ktfru.text.multiblock.compute_cluster.0"
             , COMPUTE_CLUSTER_1="ktfru.text.multiblock.compute_cluster.1"
             , COMPUTE_CLUSTER_2="ktfru.text.multiblock.compute_cluster.2"

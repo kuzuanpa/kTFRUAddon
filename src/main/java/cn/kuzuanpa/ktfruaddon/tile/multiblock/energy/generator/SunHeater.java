@@ -184,8 +184,9 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
         super.addToolTips(aList, aStack, aF3_H);
     }
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()){
-        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.SUN_BOILER_ERR)));
+        if (!isServerSide())return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
         if (!(OM.is(OD_USB_STICKS[0],equippedItem))) return false;
         NBTTagCompound aNBT = UT.NBT.make();
@@ -193,24 +194,15 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
         UT.NBT.setNumber(aNBT, NBT_TARGET_Y, this.yCoord);
         UT.NBT.setNumber(aNBT, NBT_TARGET_Z, this.zCoord);
 
-        if (equippedItem.hasTagCompound()) {
-            if (clickDoubleCheck) {
-                equippedItem.getTagCompound().setTag(NBT_USB_DATA, aNBT);
-                equippedItem.getTagCompound().setByte(NBT_USB_TIER, (byte)1);
-                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_WRITE_TO_USB)));
-                clickDoubleCheck=false;
-            } else {
-                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(I18nHandler.USB_ALREAY_HAVE_DATA)));
-                clickDoubleCheck=true;
-            }
+        if (equippedItem.hasTagCompound() && !clickDoubleCheck) {
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(I18nHandler.USB_ALREAY_HAVE_DATA)));
+            clickDoubleCheck=true;
+            return true;
         }
-        if (!equippedItem.hasTagCompound()){
-            equippedItem.setTagCompound(UT.NBT.make());
-            equippedItem.getTagCompound().setTag(NBT_USB_DATA, aNBT);
-            equippedItem.getTagCompound().setByte(NBT_USB_TIER, (byte)1);
-            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_WRITE_TO_USB)));
-        }
-        }
+        equippedItem.setTagCompound(UT.NBT.make());
+        equippedItem.getTagCompound().setTag(NBT_USB_DATA, aNBT);
+        equippedItem.getTagCompound().setByte(NBT_USB_TIER, (byte)1);
+        aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_WRITE_TO_USB)));
         return true;
     }
 

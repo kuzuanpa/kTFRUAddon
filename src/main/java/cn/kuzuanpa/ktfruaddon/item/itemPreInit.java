@@ -36,6 +36,7 @@ public class itemPreInit {
         new itemIT();
         new itemComputer();
         new itemBatteryPole();
+        new itemDevice();
         new itemCompact();
         new itemChemistry();
         new itemCover();

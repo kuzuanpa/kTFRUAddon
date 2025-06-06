@@ -13,7 +13,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseRoom;

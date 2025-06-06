@@ -13,7 +13,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;

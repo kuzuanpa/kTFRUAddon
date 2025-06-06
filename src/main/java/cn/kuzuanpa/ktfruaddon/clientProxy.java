@@ -23,10 +23,9 @@ import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
 import cn.kuzuanpa.ktfruaddon.tile.machine.TFCPresser;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.DummyCrucibleScreen;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.CNCMachine3;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.DummyCrucible;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.circuitAssembler;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.specialRend.exampleMachineModel;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -58,7 +57,6 @@ public class clientProxy extends commonProxy {
     @SideOnly(Side.CLIENT)
     public void registerRenderers(){
         ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TESRExampleMultiBlock());
-        ClientRegistry.bindTileEntitySpecialRenderer(circuitAssembler.class, new TESRCircuitAssembler());
         ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirror.class, new TESRSunBoilerMirror());
         ClientRegistry.bindTileEntitySpecialRenderer(WaterMill.class, new TESRWaterMill());
         ClientRegistry.bindTileEntitySpecialRenderer(TFCPresser.class, new TESRTFCPresser());

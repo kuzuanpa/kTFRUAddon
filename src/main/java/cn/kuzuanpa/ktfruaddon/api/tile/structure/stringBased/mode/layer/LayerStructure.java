@@ -86,7 +86,6 @@ public class LayerStructure implements IStringBaseStructure {
 
             int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2], ctx.tryAutoBuild, fastAutoBuild);
             if(step == 0)return new ChunkCoordinates(ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
-            promoteContext(ctx, expandAxis, step);
         }
         return null;
     }
@@ -94,11 +93,5 @@ public class LayerStructure implements IStringBaseStructure {
     @Override
     public Map<Character, IStructurePredicate> getPredicates() {
         return predicates;
-    }
-
-    public void promoteContext(StructureContext ctx, StructureContext.Axis axis, int num){
-        ctx.addX += axis == StructureContext.Axis.X ? num : 0;
-        ctx.addY += axis == StructureContext.Axis.Y ? num : 0;
-        ctx.addZ += axis == StructureContext.Axis.Z ? num : 0;
     }
 }

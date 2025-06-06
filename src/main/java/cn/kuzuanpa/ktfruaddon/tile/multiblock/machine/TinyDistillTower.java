@@ -13,7 +13,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
@@ -39,8 +39,8 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
-    public SmallDistillTower() {
+public class TinyDistillTower extends TileEntityBase10MultiBlockMachine {
+    public TinyDistillTower() {
     }
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -123,7 +123,7 @@ public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
                 tSuccess = false;
             }
 
-            for(int i = 1; i < 6; ++i) {
+            for(int i = 1; i < 4; ++i) {
                 if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -5)) {
                     tSuccess = false;
                 }
@@ -168,12 +168,12 @@ public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
 
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get("gt.lang.structure") + ":");
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.small.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.small.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.small.3"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.small.4"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.small.5"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.small.6"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.4"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.5"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.tiny.6"));
         super.addToolTips(aList, aStack, aF3_H);
     }
     public void doOutputFluids() {
@@ -181,18 +181,14 @@ public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
             Fluid tFluid = tTank.fluid();
             if (tFluid != null && tTank.has()&&mLastRecipe!=null) {
                 DelegatorTileEntity<TileEntity> tDelegator = null;
-                if (mLastRecipe.mFluidOutputs.length>4&&FL.is(tFluid, mLastRecipe.mFluidOutputs[4].getUnlocalizedName().replaceFirst("fluid.", ""))) {
-                    tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 5, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (mLastRecipe.mFluidOutputs.length>3&&FL.is(tFluid, mLastRecipe.mFluidOutputs[3].getUnlocalizedName().replaceFirst("fluid.", ""))) {
-                    tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 4, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
-                } else if (mLastRecipe.mFluidOutputs.length>2&&FL.is(tFluid, mLastRecipe.mFluidOutputs[2].getUnlocalizedName().replaceFirst("fluid.", ""))) {
+                if (mLastRecipe.mFluidOutputs.length>0&&FL.is(tFluid, mLastRecipe.mFluidOutputs[2].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 3, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 } else if (mLastRecipe.mFluidOutputs.length>1&&FL.is(tFluid, mLastRecipe.mFluidOutputs[1].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 2, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 } else if (mLastRecipe.mFluidOutputs.length>0&&FL.is(tFluid, mLastRecipe.mFluidOutputs[0].getUnlocalizedName().replaceFirst("fluid.", ""))) {
                     tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord + 1, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 } else {
-                    tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord, this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
+                    tDelegator = WD.te(this.worldObj, this.getOffsetXN(this.mFacing, 3), this.yCoord , this.getOffsetZN(this.mFacing, 3), this.mFacing, false);
                 }
 
                 if (FL.move(tTank, tDelegator) > 0L) {
@@ -202,16 +198,16 @@ public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
         }
 
     }    public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.distillationtower.small";
+        return "ktfru.multitileentity.multiblock.distillationtower.tiny";
     }
 
     static {
-        LH.add("ktfru.tooltip.multiblock.distilltower.small.1", "3x3 Base of Heat Transmitters");
-        LH.add("ktfru.tooltip.multiblock.distilltower.small.2", "3x3x6 of Distillation Tower Parts");
-        LH.add("ktfru.tooltip.multiblock.distilltower.small.3", "Main centered on Side-Bottom of Tower facing outwards");
-        LH.add("ktfru.tooltip.multiblock.distilltower.small.4", "Outputs automatically to the Holes on the Backside");
-        LH.add("ktfru.tooltip.multiblock.distilltower.small.5", "Bottom Hole is for outputting all Items");
-        LH.add("ktfru.tooltip.multiblock.distilltower.small.6", "Input only possible at Bottom Layer of Tower");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.1", "3x3 Base of Heat Transmitters");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.2", "3x3x4 of Distillation Tower Parts");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.3", "Main centered on Side-Bottom of Tower facing outwards");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.4", "Outputs automatically to the Holes on the Backside");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.5", "Bottom Hole is for outputting all Items");
+        LH.add("ktfru.tooltip.multiblock.distilltower.tiny.6", "Input only possible at Bottom Layer of Tower");
     }
 
     @Override
@@ -226,7 +222,7 @@ public class SmallDistillTower extends TileEntityBase10MultiBlockMachine {
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         int tX = getOffsetXN(mFacing), tY = yCoord, tZ = getOffsetZN(mFacing);
-        return aX >= tX - 1 && aY >= tY - 1 && aZ >= tZ - 1 && aX <= tX + 1 && aY <= tY + 5 && aZ <= tZ + 1;
+        return aX >= tX - 1 && aY >= tY - 1 && aZ >= tZ - 1 && aX <= tX + 1 && aY <= tY + 3 && aZ <= tZ + 1;
     }
 
     @Override

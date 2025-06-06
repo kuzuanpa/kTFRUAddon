@@ -48,10 +48,8 @@ public class ExpandableLayer implements IStructureLayer {
             for (int i = 0; i < variations.size(); i++) {
                 FixedLayer current = variations.get(i % variations.size());
                 if (current.validate(ctx, mainAxis, baseX, baseY, baseZ, tryAutoBuild, fastAutoBuild) == 0) {
-                    promoteContext(ctx,mainAxis,-1);
                     return repeatCount;
                 }
-                promoteContext(ctx, mainAxis, 1);
             }
             repeatCount++;
         }
@@ -63,38 +61,4 @@ public class ExpandableLayer implements IStructureLayer {
         variations.forEach(variation -> variation.setStructure(structure));
         this.structure=structure;
     }
-
-    public void promoteContext(StructureContext ctx, StructureContext.Axis axis, int num){
-        ctx.addX += axis == StructureContext.Axis.X ? num : 0;
-        ctx.addY += axis == StructureContext.Axis.Y ? num : 0;
-        ctx.addZ += axis == StructureContext.Axis.Z ? num : 0;
-    }
 }
-
-/*
-public class ExpandableLayer implements IStructureLayer {
-
-
-    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int startCoord) {
-        for(int i=0; i<variations.size(); i++) {
-            FixedLayer current = variations.get(i % variations.size());
-            int offset = calculateOffset(mainAxis, startCoord, i);
-
-            if(!current.validate(ctx, mainAxis,
-                    offset,
-                    ctx.getBaseY(),
-                    ctx.getBaseZ()
-            )) return false;
-        }
-        return true;
-    }
-
-    private int calculateOffset(StructureContext.Axis axis, int start, int step) {
-        switch (axis) {
-            case X :return start + step;
-            case Y :return start + step;
-            case Z :return start + step;
-        };
-        return 0;
-    }
-}*/
