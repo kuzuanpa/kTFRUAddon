@@ -26,11 +26,17 @@ import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.machines.ITileEntityRunningActively;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
@@ -161,5 +167,18 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
     @Override
     public IWailaInfoProvider[] getWailaInfos() {
         return instanceInfoState.asArray();
+    }
+
+    // Icons
+    public final static IIconContainer
+            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/tidalWaveGenerator/base"),
+            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/tidalWaveGenerator/front");
+
+
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if(aSide==mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlayStop ));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
 }

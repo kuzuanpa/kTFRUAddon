@@ -14,7 +14,7 @@
  */
 package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.ElectromagnetCrucible;
 import gregapi.data.LH;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.oredict.OreDictMaterial;
@@ -35,7 +35,7 @@ public class ContainerClientDummCrucible extends ContainerClientDefault {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        DummyCrucible tile = (DummyCrucible)mContainer.mTileEntity;
+        ElectromagnetCrucible tile = (ElectromagnetCrucible)mContainer.mTileEntity;
         drawMatList(tile, 8, 16, 49, 57, mouseX, mouseY);
         fontRendererObj.drawStringWithShadow(LH.get(LH.TEMPERATURE)+": " , 110, 10, 0xffffff);
         fontRendererObj.drawStringWithShadow(String.format("%.2f", tile.mTemp), 110, 22, 0xffffff);
@@ -44,7 +44,7 @@ public class ContainerClientDummCrucible extends ContainerClientDefault {
         drawTextureRect(Tessellator.instance, 110 + 56*(tile.mTemp/tile.mTempMax), 34, 64, 166, 1, 4);
 
     }
-    protected void drawMatList(DummyCrucible tile, int x, int y, int width, float height, int mouseX, int mouseY){
+    protected void drawMatList(ElectromagnetCrucible tile, int x, int y, int width, float height, int mouseX, int mouseY){
         mouseX -=  (this.width - xSize) / 2;
         mouseY -=  (this.height - ySize) / 2;
 

@@ -17,6 +17,7 @@
 package cn.kuzuanpa.ktfruaddon.item.items.random;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
+import cn.kuzuanpa.ktfruaddon.item.behavior.Behavior_ResearchViewer;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 import net.minecraft.item.ItemStack;
@@ -53,6 +54,9 @@ public class itemDevice extends MultiItemRandom {
         ItemList.DeprecatedAsteroidMinerRocketT4Fast.set(addItem(17, "Deprecated Fast Asteroid Miner Rocket (T4)",  ""));
         ItemList.DeprecatedAsteroidMinerRocketT5    .set(addItem(18, "Deprecated Asteroid Miner Rocket (T5)",  ""));
         ItemList.DeprecatedAsteroidMinerRocketT5Fast.set(addItem(19, "Deprecated Fast Asteroid Miner Rocket (T5)",  ""));
+
+        ItemList.ResearchViewer                      .set(addItem(20, "Research Viewer", "", Behavior_ResearchViewer.INSTANCE));
+
     }
 
     public static ItemStack getDeprecatedAsteroidMinerRocket(ItemStack stack){

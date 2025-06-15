@@ -18,7 +18,6 @@
 package cn.kuzuanpa.ktfruaddon.item.items.random;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
-import cn.kuzuanpa.ktfruaddon.item.behavior.Behavior_ResearchViewer;
 import gregapi.data.MT;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
@@ -58,7 +57,6 @@ public class itemCompact extends MultiItemRandom {
         ItemList.NaturalCore                         .set(addItem(18, "Natural Core", ""));
         ItemList.FlowerCluster                       .set(addItem(19, "Flower Cluster", ""));
         ItemList.GTQTIcon                            .set(addItem(20, "GTQT Icon", ""));
-        ItemList.ResearchViewer                      .set(addItem(21, "Research Viewer", "", Behavior_ResearchViewer.INSTANCE));
 
 
         ItemList.IntelligentCore         .set(addItem(100, "Intelligent Core", ""));

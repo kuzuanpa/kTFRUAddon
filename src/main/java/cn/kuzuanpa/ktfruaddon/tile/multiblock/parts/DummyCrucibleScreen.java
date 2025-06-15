@@ -126,10 +126,10 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         super.writeToNBT2(aNBT);
         IMultiBlockPart.writeToNBT(aNBT,mTargetPos,mDesign);
     }
-//
+
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return BlockTextureMulti.get(aSide==mFacing? new BlockTextureDefault(sOverlayFront) : null);
+        return BlockTextureMulti.get(new BlockTextureDefault(aSide==mFacing? sOverlayFront : sTextureCommon));
     }
 
     public ChunkCoordinates mTargetPos = null;
@@ -169,6 +169,16 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
 
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
         return true;
+    }
+
+    @Override
+    public boolean[] getValidSides() {
+        return SIDES_HORIZONTAL;
+    }
+
+    @Override
+    public byte getDefaultSide() {
+        return SIDE_FRONT;
     }
 
     @Override

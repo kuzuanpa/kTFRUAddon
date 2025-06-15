@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.DummyCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.ElectromagnetCrucible;
 import gregapi.oredict.OreDictMaterial;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -37,7 +37,7 @@ public class TESRDumyCrucible extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f) {
-        DummyCrucible tile = (DummyCrucible)t;
+        ElectromagnetCrucible tile = (ElectromagnetCrucible)t;
         boolean rendNow =false;
         for (byte i = 1; i < 7; i++) {
             if (tile.shouldSideBeRendered(i)) rendNow = true;

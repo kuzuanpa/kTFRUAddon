@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.miner;
 
+import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMeterDetectable;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
@@ -30,6 +31,11 @@ import gregapi.code.TagData;
 import gregapi.data.TD;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.gui.ContainerCommonDefault;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
@@ -37,6 +43,7 @@ import gregapi.util.OM;
 import gregapi.util.UT;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -54,13 +61,14 @@ import java.util.UUID;
 
 import static gregapi.data.CS.*;
 
-public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, IWailaTile {
-    public final double asteroidTotalProbability = Configuration.asteroidTypes.values().stream().mapToDouble(AsteroidSmall::getProbability).sum();
-    public boolean mStopped = false, mOverwrite = false;
+public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, IWailaTile, IMeterDetectable {
+    public boolean mStopped = false, mOverwrite = false, mStateChanged = false;
     public long mEnergy = 0, mInput = 256, mInputMax = 1024;
-    public int interval = 10000, progress = 0;
+    public int interval = 200, progress = 0, missCount=0;
     public List<IMeterDetectable.MeterData> receivedEnergy = new ArrayList<>(), receivedEnergyLast = new ArrayList<>();
     public TagData mEnergyType = TD.Energy.EU;
+    public StateMgr mState=new StateMgr();
+    public static final byte STATE_NORMAL=0, STATE_FOUND=1, STATE_RAIN=2, STATE_LIGHT=3, STATE_ENERGY=4, STATE_STRUCTURE=5;
     public AsteroidSmall findedAsteroid;
 
     @Override
@@ -88,21 +96,53 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     }
 
     @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
+            IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,null,0,0,aChatReturn);
+            return 1;
+        }
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
+
+    @Override
+    public void onMagnifyingGlass2(List<String> aChatReturn) {
+        aChatReturn.add("progress: "+progress);
+    }
+
+    public boolean checkState(){
+        if(!mStructureOkay){
+            progress =0;
+            mState.set(STATE_STRUCTURE);
+            return false;
+        }
+        if(mEnergy < mInput){
+            progress =0;
+            mState.set(STATE_ENERGY);
+            return false;
+        }
+        if(worldObj.isRaining()){
+            progress =0;
+            mState.set(STATE_RAIN);
+            return false;
+        }
+        if(worldObj.getBlockLightValue(xCoord, yCoord + 8, zCoord) > 6){
+            progress =0;
+            mState.set(STATE_LIGHT);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if(!aIsServerSide)return;
 
         receivedEnergyLast=receivedEnergy;
         receivedEnergy=new ArrayList<>();
 
-        if(!mStructureOkay || mEnergy < mInput){
-            progress =0;
-            return;
-        }
-        if(worldObj.isRaining())return;
-
-        mEnergy -= mInput;
 
         if(findedAsteroid != null){
+            mState.set(STATE_FOUND);
             if(slotHas(0) && OM.is(OD_USB_STICKS[0],slot(0))){
                 NBTTagCompound tag = slot(0).getTagCompound();
                 if(tag == null) tag = new NBTTagCompound();
@@ -115,17 +155,27 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
             }
             return;
         }
+        if(!checkState())return;
+        mEnergy -= mInput;
 
+        mState.set(STATE_NORMAL);
         progress++;
         if(progress < interval)return;
+        progress =0;
 
-        float result = rng((int) Math.round(asteroidTotalProbability*100))/100F;
+        if(rng(10)!=0 && missCount < 20){
+            missCount++;
+            return;
+        }
+        missCount = 0;
+
+        float result = rng((int) Math.round(Configuration.asteroidTypes.values().stream().mapToDouble(AsteroidSmall::getProbability).sum()*100))/100F;
         for (AsteroidSmall asteroid : Configuration.asteroidTypes.values()) {
             result -= asteroid.getProbability();
             if(result > 0)continue;
             findedAsteroid = asteroid;
+            break;
         }
-        progress =0;
     }
 
     @Override
@@ -168,7 +218,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AXBCD")
             .fixedLayer('A',
                     " XXX ",
-                    "XXXCX",
+                    "XXXXX",
                     " CCXX",
                     "XXXXX",
                     " XXX "
@@ -229,6 +279,11 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
         return SIDES_HORIZONTAL;
     }
 
+    @Override
+    public byte getDefaultSide() {
+        return SIDE_FRONT;
+    }
+
     //inventory
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
     private static final int[] ACCESSIBLE_SLOTS = new int[] {0};
@@ -242,7 +297,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
 
     @Override
     public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer);
+        return super.onTickCheck(aTimer) || mState.isChangedAndClear();
     }
 
     @Override
@@ -255,6 +310,46 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         IWailaTile.super.getWailaBody(currentTip, accessor, config);
         return currentTip;
+    }
+
+    @Override
+    public byte getVisualData() {
+        return mState.get();
+    }
+
+    @Override
+    public void setVisualData(byte aData) {
+        mState.set(aData);
+    }
+
+    // Icons
+    public final static IIconContainer
+            sTextureSides        = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/asteroidFinder/base"),
+            sOverlayBase         = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/asteroidFinder/front/base"),
+            sOverlayFound        = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/asteroidFinder/front/found"),
+            sOverlayErrEnergy    = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/err/energy"),
+            sOverlayErrStructure = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/err/structure"),
+            sOverlayErrLight     = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/asteroidFinder/front/err/light"),
+            sOverlayErrRain      = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/asteroidFinder/front/err/rain"),
+            sOverlayRunning      = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/asteroidFinder/front/running");
+
+
+    public IIconContainer getFrontOverlay(){
+        switch (mState.get()){
+            case STATE_FOUND:    return sOverlayFound;
+            case STATE_ENERGY:   return sOverlayErrEnergy;
+            case STATE_STRUCTURE:return sOverlayErrStructure;
+            case STATE_LIGHT:    return sOverlayErrLight;
+            case STATE_RAIN:     return sOverlayErrRain;
+            case STATE_NORMAL:
+            default:             return sOverlayRunning;
+        }
+    }
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if(aSide==mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayBase), BlockTextureDefault.get(worldObj == null? sOverlayRunning : getFrontOverlay(), true));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
     @Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.asteroid.finder";}
 }
