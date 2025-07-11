@@ -20,7 +20,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.IMeterDetectable;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SkyPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
@@ -215,7 +214,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
 
     //Structure
     ChunkCoordinates lastFailedPos=null;
-    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AXBCD")
+    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AXXXBCD")
             .fixedLayer('A',
                     " XXX ",
                     "XXXXX",
@@ -223,14 +222,12 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
                     "XXXXX",
                     " XXX "
             )
-            .layer('X',
-                    new ExpandableLayer(6).variation(
-                            " XXX ",
-                                   "X   X",
-                                   "X C X",
-                                   "X   X",
-                                   " XXX "
-                            )
+            .fixedLayer('X',
+                    " XXX ",
+                    "X   X",
+                    "X C X",
+                    "X   X",
+                    " XXX "
             ).fixedLayer('B',
                     " XXX ",
                     "XXXXX",
@@ -260,13 +257,12 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
             .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
             .where('S', new SkyPredicate())
-            .setOffset(-2,0,0)
-            .setFastAutoBuild(true);
+            .setOffset(-2,0,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord, zCoord, mFacing, (aPlayer != null || aInventory != null), aPlayer, aInventory));
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
     @Override

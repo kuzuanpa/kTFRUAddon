@@ -32,8 +32,8 @@ import static gregapi.data.CS.PX_P;
 import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 import static org.lwjgl.opengl.GL11.*;
 
-public class TESRDumyCrucible extends TileEntitySpecialRenderer {
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/DummyCrucible.png");
+public class TESRElectromagnetCrucible extends TileEntitySpecialRenderer {
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/ElectromagnetCrucible.png");
 
     @Override
     public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f) {

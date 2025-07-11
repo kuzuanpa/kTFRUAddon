@@ -22,7 +22,6 @@ import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketFxBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketSyncDataByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketSyncDataByteArrayLongAndIDs;
-import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.item.ItemPostInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
@@ -78,13 +77,13 @@ public class commonProxy extends Abstract_Proxy {
         lootPostInit.init(aEvent);
         ItemPostInit.init(aEvent);
 
+
     }
 
     public void serverStarting(FMLServerStartingEvent aEvent) {
     }
 
     public void serverStarted(FMLServerStartedEvent aEvent) {
-        GTTileEntityRegistry.update();
     }
 
     public void serverStopping(FMLServerStoppingEvent aEvent) {

@@ -60,7 +60,7 @@ public class LargeCompressedGasTank extends MultiTileEntityTank implements IComp
                 if (i == 0 && j == 0 && k == 0) {
                     if (getAir(tX+i, tY+j, tZ+k)) worldObj.setBlockToAir(tX+i, tY+j, tZ+k); else tSuccess = F;
                 } else {
-                    if (!utils.checkAndSetTarget(this, tX+i, tY+j, tZ+k, aClickedAt, aPlayer, aInventory, mTankWalls, GTTileEntityRegistry.gregtech, 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
+                    if (!utils.checkAndSetTarget(this, tX+i, tY+j, tZ+k, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, mTankWalls, 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
                 }
             }
             return tSuccess;

@@ -16,8 +16,10 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerTy
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import net.minecraft.util.ChunkCoordinates;
 
 public interface IStructureLayer {
-    public int validate(StructureContext ctx, StructureContext.Axis axis, int baseX, int baseY, int baseZ, boolean tryAutoBuild, boolean fastAutoBuild);
+    public int validate(StructureContext ctx, StructureContext.Axis axis, int baseX, int baseY, int baseZ);
     public void setStructure(IStringBaseStructure structure);
+    public ChunkCoordinates getSize();
 }

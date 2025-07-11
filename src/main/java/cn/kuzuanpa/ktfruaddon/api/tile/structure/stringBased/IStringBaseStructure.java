@@ -22,7 +22,7 @@ import java.util.Map;
 public interface IStringBaseStructure {
     ChunkCoordinates checkStructure(StructureContext context);
     Map<Character, IStructurePredicate> getPredicates();
-
+    ChunkCoordinates getSize();
 }
 
 

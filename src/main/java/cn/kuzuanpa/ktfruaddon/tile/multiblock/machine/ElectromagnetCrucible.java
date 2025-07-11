@@ -24,7 +24,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientDummCrucible;
+import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientElectromagnetCrucible;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.ArrayListNoNulls;
@@ -61,6 +61,7 @@ import java.io.*;
 import java.util.*;
 
 import static gregapi.data.CS.*;
+import static gregapi.data.CS.SFX.MC_FIZZ;
 
 public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, IDummyCrucibleMaterialProvider, ITileSyncByteArrayLong, IWailaTile {
     public boolean mStopped = false, mContentChanged = true, mTempChanged = true;
@@ -110,8 +111,15 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
 
         for (OreDictMaterialStack tMaterial : mContent) mMassTotal += (long) tMaterial.weight();
 
+        if(mEnergy < mEnergyBaseConsume){
+            UT.Sounds.send(MC_FIZZ, (TileEntity) this);
+            mTemp = WD.envTemp(worldObj, xCoord,yCoord,zCoord);
+            mContent.clear();
+            mContentChanged = true;
+        }
+
         if(mEnergy > mEnergyBaseConsume && mTemp <= mTempMax){
-            mTemp += (mEnergy - mEnergyBaseConsume) / ( 1 + mMassTotal * 1F / MultiTileEntityCrucible.KG_PER_ENERGY);
+            mTemp += (mEnergy - mEnergyBaseConsume) / ( 1 + mMassTotal * 1.66F / MultiTileEntityCrucible.KG_PER_ENERGY);
             mTempChanged=true;
         }
         mEnergy = 0;
@@ -174,9 +182,15 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
         }
         return 0;
     }
+    public boolean isMaterialValid(OreDictMaterial aMaterial) {
+        return aMaterial.containsAny(TD.Properties.INVALID_MATERIAL)?/*for anyIron, anySteel and so on*/
+                aMaterial.mTargetSmelting.mMaterial.containsAny(TD.Compounds.ALLOY, TD.Atomic.METAL) :
+                aMaterial.containsAny(TD.Compounds.ALLOY, TD.Atomic.METAL);
+
+    }
 
     public boolean addMaterialStacks(List<OreDictMaterialStack> aList, long aTemperature) {
-        if (checkStructure(F) && OM.total(mContent)+OM.total(aList) <= MAX_AMOUNT && aList.stream().anyMatch(matStack -> matStack.mMaterial.mMeltingPoint < mTemp)) {
+        if (checkStructure(F) && OM.total(mContent)+OM.total(aList) <= MAX_AMOUNT && aList.stream().anyMatch(matStack -> matStack.mMaterial.mMeltingPoint < mTemp && isMaterialValid(matStack.mMaterial) )) {
             double tWeight1 = OM.weight(mContent)+mMaterial.getWeight(U*100), tWeight2 = OM.weight(aList);
             if (tWeight1+tWeight2 > 0) mTemp = aTemperature + (mTemp>aTemperature?+1:-1)*UT.Code.units((long) Math.abs(mTemp - aTemperature), (long)(tWeight1+tWeight2), (long)tWeight1, F);
             for (OreDictMaterialStack tMaterial : aList) {
@@ -234,14 +248,13 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
             .where('P', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31504)))
             .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18041)))
-            .setOffset(-2,0,0)
-            .setFastAutoBuild(true);
+            .setOffset(-2,0,0);
 
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord, zCoord, mFacing, (aPlayer != null || aInventory != null), aPlayer, aInventory));
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
     @Override
@@ -250,29 +263,23 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
     }
 
     @Override
-    public @Nullable CrucibleOreDictMaterialStack extractMaterial(long amount, @Nullable OreDictMaterial selectedMaterial) {
+    public @Nullable OreDictMaterialStack extractMaterial(long amount, @Nullable OreDictMaterial selectedMaterial) {
         OreDictMaterialStack rawMatStack = findValidMaterial(selectedMaterial);
         if(rawMatStack == null)return null;
         long requiredAmount = UT.Code.units(amount, U, rawMatStack.mMaterial.mTargetSolidifying.mAmount, T);
         if(rawMatStack.mAmount <= requiredAmount){
             mContent.remove(rawMatStack);
             mContentChanged = true;
-            return new CrucibleOreDictMaterialStack(rawMatStack, rawMatStack.mAmount == requiredAmount);
+            return rawMatStack;
         }
         rawMatStack.mAmount -= requiredAmount;
         mContentChanged = true;
-        return new CrucibleOreDictMaterialStack(rawMatStack.copy(requiredAmount), true);
+        return rawMatStack.copy(requiredAmount);
     }
 
-    @Override
-    public float getTemperature() {
-        return mTemp;
-    }
+    @Override public float getTemperature() {return mTemp;}
 
-    @Override
-    public boolean[] getValidSides() {
-        return SIDES_HORIZONTAL;
-    }
+    @Override public byte getDefaultSide() {return SIDE_FRONT;}
 
     //inventory
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
@@ -286,7 +293,7 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
         return mContent.stream().filter(stack -> stack.mMaterial.mMeltingPoint < mTemp).findFirst().orElse(null);
     }
 
-    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientDummCrucible(aPlayer.inventory, this, aGUIID);}
+    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientElectromagnetCrucible(aPlayer.inventory, this, aGUIID);}
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {return new ContainerCommonDefault(aPlayer.inventory, this, aGUIID);}
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {

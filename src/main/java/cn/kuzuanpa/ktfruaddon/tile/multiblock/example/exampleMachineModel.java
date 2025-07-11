@@ -21,6 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.ModelRenderBaseMultiBlockMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
@@ -69,14 +70,14 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
     //{part,part}
     //这里决定每个参与构成本机器的方块的子id
     //Controls every block needed to build the machine
-    public static int[][][] blockIDMap = {{
+    public static short[][][] blockIDMap = {{
             {31002, 31002, 31002,31002 }
     },{
             {31002, 31002, 31002,0 }
     },};
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
     //T是忽略此位置的方块 ,F是正常检测
     //T = ignore ,F = normally check
     public static boolean[][][] ignoreMap = {{
@@ -86,21 +87,21 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
     },};
 
     //change value there to set usage of every block.
-    public int getUsage(int blockID ,short registryID){
+    public int getUsage(int blockID ,MultiTileEntityRegistry registryID){
         if (blockID == 31003&&registryID==k) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (blockID == 31003||blockID==18022&&registryID==g) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
-    public int getBlockID(int checkX, int checkY, int checkZ){
+    public short getBlockID(int checkX, int checkY, int checkZ){
         return blockIDMap[checkY][checkZ][checkX];
     }
 
     public  boolean isIgnored(int checkX, int checkY, int checkZ){ return ignoreMap[checkY][checkZ][checkX];}
     //Special Model Machines need to set every part to transparent, so we need to use parts in our own registry.
     //使用模型渲染的机器需要将每个组成方块设为透明，所以我们需要使用来自自己注册库的部件方块。
-    public short getRegistryID(int x,int y,int z){return k;}
+    public MultiTileEntityRegistry getRegistryID(int x,int y,int z){return k;}
 
     @Override
     public boolean checkStructure3(boolean shouldPartsTransparent, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -114,7 +115,7 @@ public class exampleMachineModel extends ModelRenderBaseMultiBlockMachine {
             for (cY  = 0; cY < machineY&&tSuccess; cY++) {
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),aClickedAt, aPlayer, aInventory,getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
+                        if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ),aClickedAt, aPlayer, aInventory, getRegistryID(cX,cY,cZ),getBlockID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage( getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ)))) {
                             tSuccess = F;
                             //FMLLog.log(Level.FATAL, "failed");
                         }

@@ -17,6 +17,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTurbine;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTurbine;
@@ -111,7 +113,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 						tBits = (tY == tMinY ? MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_OUT : MultiTileEntityMultiBlockPart.NOTHING);
 					}
 				}
-				if (!utils.checkAndSetTarget(this, tX, tY, tZ, aClickedAt, aPlayer, aInventory, mTurbineWalls, getMultiTileEntityRegistryID(), tX == tOutX && tY == tOutY && tZ == tOutZ ? 3 : 0, tBits)) tSuccess = F;
+				if (!utils.checkAndSetTarget(this, tX, tY, tZ, aClickedAt, aPlayer, aInventory, new TileDesc(GTTileEntityRegistry.gregtech, mTurbineWalls, tX == tOutX && tY == tOutY && tZ == tOutZ ? 3 : 0, tBits))) tSuccess = F;
 			}
 			return tSuccess;
 		}

@@ -16,8 +16,10 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
 import net.minecraft.block.Block;
 import net.minecraft.util.ChunkCoordinates;
+import zmaster587.libVulpes.block.BlockMeta;
 
 import static gregapi.data.CS.W;
 
@@ -34,12 +36,18 @@ public class BlockPredicate implements IStructurePredicate {
     }
 
     @Override
-    public boolean matches(StructureContext ctx, int x, int y, int z) {
+    public boolean check(StructureContext ctx, int x, int y, int z) {
         return ctx.world.getBlock(x,y, z) == expected && (expectedMeta == W || ctx.world.getBlockMetadata(x,y, z) == expectedMeta);
     }
     @Override
     public boolean set(StructureContext ctx, int x, int y, int z) {
         return utils.tryPlaceBlock(expected, expectedMeta, ctx.world, new ChunkCoordinates(x, y, z), ctx.player, ctx.inventory);
+    }
+
+    @Override
+    public boolean project(StructureContext ctx, int x, int y, int z) {
+        kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z,  new BlockMeta(expected, expectedMeta));
+        return true;
     }
 }
 

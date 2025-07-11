@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -60,17 +59,15 @@ public interface IRoom extends ITileEntityMultiBlockController{
             //Check blocks at every side
             for (int i = 0; i < forCount; i++) {
                 BlockCoord checkingCoord = new BlockCoord(coord.x + forX[i], coord.y + forY[i], coord.z + forZ[i]);
-                if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController, checkingCoord.x, checkingCoord.y, checkingCoord.z, aClickedAt, aPlayer, aInventory, availTile.aRegistryMeta, availTile.aRegistryID, availTile.aDesign, availTile.aUsage))) {
-                    if (!checkRange.isCoordInBox(checkingCoord)) {
-                        FMLLog.log(Level.INFO, "Err: Out of range:" + checkingCoord.x + checkingCoord.y + checkingCoord.z);
-                        checkingBlockCoords.clear();
-                        break;
-                    }
-                    if (!checkingBlockCoords.contains(checkingCoord)) {
-                        FMLLog.log(Level.INFO, "will check block:" + checkingCoord.x + checkingCoord.y + checkingCoord.z);
-                        checkingBlockCoords.put(checkingBlockCoords.size(), checkingCoord);
-
-                    }
+                if (utils.checkAndSetTarget(aController, checkingCoord.x, checkingCoord.y, checkingCoord.z, aClickedAt, aPlayer, aInventory, availableTiles)) continue;
+                if (!checkRange.isCoordInBox(checkingCoord)) {
+                    FMLLog.log(Level.INFO, "Err: Out of range:" + checkingCoord.x + checkingCoord.y + checkingCoord.z);
+                    checkingBlockCoords.clear();
+                    break;
+                }
+                if (!checkingBlockCoords.contains(checkingCoord)) {
+                    FMLLog.log(Level.INFO, "will check block:" + checkingCoord.x + checkingCoord.y + checkingCoord.z);
+                    checkingBlockCoords.put(checkingBlockCoords.size(), checkingCoord);
                 }
             }
         });

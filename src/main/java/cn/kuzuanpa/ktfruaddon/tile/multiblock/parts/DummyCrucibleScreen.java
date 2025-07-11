@@ -26,6 +26,7 @@ import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
 import gregapi.old.Textures;
 import gregapi.oredict.OreDictMaterial;
+import gregapi.oredict.OreDictMaterialStack;
 import gregapi.oredict.OreDictPrefix;
 import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
@@ -50,10 +51,10 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements IMultiBlockPart, IMultiTileEntity.IMTE_SyncDataByteArray, IWailaTile {
-    private IDummyCrucibleMaterialProvider.CrucibleOreDictMaterialStack mContent = null;
+    private OreDictMaterialStack mContent = null;
     public OreDictPrefix[] validPrefix = new OreDictPrefix[]{OP.ingot, OP.ingotDouble, OP.ingotTriple, OP.ingotQuadruple, OP.ingotQuintuple, OP.plate, OP.plateDouble, OP.plateTriple, OP.plateQuadruple, OP.plateQuintuple, OP.chunkGt, OP.plateTiny, OP.bolt, OP.stick, OP.stickLong, OP.casingSmall, OP.ring, OP.gearGt, OP.gearGtSmall, OP.toolHeadRawSaw , OP.toolHeadRawChisel, OP.toolHeadRawSword , OP.toolHeadRawPickaxe , OP.toolHeadRawShovel, OP.toolHeadRawSpade , OP.toolHeadRawUniversalSpade, OP.toolHeadRawAxe , OP.toolHeadRawAxeDouble , OP.toolHeadRawHoe , OP.toolHeadRawSense , OP.toolHeadRawPlow, OP.toolHeadRawArrow, OP.nugget, OP.billet, OP.round};
     private OreDictPrefix createTo = OP.ingot;
-    public boolean clientMolten = false, clientMatChanged=false;
+    public boolean enableAutoInput=false, clientMolten = false, clientMatChanged=false;
     public OreDictMaterial clientMat = null;
     float mTemp = C;
 
@@ -68,14 +69,13 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
             setContent(null);
             return true;
         }
-        if(aPlayer.getCurrentEquippedItem() != null && updateCreateTo(aPlayer.getCurrentEquippedItem()))return true;
-
-        ITileEntityMultiBlockController controller = getTarget(true);
-        if(controller instanceof IDummyCrucibleMaterialProvider){
-            IDummyCrucibleMaterialProvider provider = (IDummyCrucibleMaterialProvider) controller;
-            setContent(provider.extractMaterial(getCreateTo().mAmount, null));
-            if(this.mContent != null)mTemp = provider.getTemperature();
+        if(aHitY > PX_P[15]){
+            enableAutoInput=!enableAutoInput;
+            return true;
         }
+        if(mContent != null)return false;
+        if(aPlayer.getCurrentEquippedItem() != null && updateCreateTo(aPlayer.getCurrentEquippedItem()))return true;
+        requestInput();
         return true;
     }
 
@@ -87,11 +87,20 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         }
         return prefix;
     }
+    public void requestInput(){
+        if(mContent != null)return;
+        ITileEntityMultiBlockController controller = getTarget(true);
+        if(controller instanceof IDummyCrucibleMaterialProvider){
+            IDummyCrucibleMaterialProvider provider = (IDummyCrucibleMaterialProvider) controller;
+            setContent(provider.extractMaterial(getCreateTo().mAmount, null));
+            if(this.mContent != null)mTemp = provider.getTemperature();
+        }
+    }
     public void solidifyContent(){
-        if (getContent() == null || getContent().stack == null || getContent().stack.mMaterial == null || getContent().stack.mMaterial.mMeltingPoint < mTemp) return;
-        OreDictPrefix tPrefix = getTargetPrefix(getContent().stack.mMaterial);
-        if (tPrefix != null && getContent() != null && slot(0) == null && getContent().isEnough) {
-            setInventorySlotContents(0, tPrefix.mat(getContent().stack.mMaterial.mTargetSolidifying.mMaterial, 1));
+        if (getContent() == null || getContent().mMaterial == null || getContent().mMaterial.mMeltingPoint < mTemp) return;
+        OreDictPrefix tPrefix = getTargetPrefix(getContent().mMaterial);
+        if (tPrefix != null && getContent() != null && slot(0) == null && getCreateTo().mAmount == getContent().mAmount) {
+            setInventorySlotContents(0, tPrefix.mat(getContent().mMaterial.mTargetSolidifying.mMaterial, 1));
             setContent(null);
         }
     }
@@ -99,19 +108,35 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-
         if (aNBT.hasKey(NBT_TARGET)) mTargetPos = IMultiBlockPart.readTargetPosFromNBT(aNBT);
         if (aNBT.hasKey(NBT_DESIGN)) mDesign = UT.Code.unsignB(aNBT.getByte(NBT_DESIGN));
+        if (aNBT.hasKey(NBT_MODE)) enableAutoInput = aNBT.getBoolean(NBT_MODE);
+        if (aNBT.hasKey("createTo")) createTo = OreDictPrefix.get(aNBT.getString("createTo"));
+        if (aNBT.hasKey("content")) mContent = OreDictMaterialStack.load("content", aNBT);
+        if (aNBT.hasKey("temp")) mTemp = aNBT.getFloat("temp");
 
+    }
+
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+        IMultiBlockPart.writeToNBT(aNBT,mTargetPos,mDesign);
+        UT.NBT.setBoolean(aNBT, NBT_MODE, enableAutoInput);
+        if(createTo != OP.ingot)aNBT.setString("createTo", createTo.mNameInternal);
+        if(mContent != null)mContent.save("content", aNBT);
+        aNBT.setFloat("temp", mTemp);
     }
 
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if (aIsServerSide) {
-            mTemp = Math.max(WD.envTemp(worldObj, xCoord,yCoord,zCoord), mTemp - 8);
-            solidifyContent();
-        }
+        if (!aIsServerSide)return;
+
+        mTemp = Math.max(WD.envTemp(worldObj, xCoord,yCoord,zCoord), mTemp - 16);
+        solidifyContent();
+
+        if(enableAutoInput && !hasRedstoneIncoming() && aTimer % 5 == 0)requestInput();
+
     }
 
     @Override
@@ -121,11 +146,6 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         return result;
     }
 
-    @Override
-    public void writeToNBT2(NBTTagCompound aNBT) {
-        super.writeToNBT2(aNBT);
-        IMultiBlockPart.writeToNBT(aNBT,mTargetPos,mDesign);
-    }
 
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
@@ -184,7 +204,7 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
         int prefixID = getCreateTo().mNameInternal.hashCode();
-        short matID = (short) (getContent() == null? 0 : getContent().stack.mMaterial.mMeltingPoint < mTemp ? -getContent().stack.mMaterial.mID : getContent().stack.mMaterial.mID);
+        short matID = (short) (getContent() == null? 0 : getContent().mMaterial.mMeltingPoint < mTemp ? -getContent().mMaterial.mID : getContent().mMaterial.mID);
         return aSendAll ?
                 getClientDataPacketByteArray(aSendAll,
                         getDirectionData(),
@@ -237,11 +257,11 @@ public class DummyCrucibleScreen extends TileEntityBase09FacingSingle implements
         this.createTo = createTo;
     }
 
-    public IDummyCrucibleMaterialProvider.CrucibleOreDictMaterialStack getContent() {
+    public OreDictMaterialStack getContent() {
         return mContent;
     }
 
-    public void setContent(IDummyCrucibleMaterialProvider.CrucibleOreDictMaterialStack mContent) {
+    public void setContent(OreDictMaterialStack mContent) {
         clientMatChanged = true;
         this.mContent = mContent;
     }

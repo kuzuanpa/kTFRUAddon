@@ -14,18 +14,9 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile;
 
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
-import gregapi.data.CS;
-import gregapi.util.ST;
-import org.apache.logging.log4j.Level;
 
 public class GTTileEntityRegistry {
-    public static short gregtech = CS.W;
-    public static short ktfruaddon = CS.W;
-    public static void update(){
-        gregtech = ST.id(MultiTileEntityRegistry.getRegistry("gt.multitileentity").mBlock);
-        ktfruaddon = ST.id(MultiTileEntityRegistry.getRegistry("ktfru.multitileentity").mBlock);
-        FMLLog.log(Level.INFO,"Updated Registry ID, ktfruaddon:"+ktfruaddon+", gregtech:"+gregtech);
-    }
+    public static MultiTileEntityRegistry gregtech = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
+    public static MultiTileEntityRegistry ktfruaddon = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
 }

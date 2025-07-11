@@ -26,11 +26,11 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Map;
 
-public class ContainerClientDummCrucible extends ContainerClientDefault {
-    public ContainerClientDummCrucible(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID) {
-        super(aInventoryPlayer, aTileEntity, aGUIID, "ktfruaddon:textures/gui/DummyCrucible.png");
+public class ContainerClientElectromagnetCrucible extends ContainerClientDefault {
+    public ContainerClientElectromagnetCrucible(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID) {
+        super(aInventoryPlayer, aTileEntity, aGUIID, "ktfruaddon:textures/gui/ElectromagnetCrucible.png");
     }
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/gui/DummyCrucible.png");
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/gui/ElectromagnetCrucible.png");
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {

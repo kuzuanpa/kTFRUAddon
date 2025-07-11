@@ -212,11 +212,12 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
         if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
 
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
-        if (!(OM.is(OD_USB_STICKS[0],equippedItem))) {
-            openGUI(aPlayer, aSide);
+        if (OM.is(OD_USB_STICKS[0],equippedItem)) tryReadAsteroidFromUSB(equippedItem, aPlayer);
+        if (aPlayer.isSneaking()) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }
-        tryReadAsteroidFromUSB(equippedItem, aPlayer);
+        openGUI(aPlayer, aSide);
         return true;
     }
 
@@ -271,7 +272,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
 
     //Structure
     ChunkCoordinates lastFailedPos=null;
-    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABBBCBBD")
+    static final IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABBBCBBD")
             .fixedLayer('A',
                     "  XX ",
                     " XAAX",
@@ -293,17 +294,17 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
                     " X   ",
                     "     "
             )
-            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech  , 18002)))
+            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
-            .setOffset(-1,0,0)
-            .setFastAutoBuild(true);
+            .setOffset(-1,0,0);
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord, zCoord, mFacing, (aPlayer != null || aInventory != null), aPlayer, aInventory));
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
+
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return true;
@@ -312,7 +313,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         ChunkCoordinates startPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, 0, 1, 1);
-        ChunkCoordinates endPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, 1, 50, 3);
+        ChunkCoordinates endPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, 1, 50, 5);
         return AxisAlignedBB.getBoundingBox(startPos.posX, startPos.posY,startPos.posZ, endPos.posX,endPos.posY,endPos.posZ);
     }
 

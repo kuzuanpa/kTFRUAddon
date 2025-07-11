@@ -39,6 +39,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.async.IMappedStructureAsync;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
@@ -97,9 +98,9 @@ public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMac
             {18002, 18002, 18002, 18002, 18002},
     }};
     //这是决定物品注册库（即来源mod）k是本mod,g是gregtech
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
-    public short[][][] registryIDMap = {{
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
+    public MultiTileEntityRegistry[][][] registryIDMap = {{
             {g, g, k, g, g},
             {g, g, g, g, g},
             {g, g, g, g, g},
@@ -120,7 +121,8 @@ public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMac
     }
 
     public int getUsage(int mapX, int mapY, int mapZ) {
-        int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
+        MultiTileEntityRegistry registryID = getRegistryID(mapX,mapY,mapZ);
+        int blockID = getBlockID(mapX, mapY, mapZ);
         if (blockID == 18002&&registryID==k) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (blockID == 18002||blockID==18022&&registryID==g) {
@@ -135,7 +137,7 @@ public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMac
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return ignoreMap[checkY][checkZ][checkX];
     }
-    public short getRegistryID(int checkX, int checkY, int checkZ){return registryIDMap[checkY][checkZ][checkX];}
+    public MultiTileEntityRegistry getRegistryID(int checkX, int checkY, int checkZ){return registryIDMap[checkY][checkZ][checkX];}
 
     UUID asyncTaskID = UUID.randomUUID();
     ChunkCoordinates lastFailedPos=null;

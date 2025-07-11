@@ -65,8 +65,8 @@ import static gregapi.data.CS.*;
 public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiBlockFluidHandler, IMultiTileEntity.IMTE_SyncDataByteArray, IMappedStructureAsync, IAsyncStructure {
     public short maxLayer = 8, maxRange=8, liquidYLevelRender=0, wallID=0, oldYLevel=0;
     public FluidTankGT mTank = new FluidTankGT();
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
     public boolean isTankChanged = false, isStructureChanged =false, isStoredEnergyChanged=false, disableTESR=false;
     public final HashMap<Short,Long> layerLiquidCapacity = new HashMap<>();
     public static final int liquidAmountPerBlock = 8000;
@@ -76,7 +76,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
 
         aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE));
-        aList.add(LH.Chat.WHITE + "3x2x1 "+MultiTileEntityRegistry.getRegistry(g).getItem(wallID).getDisplayName());
+        aList.add(LH.Chat.WHITE + "3x2x1 "+g.getItem(wallID).getDisplayName());
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.1"));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.2"));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.3")+(maxRange*2)+"x"+(maxRange*2));
@@ -251,7 +251,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
         Queue<BlockCoord> queue = new LinkedList<>();
         queue.add(new BlockCoord(initX, yCoord+layer,initZ));
         checkedAirList.add(new BlockCoord(initX, yCoord+layer,initZ));
-        if (Arrays.stream(getAvailableTiles()).anyMatch(availTile ->IAsyncStructure.checkAndSetTarget(worldContainer,this, new ChunkCoordinates(initX, yCoord+layer, initZ), new TileDesc[]{ new TileDesc(availTile.aRegistryID, availTile.aRegistryMeta, availTile.aUsage, availTile.aDesign)}, false, aClickedAt, aPlayer, aInventory)))return false; //the start pos is a wall, Why you do that?
+        if (Arrays.stream(getAvailableTiles()).anyMatch(availTile ->IAsyncStructure.checkAndSetTarget(worldContainer,this, new ChunkCoordinates(initX, yCoord+layer, initZ), new TileDesc[]{ new TileDesc(availTile.aRegistry, availTile.aRegistryMeta, availTile.aUsage, availTile.aDesign)}, false, aClickedAt, aPlayer, aInventory)))return false; //the start pos is a wall, Why you do that?
         //start pos is vaild, begin search.
         layerCapacity++;
         while (!queue.isEmpty()){
@@ -259,12 +259,12 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
             if(!checkRange.isCoordInBox(coord))return false;//Out Bound
 
             //check the block below is in sink || the below block is a valid wall
-            if(!checkedAirList.contains(new BlockCoord(coord.x, yCoord+layer-1, coord.z)) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> IAsyncStructure.checkAndSetTarget(worldContainer, this, new ChunkCoordinates(coord.x, yCoord+layer-1, coord.z), new TileDesc[]{ new TileDesc(availTile.aRegistryID, availTile.aRegistryMeta, availTile.aUsage, availTile.aDesign)}, false, aClickedAt, aPlayer, aInventory))) return false;
+            if(!checkedAirList.contains(new BlockCoord(coord.x, yCoord+layer-1, coord.z)) && Arrays.stream(getAvailableTiles()).noneMatch(availTile -> IAsyncStructure.checkAndSetTarget(worldContainer, this, new ChunkCoordinates(coord.x, yCoord+layer-1, coord.z), new TileDesc[]{ new TileDesc(availTile.aRegistry, availTile.aRegistryMeta, availTile.aUsage, availTile.aDesign)}, false, aClickedAt, aPlayer, aInventory))) return false;
             for (int i = 0; i < 4; i++) {
                 BlockCoord coordNext = new BlockCoord(coord.x + forX[i], yCoord + layer, coord.z + forZ[i]);
                 if(checkedAirList.contains(coordNext))continue;
                 checkedAirList.add(coordNext);
-                if (Arrays.stream(getAvailableTiles()).noneMatch(availTile ->IAsyncStructure.checkAndSetTarget(worldContainer,this, codeUtil.CCCoord2MCCoord(coordNext), new TileDesc[]{ new TileDesc(availTile.aRegistryID, availTile.aRegistryMeta, availTile.aUsage, availTile.aDesign)}, false, aClickedAt, aPlayer, aInventory))){
+                if (Arrays.stream(getAvailableTiles()).noneMatch(availTile ->IAsyncStructure.checkAndSetTarget(worldContainer,this, codeUtil.CCCoord2MCCoord(coordNext), new TileDesc[]{ new TileDesc(availTile.aRegistry, availTile.aRegistryMeta, availTile.aUsage, availTile.aDesign)}, false, aClickedAt, aPlayer, aInventory))){
                     layerCapacity++;
                     queue.add(coordNext);
                 }
@@ -385,7 +385,7 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
     public int getBlockID(int checkX, int checkY, int checkZ){return wallID;}
     public boolean isIgnored(int checkX, int checkY, int checkZ){return false;}
-    public short getRegistryID(int x,int y,int z){return g;}
+    public MultiTileEntityRegistry getRegistryID(int x,int y,int z){return g;}
 
     ChunkCoordinates lastFailedPos=null;
     UUID asyncTaskID = UUID.randomUUID();

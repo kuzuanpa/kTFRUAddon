@@ -15,17 +15,27 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import net.minecraft.init.Blocks;
+import zmaster587.libVulpes.block.BlockMeta;
 
 public class SkyPredicate implements IStructurePredicate {
     public SkyPredicate() {
     }
 
     @Override
-    public boolean matches(StructureContext ctx, int x, int y, int z) {
+    public boolean check(StructureContext ctx, int x, int y, int z) {
         return ctx.world.canBlockSeeTheSky(x,y, z);
     }
     @Override
     public boolean set(StructureContext ctx, int x, int y, int z) {
+        return true;
+    }
+
+
+    @Override
+    public boolean project(StructureContext ctx, int x, int y, int z) {
+        kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z,  new BlockMeta(Blocks.glass, 0, "Must See Sky"));
         return true;
     }
 }

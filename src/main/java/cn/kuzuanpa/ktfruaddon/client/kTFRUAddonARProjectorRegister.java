@@ -20,13 +20,20 @@ import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import zmaster587.libVulpes.api.IDummyMultiBlockRegisterer;
+import zmaster587.libVulpes.api.LibVulpesBlocks;
 import zmaster587.libVulpes.block.BlockMeta;
+import zmaster587.libVulpes.tile.TileSchematic;
 import zmaster587.libVulpes.tile.multiblock.DummyTileMultiBlock;
+import zmaster587.libVulpes.tile.multiblock.TilePlaceholder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class kTFRUAddonARProjectorRegister implements IDummyMultiBlockRegisterer {
@@ -55,11 +62,31 @@ public class kTFRUAddonARProjectorRegister implements IDummyMultiBlockRegisterer
         dummyStructures.add(new DummyTileMultiBlock(TidalWaveGenerater(),"ktfru.projector.tidalWaveGenerater"));
         return dummyStructures;
     }
+    public static boolean setProjectBlock(World world, int x, int y, int z, BlockMeta block){
+        return setProjectBlock(world, x, y, z, Collections.singletonList(block));
+    }
+
+    public static boolean setProjectBlock(World world, int x, int y, int z, List<BlockMeta> block){
+        if(!(world.isAirBlock(x, y, z) || world.getBlock(x, y, z).isReplaceable(world, x, y, z)) && block.get(0).getBlock().getMaterial() != Material.air) return false;
+        world.setBlock(x, y, z, LibVulpesBlocks.blockPhantom, block.get(0).getMeta(), 3);
+        TileEntity newTile = world.getTileEntity(x, y, z);
+
+        if(!(newTile instanceof TilePlaceholder))return false;
+
+        ((TileSchematic)newTile).setReplacedBlock(block);
+        ((TilePlaceholder)newTile).setReplacedTileEntity(block.get(0).getBlock().createTileEntity(null, 0));
+        return true;
+    }
     static Object[][][] TidalWaveGenerater(){
-        BlockMeta main = tile(k, 30033);
+        List<BlockMeta> main = new ArrayList<>();
+        main.add(tile(k, 30033));
+        main.add(tile(k, 30032));
+        main.add(tile(k, 30031));
         BlockMeta wall = tile(g, 18002);
         BlockMeta blad = tile(k, 31045);
-        BlockMeta aair = new BlockMeta(Blocks.stained_glass,8,"ktfru.projector.block.must.air");
+        List<BlockMeta> aair = new ArrayList<>();
+        aair.add(new BlockMeta(Blocks.stained_glass,8,"ktfru.projector.block.must.air"));
+        aair.add(new BlockMeta(Blocks.stained_glass,3,"ktfru.projector.block.must.liquid"));
         BlockMeta aliq = new BlockMeta(Blocks.stained_glass,3,"ktfru.projector.block.must.liquid");
         BlockMeta asol = new BlockMeta(Blocks.stone,0,"ktfru.projector.block.any.solid");
         return new Object[][][]{{

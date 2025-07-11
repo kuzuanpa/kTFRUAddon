@@ -19,6 +19,7 @@ import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.ModelRenderBaseMultiBlockMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
@@ -43,7 +44,7 @@ public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;
     //values used by TESR
     public int processTime, proTime, headMoveToX, headMoveToZ;
-    public static int[][][] blockIDMap = {{
+    public static short[][][] blockIDMap = {{
             {31000, 0    , 31007,31007,31007},
             {31000, 31008, 31007,31007,31007},
             {31000, 31008, 31007,31007,31007}
@@ -76,12 +77,12 @@ public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
         else if(getBlockID(x, y, z)==31007)return MultiTileEntityMultiBlockPart.ONLY_ITEM_IN;
         else {return MultiTileEntityMultiBlockPart.NOTHING;}
     }
-    public int getBlockID(int checkX, int checkY, int checkZ){
+    public short getBlockID(int checkX, int checkY, int checkZ){
         return blockIDMap[checkY][checkZ][checkX];
     }
 
     public  boolean isIgnored(int checkX, int checkY, int checkZ){ return ignoreMap[checkY][checkZ][checkX];}
-    public short getRegistryID(int x,int y,int z){return GTTileEntityRegistry.ktfruaddon;}
+    public MultiTileEntityRegistry getRegistryID(int x, int y, int z){return GTTileEntityRegistry.ktfruaddon;}
 
     @Override
     public boolean checkStructure3(boolean shouldPartsTransparent, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -93,7 +94,7 @@ public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
             tY+=yMapOffset;
             int cX, cY, cZ;
             for (cY  = 0; cY < machineY&&tSuccess; cY++) for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory, getBlockID(cX,cY,cZ), getRegistryID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
+                if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory, getRegistryID(cX,cY,cZ), getBlockID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
                     tSuccess = F;
                 }
             }

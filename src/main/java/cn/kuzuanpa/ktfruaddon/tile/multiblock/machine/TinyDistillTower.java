@@ -47,116 +47,115 @@ public class TinyDistillTower extends TileEntityBase10MultiBlockMachine {
         int tX = this.getOffsetXN(this.mFacing);
         int tY = this.yCoord;
         int tZ = this.getOffsetZN(this.mFacing);
-        short gRegistry = GTTileEntityRegistry.gregtech;
 
         if (this.worldObj.blockExists(tX - 1, tY, tZ - 1) && this.worldObj.blockExists(tX + 1, tY, tZ - 1) && this.worldObj.blockExists(tX - 1, tY, tZ + 1) && this.worldObj.blockExists(tX + 1, tY, tZ + 1)) {
             boolean tSuccess = true;
-            if (!utils.checkAndSetTarget(this, tX - 1, tY - 1, tZ - 1, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX - 1, tY - 1, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX, tY - 1, tZ - 1, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX, tY - 1, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX + 1, tY - 1, tZ - 1, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX + 1, tY - 1, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX - 1, tY - 1, tZ, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX - 1, tY - 1, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX, tY - 1, tZ, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX, tY - 1, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX + 1, tY - 1, tZ, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX + 1, tY - 1, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX - 1, tY - 1, tZ + 1, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX - 1, tY - 1, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX, tY - 1, tZ + 1, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX, tY - 1, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX + 1, tY - 1, tZ + 1, aClickedAt, aPlayer, aInventory,18101, gRegistry, 0, -3)) {
+            if (!utils.checkAndSetTarget(this, tX + 1, tY - 1, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18101, 0, -3)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX - 1, tY, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX - 1, tY, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX, tY, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 3 ? 1 : 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX, tY, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 3 ? 1 : 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX + 1, tY, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX + 1, tY, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX - 1, tY, tZ, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 5 ? 1 : 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX - 1, tY, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 5 ? 1 : 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX, tY, tZ, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX, tY, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX + 1, tY, tZ, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 4 ? 1 : 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX + 1, tY, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 4 ? 1 : 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX - 1, tY, tZ + 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX - 1, tY, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX, tY, tZ + 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 2 ? 1 : 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX, tY, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 2 ? 1 : 0, -61)) {
                 tSuccess = false;
             }
 
-            if (!utils.checkAndSetTarget(this, tX + 1, tY, tZ + 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -61)) {
+            if (!utils.checkAndSetTarget(this, tX + 1, tY, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -61)) {
                 tSuccess = false;
             }
 
             for(int i = 1; i < 4; ++i) {
-                if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 3 ? 1 : 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 3 ? 1 : 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX + 1, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX + 1, tY + i, tZ - 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 5 ? 1 : 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 5 ? 1 : 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX, tY + i, tZ, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX, tY + i, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX + 1, tY + i, tZ, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 4 ? 1 : 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX + 1, tY + i, tZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 4 ? 1 : 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ + 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX - 1, tY + i, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX, tY + i, tZ + 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, this.mFacing == 2 ? 1 : 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX, tY + i, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, this.mFacing == 2 ? 1 : 0, -5)) {
                     tSuccess = false;
                 }
 
-                if (!utils.checkAndSetTarget(this, tX + 1, tY + i, tZ + 1, aClickedAt, aPlayer, aInventory,18102, gRegistry, 0, -5)) {
+                if (!utils.checkAndSetTarget(this, tX + 1, tY + i, tZ + 1, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (short)18102, 0, -5)) {
                     tSuccess = false;
                 }
             }

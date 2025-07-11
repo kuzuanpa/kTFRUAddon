@@ -17,6 +17,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerTy
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
+import net.minecraft.util.ChunkCoordinates;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class FixedLayer implements IStructureLayer {
     }
 
     @Override
-    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ, boolean tryAutoBuild, boolean fastAutoBuild) {
+    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ) {
         for(int rowIdx=0; rowIdx<rows.size(); rowIdx++) {
             String row = rows.get(rowIdx);
             for(int colIdx=0; colIdx<row.length(); colIdx++) {
@@ -44,10 +45,7 @@ public class FixedLayer implements IStructureLayer {
 
                 if(condition == null)throw new IllegalArgumentException("condition can not be null!");
 
-                if (!condition.matches(ctx, absCoords[0], absCoords[1], absCoords[2])) {
-                    if(!tryAutoBuild)return 0;
-                    if(!condition.set(ctx, absCoords[0], absCoords[1], absCoords[2]) || !fastAutoBuild) return 0;
-                }
+                if (!condition.validate(ctx, absCoords[0], absCoords[1], absCoords[2])) return 0;
             }
         }
         promoteContext(ctx, mainAxis, 1);
@@ -57,6 +55,11 @@ public class FixedLayer implements IStructureLayer {
     @Override
     public void setStructure(IStringBaseStructure structure) {
         this.structure=structure;
+    }
+
+    @Override
+    public ChunkCoordinates getSize() {
+        return new ChunkCoordinates(rows.size(), 1, rows.get(0).length());
     }
 
     public void promoteContext(StructureContext ctx, StructureContext.Axis axis, int num){

@@ -23,27 +23,27 @@ public class StructureContext {
     public final World world;
     public int addX,addY,addZ, oX,oY,oZ;
     public final byte facing;
-    public final boolean tryAutoBuild;
     public final ITileEntityMultiBlockController controller;
     public final Entity player;
     public final IInventory inventory;
-    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing, boolean tryAutoBuild) {
-        this(controller, world, oX, oY, oZ, facing, tryAutoBuild, null, null);
+    public StringBaseMode mode;
+    public StructureContext(ITileEntityMultiBlockController controller, StringBaseMode mode, World world, int oX,int oY, int oZ, byte facing) {
+        this(controller, mode, world, oX, oY, oZ, facing, null, null);
     }
-    public StructureContext(ITileEntityMultiBlockController controller, World world, int oX,int oY, int oZ, byte facing, boolean tryAutoBuild, Entity player, IInventory inventory) {
+    public StructureContext(ITileEntityMultiBlockController controller, StringBaseMode mode, World world, int oX,int oY, int oZ, byte facing, Entity player, IInventory inventory) {
         this.controller = controller;
         this.world = world;
         this.oX=oX;
         this.oY=oY;
         this.oZ=oZ;
+        this.mode=mode;
         this.facing = facing;
-        this.tryAutoBuild=tryAutoBuild;
         this.player = player;
         this.inventory = inventory;
 
     }
 
-        public int[] getMapCoord() {
+    public int[] getMapCoord() {
         return convertCoord(facing, oX, oY, oZ, addX, addY, addZ);
     }
     public static int[] convertCoord(byte facing, int oX, int oY, int oZ, int addX, int addY, int addZ) {
@@ -53,5 +53,7 @@ public class StructureContext {
         return new int[]{resultX[facing],resultY[facing],resultZ[facing]};
     }
     public enum Axis {X, Y, Z}
-
+    public enum StringBaseMode {
+        CHECK, SET, PROJECT
+    }
 }

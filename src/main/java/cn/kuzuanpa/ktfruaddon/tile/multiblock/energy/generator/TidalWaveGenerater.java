@@ -23,6 +23,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IWailaTile;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -101,8 +102,8 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
             {18002,   0  , 18002},
             {31045, 31045, 31045},
     }};
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
     @Override
     public boolean[] getValidSides() {
@@ -123,7 +124,7 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
         return getBlockID(mapX,mapY,mapZ)==0;
     }
 
-    public short getRegistryID(int mapX, int mapY, int mapZ) {
+    public MultiTileEntityRegistry getRegistryID(int mapX, int mapY, int mapZ) {
         return getBlockID(mapX,mapY,mapZ) == 18002 ? g:k;
     }
 

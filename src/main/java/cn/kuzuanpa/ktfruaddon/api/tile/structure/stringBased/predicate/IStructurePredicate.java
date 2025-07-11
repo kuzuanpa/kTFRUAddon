@@ -17,6 +17,15 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 
 public interface IStructurePredicate {
-    boolean matches(StructureContext ctx, int x, int y, int z);
+    default boolean validate(StructureContext ctx, int x, int y, int z){
+        switch (ctx.mode){
+            case SET:return set(ctx, x, y, z);
+            case PROJECT:return project(ctx, x, y, z);
+            case CHECK:return check(ctx, x, y, z);
+        }
+        return false;
+    }
+    boolean check(StructureContext ctx, int x, int y, int z);
+    boolean project(StructureContext ctx, int x, int y, int z);
     boolean set(StructureContext ctx, int x, int y, int z);
 }

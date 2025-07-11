@@ -20,15 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IDummyCrucibleMaterialProvider {
     /**@param selectMaterial Select what material to be extract, crucible won't return other material if this param != null**/
-    @Nullable CrucibleOreDictMaterialStack extractMaterial(long amount, @Nullable OreDictMaterial selectMaterial);
+    @Nullable OreDictMaterialStack extractMaterial(long amount, @Nullable OreDictMaterial selectMaterial);
     float getTemperature();
-    class CrucibleOreDictMaterialStack{
-        public OreDictMaterialStack stack;
-        public boolean isEnough;
-        /**@param isMaterialEnough You should set it in Provider side. mold won't check stack.mAmount anymore**/
-        public CrucibleOreDictMaterialStack(OreDictMaterialStack stack,boolean isMaterialEnough){
-            this. stack = stack;
-            this.isEnough = isMaterialEnough;
-        }
-    }
 }

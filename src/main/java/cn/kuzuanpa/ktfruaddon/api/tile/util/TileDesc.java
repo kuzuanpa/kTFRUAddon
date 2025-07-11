@@ -14,35 +14,36 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.util;
 
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 
 public class TileDesc {
+    public MultiTileEntityRegistry aRegistry;
     public short aRegistryMeta;
-    public int aRegistryID;
     public int aDesign;
     public int aUsage;
 
-    public TileDesc(int aRegistryID, short aRegistryMeta, int aUsage, int aDesign) {
+    public TileDesc(MultiTileEntityRegistry aRegistry, short aRegistryMeta, int aUsage, int aDesign) {
         this.aDesign = aDesign;
-        this.aRegistryID = aRegistryID;
+        this.aRegistry = aRegistry;
         this.aRegistryMeta = aRegistryMeta;
         this.aUsage = aUsage;
     }
 
-    public TileDesc(int aRegistryID, int aRegistryMeta, int aUsage, int aDesign) {
-        this(aRegistryID, (short) aRegistryMeta, aUsage, aDesign);
+    public TileDesc(MultiTileEntityRegistry aRegistry, int aRegistryMeta, int aUsage, int aDesign) {
+        this(aRegistry, (short) aRegistryMeta, aUsage, aDesign);
     }
 
-    public TileDesc(int aRegistryID, int aRegistryMeta, int aUsage) {
-        this(aRegistryID, (short) aRegistryMeta, aUsage, 0);
+    public TileDesc(MultiTileEntityRegistry aRegistry, int aRegistryMeta, int aUsage) {
+        this(aRegistry, (short) aRegistryMeta, aUsage, 0);
     }
 
-    public TileDesc(int aRegistryID, int aRegistryMeta) {
-        this(aRegistryID, (short) aRegistryMeta, MultiTileEntityMultiBlockPart.NOTHING, 0);
+    public TileDesc(MultiTileEntityRegistry aRegistry, int aRegistryMeta) {
+        this(aRegistry, (short) aRegistryMeta, MultiTileEntityMultiBlockPart.NOTHING, 0);
     }
 
     @Override
     public String toString() {
-        return aRegistryID+":"+aRegistryMeta;
+        return aRegistry +":"+aRegistryMeta;
     }
 }

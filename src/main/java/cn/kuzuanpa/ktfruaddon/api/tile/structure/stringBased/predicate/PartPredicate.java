@@ -17,6 +17,15 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.block.multitileentity.MultiTileEntityContainer;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
+import net.minecraft.nbt.NBTTagCompound;
+import zmaster587.libVulpes.block.BlockMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PartPredicate implements IStructurePredicate {
     private final TileDesc[] expected;
@@ -34,12 +43,29 @@ public class PartPredicate implements IStructurePredicate {
     }
 
     @Override
-    public boolean matches(StructureContext ctx, int x, int y, int z) {
+    public boolean check(StructureContext ctx, int x, int y, int z) {
         return utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare);
     }
     @Override
     public boolean set(StructureContext ctx, int x, int y, int z) {
         return utils.checkAndSetTarget(ctx.controller, x,y,z, null, ctx.player, ctx.inventory, expected, allowPartShare);
+    }
+
+    @Override
+    public boolean project(StructureContext ctx, int x, int y, int z) {
+        if(expected.length == 1) kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z,  getMetaBlockForGTTile(expected[0].aRegistry, expected[0].aRegistryMeta));
+        else {
+            List<BlockMeta> list = new ArrayList<>();
+            for(TileDesc desc : expected)list.add(getMetaBlockForGTTile(desc.aRegistry, desc.aRegistryMeta));
+            kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z, list);
+        }
+        return true;
+    }
+
+    public static BlockMeta getMetaBlockForGTTile(MultiTileEntityRegistry registry, int id){
+        MultiTileEntityContainer container = registry.getNewTileEntityContainer(id, new NBTTagCompound());
+        ((IMultiTileEntity) container.mTileEntity).setShouldRefresh(false);
+        return new BlockMeta(container.mBlock,container.mTileEntity);
     }
 }
 

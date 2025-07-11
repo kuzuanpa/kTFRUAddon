@@ -63,7 +63,7 @@ public class clientProxy extends commonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TFCPresser.class, new TESRTFCPresser());
         ClientRegistry.bindTileEntitySpecialRenderer(CNCMachine3.class, new TESRCNCMachine3());
         ClientRegistry.bindTileEntitySpecialRenderer(LiquidBattery.class, new TESRLiquidBattery());
-        ClientRegistry.bindTileEntitySpecialRenderer(ElectromagnetCrucible.class, new TESRDumyCrucible());
+        ClientRegistry.bindTileEntitySpecialRenderer(ElectromagnetCrucible.class, new TESRElectromagnetCrucible());
         ClientRegistry.bindTileEntitySpecialRenderer(AsteroidMiner.class, new TESRAsteroidMiner());
         ClientRegistry.bindTileEntitySpecialRenderer(DummyCrucibleScreen.class, new TESRDummyCrucibleScreen());
 

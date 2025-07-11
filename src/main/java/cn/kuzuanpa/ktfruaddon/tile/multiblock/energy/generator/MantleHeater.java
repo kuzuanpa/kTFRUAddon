@@ -21,6 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -85,11 +86,11 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
             {  0  , 18004, 31004, 18004,   0  },
             {  0  ,   0  , 18004,   0  ,   0  },
     }};
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
     public int getUsage(int mapX, int mapY, int mapZ) {
-int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
+        int blockID = getBlockID(mapX, mapY, mapZ);
         if(blockID==18004)return MultiTileEntityMultiBlockPart.ONLY_IN;
         if(blockID==31004)return MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
         return MultiTileEntityMultiBlockPart.NOTHING;
@@ -122,7 +123,7 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
         return getBlockID(mapX,mapY,mapZ)==0;
     }
 
-    public short getRegistryID(int mapX, int mapY, int mapZ) {
+    public MultiTileEntityRegistry getRegistryID(int mapX, int mapY, int mapZ) {
         return getBlockID(mapX,mapY,mapZ) == 18004 ? g:k;
     }
 
@@ -154,7 +155,7 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
         int mapX=utils.getRealX(getFacing(), tX, 2, 2), mapZ=utils.getRealZ(getFacing(), tZ, 2, 2);
         for (int i = 1; i < yCoord; i++) {
             int mapY=tY - i;
-            if (!utils.checkAndSetTarget(this, mapX, mapY, mapZ, aClickedAt, aPlayer, aInventory, 31039, k, 0, MultiTileEntityMultiBlockPart.NOTHING) && !(worldObj.getBlock(mapX, mapY, mapZ) == Blocks.bedrock)){
+            if (!utils.checkAndSetTarget(this, mapX, mapY, mapZ, aClickedAt, aPlayer, aInventory,new TileDesc(k, 31039, 0, MultiTileEntityMultiBlockPart.NOTHING) ) && !(worldObj.getBlock(mapX, mapY, mapZ) == Blocks.bedrock)){
                 FxRenderBlockOutline.addBlockOutlineToRender(new ChunkCoordinates(mapX, mapY, mapZ),0xff0000,2,System.currentTimeMillis()+8000);
                 return false;
             }

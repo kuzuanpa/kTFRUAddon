@@ -22,6 +22,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.part.IConditionParts;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
@@ -60,8 +61,8 @@ public class maskAlignerDUV extends TileEntityBaseControlledMachine implements I
             {31002, 31120, 31002},
     }};
 
-    public short g = GTTileEntityRegistry.gregtech;
-    public short k = GTTileEntityRegistry.ktfruaddon;
+    public MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
+    public MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
 
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;

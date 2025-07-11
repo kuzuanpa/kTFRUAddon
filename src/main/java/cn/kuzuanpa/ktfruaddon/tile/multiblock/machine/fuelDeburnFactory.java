@@ -21,6 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -212,15 +213,16 @@ public class fuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
     public final short sizeX = 11, sizeY = 19, sizeZ = 14;
     public final short xMapOffset = -6,yMapOffset=-1, zMapOffset = 0;
 
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
         return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
     }
 
     public int getUsage(int mapX, int mapY, int mapZ) {
-int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
+        MultiTileEntityRegistry registryID = getRegistryID(mapX,mapY,mapZ);
+int blockID = getBlockID(mapX, mapY, mapZ);
         if(mapY == 1 && blockID == 18002)return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         if (blockID == 18002&&registryID==k) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
@@ -236,7 +238,7 @@ int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY,
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return getBlockID(checkX,checkY,checkZ) == 0;
     }
-    public short getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX,checkY,checkZ) == 18002?g:k;}
+    public MultiTileEntityRegistry getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX,checkY,checkZ) == 18002?g:k;}
 
     ChunkCoordinates lastFailedPos=null;
     @Override

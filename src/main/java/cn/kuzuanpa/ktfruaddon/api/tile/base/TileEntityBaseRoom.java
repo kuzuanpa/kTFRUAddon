@@ -33,7 +33,6 @@ import net.minecraft.util.ChunkCoordinates;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachine {
@@ -77,7 +76,7 @@ public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachi
             //Check blocks at every side
             for (int i = 0; i < fori; i++) {
                 BlockCoord checkingCoord=new BlockCoord(coord.x+forX[i],coord.y+forY[i],coord.z+forZ[i]);
-                if (Arrays.stream(availableTiles).noneMatch(availTile -> utils.checkAndSetTarget(aController,checkingCoord.x,checkingCoord.y,checkingCoord.z,aClickedAt,aPlayer,aInventory,availTile.aRegistryMeta,availTile.aRegistryID,availTile.aDesign, availTile.aUsage))){
+                if (!utils.checkAndSetTarget(aController, checkingCoord.x, checkingCoord.y,checkingCoord.z,aClickedAt,aPlayer,aInventory,availableTiles)){
                     if (!checkRange.isCoordInBox(checkingCoord)) {
                         FMLLog.log(Level.INFO,"Err: Out of range:"+checkingCoord.x+checkingCoord.y+checkingCoord.z);
                         checkingBlockCoords.clear();

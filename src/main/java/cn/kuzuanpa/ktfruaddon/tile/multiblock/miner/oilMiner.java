@@ -20,6 +20,7 @@ import cn.kuzuanpa.ktfruaddon.api.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -45,14 +46,14 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy, IFluidHandler {
-    public int wallID=-1;
+    public short wallID=-1;
     public FluidTankGT mTank = new FluidTankGT(32000);
     public FluidTankGT mTankInput = new FluidTankGT(32000);
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if(aNBT.hasKey(NBT_DESIGN))wallID=aNBT.getInteger(NBT_DESIGN);
+        if(aNBT.hasKey(NBT_DESIGN))wallID=aNBT.getShort(NBT_DESIGN);
         if(aNBT.hasKey(NBT_INPUT_MAX))mInputMax=aNBT.getLong(NBT_INPUT_MAX);
         if(aNBT.hasKey(NBT_INPUT    ))mInput   =aNBT.getLong(NBT_INPUT);
         if(aNBT.hasKey(NBT_INPUT_MIN))mInputMin=aNBT.getLong(NBT_INPUT_MIN);
@@ -166,7 +167,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     //Structure
     public final short machineX = 3, machineY = 2, machineZ = 3;
     public final short xMapOffset = -1, zMapOffset = 0;
-    public int[][][] blockIDMap = {{
+    public short[][][] blockIDMap = {{
             { -1000,   0  , -1000},
             { 31014, 31014, 31014},
             { 31014, 31014, 31014}
@@ -176,10 +177,10 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
             { -1000, -1000, -1000}
     }};
 
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
-    public int getUsage(int blockID ,short registryID,int dX,int dY,int dZ){
+    public int getUsage(int blockID ,MultiTileEntityRegistry registryID,int dX,int dY,int dZ){
         if (blockID == wallID&&registryID==g&&dY==0) {
             return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
         } else if (blockID == wallID&&registryID==g&&dY==1&&dX==1&&dZ==0) {
@@ -189,14 +190,14 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         }else{return MultiTileEntityMultiBlockPart.NOTHING;}
     }
 
-    public int getBlockID(int checkX, int checkY, int checkZ){
+    public short getBlockID(int checkX, int checkY, int checkZ){
         return blockIDMap[checkY][checkZ][checkX] == -1000?wallID:blockIDMap[checkY][checkZ][checkX];
     }
 
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;
     }
-    public short getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX, checkY, checkZ)==wallID? g:k;}
+    public MultiTileEntityRegistry getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX, checkY, checkZ)==wallID? g:k;}
 
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -210,7 +211,7 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
                 for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
                     for (cX = 0; cX < machineX&&tSuccess; cX++) {
                         if(!isIgnored(cX,cY,cZ)) {
-                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory, getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ), 0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cX,cY,cZ)))
+                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory,  getRegistryID(cX, cY, cZ), getBlockID(cX, cY, cZ),0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cX,cY,cZ)))
                                 tSuccess = F;
                         }
                     }

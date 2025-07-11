@@ -16,6 +16,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerTy
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import net.minecraft.util.ChunkCoordinates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +43,12 @@ public class ExpandableLayer implements IStructureLayer {
     private StructureContext.Axis layerAxis;
 
     @Override
-    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ, boolean tryAutoBuild, boolean fastAutoBuild) {
+    public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ) {
 
         for (repeatCount = 0; repeatCount < maxRepeats;) {
             for (int i = 0; i < variations.size(); i++) {
                 FixedLayer current = variations.get(i % variations.size());
-                if (current.validate(ctx, mainAxis, baseX, baseY, baseZ, tryAutoBuild, fastAutoBuild) == 0) {
+                if (current.validate(ctx, mainAxis, baseX, baseY, baseZ) == 0) {
                     return repeatCount;
                 }
             }
@@ -60,5 +61,12 @@ public class ExpandableLayer implements IStructureLayer {
     public void setStructure(IStringBaseStructure structure) {
         variations.forEach(variation -> variation.setStructure(structure));
         this.structure=structure;
+    }
+
+    @Override
+    public ChunkCoordinates getSize() {
+        ChunkCoordinates size = variations.get(0).getSize();
+        size.posY = variations.size()*maxRepeats;
+        return size;
     }
 }

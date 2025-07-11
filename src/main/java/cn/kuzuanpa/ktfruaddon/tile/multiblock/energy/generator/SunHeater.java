@@ -18,6 +18,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -66,7 +67,7 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;
-    public static int[][][] blockIDMap = {{
+    public static short[][][] blockIDMap = {{
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
             {18002, 18002, 18002, 18002, 18002},
@@ -91,9 +92,9 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
             {31004, 31004, 31004, 31004, 31004},
             {31004, 31004, 31004, 31004, 31004},
     },};
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
-    public short[][][] registryIDMap = {{
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
+    public MultiTileEntityRegistry[][][] registryIDMap = {{
             {g, g, g, g, g},
             {g, g, g, g, g},
             {g, g, g, g, g},
@@ -119,7 +120,7 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
             {k, k, k, k, k},
     }};
 
-    public int getUsage(int blockID ,short registryID){
+    public int getUsage(int blockID ,MultiTileEntityRegistry registryID){
         if(blockID==18002&&registryID==g)return MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
         if(blockID==31004&&registryID==k)return MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
         return MultiTileEntityMultiBlockPart.NOTHING;
@@ -142,15 +143,15 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
             tX = utils.getRealX(getFacing(), tX, xMapOffset, -zMapOffset);
             tZ = utils.getRealZ(getFacing(), tZ, xMapOffset, -zMapOffset);
             int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < 2 &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) for (checkX = 0; checkX < machineX&&tSuccess; checkX++) if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY -1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = F;
+            for (checkY  = 0; checkY < 2 &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) for (checkX = 0; checkX < machineX&&tSuccess; checkX++) if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY -1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, registryIDMap[checkY][checkZ][checkX], blockIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = F;
             if(!tSuccess)return false;
 
-            for (checkY  = 2; checkY < machineYmax &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++) if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, blockIDMap[2][checkZ][checkX], registryIDMap[2][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[2][checkZ][checkX]))) tSuccess = F;
+            for (checkY  = 2; checkY < machineYmax &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++) if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, registryIDMap[2][checkZ][checkX], blockIDMap[2][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[2][checkZ][checkX]))) tSuccess = F;
             machineY = (short) (checkY - (tSuccess ? 2 : 3));
             if (!tSuccess) checkY--;
             tSuccess=T;
 
-            for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++)if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX]))) tSuccess = F;
+            for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++)if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, registryIDMap[3][checkZ][checkX], blockIDMap[3][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX]))) tSuccess = F;
             return tSuccess;
         }
         return mStructureOkay;

@@ -60,8 +60,7 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
             )
             .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
-            .setOffset(-2,0,0)
-            .setFastAutoBuild(true);
+            .setOffset(-2,0,0);
     //决定机器大小
     //this controls the size of machine.
     public final short sizeX = 5, sizeY = 1, sizeZ = 4;
@@ -74,7 +73,7 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = structure.checkStructure(new StructureContext(this, worldObj, xCoord, yCoord,zCoord,mFacing, (aPlayer != null || aInventory != null), aPlayer, aInventory));
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord,zCoord,mFacing, aPlayer, aInventory));
         return lastFailedPos == null;
     }
 

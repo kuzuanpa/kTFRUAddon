@@ -23,6 +23,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.TransformerPart;
 import gregapi.block.multitileentity.IWailaTile;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.IL;
 import gregapi.data.LH;
@@ -100,8 +101,8 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
                 {mWall, mWall, mWall, mWall},
         }};
     }
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
@@ -191,7 +192,7 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;
     }
-    public short getRegistryID(int checkX, int checkY, int checkZ){
+    public MultiTileEntityRegistry getRegistryID(int checkX, int checkY, int checkZ){
         int blockID = getBlockID(checkX, checkY, checkZ);
         return blockID == mCond || blockID == mBatt || blockID == 0? k: g;
     }

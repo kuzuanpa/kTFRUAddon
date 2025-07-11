@@ -38,12 +38,12 @@ public interface IAsyncStructure {
         }
         if (tTileEntity instanceof MultiTileEntityMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
-                if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
+                if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistry.currentID() != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
                 return utils.setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, tTile.aDesign, tTile.aUsage, false);
             }
         } else if (tTileEntity instanceof IMultiBlockPart) {
             for (TileDesc tTile : availTiles) {
-                if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
+                if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistry.currentID() != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
                 return utils.setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, tTile.aDesign, tTile.aUsage, false);
             }
         }

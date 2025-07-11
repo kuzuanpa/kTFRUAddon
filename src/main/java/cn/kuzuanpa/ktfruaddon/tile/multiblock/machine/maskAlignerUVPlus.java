@@ -21,6 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseControlledMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IConditionParts;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
@@ -64,11 +65,12 @@ public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implement
             {31011, 31011, 31011},
             {31011, 31011, 31011},
     }};
-    public short g = GTTileEntityRegistry.gregtech;
-    public short k = GTTileEntityRegistry.ktfruaddon;
+    public MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
+    public MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
 
     public int getUsage(int mapX, int mapY, int mapZ){
-        int registryID = getRegistryID(mapX,mapY,mapZ), blockID = getBlockID(mapX, mapY, mapZ);
+        MultiTileEntityRegistry registryID = getRegistryID(mapX,mapY,mapZ);
+        int blockID = getBlockID(mapX, mapY, mapZ);
         if (registryID==k) switch (blockID){
             case 31011: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
             case 31021: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
@@ -88,7 +90,7 @@ public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implement
     public  boolean isIgnored(int checkX, int checkY, int checkZ){
         return false;
     }
-    public short getRegistryID(int x,int y,int z){
+    public MultiTileEntityRegistry getRegistryID(int x,int y,int z){
         return getBlockID(x,y,z)==18002?g:k;
     }
 

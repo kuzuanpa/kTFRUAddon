@@ -31,17 +31,11 @@ public class LayerStructure implements IStringBaseStructure {
     private final Map<Character, IStructureLayer> layers = new HashMap<>();
     private final Map<Character, IStructurePredicate> predicates = new HashMap<>();
     public ChunkCoordinates controllerOffsetPos = null;
-    public boolean fastAutoBuild;
 
     public LayerStructure(StructureContext.Axis expandAxis) {
         this.expandAxis = expandAxis;
-        fastAutoBuild = false;
     }
 
-    public LayerStructure setFastAutoBuild(boolean fastAutoBuild) {
-        this.fastAutoBuild = fastAutoBuild;
-        return this;
-    }
     public LayerStructure layerRule(String sequence) {
         this.layerSequence = sequence;
         return this;
@@ -84,7 +78,7 @@ public class LayerStructure implements IStringBaseStructure {
             IStructureLayer layer = layers.get(c);
             if(layer == null) throw new IllegalArgumentException("Invalid Layer config");
 
-            int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2], ctx.tryAutoBuild, fastAutoBuild);
+            int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
             if(step == 0)return new ChunkCoordinates(ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
         }
         return null;
@@ -93,5 +87,13 @@ public class LayerStructure implements IStringBaseStructure {
     @Override
     public Map<Character, IStructurePredicate> getPredicates() {
         return predicates;
+    }
+
+    @Override
+    public ChunkCoordinates getSize() {
+        int y = 0;
+        for(char c : layerSequence.toCharArray()) y += layers.get(c).getSize().posY;
+        char firstLayer = layerSequence.charAt(0);
+        return new ChunkCoordinates(layers.get(firstLayer).getSize().posX, y, layers.get(firstLayer).getSize().posZ);
     }
 }

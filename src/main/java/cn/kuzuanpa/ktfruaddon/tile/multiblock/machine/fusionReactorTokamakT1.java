@@ -26,6 +26,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakT1;
 import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -368,8 +369,8 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public final short machineX = 27, machineY = 14, machineZ = 27;
     public final short xMapOffset = -12,yMapOffset = -1, zMapOffset = 0;
 
-    short k = GTTileEntityRegistry.ktfruaddon;
-    short g = GTTileEntityRegistry.gregtech;
+    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
+    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
     @Override
     public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
@@ -393,7 +394,7 @@ public class fusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         return getBlockID(mapX,mapY,mapZ)==0?T:F;
     }
 
-    public short getRegistryID(int mapX, int mapY, int mapZ) {
+    public MultiTileEntityRegistry getRegistryID(int mapX, int mapY, int mapZ) {
         return getBlockID(mapX,mapY,mapZ)==18002?g:k;
     }
 

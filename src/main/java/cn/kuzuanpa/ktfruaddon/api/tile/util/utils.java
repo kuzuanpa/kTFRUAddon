@@ -52,9 +52,6 @@ import java.io.IOException;
 import static gregapi.data.CS.*;
 
 public class utils {
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, aRegistryMeta,aRegistryID,aDesign,aMode);
-    }
     public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
         if(tTileEntity == null) return false;
@@ -67,11 +64,14 @@ public class utils {
         } catch (Throwable ignored){}
         return true;
     }
-    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, ChunkCoordinates coord, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, int aRegistryMeta, int aRegistryID, int aDesign, int aMode) {
-        return checkAndSetTarget(aController,coord, aClickedAt, aPlayer, aInventory, new TileDesc[] {new TileDesc(aRegistryID, aRegistryMeta, aMode, aDesign)});
-    }
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles, boolean allowPartShare) {
         return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, availTiles, allowPartShare);
+    }
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, MultiTileEntityRegistry registry, short registryMeta, int aDesign, int aUsage) {
+        return checkAndSetTarget(aController,aX,aY,aZ, aClickedAt, aPlayer, aInventory, new TileDesc(registry, registryMeta, aUsage, aDesign));
+    }
+    public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc availTile) {
+        return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, new TileDesc[]{availTile});
     }
     public static boolean checkAndSetTarget(ITileEntityMultiBlockController aController, int aX, int aY, int aZ, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileDesc[] availTiles) {
         return checkAndSetTarget(aController,new ChunkCoordinates(aX,aY,aZ), aClickedAt, aPlayer, aInventory, availTiles);
@@ -81,7 +81,7 @@ public class utils {
     }
 
     public static boolean tryPlaceTile(TileDesc tTile, ITileEntityMultiBlockController aController, ChunkCoordinates coord, Entity aPlayer, IInventory aInventory){
-        ItemStack aStack = ST.make(tTile.aRegistryID, 1, tTile.aRegistryMeta);
+        ItemStack aStack = ST.make(tTile.aRegistry.currentID(), 1, tTile.aRegistryMeta);
         if (!WD.easyRep(aController.getWorld(), coord.posX, coord.posY, coord.posZ) || !UT.Entities.canEdit(aPlayer, coord.posX, coord.posY, coord.posZ, aStack)) return false;
         if (aInventory == null || UT.Entities.hasInfiniteItems(aPlayer)) {// is Player in creative
             if (WD.set(aController.getWorld(), coord.posX, coord.posY, coord.posZ, aStack)) {
@@ -127,12 +127,12 @@ public class utils {
         TileDesc result = null;
 
         if (tTileEntity instanceof MultiTileEntityMultiBlockPart) for (TileDesc tTile : availTiles) {
-            if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID())continue;
+            if (tTile.aRegistryMeta != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistry.currentID() != ((MultiTileEntityMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID())continue;
             result = tTile;
             break;
         }
         else if (tTileEntity instanceof IMultiBlockPart) for (TileDesc tTile : availTiles) {
-            if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistryID != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
+            if (tTile.aRegistryMeta != ((IMultiBlockPart) tTileEntity).getMultiTileEntityID() || tTile.aRegistry.currentID() != ((IMultiBlockPart) tTileEntity).getMultiTileEntityRegistryID()) continue;
             result = tTile;
             break;
         }
