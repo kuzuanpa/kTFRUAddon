@@ -56,7 +56,7 @@ public class Plastic {
         recipeMaps.   HeatMixer          .addRecipe1(F,240, 100,OP.dust.mat(matList.CalciumAcetate.mat, 1),ZL_FS,flList.Acetone.make(500),OP.dust.mat(MT.CaCO3,1));
         RM.           Mixer              .addRecipe0(F,80 , 120,FL.array(FL.Propylene.make(100),MT.Cl.gas(U10,false)),FL.array(flList.AllylChloride.make(100),MT.HCl.gas(U10,false)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,100, 120,FL.array(flList.AllylChloride.make(100),flList.HypochlorousAcid.make(100)),FL.array(flList.Dichloromethane.make(100)),ZL_IS);
-        RM.           Mixer              .addRecipe0(F,120, 100,FL.array(MT.Glycerol.liquid(U10,false),MT.HCl.gas(U5,false),flList.GlacialAceticAcid.make(0)),FL.array(flList.Dichloromethane.make(100)),ZL_IS);
+        RM.           Mixer              .addRecipe0(F,120, 100,FL.array(MT.Glycerol.liquid(U10,false),MT.HCl.gas(U5,false),flList.GlacialAceticAcid.make(0)),FL.array(flList.DichloroPropane.make(100)),ZL_IS);
         recipeMaps.   HeatMixer          .addRecipe1(F,256,  80,OP.dust.mat(MT.Ag, 0),FL.array(FL.Propylene.make(100),FL.Oxygen.make(100),FL.Hydrogen.make(100)),flList.AllylAlcohol.make(100),ZL_IS);
         RM.           Mixer              .addRecipe1(F,256,  80,OP.dust.mat(MT.Pb, 0),FL.array(FL.Propylene.make(100),FL.Oxygen.make(100),flList.GlacialAceticAcid.make(40)),flList.AllylAcetate.make(100),ZL_IS);
         RM.           Mixer              .addRecipe0(F,140, 100,FL.array(flList.AllylAcetate.make(100),FL.Water.make(100)),FL.array(flList.AllylAlcohol.make(100),flList.GlacialAceticAcid.make(40)),ZL_IS);
@@ -153,6 +153,6 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe1(F,140,80,OP.dust.mat(MT.NaHCO3,0), FL.array(flList.DichloroPropane.make(1000),FL.DistW.make(1000)),FL.array(flList.Propanediol.make(1000),MT.HCl.gas(U*2,false)));
 
-        recipeMaps.   HeatMixer          .addRecipe0(F,120,200, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U,false)),FL.array(flList.DichloroPropane.make(1000)));
+        recipeMaps.   HeatMixer          .addRecipe0(F,120,200, FL.array(FL.Propylene.make(1000),MT.Cl.gas(U,false)),FL.array(flList.Dichloromethane.make(1000)));
     }
 }

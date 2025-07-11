@@ -87,8 +87,8 @@ public class OilProcessing {
         //Natural Gas
         RM.Centrifuge.addRecipe0(F,80,100,FL.array(FL.Gas_Natural.make(400)),FL.array(FL.CarbonDioxide.make(8),FL.Water.make(1),FL.Methane.make(380),FL.Nitrogen.make(8)),ZL_IS);
 
-        RM.BurnMixer.addRecipe0(false,64,400,FL.array(FL.Methane.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(40),FL.Hydrogen.make(280),FL.CarbonDioxide.make(30)));
-        RM.BurnMixer.addRecipe0(false,64,400,FL.array(flList.Naphtha.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(50),FL.Hydrogen.make(250),FL.CarbonDioxide.make(30)));
+        RM.BurnMixer.addRecipe0(false,64,80,FL.array(FL.Methane.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(40),FL.Hydrogen.make(280),FL.CarbonDioxide.make(30)));
+        RM.BurnMixer.addRecipe0(false,64,80,FL.array(flList.Naphtha.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(50),FL.Hydrogen.make(250),FL.CarbonDioxide.make(30)));
 
         RM.BurnMixer.addRecipe1(false,16,40,OP.dust.mat(MT.C,1),FL.array(FL.Oxygen.make(80)),FL.array(flList.CarbonMonoxide.make(20),FL.CarbonDioxide.make(30)));
         RM.BurnMixer.addRecipe1(false,16,40, gem.mat(MT.CoalCoke,1),FL.array(FL.Oxygen.make(120)),FL.array(flList.CarbonMonoxide.make(30),FL.CarbonDioxide.make(45)));

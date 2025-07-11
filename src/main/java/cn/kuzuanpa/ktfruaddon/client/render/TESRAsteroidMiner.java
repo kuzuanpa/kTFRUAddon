@@ -31,15 +31,21 @@ import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
-    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/asteroid_mine_rocket.obj"));
-    ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/TFCPresser.png");
+    IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/mining_rocket.obj"));
+    ResourceLocation texture = new ResourceLocation("ktfruaddon:models/mining_rocket.png");
 
     private static int bodyList;
 
     public TESRAsteroidMiner() {
-        bodyList = GL11.glGenLists(1);
+        bodyList = GL11.glGenLists(2);
         GL11.glNewList(bodyList, GL11.GL_COMPILE);
-        model.renderPart("cube");
+        model.renderPart("main");
+        model.renderPart("head");
+        GL11.glEndList();
+        GL11.glNewList(bodyList+1, GL11.GL_COMPILE);
+        model.renderPart("left");
+        model.renderPart("right");
+        model.renderPart("norse");
         GL11.glEndList();
     }
 
@@ -53,25 +59,29 @@ public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
 
         //Initial setup
-        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord +utils.getXOffset(tile.mFacing,-1,0), tile.yCoord , tile.zCoord + utils.getZOffset(tile.mFacing,-1,0),0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the model into position
-        GL11.glTranslatef((float) utils.getXOffset(tile.mFacing,0.5D,2.5D),0,(float)utils.getZOffset(tile.mFacing,0.5D,2.5D));
+        GL11.glTranslatef((float) utils.getXOffset(tile.mFacing,0.5D,4D),1.9F,(float)utils.getZOffset(tile.mFacing,0.5D,4D));
         GL11.glTranslated(x, y, z );
-        GL11.glTranslatef(0.5f, (float) (tile.clientRocketSendTimer>0?Math.pow(tile.clientRocketSendTimer/80F, 3F): tile.clientRocketSendTimer<0?Math.pow(10+tile.clientRocketSendTimer/80F, 2.4F):0), 0.5f);
+
+        float rocketFlyHeight = (float) (tile.clientRocketSendTimer>0?Math.pow(tile.clientRocketSendTimer/80F, 3F): tile.clientRocketSendTimer<0?Math.pow(10+tile.clientRocketSendTimer/80F, 2.4F):0);
+        GL11.glTranslatef(0.5f, rocketFlyHeight, 0.5f);
+
         if(tile.clientRocketSendTimer > 0) tile.clientRocketSendTimer ++;
         if(tile.clientRocketSendTimer < 0 && tile.clientRocketSendTimer > -800) tile.clientRocketSendTimer --;
+
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
         GL11.glRotatef(-90,0,1,0);
 
+        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord +utils.getXOffset(tile.mFacing,1,3), Math.min(255,tile.yCoord +2 +(int)rocketFlyHeight) , tile.zCoord + utils.getZOffset(tile.mFacing,1,3),0);
+        int brightX = bright % 65536;
+        int brightY = bright / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+
         bindTexture(texture);
         GL11.glCallList(bodyList);
+        if(tile.clientRocketSendTimer >= 0)GL11.glCallList(bodyList+1);
 
         GL11.glColor4f(1,1,1,1);
 
