@@ -15,6 +15,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.miner;
 
 import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IMeterDetectable;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
@@ -27,6 +28,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.ArrayListNoNulls;
 import gregapi.code.TagData;
+import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.gui.ContainerCommonDefault;
@@ -49,9 +51,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,7 +97,19 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
     }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
 
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        openGUI(aPlayer, aSide);
+        return true;
+    }
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
@@ -175,13 +191,6 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
             findedAsteroid = asteroid;
             break;
         }
-    }
-
-    @Override
-    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (!isServerSide())return true;
-        openGUI(aPlayer, aSide);
-        return true;
     }
 
     @Override

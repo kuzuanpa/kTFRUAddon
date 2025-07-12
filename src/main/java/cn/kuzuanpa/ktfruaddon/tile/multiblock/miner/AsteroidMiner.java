@@ -60,6 +60,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import zmaster587.advancedRocketry.api.Configuration;
 import zmaster587.advancedRocketry.util.AsteroidSmall;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -213,7 +214,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
 
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
         if (OM.is(OD_USB_STICKS[0],equippedItem)) tryReadAsteroidFromUSB(equippedItem, aPlayer);
-        if (aPlayer.isSneaking()) {
+        if (equippedItem.getItem() instanceof ItemProjector) {
             structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }

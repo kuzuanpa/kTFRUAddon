@@ -16,6 +16,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import gregapi.util.WD;
 import net.minecraft.init.Blocks;
 import zmaster587.libVulpes.block.BlockMeta;
 
@@ -29,6 +30,7 @@ public class SkyPredicate implements IStructurePredicate {
     }
     @Override
     public boolean set(StructureContext ctx, int x, int y, int z) {
+        if(WD.easyRep(ctx.world, x, y, z))ctx.world.setBlock(x, y, z, Blocks.air);
         return true;
     }
 
