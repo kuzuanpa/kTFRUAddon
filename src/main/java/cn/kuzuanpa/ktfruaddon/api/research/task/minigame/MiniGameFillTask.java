@@ -16,6 +16,7 @@ package cn.kuzuanpa.ktfruaddon.api.research.task.minigame;
 
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchGameTypes;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
+import gregapi.data.LH;
 import net.minecraft.util.IIcon;
 
 public class MiniGameFillTask implements IResearchTask {
@@ -54,5 +55,10 @@ public class MiniGameFillTask implements IResearchTask {
     @Override
     public String getIdentifier() {
         return String.valueOf(ResearchGameTypes.FillPack.ordinal());
+    }
+
+    @Override
+    public String getDesc() {
+        return LH.get("ktfru.research.task.minigame.fill") + requiredAmount;
     }
 }

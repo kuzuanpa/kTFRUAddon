@@ -156,6 +156,11 @@ public class ResearchProject {
         }
 
         @Override
+        public String getDesc() {
+            return "test task";
+        }
+
+        @Override
         public IIcon getIcon() {
             return item.getIconFromDamage(0);
         }

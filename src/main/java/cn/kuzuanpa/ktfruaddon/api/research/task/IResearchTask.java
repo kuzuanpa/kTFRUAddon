@@ -26,4 +26,5 @@ public interface IResearchTask {
     void setProgress(long progress);
     IIcon getIcon();
     String getIdentifier();
+    String getDesc();
 }

@@ -266,8 +266,6 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
 
             Tessellator tessellator = Tessellator.instance;
 
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
-
             shape.content.forEach(p->drawTextureRect(tessellator,  p.x*puzzleSize, p.y*puzzleSize, 0,0, puzzleSize,puzzleSize));
 
             GL11.glEndList();
@@ -279,9 +277,9 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
         @Override
         public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
             if (!visible) return;
-            mc.getTextureManager().bindTexture(main);
             if(currentFocusX!=-1 && selectedButton == this && theGame.placeTile(selectedButton.shape, currentFocusX, currentFocusY, true)){
                 GL11.glPushMatrix();
+                mc.getTextureManager().bindTexture(main);
                 GL11.glTranslatef((mc.currentScreen.width-totalSize)/2F + currentFocusX*puzzleSize, 16 + currentFocusY*puzzleSize,0);
                 GL11.glColor4f(0.4F, 1.0F, 0.4F, 0.7F);
                 GL11.glCallList(glListID);
@@ -290,6 +288,7 @@ public class ContainerClientFillThePack extends kGuiContainerBase implements IHi
             }
 
             GL11.glPushMatrix();
+            mc.getTextureManager().bindTexture(main);
             GL11.glTranslatef(xPosition,yPosition,0);
             GL11.glCallList(glListID);
             GL11.glColor4f(1, 1, 1, 1);

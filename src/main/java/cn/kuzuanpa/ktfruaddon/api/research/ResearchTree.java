@@ -200,5 +200,6 @@ public class ResearchTree {
         public void setProgress(long progress) {}
         @Override public IIcon getIcon() {return null;}
         @Override public String getIdentifier() {return "d";}
+        @Override public String getDesc() {return "";}
     }
 }

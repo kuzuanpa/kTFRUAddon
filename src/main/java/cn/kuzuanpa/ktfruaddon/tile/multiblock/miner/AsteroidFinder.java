@@ -103,7 +103,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
         if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
 
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
-        if (equippedItem.getItem() instanceof ItemProjector) {
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
             structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }

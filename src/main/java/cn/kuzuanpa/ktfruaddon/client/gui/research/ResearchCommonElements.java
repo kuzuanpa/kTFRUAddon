@@ -50,18 +50,18 @@ public class ResearchCommonElements {
         tessellator.draw();
     }
 
-    public static void drawTextureRect(Tessellator tessellator, int x, int y, int u, int v, int width, int height){
+    public static void drawTextureRect(Tessellator tessellator, int x, int y, float z, int v, int width, int height, int u){
         final float f = 0.00390625F;
         final float f1 = 0.00390625F;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x, y + height, 0, (u * f), (v + height) * f1);
-        tessellator.addVertexWithUV(x + width, y + height, 0, (u + width) * f, (v + height) * f1);
-        tessellator.addVertexWithUV(x + width, y, 0, (u + width) * f, v * f1);
-        tessellator.addVertexWithUV(x, y, 0, (u * f), v * f1);
+        tessellator.addVertexWithUV(x, y + height, z, (u * f), (v + height) * f1);
+        tessellator.addVertexWithUV(x + width, y + height, z, (u + width) * f, (v + height) * f1);
+        tessellator.addVertexWithUV(x + width, y, z, (u + width) * f, v * f1);
+        tessellator.addVertexWithUV(x, y, z, (u * f), v * f1);
         tessellator.draw();
     }
 
-    public static void drawResearchProgressBar(ResearchProject researchProject, Tessellator tessellator, int x, int y, int width){
+    public static void drawResearchProgressBar(ResearchProject researchProject, Tessellator tessellator, int x, int y, float z, int width){
         mc.getTextureManager().bindTexture(background);
         GL11.glColor4f(1, 1, 1, 1f);
         float progress = 0.0f;
@@ -69,7 +69,7 @@ public class ResearchCommonElements {
         else for (IResearchTask condition : researchProject.tasks) {
             progress += condition.getProgress()*1f/condition.getRequiredProgress();
         }
-        drawTextureRect(tessellator, x, y, 0, 14, researchProject.tasks.isEmpty()? 0 : (int) ((width-4) * (progress/ researchProject.tasks.size())), 8);
+        drawTextureRect(tessellator, x, y, z, 14, researchProject.tasks.isEmpty()? 0 : (int) ((width-4) * (progress/ researchProject.tasks.size())), 8, 0);
     }
 
     public static void drawResearchConditionIcon(ResearchProject researchProject, int x, int y){
@@ -158,11 +158,11 @@ public class ResearchCommonElements {
 
                 mc.getTextureManager().bindTexture(main);
                 GL11.glColor4f(1,1,1,1);
-                drawTextureRect(tessellator, xPosition + 12 ,yPosition -9 + i.get() * 10,0, 8,width -16, 6);
+                drawTextureRect(tessellator, xPosition + 12 ,yPosition -9 + i.get() * 10, this.zLevel, 8, width -16, 6, 0);
 
                 GL11.glColor4f(0.0f,0.8f,0.0f,colorTimer/4+0.75f);
                 float progress = renderedResearchProject.isCompleted || task.isCompleted()?1:task.getProgress()*1f/task.getRequiredProgress();
-                drawTextureRect(tessellator, xPosition + 12 ,yPosition -9 + i.get() * 10,60, 8, (int) ((width -16)*progress), 6);
+                drawTextureRect(tessellator, xPosition + 12 ,yPosition -9 + i.get() * 10, this.zLevel, 8, (int) ((width -16)*progress), 6, 60);
 
             }
             i.getAndIncrement();
@@ -175,7 +175,7 @@ public class ResearchCommonElements {
         public void drawBackground(Tessellator tessellator, int i, float colorTimer, boolean isEnded){
             mc.getTextureManager().bindTexture(main);
             GL11.glColor4f(1,1,1,colorTimer/3 + 0.5f);
-            drawTextureRect(tessellator, xPosition, yPosition - 10 + i*10,  0,i==1?32: isEnded?50: 41, width, isEnded?11:10);
+            drawTextureRect(tessellator, xPosition, yPosition - 10 + i*10, this.zLevel, i==1?32: isEnded?50: 41, width, isEnded?11:10, 0);
             GL11.glColor4f(1,1,1,1);
         }
         public void drawHoverDetail(AtomicInteger i, int x, int y, float colorTimer){
@@ -234,7 +234,7 @@ public class ResearchCommonElements {
         public void drawBackground(Tessellator tessellator, float colorTimer) {
             fillColor(colorTimer);
             mc.getTextureManager().bindTexture(main);
-            drawTextureRect(tessellator, xPosition, yPosition, 160, 45, width, height);
+            drawTextureRect(tessellator, xPosition, yPosition, this.zLevel, 45, width, height, 160);
             GL11.glColor4f(1, 1, 1, 1);
         }
 
@@ -246,7 +246,7 @@ public class ResearchCommonElements {
             else for (IResearchTask condition : selectedProject.tasks) {
                 progress += condition.getProgress() * 1f / condition.getRequiredProgress();
             }
-            drawTextureRect(tessellator, xPosition + 2, yPosition + height - 11, 0, 14, (int) ((width - 4) * (progress / selectedProject.tasks.size())), 8);
+            drawTextureRect(tessellator, xPosition + 2, yPosition + height - 11, this.zLevel, 14, (int) ((width - 4) * (progress / selectedProject.tasks.size())), 8, 0);
         }
 
         public void drawConditionIcon() {
@@ -263,11 +263,11 @@ public class ResearchCommonElements {
 
                 mc.getTextureManager().bindTexture(main);
                 GL11.glColor4f(1, 1, 1, 1);
-                drawTextureRect(tessellator, xPosition + 12, yPosition + height - 11 - i.get() * 9, 0, 8, width - 14, 6);
+                drawTextureRect(tessellator, xPosition + 12, yPosition + height - 11 - i.get() * 9, this.zLevel, 8, width - 14, 6, 0);
 
                 GL11.glColor4f(0.0f, 0.8f, 0.0f, colorTimer / 4 + 0.75f);
                 float progress = selectedProject.isCompleted || task.isCompleted()? 1 : task.getProgress() * 1f / task.getRequiredProgress();
-                drawTextureRect(tessellator, xPosition + 12, yPosition + height - 11 - i.get() * 9, 60, 8, (int) ((width - 14) * progress), 6);
+                drawTextureRect(tessellator, xPosition + 12, yPosition + height - 11 - i.get() * 9, this.zLevel, 8, (int) ((width - 14) * progress), 6, 60);
 
             }
         }
@@ -301,14 +301,14 @@ public class ResearchCommonElements {
             if (!visible) return;
             float colorTimer = ((float) Math.sin(System.currentTimeMillis() % 3141 / 1000f)) / 2f + 0.5f;
             Tessellator tessellator = Tessellator.instance;
-            GL11.glEnable(GL11.GL_ALPHA_TEST);
+            GL11.glDisable(GL11.GL_ALPHA_TEST);
             drawBackground(tessellator, colorTimer, currentProject);
             String str = LH.get(  kUII18n.RESEARCH_VIEWER_CURRENT);
             mc.fontRenderer.drawStringWithShadow(str, xPosition + 48  - mc.fontRenderer.getStringWidth(str)/2,yPosition+1,0xffffffff);
             if (currentProject != null) {
                 drawResearchMainIcon(currentProject, xPosition + 3, yPosition + 13);
                 drawResearchNameDesc(currentProject, xPosition + 22, yPosition + 16);
-                drawResearchProgressBar(currentProject, tessellator, xPosition+2, yPosition + 32, width);
+                drawResearchProgressBar(currentProject, tessellator, xPosition+2, yPosition + 32, this.zLevel, width);
                 drawResearchConditionIcon(currentProject, xPosition + 2, yPosition + 28);
             }
             GL11.glColor4f(1, 1, 1, 1);
@@ -325,7 +325,7 @@ public class ResearchCommonElements {
         public void drawBackground(Tessellator tessellator, float colorTimer, ResearchProject project) {
             fillColor(colorTimer, project);
             mc.getTextureManager().bindTexture(main);
-            drawTextureRect(tessellator, xPosition, yPosition, 160, 0, width, height);
+            drawTextureRect(tessellator, xPosition, yPosition, this.zLevel, 0, width, height, 160);
             GL11.glColor4f(1, 1, 1, 1);
         }
     }

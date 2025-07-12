@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research.task;
 
+import gregapi.data.LH;
 import gregapi.util.ST;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -66,5 +67,11 @@ public class ItemConsumeTask implements IResearchTask{
 
     public static boolean isItemStackEqual(ItemStack need, ItemStack received) {
         return need.isItemEqual(received) && ((!need.hasTagCompound()) || need.getTagCompound().equals(received.getTagCompound()));
+    }
+
+
+    @Override
+    public String getDesc() {
+        return LH.get("ktfru.research.task.item") + " "+ item.getDisplayName() + requiredCount;
     }
 }

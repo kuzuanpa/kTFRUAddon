@@ -204,7 +204,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 				pointingItem= researchProject;
 			}
 			if(!researchProject.isUnlocked)return;
-			ResearchCommonElements.drawResearchProgressBar(researchProject, tessellator, xPosition+2, yPosition+height-10, width);
+			ResearchCommonElements.drawResearchProgressBar(researchProject, tessellator, xPosition+2, yPosition+height-10, this.zLevel, width);
 			ResearchCommonElements.drawResearchConditionIcon(researchProject, xPosition + 2, yPosition + height - 14);
 
 			GL11.glColor4f(1,1,1,1);
@@ -219,7 +219,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 		public void drawBackground(Tessellator tessellator, float colorTimer){
 			fillColor(colorTimer);
 			mc.getTextureManager().bindTexture(main);
-			ResearchCommonElements.drawTextureRect(tessellator, xPosition, yPosition, 0, 0, width, height);
+			ResearchCommonElements.drawTextureRect(tessellator, xPosition, yPosition, this.zLevel, 0, width, height, 0);
 			drawDependsLine(tessellator, colorTimer);
 			GL11.glColor4f(1,1,1,1);
 		}
@@ -245,7 +245,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 			if(researchProject.isUnlocked) return;
 			mc.getTextureManager().bindTexture(background);
 			GL11.glColor4f(1, 1, 1, 0.5f);
-			ResearchCommonElements.drawTextureRect(tessellator, xPosition, yPosition, 20, 40, width, height);
+			ResearchCommonElements.drawTextureRect(tessellator, xPosition, yPosition, this.zLevel, 40, width, height, 20);
 		}
 	}
 }

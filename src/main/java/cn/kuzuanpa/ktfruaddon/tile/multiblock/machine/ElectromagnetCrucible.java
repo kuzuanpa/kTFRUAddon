@@ -111,7 +111,7 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
 
         for (OreDictMaterialStack tMaterial : mContent) mMassTotal += (long) tMaterial.weight();
 
-        if(mEnergy < mEnergyBaseConsume){
+        if(mEnergy < mEnergyBaseConsume && !mContent.isEmpty()){
             UT.Sounds.send(MC_FIZZ, (TileEntity) this);
             mTemp = WD.envTemp(worldObj, xCoord,yCoord,zCoord);
             mContent.clear();

@@ -214,7 +214,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
 
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
         if (OM.is(OD_USB_STICKS[0],equippedItem)) tryReadAsteroidFromUSB(equippedItem, aPlayer);
-        if (equippedItem.getItem() instanceof ItemProjector) {
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
             structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }

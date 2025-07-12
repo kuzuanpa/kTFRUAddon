@@ -17,17 +17,16 @@ package cn.kuzuanpa.ktfruaddon.api.research.task;
 import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import gregapi.data.IL;
+import gregapi.data.LH;
 import net.minecraft.util.IIcon;
 
 public class ComputeTask implements IResearchTask{
     public ComputePower type;
     public long requiredAmount;
-    public long requiredPower;
     public long finishedCount;
-    public ComputeTask(ComputePower type, long requiredAmount, long minimumPower) {
+    public ComputeTask(ComputePower type, long requiredAmount) {
         this.type = type;
         this.requiredAmount = requiredAmount;
-        this.requiredPower = minimumPower;
     }
     @Override
     public long getRequiredProgress() {
@@ -43,7 +42,6 @@ public class ComputeTask implements IResearchTask{
     public long tryPromoteProgress(Object consume, boolean dryRun) {
         if(!(consume instanceof SingleEntry && ((SingleEntry<?,?>) consume).getKey() instanceof ComputePower && ((SingleEntry<?,?>) consume).getValue() instanceof Long))return 0;
         long avail = (Long) ((SingleEntry<?, ?>) consume).getValue();
-        if(requiredPower > avail)return 0;
         long consumeAmount = Math.min(avail, requiredAmount - finishedCount);
         if(!dryRun)finishedCount += consumeAmount;
         return consumeAmount;
@@ -62,5 +60,10 @@ public class ComputeTask implements IResearchTask{
     @Override
     public String getIdentifier() {
         return String.valueOf(type.ordinal());
+    }
+
+    @Override
+    public String getDesc() {
+        return LH.get("ktfru.research.task.compute") + " "+ LH.get("ktfru.text.compute.power."+type.ordinal()) + requiredAmount;
     }
 }
