@@ -54,7 +54,7 @@ import static gregapi.data.CS.*;
 public class utils {
     public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign) {
         TileEntity tTileEntity = aController.getTileEntity(aX, aY, aZ);
-        if(tTileEntity == null) return false;
+        if(tTileEntity == null) return true;
         else if (tTileEntity == aController) {
             return true;
         }

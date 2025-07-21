@@ -60,6 +60,8 @@ public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
 
         //Initial setup
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
 
         GL11.glTranslatef((float) utils.getXOffset(tile.mFacing,0.5D,4D),1.9F,(float)utils.getZOffset(tile.mFacing,0.5D,4D));
         GL11.glTranslated(x, y, z );

@@ -61,6 +61,8 @@ public class TESRSunBoilerMirror extends TileEntitySpecialRenderer {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
 
         //Rotate and move the specialRend into position
         GL11.glTranslated(x, y, z );

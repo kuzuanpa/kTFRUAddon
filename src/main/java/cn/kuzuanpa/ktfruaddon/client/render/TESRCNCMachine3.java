@@ -63,6 +63,8 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
 
         //Rotate and move the specialRend into position
         GL11.glTranslatef((float) utils.getXOffset(tile.mFacing,-1.5D,1D),0,(float)utils.getZOffset(tile.mFacing,-1.5D,1D));
