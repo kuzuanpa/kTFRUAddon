@@ -21,6 +21,7 @@ import net.minecraft.util.IIcon;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ResearchProject {
@@ -73,6 +74,14 @@ public class ResearchProject {
         return this;
     }
 
+    public ResearchProject addTask(IResearchTask task) {
+        tasks.add(task);
+        return this;
+    }
+    public ResearchProject addTasks(IResearchTask... tasks) {
+        this.tasks.addAll(Arrays.asList(tasks));
+        return this;
+    }
     public boolean removePrerequisite(ResearchProject prerequisite) {
         return prerequisites.remove(prerequisite);
     }
@@ -87,9 +96,6 @@ public class ResearchProject {
         return prerequisites;
     }
 
-    public void addTask(IResearchTask condition) {
-        tasks.add(condition);
-    }
 
     public boolean removeTask(IResearchTask condition) {
         return tasks.remove(condition);

@@ -29,17 +29,11 @@
 package cn.kuzuanpa.ktfruaddon.api.research;
 
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
-import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTask;
 import cpw.mods.fml.common.FMLLog;
-import gregapi.data.MT;
-import gregapi.data.OP;
-import gregapi.util.ST;
 import gregapi.util.UT;
-import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import org.apache.logging.log4j.Level;
-import zmaster587.advancedRocketry.api.AdvancedRocketryItems;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -58,35 +52,8 @@ public class ResearchTree {
 
     public ResearchTree(byte id){
         this.id = id;
-        putTestValues();
     }
-    public void putTestValues(){
-
-        ResearchProject a = new ResearchProject(this, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，找回地球上最实用的工具：芯片", AdvancedRocketryItems.itemIC, 0, 1).setPos(60,130);
-        ResearchProject b = new ResearchProject(this, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, 2).setPos(60,20);
-        ResearchProject c = new ResearchProject(this, "芯片理论", "研究半导体特性，了解其在芯片制造中的关键作用", Items.paper, 0, 3).setPos(180,10);
-        ResearchProject d = new ResearchProject(this, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si,0).getItem(), MT.Si.mID, 4).setPos(180,130);
-        ResearchProject e = new ResearchProject(this, "半导体电路设计", "是时候设计一个基本的计算器了，它将你从繁重的笔算心算中解放出来", Items.paper, 0, 5).setPos(320,130);
-        ResearchProject f = new ResearchProject(this, "进阶电路设计", "利用计算器进一步改进电路，你认为你离真正的发电机不远了", Items.paper, 0, 6).setPos(340,10);
-        a.addPrerequisite(rootItem);
-        b.addPrerequisite(rootItem);
-
-
-        c.addPrerequisite(a);
-        d.addPrerequisite(a);
-        d.addPrerequisite(b);
-
-        e.addPrerequisite(d);
-        f.addPrerequisite(e);
-
-        a.tasks.add(new ItemConsumeTask(ST.make(Items.iron_ingot, 32, 0)));
-        b.tasks.add(new ItemConsumeTask(ST.make(Items.iron_ingot, 32, 0)));
-        c.tasks.add(new ResearchProject.TestTask(Items.glass_bottle));
-        d.tasks.add(new ResearchProject.TestTask(Items.water_bucket));
-        e.tasks.add(new ResearchProject.TestTask(Items.paper));
-        init();
-    }
-    public ResearchProject rootItem = new ResearchProject(this,"计算学","算力的提升是万物的基础", -1);
+    public ResearchProject rootItem;
 
     private void removeChildRecursively(ResearchProject current, ResearchProject target) {
         List<ResearchProject> children = current.getPrerequisites();

@@ -64,6 +64,6 @@ public class ComputeTask implements IResearchTask{
 
     @Override
     public String getDesc() {
-        return LH.get("ktfru.research.task.compute") + " "+ LH.get("ktfru.text.compute.power."+type.ordinal()) + requiredAmount;
+        return String.format(LH.get("ktfru.research.task.compute"), LH.get("ktfru.text.compute.power."+type.ordinal()), requiredAmount);
     }
 }

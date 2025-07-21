@@ -59,6 +59,6 @@ public class MiniGameFillTask implements IResearchTask {
 
     @Override
     public String getDesc() {
-        return LH.get("ktfru.research.task.minigame.fill") + requiredAmount;
+        return String.format(LH.get("ktfru.research.task.minigame.fill"), requiredAmount);
     }
 }

@@ -72,6 +72,6 @@ public class ItemConsumeTask implements IResearchTask{
 
     @Override
     public String getDesc() {
-        return LH.get("ktfru.research.task.item") + " "+ item.getDisplayName() + requiredCount;
+        return String.format(LH.get("ktfru.research.task.item"), item.getDisplayName(), requiredCount);
     }
 }

@@ -258,16 +258,18 @@ public class ResearchCommonElements {
 
                 GL11.glColor4f(1, 1, 1, 1);
                 mc.getTextureManager().bindTexture(mc.getTextureManager().getResourceLocation(Items.book.getSpriteNumber()));
-                if (task.getIcon() != null) drawTexturedModelRectFromIcon(xPosition + 2, yPosition + height - 12 - i.get() * 9, task.getIcon(), 8, 8);
-                else drawTexturedModelRectFromIcon(xPosition + 2, yPosition + height - 12 - i.get() * 9, Items.book.getIconFromDamage(0), 8, 8);
+                if (task.getIcon() != null) drawTexturedModelRectFromIcon(xPosition + 3, yPosition + height - 12 - i.get() * 18, task.getIcon(), 8, 8);
+                else drawTexturedModelRectFromIcon(xPosition + 3, yPosition + height - 12 - i.get() * 18, Items.book.getIconFromDamage(0), 8, 8);
+
+                mc.fontRenderer.drawStringWithShadow(task.getDesc(),xPosition + 13, yPosition + height - 12 - i.get() * 18,0xffffffff);
 
                 mc.getTextureManager().bindTexture(main);
                 GL11.glColor4f(1, 1, 1, 1);
-                drawTextureRect(tessellator, xPosition + 12, yPosition + height - 11 - i.get() * 9, this.zLevel, 8, width - 14, 6, 0);
+                drawTextureRect(tessellator, xPosition + 2, yPosition + height - 3 - i.get() * 18, this.zLevel, 8, width - 6, 6, 0);
 
                 GL11.glColor4f(0.0f, 0.8f, 0.0f, colorTimer / 4 + 0.75f);
                 float progress = selectedProject.isCompleted || task.isCompleted()? 1 : task.getProgress() * 1f / task.getRequiredProgress();
-                drawTextureRect(tessellator, xPosition + 12, yPosition + height - 11 - i.get() * 9, this.zLevel, 8, (int) ((width - 14) * progress), 6, 60);
+                drawTextureRect(tessellator, xPosition + 2, yPosition + height - 3 - i.get() * 18, this.zLevel, 8, (int) ((width - 6) * progress), 6, 60);
 
             }
         }

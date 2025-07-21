@@ -1,9 +1,7 @@
-ktfru.projector.fusionReactorTokamakExperiment=托卡马克堆(实验)
-ktfru.projector.fusionReactorTokamakT1=托卡马克堆(T1)
-ktfru.projector.cncMachine3=3轴数控车床
-ktfru.projector.oilMiner=油井
-ktfru.projector.MantleHeater=地热站
-ktfru.projector.fuelDeburnFactory=回收燃料厂
+
+ktfru.research.task.compute=提供%s 点算力
+ktfru.research.task.minigame.fill=研究%s 点空间规划
+ktfru.research.task.item=研究%2$d个%1$s
 ktfru.projector.block.must.air=必须为空气
 ktfru.projector.block.must.liquid=必须为流体
 ktfru.projector.block.any.solid=任意固体方块
@@ -56,7 +54,7 @@ ktfru.multitileentity.multiblock.turbine.steam=大型蒸汽涡轮
 ktfru.multitileentity.multiblock.tidalwave_generator=潮汐波浪产能站
 ktfru.multitileentity.multiblock.storage.transformer=变压储能站
 ktfru.multitileentity.multiblock.crucible.electromagnet=电磁坩埚
-ktfru.multitileentity.multiblock.asteroid.miner=小行星采掘器发射塔
+ktfru.multitileentity.multiblock.asteroid.miner=小行星采掘火箭发射塔
 ktfru.multitileentity.multiblock.asteroid.finder=小行星探测塔
 
 ktfru.text.common.side.front=正面
@@ -1164,7 +1162,7 @@ ktfru.multitileentity.30031=水晶光棱塔
 ktfru.multitileentity.30032=电磁坩埚控制器
 ktfru.multitileentity.30033=潮汐波浪产能站控制器
 ktfru.multitileentity.30034=小行星探测塔控制器
-ktfru.multitileentity.30035=小行星采掘器发射塔控制器
+ktfru.multitileentity.30035=小行星采掘火箭发射塔控制器
 
 
 ktfru.multitileentity.30100=钢压缩气体储罐主阀门
