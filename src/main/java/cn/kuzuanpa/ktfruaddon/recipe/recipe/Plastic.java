@@ -127,7 +127,7 @@ public class Plastic {
 
         recipeMaps.   HeatMixer          .addRecipe0(F,210,100,FL.array(flList.Tetrafluoroethylene.make(100),MT.SO3.gas(U10,false)),FL.array(flList.TFES.make(100)),ZL_IS);
 
-        recipeMaps.   HeatMixer          .addRecipe0(F,256,120,FL.array(flList.Tetrafluoroethylene.make(700)),FL.array(flList.HexaFluoroPropylene.make(200),flList.Perfluorocyclobutane.make(200)),ZL_IS);
+        recipeMaps.   HeatMixer          .addRecipe0(F,256,120,FL.array(flList.Tetrafluoroethylene.make(600), flList.Acetylene.make(200)),FL.array(flList.HexaFluoroPropylene.make(200),flList.Perfluorocyclobutane.make(200)),ZL_IS);
 
         RM.           Electrolyzer       .addRecipe1(F,320,40,ItemList.ProtonExchangeMembrane.get(0),FL.array(flList.MoltenTeflon.make(500),MT.Br.liquid(U5,false)),FL.array(flList.HFPO.make(200),flList.HydrobromicAcid.make(200),FL.Hydrogen.make(100)),ZL_IS);
 

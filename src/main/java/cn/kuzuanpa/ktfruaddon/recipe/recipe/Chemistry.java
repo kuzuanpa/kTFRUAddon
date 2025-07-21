@@ -50,7 +50,7 @@ public class Chemistry {
 
         //fuel battery
         recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Ni,8),ZL_FS,ZL_FS,ItemList.BatteryPoleNickel.get(1));
-        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Au,8),ZL_FS,ZL_FS,ItemList.BatteryPoleCarbon.get(1));
+        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.C,8),ZL_FS,ZL_FS,ItemList.BatteryPoleCarbon.get(1));
         recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Pt,8),ZL_FS,ZL_FS,ItemList.BatteryPolePlatinum.get(1));
         RM.        BurnMixer  .addRecipe2(F,200,480,OP.dust.mat(MT.Ca,4),OP.dust.mat(MT.Ti,4),FL.array(FL.Oxygen.make(4000)),ZL_FS,ItemList.BatteryPoleCaTiO3.get(1));
         recipeMaps.HeatMixer  .addRecipe2(F,500,800,OP.dust.mat(MT.Y,4),OP.dust.mat(MT.Zr,4),FL.array(FL.Oxygen.make(4000)),FL.array(flList.YttriumZirconiumOxide.make(1000)));
