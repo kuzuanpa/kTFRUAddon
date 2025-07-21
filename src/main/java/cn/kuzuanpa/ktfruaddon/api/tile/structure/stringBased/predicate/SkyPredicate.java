@@ -34,6 +34,10 @@ public class SkyPredicate implements IStructurePredicate {
         return true;
     }
 
+    @Override
+    public boolean reset(StructureContext ctx, int x, int y, int z) {
+        return true;
+    }
 
     @Override
     public boolean project(StructureContext ctx, int x, int y, int z) {

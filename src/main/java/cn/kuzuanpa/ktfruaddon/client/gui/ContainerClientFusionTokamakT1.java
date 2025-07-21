@@ -33,8 +33,8 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
-import static cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.fusionReactorTokamakExp.MAX_FIELD_STRENGTH;
-import static cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.fusionReactorTokamakT1.*;
+import static cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.FusionReactorTokamakExp.MAX_FIELD_STRENGTH;
+import static cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.FusionReactorTokamakT1.*;
 
 @SideOnly(Side.CLIENT)
 public class ContainerClientFusionTokamakT1 extends ContainerClientbase {

@@ -54,6 +54,6 @@ public class StructureContext {
     }
     public enum Axis {X, Y, Z}
     public enum StringBaseMode {
-        CHECK, SET, PROJECT
+        CHECK, SET, PROJECT, RESET
     }
 }

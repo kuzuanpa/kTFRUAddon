@@ -22,10 +22,14 @@ public interface IStructurePredicate {
             case SET:return set(ctx, x, y, z);
             case PROJECT:return project(ctx, x, y, z);
             case CHECK:return check(ctx, x, y, z);
+            case RESET:return reset(ctx, x, y, z);
         }
         return false;
     }
+    default void preCheck(StructureContext ctx, char myID){}
+    default void afterCheck(StructureContext ctx, char myID){}
     boolean check(StructureContext ctx, int x, int y, int z);
     boolean project(StructureContext ctx, int x, int y, int z);
     boolean set(StructureContext ctx, int x, int y, int z);
+    boolean reset(StructureContext ctx, int x, int y, int z);
 }

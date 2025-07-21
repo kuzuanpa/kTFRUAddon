@@ -18,10 +18,12 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseControlledMachine;
-import cn.kuzuanpa.ktfruaddon.api.tile.part.IConditionParts;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
@@ -35,82 +37,71 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static gregapi.data.CS.*;
 
-public class maskAlignerUVPlus extends TileEntityBaseControlledMachine implements IMappedStructure {
-    public final short sizeX = 3, sizeY = 3, sizeZ = 3;
-    public final short xMapOffset = -1;
-    public IIconContainer[] mTexturesMaterial = null, mTexturesInactive = null, mTexturesActive = null, mTexturesRunning = null;
+public class MaskAlignerUVPlus extends TileEntityBaseControlledMachine implements SpecialPartPredicate.IReceiveSpecialPart {
 
-    public static final int[][][] blockIDMap = {{
-            {18002,   0  , 18002},
-            {18002, 31021, 18002},
-            {18002, 31501, 18002},
-    },{
-            {18002, 31005, 18002},
-            {31005, 31006, 31005},
-            {18002, 31005, 18002},
-    },{
-            {31011, 31011, 31011},
-            {31011, 31011, 31011},
-            {31011, 31011, 31011},
-    }};
-    public MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-    public MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-
-    public int getUsage(int mapX, int mapY, int mapZ){
-        MultiTileEntityRegistry registryID = getRegistryID(mapX,mapY,mapZ);
-        int blockID = getBlockID(mapX, mapY, mapZ);
-        if (registryID==k) switch (blockID){
-            case 31011: return MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-            case 31021: return MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID;
-        }
-        return MultiTileEntityMultiBlockPart.ONLY_IN;
-    }
-
-    @Override
-    public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
-        return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
-    }
-
-    public int getBlockID(int checkX, int checkY, int checkZ){
-        return blockIDMap[checkY][checkZ][checkX];
-    }
-    @Override
-    public  boolean isIgnored(int checkX, int checkY, int checkZ){
-        return false;
-    }
-    public MultiTileEntityRegistry getRegistryID(int x,int y,int z){
-        return getBlockID(x,y,z)==18002?g:k;
-    }
-
-    @Override
-    public boolean isPartSpecial(TileEntity tile) {
-        return tile instanceof IConditionParts;
-    }
-
-    @Override
-    public void receiveSpecialBlockList(List<TileEntity> list) {
-        ConditionPartsPos = list.stream().map(tile -> new ChunkCoordinates(tile.xCoord,tile.yCoord,tile.zCoord)).collect(Collectors.toList());
-    }
     ChunkCoordinates lastFailedPos=null;
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+            .fixedLayer('A',
+                    "WWW",
+                    " DA",
+                    "WWW"
+            ).fixedLayer('B',
+                    "WBW",
+                    "BCB",
+                    "WBW"
+            ).fixedLayer('C',
+                    "LLL",
+                    "LLL",
+                    "LLL"
+            )
+            .where('A', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31501,MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31005,MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31021,MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('L', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31011, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002,MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .setOffset(-1,0,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(null, sizeX, sizeY, sizeZ,xMapOffset,0,0, aClickedAt, aPlayer, aInventory);
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+    }
+
+    @Override
+    public void receiveSpecialPart(TileEntity part) {
+        ConditionPartsPos.add(new ChunkCoordinates(part.xCoord, part.yCoord,part.zCoord));
+    }
+
+    public final short sizeX = 3, sizeY = 3, sizeZ = 3;
+    public final short xMapOffset = -1;
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {

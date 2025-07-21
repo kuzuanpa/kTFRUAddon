@@ -16,7 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.client.gui;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.fusionReactorTokamakExp;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.FusionReactorTokamakExp;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.data.LH;
@@ -40,7 +40,7 @@ public class ContainerCommonFusionTokamakExp extends ContainerCommon {
 	
 	@Override
 	public int addSlots(InventoryPlayer aPlayerInventory) {
-		mRecipes = ((fusionReactorTokamakExp)mTileEntity).mRecipes;
+		mRecipes = ((FusionReactorTokamakExp)mTileEntity).mRecipes;
 		int tIndex =0;
 		addSlotToContainer(new Slot_Normal(mTileEntity, tIndex++, 151, 4));
 		addSlotToContainer(new Slot_Normal(mTileEntity, tIndex++, 133, 62));
@@ -64,11 +64,11 @@ public class ContainerCommonFusionTokamakExp extends ContainerCommon {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 		for (ICrafting tUpdate : (List<ICrafting>)crafters) {
-			tUpdate.sendProgressBarUpdate(this, 0, ((fusionReactorTokamakExp)mTileEntity).mState);
-			tUpdate.sendProgressBarUpdate(this, 1, ((fusionReactorTokamakExp)mTileEntity).mFieldStrength);
-			tUpdate.sendProgressBarUpdate(this, 2, ((fusionReactorTokamakExp)mTileEntity).clientTemp());
-			tUpdate.sendProgressBarUpdate(this, 3, ((fusionReactorTokamakExp)mTileEntity).clientProgress());
-			tUpdate.sendProgressBarUpdate(this, 4, ((fusionReactorTokamakExp)mTileEntity).clientDensity());
+			tUpdate.sendProgressBarUpdate(this, 0, ((FusionReactorTokamakExp)mTileEntity).mState);
+			tUpdate.sendProgressBarUpdate(this, 1, ((FusionReactorTokamakExp)mTileEntity).mFieldStrength);
+			tUpdate.sendProgressBarUpdate(this, 2, ((FusionReactorTokamakExp)mTileEntity).clientTemp());
+			tUpdate.sendProgressBarUpdate(this, 3, ((FusionReactorTokamakExp)mTileEntity).clientProgress());
+			tUpdate.sendProgressBarUpdate(this, 4, ((FusionReactorTokamakExp)mTileEntity).clientDensity());
 		}
 	}
 

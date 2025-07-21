@@ -19,8 +19,13 @@ import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ChangeablePartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -30,22 +35,25 @@ import gregapi.tileentity.multiblocks.*;
 import gregapi.util.WD;
 import gregtech.tileentity.misc.MultiTileEntityFluidSpring;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.Collection;
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy, IFluidHandler {
+public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IMultiBlockInventory, IMultiBlockEnergy, ITileEntityEnergy, IFluidHandler, ChangeablePartPredicate.IChangeablePartSupplier {
     public short wallID=-1;
     public FluidTankGT mTank = new FluidTankGT(32000);
     public FluidTankGT mTankInput = new FluidTankGT(32000);
@@ -165,69 +173,51 @@ public class oilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
 
     //Structure
-    public final short machineX = 3, machineY = 2, machineZ = 3;
-    public final short xMapOffset = -1, zMapOffset = 0;
-    public short[][][] blockIDMap = {{
-            { -1000,   0  , -1000},
-            { 31014, 31014, 31014},
-            { 31014, 31014, 31014}
-    },{
-            { -1000, -1000, -1000},
-            { -1000, -1000, -1000},
-            { -1000, -1000, -1000}
-    }};
+    ChunkCoordinates lastFailedPos=null;
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AB")
+            .fixedLayer('A',
+                    "WAA",
+                    " AA",
+                    "WAA"
+            ).fixedLayer('B',
+                    "WWW",
+                    "WWW",
+                    "WWW"
+            )
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31014)))
+            .where('W', new ChangeablePartPredicate())
+            .setOffset(-1,0,0);
 
-    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-
-    public int getUsage(int blockID ,MultiTileEntityRegistry registryID,int dX,int dY,int dZ){
-        if (blockID == wallID&&registryID==g&&dY==0) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else if (blockID == wallID&&registryID==g&&dY==1&&dX==1&&dZ==0) {
-            return  MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
-        } else if (blockID == wallID&&registryID==g&&dY==1) {
-            return  MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
-        }else{return MultiTileEntityMultiBlockPart.NOTHING;}
+    @Override
+    public TileDesc[] getChangeablePartDesc(char identifier) {
+        return new TileDesc[]{new TileDesc(GTTileEntityRegistry.gregtech, wallID, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)};
     }
-
-    public short getBlockID(int checkX, int checkY, int checkZ){
-        return blockIDMap[checkY][checkZ][checkX] == -1000?wallID:blockIDMap[checkY][checkZ][checkX];
-    }
-
-    public  boolean isIgnored(int checkX, int checkY, int checkZ){
-        return false;
-    }
-    public MultiTileEntityRegistry getRegistryID(int checkX, int checkY, int checkZ){return getBlockID(checkX, checkY, checkZ)==wallID? g:k;}
-
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX= utils.getRealX(mFacing,tX,xMapOffset,0);
-            tZ=utils.getRealZ(mFacing,tZ,xMapOffset,0);
-            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) {
-                for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) {
-                    for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                        if(!isIgnored(cX,cY,cZ)) {
-                            if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory,  getRegistryID(cX, cY, cZ), getBlockID(cX, cY, cZ),0, getUsage(getBlockID(cX, cY, cZ), getRegistryID(cX, cY, cZ),cX,cY,cZ)))
-                                tSuccess = F;
-                        }
-                    }
-                }
-            }
-            return tSuccess;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos==null;
+    }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
 
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
         }
-        return mStructureOkay;
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
     @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.multiblock.oilMiner";
     }
-
+    public final short machineX = 3, machineY = 2, machineZ = 3;
+    public final short xMapOffset = -1, zMapOffset = 0;
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);

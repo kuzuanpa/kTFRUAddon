@@ -16,22 +16,30 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.ModelRenderBaseMultiBlockMachine;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
 
@@ -41,79 +49,50 @@ import static gregapi.data.CS.*;
 public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
 
     public final short machineX = 5, machineY = 3, machineZ = 3;
-    public final short xMapOffset = -1,yMapOffset=0,zMapOffset = 0;
     //values used by TESR
     public int processTime, proTime, headMoveToX, headMoveToZ;
-    public static short[][][] blockIDMap = {{
-            {31000, 0    , 31007,31007,31007},
-            {31000, 31008, 31007,31007,31007},
-            {31000, 31008, 31007,31007,31007}
-    },{
-            {31000, 31008, 0    ,0    ,0    },
-            {31000, 31008, 0    ,0    ,0    },
-            {31000, 31008, 0    ,0    ,0    }
-    },{
-            {0    , 0    , 0    ,0    ,0    },
-            {31000, 31000, 31000,31009,0    },
-            {0    , 0    , 0    ,0    ,0    }
-    }};
-    public static boolean[][][] ignoreMap = {{
-            {F, T, F, F, F},
-            {F, F, F, F, F},
-            {F, F, F, F, F}
-    },{
-            {F, F, T, T, T},
-            {F, F, T, T, T},
-            {F, F, T, T, T}
-    },{
-            {T, T, T, T, T},
-            {F, F, F, F, T},
-            {T, T, T, T, T}
-    }};
-    public int getUsage(int x,int y,int z){
-        int blockID=getBlockID(x,y,z);
-        if (x==0&&y==0) return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        else if (x==0&&y==1&&z==1)return MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
-        else if(getBlockID(x, y, z)==31007)return MultiTileEntityMultiBlockPart.ONLY_ITEM_IN;
-        else {return MultiTileEntityMultiBlockPart.NOTHING;}
-    }
-    public short getBlockID(int checkX, int checkY, int checkZ){
-        return blockIDMap[checkY][checkZ][checkX];
-    }
 
-    public  boolean isIgnored(int checkX, int checkY, int checkZ){ return ignoreMap[checkY][checkZ][checkX];}
-    public MultiTileEntityRegistry getRegistryID(int x, int y, int z){return GTTileEntityRegistry.ktfruaddon;}
+    //Structure
+    ChunkCoordinates lastFailedPos=null;
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+            .fixedLayer('A',
+                    "AAA",
+                    " CC",
+                    "BBB",
+                    "BBB",
+                    "BBB"
+            )
+            .fixedLayer('B',
+                    "AAA",
+                    "CCC",
+                    "   ",
+                    "   ",
+                    "   "
+            ).fixedLayer('C',
+                    " A ",
+                    " A ",
+                    " A ",
+                    " D ",
+                    "   "
+            )
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN, 1)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31007, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN, 1)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31008, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31009, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .setOffset(-1,0,0) ;
 
     @Override
     public boolean checkStructure3(boolean shouldPartsTransparent, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
-            tZ= utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
-            tY+=yMapOffset;
-            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY&&tSuccess; cY++) for (cZ = 0; cZ < machineZ&&tSuccess; cZ++) for (cX = 0; cX < machineX&&tSuccess; cX++) {
-                if(!isIgnored(cX,cY,cZ))if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), aClickedAt, aPlayer, aInventory, getRegistryID(cX,cY,cZ), getBlockID(cX,cY,cZ), shouldPartsTransparent?1:0, getUsage(cX,cY,cZ))) {
-                    tSuccess = F;
-                }
-            }
-            return tSuccess;
-        }
-        return mStructureOkay;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos==null;
     }
     @Override
     public void resetParts() {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            tX= utils.getRealX(mFacing,tX,xMapOffset,zMapOffset);
-            tZ= utils.getRealZ(mFacing,tZ,xMapOffset,zMapOffset);
-            tY+=yMapOffset;
-            int cX, cY, cZ;
-            for (cY  = 0; cY < machineY; cY++) for (cZ = 0; cZ < machineZ; cZ++) for (cX = 0; cX < machineX; cX++) {
-                if(!isIgnored(cX,cY,cZ))utils.resetTarget(this, utils.getRealX(mFacing, tX, cX, cZ), tY + cY, utils.getRealZ(mFacing, tZ, cX, cZ), 0);
-            }
-        }
+        if (!worldObj.blockExists(tX, tY, tZ)) return;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.RESET, worldObj, xCoord, yCoord, zCoord, mFacing, null,null));
     }
 
     @Override
@@ -123,7 +102,7 @@ public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     }
 
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) { return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
+    public boolean isInsideStructure(int aX, int aY, int aZ) { return new BoundingBox(utils.getRealX(mFacing,xCoord,-1,0),yCoord,utils.getRealZ(mFacing,zCoord,-1,0),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,-1,0),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,-1,0),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
 
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
@@ -153,6 +132,18 @@ public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
         return new DelegatorTileEntity<>(this,SIDE_UP);
+    }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
     @Override
     public String getTileEntityName() {

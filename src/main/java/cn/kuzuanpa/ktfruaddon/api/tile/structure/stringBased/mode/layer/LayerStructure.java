@@ -74,13 +74,15 @@ public class LayerStructure implements IStringBaseStructure {
         ctx.addX += controllerOffsetPos.posX;
         ctx.addY += controllerOffsetPos.posY;
         ctx.addZ += controllerOffsetPos.posZ;
+        predicates.forEach((character, predicate) -> predicate.preCheck(ctx, character));
         for(char c : layerSequence.toCharArray()) {
             IStructureLayer layer = layers.get(c);
-            if(layer == null) throw new IllegalArgumentException("Invalid Layer config");
+            if(layer == null) throw new IllegalArgumentException("Null Layer!");
 
             int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
             if(step == 0)return new ChunkCoordinates(ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
         }
+        predicates.forEach((character, predicate) -> predicate.afterCheck(ctx, character));
         return null;
     }
 

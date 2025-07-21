@@ -45,6 +45,11 @@ public class BlockPredicate implements IStructurePredicate {
     }
 
     @Override
+    public boolean reset(StructureContext ctx, int x, int y, int z) {
+        return true;
+    }
+
+    @Override
     public boolean project(StructureContext ctx, int x, int y, int z) {
         kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z,  new BlockMeta(expected, expectedMeta));
         return true;

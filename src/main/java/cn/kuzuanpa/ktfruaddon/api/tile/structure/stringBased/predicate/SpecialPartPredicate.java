@@ -22,29 +22,32 @@ import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import zmaster587.libVulpes.block.BlockMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartPredicate implements IStructurePredicate {
+public class SpecialPartPredicate implements IStructurePredicate {
     private final TileDesc[] expected;
     private boolean allowPartShare = false;
 
-    public PartPredicate(TileDesc expected) {
+    public SpecialPartPredicate(TileDesc expected) {
         this.expected = new TileDesc[]{expected};
     }
-    public PartPredicate(TileDesc... expected) {
+    public SpecialPartPredicate(TileDesc... expected) {
         this.expected = expected;
     }
-    public PartPredicate allowShare(){
+    public SpecialPartPredicate allowShare(){
         allowPartShare = true;
         return this;
     }
 
     @Override
     public boolean check(StructureContext ctx, int x, int y, int z) {
-        return utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare);
+        boolean result = utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare);
+        if(result) ((IReceiveSpecialPart)ctx.controller).receiveSpecialPart(ctx.controller.getTileEntity(x,y,z));
+        return result;
     }
     @Override
     public boolean set(StructureContext ctx, int x, int y, int z) {
@@ -70,6 +73,10 @@ public class PartPredicate implements IStructurePredicate {
         MultiTileEntityContainer container = registry.getNewTileEntityContainer(id, new NBTTagCompound());
         ((IMultiTileEntity) container.mTileEntity).setShouldRefresh(false);
         return new BlockMeta(container.mBlock,container.mTileEntity);
+    }
+
+    public interface IReceiveSpecialPart {
+        void receiveSpecialPart(TileEntity part);
     }
 }
 

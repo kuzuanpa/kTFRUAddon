@@ -17,10 +17,14 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IComputeNode;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
@@ -42,7 +46,10 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase01Root;
 import gregapi.tileentity.energy.ITileEntityEnergy;
-import gregapi.tileentity.multiblocks.*;
+import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
+import gregapi.tileentity.multiblocks.IMultiBlockFluidHandler;
+import gregapi.tileentity.multiblocks.IMultiBlockInventory;
+import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
@@ -53,9 +60,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,7 +72,7 @@ import java.util.stream.Collectors;
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory, IMappedStructure {
+public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory {
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
     public static final short MAX_FIELD_STRENGTH=400, KEEP_CHARGE_EUt=512;
     public static final long MAX_CHARGE =16*1024L*1024L;
@@ -345,11 +354,6 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {
         return T;
     }
-    @Override
-    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()) openGUI(aPlayer, aSide);
-        return T;
-    }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerClientFusionTokamakExp(aPlayer.inventory, this, mRecipes, aGUIID, "");
@@ -363,55 +367,12 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
 
     MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
     MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-    @Override
-    public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
-        return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
-    }
 
-    public int getUsage(int mapX, int mapY, int mapZ) {
-        if (getRegistryID(mapX,mapY,mapZ)==g) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else if (getBlockID(mapX,mapY,mapZ) == 31019) {
-            return  MultiTileEntityMultiBlockPart.ONLY_FLUID;
-        }else{return MultiTileEntityMultiBlockPart.NOTHING;}
-    }
-
-    public int getBlockID(int checkX, int checkY, int checkZ){
-        return blockIDMap[checkY][checkZ][checkX];
-    }
-
-    @Override
-    public boolean isIgnored(int mapX, int mapY, int mapZ) {
-        return getBlockID(mapX,mapY,mapZ)==0?T:F;
-    }
-
-    public MultiTileEntityRegistry getRegistryID(int mapX, int mapY, int mapZ) {
-        return getBlockID(mapX,mapY,mapZ)==18002?g:k;
-    }
-
-    @Override
-    public boolean isPartSpecial(TileEntity tile) {
-        return tile instanceof IComputeNode;
-    }
-
-    @Override
     public void receiveSpecialBlockList(List<TileEntity> list) {
         computeNodesCoord = list.stream().map(tile -> new ChunkCoordinates(tile.xCoord,tile.yCoord,tile.zCoord)).collect(Collectors.toList());
     }
 
     private ChunkCoordinates lastFailedPos=null;
-    @Override
-    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos,machineX,machineY,machineZ,xMapOffset,yMapOffset,zMapOffset, aClickedAt, aPlayer, aInventory);
-        return lastFailedPos==null;
-    }
-
-
-    static {
-
-    }
-
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
@@ -447,139 +408,162 @@ public class fusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override public String getTileEntityName() {
         return "ktfru.multitileentity.multiblock.fusion.tokamak.exp";
     }
-    private final static int[][][] blockIDMap = {{
-            {  0  ,  0  ,  0  ,  0  ,31015,31019,31015,32005,  0  ,32005,31015,31019,31015,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31015,31019,31015,18002,31016,18002,31015,31019,31015,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31015,31019,31015,  0  ,31016,  0  ,31015,31019,31015,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31019,  0  ,  0  ,31016,  0  ,  0  ,31019,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31016,  0  ,31019,  0  ,  0  ,31016,  0  ,  0  ,31019,  0  ,31016,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31016,31019,  0  ,  0  ,31016,  0  ,  0  ,31019,31016,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {31016,31016,31016,31016,31016,31016,31016,  0  ,  0  ,  0  ,31016,31016,31016,31016,31016,31016,31016},
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-    },{
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31015,  0  ,18002,32005,18002,  0  ,31015,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31015,  0  ,18002,31017,18002,  0  ,31015,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31015,  0  ,  0  ,  0  ,  0  ,  0  ,31015,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,  0  ,31018,31018,31018,31018,31018,31018,31018,  0  ,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31018,31018,31018,31018,31018,31018,31018,31018,31018,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,31016,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  },
-            {31017,  0  ,31018,31018,31018,  0  ,31016,31016,  0  ,31016,31016,  0  ,31018,31018,31018,  0  ,31017},
-            {  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,31016,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31018,31018,31018,31018,31018,31018,31018,31018,31018,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,  0  ,31018,31018,31018,31018,31018,31018,31018,  0  ,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-    },{
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31024,31019,31024,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31024,31017,31024,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,31016,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  },
-            {31017,31018,  0  ,  0  ,  0  ,31018,31016,31016,  0  ,31016,31016,31018,  0  ,  0  ,  0  ,31018,31017},
-            {  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,31016,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-    },{
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31024,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,31016,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  },
-            {31017,31018,  0  ,  0  ,  0  ,31018,31016,31016,  0  ,31016,31016,31018,  0  ,  0  ,  0  ,31018,31017},
-            {  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,31016,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-    },{
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,31016,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  },
-            {31017,31018,  0  ,  0  ,  0  ,31018,31016,31016,  0  ,31016,31016,31018,  0  ,  0  ,  0  ,31018,31017},
-            {  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,31016,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,31016,  0  ,31018,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-    },{
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,  0  ,31018,31018,31018,31018,31018,31018,31018,  0  ,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31018,31018,31018,31018,31018,31018,31018,31018,31018,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,31016,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  },
-            {31017,  0  ,31018,31018,31018,  0  ,31016,31016,  0  ,31016,31016,  0  ,31018,31018,31018,  0  ,31017},
-            {  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,31016,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,31016,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  ,31018,31018,31018,31018,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31018,31018,31018,31018,31018,31018,31018,31018,31018,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31017,  0  ,31018,31018,31018,31018,31018,31018,31018,  0  ,31017,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31018,31018,31018,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31017,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-    },{
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {31016,31016,31016,31016,31016,31016,31016,  0  ,  0  ,  0  ,31016,31016,31016,31016,31016,31016,31016},
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,31016,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
-            {  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,31016,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  },
+
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("0123456")
+            .fixedLayer('0',
+                    "         C        ",
+                    "         C        ",
+                    "         C        ",
+                    "    C    C    C   ",
+                    "AAA  C   C   C    ",
+                    "FFFFFFC  C  C     ",
+                    "AAA    C C C      ",
+                    "HW      C C       ",
+                    " CCCCCCC   CCCCCCC",
+                    "HW      C C       ",
+                    "AAA    C C C      ",
+                    "FFFFFFC  C  C     ",
+                    "AAA  C   C   C    ",
+                    "    C    C    C   ",
+                    "         C        ",
+                    "         C        ",
+                    "         C        "
+                    ).fixedLayer('1',
+                    "         B        ",
+                    "                  ",
+                    "        DDD       ",
+                    "    B DDDDDDD B   ",
+                    "     DDDDDDDDD    ",
+                    "AAA DDDD   DDDD   ",
+                    "    DDD  C  DDD   ",
+                    "WW DDD  CCC  DDD  ",
+                    "HB DDD CC CC DDD B",
+                    "WW DDD  CCC  DDD  ",
+                    "    DDD  C  DDD   ",
+                    "AAA DDDD   DDDD   ",
+                    "     DDDDDDDDD    ",
+                    "    B DDDDDDD B   ",
+                    "        DDD       ",
+                    "                  ",
+                    "         B        "
+                    ).fixedLayer('2',
+                    "         B        ",
+                    "        DDD       ",
+                    "      DD   DD     ",
+                    "    BD       DB   ",
+                    "    D         D   ",
+                    "   D    DDD    D  ",
+                    "   D   D C D   D  ",
+                    "GGD   D CCC D   D ",
+                    "FBD   DCC CCD   DB",
+                    "GGD   D CCC D   D ",
+                    "   D   D C D   D  ",
+                    "   D    DDD    D  ",
+                    "    D         D   ",
+                    "    BD       DB   ",
+                    "      DD   DD     ",
+                    "        DDD       ",
+                    "         B        "
+                    ).fixedLayer('3',
+                    "         B        ",
+                    "        DDD       ",
+                    "      DD   DD     ",
+                    "    BD       DB   ",
+                    "    D         D   ",
+                    "   D    DDD    D  ",
+                    "   D   D C D   D  ",
+                    "  D   D CCC D   D ",
+                    "GBD   DCC CCD   DB",
+                    "  D   D CCC D   D ",
+                    "   D   D C D   D  ",
+                    "   D    DDD    D  ",
+                    "    D         D   ",
+                    "    BD       DB   ",
+                    "      DD   DD     ",
+                    "        DDD       ",
+                    "         B        "
+                    ).fixedLayer('4',
+                    "         B        ",
+                    "        DDD       ",
+                    "      DD   DD     ",
+                    "    BD       DB   ",
+                    "    D         D   ",
+                    "   D    DDD    D  ",
+                    "   D   D C D   D  ",
+                    "  D   D CCC D   D ",
+                    " BD   DCC CCD   DB",
+                    "  D   D CCC D   D ",
+                    "   D   D C D   D  ",
+                    "   D    DDD    D  ",
+                    "    D         D   ",
+                    "    BD       DB   ",
+                    "      DD   DD     ",
+                    "        DDD       ",
+                    "         B        "
+                    ).fixedLayer('5',
+                    "         B        ",
+                    "                  ",
+                    "        DDD       ",
+                    "    B DDDDDDD B   ",
+                    "     DDDDDDDDD    ",
+                    "    DDDD   DDDD   ",
+                    "    DDD  C  DDD   ",
+                    "   DDD  CCC  DDD  ",
+                    " B DDD CC CC DDD B",
+                    "   DDD  CCC  DDD  ",
+                    "    DDD  C  DDD   ",
+                    "    DDDD   DDDD   ",
+                    "     DDDDDDDDD    ",
+                    "    B DDDDDDD B   ",
+                    "        DDD       ",
+                    "                  ",
+                    "         B        "
+                    ).fixedLayer('6',
+                    "         C        ",
+                    "         C        ",
+                    "         C        ",
+                    "    C    C    C   ",
+                    "     C   C   C    ",
+                    "      C  C  C     ",
+                    "       C C C      ",
+                    "        C C       ",
+                    " CCCCCCC   CCCCCCC",
+                    "        C C       ",
+                    "       C C C      ",
+                    "      C  C  C     ",
+                    "     C   C   C    ",
+                    "    C    C    C   ",
+                    "         C        ",
+                    "         C        ",
+                    "         C        "
+            )
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31015)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31017)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31016)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31018)))
+            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31019)))
+            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31024)))
+            .where('H', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .setOffset(-1,-1,0) ;
+    @Override
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos==null;
     }
-    };
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        openGUI(aPlayer, aSide);
+        return true;
+    }
 }
