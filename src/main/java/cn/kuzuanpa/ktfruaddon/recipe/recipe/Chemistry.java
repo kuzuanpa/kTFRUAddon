@@ -146,7 +146,9 @@ public class Chemistry {
 
         recipeMaps.HeatMixer.addRecipe1(F, 450, 80, OP.dust.mat(MT.NaOH, 2), FL.array(flList.ImpureTitaniumAcylate.make(1000)), FL.array(flList.CrudeTitaniumAcylate.make(1000)), ZL_IS);
 
-        RM.Distillery.addRecipe0(F, 250, 120, FL.array(flList.PurifyTitaniumAcylate.make(1000)), FL.array(flList.TitaniumAcylate.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe0(F, 230, 120, FL.array(flList.CrudeTitaniumAcylate.make(1000)), FL.array(flList.PurifyTitaniumAcylate.make(1000)), ZL_IS);
+
+        RM.Distillery.addRecipe1(F, 250, 120,ST.tag(0), FL.array(flList.PurifyTitaniumAcylate.make(1000), MT.H2SO4.liquid(2*U, true)), FL.array(flList.TitaniumAcylate.make(1000)), ZL_IS);
 
         recipeMaps.HeatMixer.addRecipe0(F, 480, 800, FL.array(flList.TitaniumAcylate.make(1000), flList.BariumAcetate.make(1000)), ZL_FS, matList.NanoBariumTitanate.getDust(1));
 

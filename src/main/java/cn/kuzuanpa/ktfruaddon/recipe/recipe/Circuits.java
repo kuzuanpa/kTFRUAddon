@@ -117,8 +117,5 @@ public class Circuits {
         CR.shapeless(IL.Circuit_Part_Advanced.get(1), new Object[]{IL.Circuit_Part_Elite.get(1)});
         CR.shapeless(IL.Circuit_Part_Elite.get(1), new Object[]{IL.Circuit_Part_Master.get(1)});
         CR.shapeless(IL.Circuit_Part_Master.get(1), new Object[]{IL.Circuit_Part_Ultimate.get(1)});
-
-        recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80, OP.dust.mat(matList.SodiumAcetate.get(),2), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.SodiumAcetate.getDust(2));
-
     }
 }
