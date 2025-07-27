@@ -55,8 +55,10 @@ public enum flList {
     ,BlendedFuel1,BlendedFuel2,BlendedFuel3,BlendedFuel4,BlendedFuel5,BioFuel1,BioFuel2,/**蚀刻液**/EtchingSolution
     ,NegativeColloid,PositiveColloid
     ,/**磷酸三丁酯**/TributylPhosphate,/**丁醇**/Butanol,/**碳酸铀酰络合离子溶液**/UranylCarbonateSolution,/**甲基叔胺**/MethylTertiaryAmine,/**油酸乙酯**/EthylOleate,/**铀萃取剂**/UraniumExtractant,/**用过的铀萃取剂**/UsedUraniumExtractant,/**萃取的铀**/ExtractedUranium,/**萃取的铀**/ExtractedUranium2,/**硅烷**/Silane,/**四氟化硅**/SiliconTetrafluoride
-    ,/**双酚钠盐溶液**/ SolutionBPASodium ,/**氧化钇锆电解质**/ YttriumZirconiumOxide
+    ,/**双酚钠盐溶液**/ SolutionBPASodium ,/**氧化钇锆电解质**/ YttriumZirconiumOxide, /**二氧化钼**/MolybdenumOxide, /**硫酸钡**/BariumSulfate, /**醋酸钡**/BariumAcetate
+    ,/**乙烯酮**/Ketene,/**双乙烯酮**/Diketene
 
+    ,/**含杂酰化钛**/ImpureTitaniumAcylate,/**粗制酰化钛**/CrudeTitaniumAcylate,/**净化酰化钛**/PurifyTitaniumAcylate,/**酰化钛**/TitaniumAcylate
     ,RecycledFuel0 ,RecycledFuel1 ,RecycledFuel2 ,RecycledFuel3 ,RecycledFuel4
     ,CrackedNaphthaLow,CrackedNaphthaMedium,CrackedNaphthaHigh, CrackedPetrolLow, CrackedPetrolMedium, CrackedPetrolHigh
     ,MoltenTeflon,MoltenBakelite,MoltenNaK,HotMoltenNaK, MoltenPolycarbonate

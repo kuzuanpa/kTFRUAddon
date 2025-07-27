@@ -211,6 +211,7 @@ public class fluidPreInit {
         flList.MoltenNaK.registerMolten("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
         flList.HotMoltenNaK.registerMolten("potassiumsodiumhot","Hot Potassium Sodium",matList.PotassiumSodium.mat,800);
         flList.MoltenPolycarbonate.registerMolten("polycarbonate","Polycarbonate",MT.Polycarbonate);
+        flList.MolybdenumOxide.registerMolten("molybdenumoxide","MolybdenumOxide",matList.MolybdenumOxide.get());
 
         //磷酸三丁酯
         flList.TributylPhosphate.register("tributylphosphate","TributylPhosphate",matList.TributylPhosphate.get(), LIQUID);
@@ -233,6 +234,22 @@ public class fluidPreInit {
         flList.Silane.register("silane","Silane",matList.Silane.get(), GAS);
         //四氟化硅
         flList.SiliconTetrafluoride.register("silicontetrafluoride","Silicon Tetrafluoride",matList.SiliconTetrafluoride.get(), GAS);
+        //硫酸钡
+        flList.BariumSulfate.register("bariumsulfate","Barium Sulfate",MT.OREMATS.Barite, LIQUID);
+        //醋酸钡
+        flList.BariumAcetate.register("bariumacetate","Barium Acetate",matList.BariumAcetate.get(), LIQUID);
+        //乙烯酮
+        flList.Ketene.register("ketene","Ketene",matList.Ketene.get(), LIQUID);
+        //双乙烯酮
+        flList.Diketene.register("diketene","Diketene",null, LIQUID);
+        //含杂酰化钛
+        flList.ImpureTitaniumAcylate.register("ImpureTitaniumAcylate","ImpureTitaniumAcylate",null, LIQUID);
+        //粗制酰化钛
+        flList.CrudeTitaniumAcylate.register("CrudeTitaniumAcylate","CrudeTitaniumAcylate",null, LIQUID);
+        //净化酰化钛
+        flList.PurifyTitaniumAcylate.register("PurifyTitaniumAcylate","PurifyTitaniumAcylate",null, LIQUID);
+        // 酰化钛
+        flList.TitaniumAcylate.register("TitaniumAcylate","TitaniumAcylate",matList.TitaniumAcylate.mat, LIQUID);
 
         flList.RecycledFuel0.register("RecycledFuel0","#0 Recycled Fuel",null, LIQUID);
         flList.RecycledFuel1.register("RecycledFuel1","#1 Recycled Fuel",null, LIQUID);

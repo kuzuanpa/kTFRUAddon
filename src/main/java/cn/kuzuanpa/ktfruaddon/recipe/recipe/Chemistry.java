@@ -125,5 +125,30 @@ public class Chemistry {
 
         recipeMaps.LaserCutter.addRecipe1(F, 500, 200, OP.plate.mat(MT.Graphene, 1), ZL_FS, ZL_FS, OP.stick.mat(MT.Graphene, 2));
 
+        RM.Mixer.addRecipe1(F, 80, 120, OP.dust.mat(MT.Al, 0), FL.array(MT.Cl.gas(3*U, true)), ZL_FS, matList.AluminumChloride.getDust(1));
+
+        recipeMaps.HeatMixer.addRecipe1(F, 120, 80, matList.AluminumChloride.getDust(0), FL.array(flList.Benzene.make(200), flList.Chloromethane.make(100)), FL.array(flList.Toluene.make(200), MT.HCl.gas(U, false)), ZL_IS);
+
+        recipeMaps.UltrasonicMixer.addRecipe1(F, 800, 80, OP.dust.mat(MT.OREMATS.Barite, 4), FL.array(FL.DistW.make(1000)), FL.array(flList.BariumSulfate.make(1000)), ZL_IS);
+
+        recipeMaps.HeatMixer.addRecipe1(F, 480, 800, matList.SodiumAcetate.getDust(2), FL.array(flList.BariumSulfate.make(2000)), FL.array(flList.BariumAcetate.make(2000)), OP.dust.mat(MT.NaSO4, 1));
+
+        recipeMaps.HeatMixer.addRecipe0(F, 1040, 80, FL.array(flList.Acetone.make(1000)), FL.array(flList.Ketene.make(400), flList.Diketene.make(600), FL.Methane.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe0(F, 200, 200, FL.array(flList.Diketene.make(1000)), FL.array(flList.Ketene.make(600), flList.Diketene.make(400)), ZL_IS);
+
+        RM.        BurnMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.P, 2), FL.array(FL.Oxygen.make(2500)), ZL_FS, matList.PhosphorusPentoxide.getDust(3));
+
+        recipeMaps.HeatMixer.addRecipe1(F, 440, 200, matList.PhosphorusPentoxide.getDust(0), FL.array(flList.GlacialAceticAcid.make(1000)), FL.array(flList.Ketene.make(900), flList.Diketene.make(100), FL.DistW.make(1000)), ZL_IS);
+
+        recipeMaps.HeatMixer.addRecipe1(F, 2141, 80, OP.dust.mat(MT.TiO2,2), FL.array(MT.H2SO4.liquid(4*U, true)), ZL_FS, matList.TitanicSulfate.getDust(3));
+
+        RM.Mixer.addRecipe1(F, 200, 240, matList.TitanicSulfate.getDust(2), FL.array(flList.Ketene.make(1500)), FL.array(flList.ImpureTitaniumAcylate.make(1000)), ZL_IS);
+
+        recipeMaps.HeatMixer.addRecipe1(F, 450, 80, OP.dust.mat(MT.NaOH, 2), FL.array(flList.ImpureTitaniumAcylate.make(1000)), FL.array(flList.CrudeTitaniumAcylate.make(1000)), ZL_IS);
+
+        RM.Distillery.addRecipe0(F, 250, 120, FL.array(flList.PurifyTitaniumAcylate.make(1000)), FL.array(flList.TitaniumAcylate.make(1000)), ZL_IS);
+
+        recipeMaps.HeatMixer.addRecipe0(F, 480, 800, FL.array(flList.TitaniumAcylate.make(1000), flList.BariumAcetate.make(1000)), ZL_FS, matList.NanoBariumTitanate.getDust(1));
+
     }
 }

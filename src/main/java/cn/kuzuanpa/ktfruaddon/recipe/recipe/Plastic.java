@@ -43,6 +43,7 @@ public class Plastic {
         recipeMaps.   LightMixer         .addRecipe0(F,32 ,600,FL.array(FL.Methane.make(300),MT.Cl.gas(6*U10,false)),FL.array(flList.Chloromethane.make(100),flList.Dichloromethane.make(100),flList.Chloroform.make(100),MT.HCl.gas(6*U10,false)),ZL_IS);
 
         recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80, OP.dust.mat(MT.CaCO3,1), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.CalciumAcetate.getDust(1));
+        recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80, OP.dust.mat(MT.Na2CO3,1), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.SodiumAcetate.getDust(2));
         recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80,OP.dust.mat(matList.ZincChromate.mat, 0),FL.array(FL.BioEthanol.make(100)),FL.array(flList.Acetone.make(45),FL.CarbonDioxide.make(50)),ZL_IS);
         RM.           Mixer              .addRecipe1(F,64 ,  80,OP.dust.mat(matList.Zincoxide.mat, 0),FL.array(flList.Acetylene.make(200),FL.Water.make(300)),FL.array(flList.Acetone.make(100),FL.CarbonDioxide.make(100),FL.Hydrogen.make(200)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,100, 200,FL.array(FL.Propylene.make(100),flList.Benzene.make(100),FL.Oxygen.make(50)),FL.array(flList.Phenol.make(100),flList.Acetone.make(100)),ZL_IS);

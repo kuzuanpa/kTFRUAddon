@@ -33,8 +33,8 @@ public class itemIT extends MultiItemRandom {
     public void addItems() {
 
         ItemList.SiliconBoulePure             .set(addItem(9701, "Pure Silicon Boule", "Ready to Cut into Plates"));
-        ItemList.MoO2Boule                    .set(addItem(9702, "MoO2 Boule", "Ready to Cut into Plates"));
-        ItemList.MoO2BoulePure                .set(addItem(9703, "Pure MoO2 Boule", "Ready to Cut into Plates"));
+        ItemList.MoO2Boule                    .set(addItem(9702, "MolybdenumOxide Boule", "Ready to Cut into Plates"));
+        ItemList.MoO2BoulePure                .set(addItem(9703, "Pure MolybdenumOxide Boule", "Ready to Cut into Plates"));
 
         ItemList.SiliconPlateT1.set(addItem(9800, "SiliconPlateT1", "Next Step:"+ LH.Chat._CYAN+"Coat"));
         ItemList.SiliconPlateT2.set(addItem(9801, "SiliconPlateT2", "Next Step:"+ LH.Chat._CYAN+"Clean"));

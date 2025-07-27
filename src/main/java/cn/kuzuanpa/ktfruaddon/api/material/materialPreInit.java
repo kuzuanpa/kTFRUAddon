@@ -113,7 +113,7 @@ public class materialPreInit {
                 .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.LIQUID);
 
         //醋酸钙
-        matList.CalciumAcetate.registerC(22034,"CalciumAcetate","Calcium Acetate",395,397,245,246,245,0,"CH"+NUM_SUB[3]+"COOCaOOCCH"+NUM_SUB[3])
+        matList.CalciumAcetate.registerC(22034,"CalciumAcetate","Calcium Acetate",395,397,245,246,245,0,"(CH"+NUM_SUB[3]+"COO)"+NUM_SUB[2]+"Ca")
                 .put(TD.Compounds.DECOMPOSABLE,TD.ItemGenerator.DUSTS);
         //铬酸锌
         matList.ZincChromate.registerC(22035,"ZincChromate","Zinc Chromate",316,651,214,198,0,0,"ZnCrO"+NUM_SUB[4])
@@ -299,28 +299,53 @@ public class materialPreInit {
         matList.Silane.registerC(22096,"Silane","Silane",-185,-112,255,255,255,130,"H"+NUM_SUB[4]+"Si")
                 .put();
         //硅化镁
-        matList.MagnesiumSilicide.registerC(22097,"MagnesiumSilicide","MagnesiumSilicide",1102,1200,255,255,255,130,"Mg"+NUM_SUB[2]+"Si")
+        matList.MagnesiumSilicide.registerC(22097,"MagnesiumSilicide","Magnesium Silicide",1102,1200,255,255,255,130,"Mg"+NUM_SUB[2]+"Si")
                 .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
         //氯化铵
-        matList.AmmoniumChloride.registerC(22098,"AmmoniumChloride","AmmoniumChloride",340,653,255,255,255,130,"NH"+NUM_SUB[4]+"Cl")
+        matList.AmmoniumChloride.registerC(22098,"AmmoniumChloride","Ammonium Chloride",340,653,255,255,255,130,"NH"+NUM_SUB[4]+"Cl")
                 .put(TD.ItemGenerator.DUSTS);
         //四氟化硅
-        matList.SiliconTetrafluoride.registerC(22099,"SiliconTetrafluoride","SiliconTetrafluoride",-90,-86,255,255,255,130,"SiF"+NUM_SUB[4])
+        matList.SiliconTetrafluoride.registerC(22099,"SiliconTetrafluoride","Silicon Tetrafluoride",-90,-86,255,255,255,130,"SiF"+NUM_SUB[4])
                 .put(TD.ItemGenerator.GASES);
         //四氢铝钠
-        matList.SodiumAluminiumHydride.registerC(22100,"SodiumAluminiumHydride","SodiumAluminiumHydride",178,231,255,255,255,130,"NaAlH"+NUM_SUB[4])
+        matList.SodiumAluminiumHydride.registerC(22100,"SodiumAluminiumHydride","Sodium Aluminium Hydride",178,231,255,255,255,130,"NaAlH"+NUM_SUB[4])
                 .put(TD.ItemGenerator.DUSTS,TD.Properties.FLAMMABLE);
         //智金
         matList.Ij.registerC(22101,"intellite","Intellite",118,132,213,221,255,255,"Ij")
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES,TD.ItemGenerator.ORES,TD.Processing.EXTRUDER_SIMPLE)
                 .ores(MT.Ag, MT.OREMATS.Ilmenite);
-
         //氢氧化镁
-        matList.MagnesiumDihydroxide.registerC(22102,"MagnesiumDihydroxide","MagnesiumDihydroxide",350,2804,255,255,255,150,"Mg(OH)"+NUM_SUB[2]) // i don't know which color is better so i put a random number in
+        matList.MagnesiumDihydroxide.registerC(22102,"MagnesiumDihydroxide","Magnesium Dihydroxide",350,2804,255,255,255,150,"Mg(OH)"+NUM_SUB[2]) // i don't know which color is better so i put a random number in
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS);
         //钛酸钡
-        matList.BariumTitanate.registerC(22103,"BariumTitanate","BariumTitanate",2100,3205,230,255,180,150,"BaTiO"+NUM_SUB[3])
+        matList.BariumTitanate.registerC(22103,"BariumTitanate","Barium Titanate",2100,3205,230,255,180,150,"BaTiO"+NUM_SUB[3])
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES);
-
+        //二氧化钼
+        matList.MolybdenumOxide.registerC(22104,"MolybdenumOxide","Molybdenum Oxide",1690,2440,225,101,235,255,"MoO"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES,TD.ItemGenerator.ORES, TD.ItemGenerator.LIQUID);
+        //纳米钛酸钡
+        matList.NanoBariumTitanate.registerC(22105,"NanoBariumTitanate","Nano Barium Titanate",2400,3805,140,175,110,150,"BaTiO"+NUM_SUB[3])
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.PLATES);
+        //氯化铝
+        matList.AluminumChloride.registerC(22106,"AluminumChloride","Aluminum Chloride",184,192,140,175,110,150,"AlCl"+NUM_SUB[3])
+                .put(TD.ItemGenerator.DUSTS);
+        //醋酸钡
+        matList.BariumAcetate.registerC(22107,"BariumAcetate","Sodium Sulfate",430,654,211,223,211,150,"(CH"+NUM_SUB[3]+"COO)"+NUM_SUB[2]+"Ba")
+                .put(TD.ItemGenerator.DUSTS);
+        //醋酸钠
+        matList.SodiumAcetate.registerC(22108,"SodiumAcetate","Sodium Acetate",324,326,211,213,211,150,"CH"+NUM_SUB[3]+"COONa")
+                .put(TD.ItemGenerator.DUSTS);
+        //五氧化二磷
+        matList.PhosphorusPentoxide.registerC(22109,"PhosphorusPentoxide","Phosphorus Pentoxide",330,1354,111,123,111,150,"P"+NUM_SUB[2]+"O"+NUM_SUB[5])
+                .put(TD.ItemGenerator.DUSTS);
+        //硫酸钡
+        matList.Ketene.registerC(22110,"Ketene","Ketene",10,32,211,223,211,150,"CH"+NUM_SUB[2]+"=C=O")
+                .put(TD.ItemGenerator.DUSTS);
+        //硫酸钛
+        matList.TitanicSulfate.registerC(22111,"TitanicSulfate","TitanicSulfate",1800,2091,231,123,201,150,"Ti(SO"+NUM_SUB[4]+")"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //酰化钛
+        matList.TitaniumAcylate.registerC(22112,"TitaniumAcylate","Titanium Acylate",1800,2091,231,123,201,150,"[TiO"+NUM_SUB[2]+"(OH)(H"+NUM_SUB[2]+"O)"+NUM_SUB[4]+"]")
+                .put(TD.ItemGenerator.DUSTS);
     }
 }
