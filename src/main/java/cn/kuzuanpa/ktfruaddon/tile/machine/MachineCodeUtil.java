@@ -15,14 +15,10 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
+import cn.kuzuanpa.ktfruaddon.api.code.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.api.code.OreScanner;
 import cn.kuzuanpa.ktfruaddon.api.tile.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.BlockPredicate;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
@@ -30,8 +26,8 @@ import gregapi.tileentity.base.TileEntityBase01Root;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -62,17 +58,15 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
     if (isServerSide()) {
-        //openGUI(aPlayer, aSide);
+        openGUI(aPlayer, aSide);
         try {
-            //for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
-           // FMLLog.log(Level.FATAL,worldObj.getChunkFromChunkCoords(-28, 43).getBlock(5, 5,0).toString());
+            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
             //for (ItemStack computer : getComputers()) {
             //    worldObj.spawnEntityInWorld(new EntityItem(worldObj,xCoord,yCoord + 2,zCoord,computer));
             //}
         }catch (Throwable ignored) {}
+        FMLLog.log(Level.FATAL, slot(0)==null?"/": String.valueOf(Block.getBlockFromItem(slot(0).getItem()).getMaterial().equals(Material.ice)));
     }
-    if(aPlayer.isSneaking()) oreVeinScanner.clearRendedOres();
-    genMultiTileName();
     return false;
 }
 

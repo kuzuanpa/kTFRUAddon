@@ -41,11 +41,14 @@ public class FixedLayer implements IStructureLayer {
 
                 int[] absCoords = convertAxis(ctx, mainAxis, rowIdx, colIdx);
 
-                IStructurePredicate condition = structure.getPredicates().get(expected);
+                IStructurePredicate predicates = structure.getPredicates().get(expected);
 
-                if(condition == null)throw new IllegalArgumentException("condition can not be null!");
+                if(predicates == null)throw new IllegalArgumentException("predicates can not be null!");
 
-                if (!condition.validate(ctx, absCoords[0], absCoords[1], absCoords[2])) return 0;
+                if (!predicates.validate(ctx, absCoords[0], absCoords[1], absCoords[2])) {
+                    ctx.failedPos = new ChunkCoordinates(absCoords[0], absCoords[1], absCoords[2]);
+                    return 0;
+                }
             }
         }
         promoteContext(ctx, mainAxis, 1);

@@ -25,8 +25,6 @@ import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +51,6 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
     return false;
 }
 
-    protected static boolean hasHazmatNBT(ItemStack stack, String hazmatType) {
-        return stack != null && stack.stackTagCompound != null && stack.stackTagCompound.hasKey("gt.hazmat."+hazmatType) && stack.stackTagCompound.getBoolean("gt.hazmat."+hazmatType);
-    }
     public void onTick2(long aTimer, boolean isServerside){
 
     }

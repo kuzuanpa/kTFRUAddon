@@ -17,6 +17,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
 public class StructureContext {
@@ -27,6 +28,7 @@ public class StructureContext {
     public final Entity player;
     public final IInventory inventory;
     public StringBaseMode mode;
+    public ChunkCoordinates failedPos;
     public StructureContext(ITileEntityMultiBlockController controller, StringBaseMode mode, World world, int oX,int oY, int oZ, byte facing) {
         this(controller, mode, world, oX, oY, oZ, facing, null, null);
     }

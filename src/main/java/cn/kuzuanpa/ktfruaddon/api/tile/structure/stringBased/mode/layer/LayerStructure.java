@@ -15,15 +15,19 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer;
 
+import cn.kuzuanpa.ktfruaddon.api.network.PacketFxBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.IStructureLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 public class LayerStructure implements IStringBaseStructure {
     private final StructureContext.Axis expandAxis;
@@ -80,7 +84,10 @@ public class LayerStructure implements IStringBaseStructure {
             if(layer == null) throw new IllegalArgumentException("Null Layer!");
 
             int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
-            if(step == 0)return new ChunkCoordinates(ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
+            if(step == 0){
+                kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(ctx.failedPos, 0xff0000, 4000,1.0f), new NetworkRegistry.TargetPoint(ctx.world.provider.dimensionId, ctx.failedPos.posX, ctx.failedPos.posY, ctx.failedPos.posZ, 80));
+                return ctx.failedPos;
+            }
         }
         predicates.forEach((character, predicate) -> predicate.afterCheck(ctx, character));
         return null;
