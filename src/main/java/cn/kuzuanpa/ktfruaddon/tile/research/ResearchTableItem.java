@@ -14,7 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
-import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTask;
+import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTaskSimple;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -91,7 +91,7 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if(aIsServerSide && slotHas(0) && consuming == null) {
-            long count = tryPromoteCurrentProjectProgress(ItemConsumeTask.class, slot(0), true);
+            long count = tryPromoteCurrentProjectProgress(ItemConsumeTaskSimple.class, slot(0), true);
             int consume = (int)Math.min(speed, count);
             if(consume > 0) {
                 consuming = slot(0).copy();
@@ -104,7 +104,7 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
         if(aIsServerSide && consuming!=null){
             progress ++;
             if(progress < interval)return;
-            long amount = tryPromoteCurrentProjectProgress(ItemConsumeTask.class, consuming, false);
+            long amount = tryPromoteCurrentProjectProgress(ItemConsumeTaskSimple.class, consuming, false);
             if(amount < consuming.stackSize) utils.put(consuming, delegator(mFacing), null, true, false, false, 64, 0);
             progress = 0;
             consuming = null;

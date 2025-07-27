@@ -14,21 +14,20 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research.task;
 
-import gregapi.data.LH;
 import gregapi.util.ST;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemConsumeTask implements IResearchTask{
+public abstract class ItemConsumeTaskBase implements IResearchTask{
     public @NotNull ItemStack item;
     public long requiredCount;
     public long finishedCount;
-    public ItemConsumeTask(@NotNull ItemStack needItem){
+    public ItemConsumeTaskBase(@NotNull ItemStack needItem){
         this.item = needItem;
         requiredCount = needItem.stackSize;
     }
-    public ItemConsumeTask(@NotNull ItemStack needItem, long requiredCount){
+    public ItemConsumeTaskBase(@NotNull ItemStack needItem, long requiredCount){
         this.item = needItem;
         this.requiredCount = requiredCount;
     }
@@ -70,8 +69,4 @@ public class ItemConsumeTask implements IResearchTask{
     }
 
 
-    @Override
-    public String getDesc() {
-        return String.format(LH.get("ktfru.research.task.item"), item.getDisplayName(), requiredCount);
-    }
 }

@@ -1,7 +1,9 @@
 
 ktfru.research.task.compute=提供%s 点算力
 ktfru.research.task.minigame.fill=研究%s 点空间规划
-ktfru.research.task.item=研究%2$d个%1$s
+ktfru.research.task.item.simple=研究%2$d个%1$s
+ktfru.research.task.item.scope=显微镜下观察%2$d个%1$s
+ktfru.research.task.item.escope=电子显微镜观察%2$d个%1$s
 ktfru.projector.block.must.air=必须为空气
 ktfru.projector.block.must.liquid=必须为流体
 ktfru.projector.block.any.solid=任意固体方块

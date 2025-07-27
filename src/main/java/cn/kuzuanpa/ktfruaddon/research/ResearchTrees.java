@@ -16,7 +16,7 @@ package cn.kuzuanpa.ktfruaddon.research;
 
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
-import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTask;
+import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTaskSimple;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.util.ST;
@@ -32,7 +32,7 @@ public class ResearchTrees {
         ResearchProject a = new ResearchProject(main, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，将巨大的电子管电路修改为硅基的集成电路.", AdvancedRocketryItems.itemIC, 0, 1)
                 .setPos(60,130)
                 .addPrerequisite(main.rootItem)
-                .addTask(new ItemConsumeTask(ST.make(Items.iron_ingot, 32, 0)));
+                .addTask(new ItemConsumeTaskSimple(ST.make(Items.iron_ingot, 32, 0)));
 
         ResearchProject b = new ResearchProject(main, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, 2)
                 .setPos(80,20)
@@ -70,7 +70,12 @@ public class ResearchTrees {
                 .setPos(340,10)
                 .addPrerequisite(f);
 
-        ResearchProject l = new ResearchProject(main, "精确制造", "利用激光的极度精确", Items.paper, 0, 5)
+        ResearchProject l = new ResearchProject(main, "精确制造", "研究如何利用激光的极度精确集中的能量加工物品", Items.paper, 0, 5)
+                .setPos(340,10)
+                .addPrerequisite(f);
+
+
+        ResearchProject m = new ResearchProject(main, "精确制造", "研究如何利用激光的极度精确集中的能量加工物品", Items.paper, 0, 5)
                 .setPos(340,10)
                 .addPrerequisite(f);
 
