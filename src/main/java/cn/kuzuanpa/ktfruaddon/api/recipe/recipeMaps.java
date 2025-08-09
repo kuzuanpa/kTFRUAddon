@@ -60,7 +60,7 @@ public class recipeMaps {
             , QuantumPetrochem        = new Recipe.RecipeMap(null, "ktfru.recipe.quantum.petrochem"      , "Quantum Petrochemical"     , null, 0, 1, RES_PATH_GUI + "machines/QuantumPetrochem",         1, 0, 0, 1, 6, 0,  1,  1, "", 1, "", F, F, T, F, F, F, T, T)
             , QuantumMoleculeOperator = new Recipe.RecipeMap(null, "ktfru.recipe.quantum.molecule"       , "Molecule Operator"         , null, 0, 1, RES_PATH_GUI + "machines/QuantumMolecule",          6, 0, 0, 6, 6, 0,  1,  1, "", 1, "", F, F, T, F, F, F, T, T)
             , FusionTokamak           = new Recipe.RecipeMap(null, "ktfru.recipe.fusion.tokamak"         , "Tokamak Fusion"            , null, 0, 1, RES_PATH_GUI + "machines/FusionTokamak",            3, 3, 0, 6, 6, 1,  1,  1, "Start: ", 1, "", F, T, T, T, T, F, F, F)
-            , MagicConverter          = new Recipe.RecipeMap(null, "ktfru.recipe.magic.converter"        , "Magic Converter"           , null, 0, 1, RES_PATH_GUI + "machines/MagicConverter",           3, 3, 0, 6, 6, 1,  1,  1, "Start: ", 1, "", F, T, T, T, T, F, F, F)
+            , RocketAssembler         = new Recipe.RecipeMap(null, "ktfru.recipe.rocket.assembler"       , "Rocket Assembler"          , null, 0, 1, RES_PATH_GUI + "machines/RocketAssembler",          1, 2, 1, 0, 0, 0,  1,  1, "", 1, "", T, T, T, T, T, F, F, F)
             , RTG                     = new Recipe.RecipeMap(null, "ktfru.recipe.rtg"                    , "Radio Thermo Generator"    , null, 0, 1, RES_PATH_GUI + "machines/RTG",                      1, 2, 1, 0, 0, 0,  1,  1, "", 1, "", T, T, T, T, T, F, F, F)
 
     ;

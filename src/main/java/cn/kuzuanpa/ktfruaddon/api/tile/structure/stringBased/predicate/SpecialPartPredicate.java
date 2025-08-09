@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpecialPartPredicate implements IStructurePredicate {
-    private final TileDesc[] expected;
-    private boolean allowPartShare = false;
+    protected final TileDesc[] expected;
+    protected boolean allowPartShare = false;
 
     public SpecialPartPredicate(TileDesc expected) {
         this.expected = new TileDesc[]{expected};

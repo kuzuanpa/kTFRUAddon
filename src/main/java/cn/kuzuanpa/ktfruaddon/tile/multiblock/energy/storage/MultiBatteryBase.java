@@ -91,12 +91,17 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
+            aChatReturn.add(LH.Chat.CYAN + LH.get(LH.ENERGY_CONTAINED)+ ": "  + LH.Chat.WHITE + mEnergyStored + " / " + mCapacity + " EU");
             IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,mEnergyTypeOut,mOutput,mOutputAmpereLast,aChatReturn);
             return 1;
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
-
+    @Override
+    public void onMagnifyingGlass2(List<String> aChatReturn) {
+        super.onMagnifyingGlass2(aChatReturn);
+        aChatReturn.add(LH.Chat.CYAN + LH.get(LH.ENERGY_CONTAINED)+ ": "  + LH.Chat.WHITE + mEnergyStored + " / " + mCapacity + " EU");
+    }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (!aIsServerSide) return;

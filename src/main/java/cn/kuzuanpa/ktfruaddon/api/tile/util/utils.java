@@ -104,6 +104,7 @@ public class utils {
     }
     public static boolean tryPlaceBlock(Block block, int blockMeta, World world, ChunkCoordinates coord, Entity aPlayer, IInventory aInventory){
         ItemStack aStack = ST.make(block, 1, blockMeta);
+        if(WD.block(world, coord.posX,coord.posY,coord.posZ, true).equals(block) && (blockMeta == W || WD.meta(world, coord.posX,coord.posY,coord.posZ, true) == blockMeta))return true;
         if (!WD.easyRep(world, coord.posX, coord.posY, coord.posZ) || !UT.Entities.canEdit(aPlayer, coord.posX, coord.posY, coord.posZ, aStack)) return false;
         if (aInventory == null || UT.Entities.hasInfiniteItems(aPlayer)) {// is Player in creative
             if (WD.set(world, coord.posX, coord.posY, coord.posZ, blockMeta == W ? ST.make(block, 1, 0) : aStack)) {

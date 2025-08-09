@@ -12,12 +12,10 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.api.tile;
+package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
+public class RocketBuilding {
+    public static void init(){
 
-public class GTTileEntityRegistry {
-    public static MultiTileEntityRegistry gregtech = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
-    public static MultiTileEntityRegistry ktfruaddon = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
-    public static MultiTileEntityRegistry purification = MultiTileEntityRegistry.getRegistry("pu.multitileentity");
+    }
 }

@@ -347,5 +347,7 @@ public class materialPreInit {
         //酰化钛
         matList.TitaniumAcylate.registerC(22112,"TitaniumAcylate","Titanium Acylate",1800,2091,231,123,201,150,"[TiO"+NUM_SUB[2]+"(OH)(H"+NUM_SUB[2]+"O)"+NUM_SUB[4]+"]")
                 .put(TD.ItemGenerator.DUSTS);
+
+        //22400-22499 reserved for Purification
     }
 }

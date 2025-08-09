@@ -43,7 +43,7 @@ public class FixedLayer implements IStructureLayer {
 
                 IStructurePredicate predicates = structure.getPredicates().get(expected);
 
-                if(predicates == null)throw new IllegalArgumentException("predicates can not be null!");
+                if(predicates == null)throw new IllegalArgumentException("predicates can not be null! Symbol: "+expected);
 
                 if (!predicates.validate(ctx, absCoords[0], absCoords[1], absCoords[2])) {
                     ctx.failedPos = new ChunkCoordinates(absCoords[0], absCoords[1], absCoords[2]);

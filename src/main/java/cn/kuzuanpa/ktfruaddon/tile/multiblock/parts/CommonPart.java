@@ -17,16 +17,24 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.nbt.NBTTagCompound;
+
+import static gregapi.data.CS.*;
 
 
 public class CommonPart extends MultiTileEntityMultiBlockPart {
+    public boolean isOpaque = T;
 
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        if (aNBT.hasKey(NBT_OPAQUE)) isOpaque = aNBT.getBoolean(NBT_OPAQUE);
+    }
     @Override
     public int getLightOpacity(){
         return mDesign==1?255:0;
     }
     //When this part be hidden, This will make adjoining block's side rendering properly.
-    @Override public boolean isSurfaceOpaque2       (byte aSide) {return mDesign!=1;}
+    @Override public boolean isSurfaceOpaque2       (byte aSide) {return isOpaque && mDesign!=1;}
     @Override
     public String getTileEntityName(){
         return "kfru.multitileentity.multiblock.commonpart";

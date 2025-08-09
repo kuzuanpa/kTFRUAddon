@@ -68,7 +68,8 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
             if(aDoInject && aSize > getEnergySizeInputMax(aEnergyType, aSide))overcharge(aSide,aEnergyType);
             if (aDoInject) mStateNew = tPositive;
             long tInput = Math.min(mInputMax - mEnergy, aSize * aAmount), tConsumed = Math.min(aAmount, (tInput/aSize) + (tInput%aSize!=0?1:0));
-            if (aDoInject) mEnergy += tConsumed * aSize;
+            if (!aDoInject) return tConsumed;
+            mEnergy += tConsumed * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, tConsumed));
             return tConsumed;
         }

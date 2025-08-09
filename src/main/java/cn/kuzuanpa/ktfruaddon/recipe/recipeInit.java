@@ -30,6 +30,7 @@ public class recipeInit {
         OilProcessing.init();
         Plastic.init();
         CompactItem.init();
+        RocketBuilding.init();
         Fusion.init();
         FakeRecipe.init();
 
