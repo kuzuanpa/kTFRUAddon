@@ -39,6 +39,8 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
+import gregapi.tileentity.multiblocks.IMultiBlockInventory;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.OM;
 import gregapi.util.UT;
@@ -64,7 +66,7 @@ import java.util.UUID;
 
 import static gregapi.data.CS.*;
 
-public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, IWailaTile, IMeterDetectable {
+public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockInventory, IMultiBlockEnergy, IWailaTile, IMeterDetectable {
     public boolean mStopped = false, mOverwrite = false, mStateChanged = false;
     public long mEnergy = 0, mInput = 256, mInputMax = 1024;
     public int interval = 200, progress = 0, missCount=0;
@@ -262,9 +264,9 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
                     "  S  ",
                     "     "
             )
-            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech  , 18002)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
-            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
+            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)))
+            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)))
             .where('S', new SkyPredicate())
             .setOffset(-2,0,0) ;
     @Override

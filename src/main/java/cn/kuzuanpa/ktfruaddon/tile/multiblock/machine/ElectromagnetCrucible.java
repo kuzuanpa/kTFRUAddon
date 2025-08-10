@@ -40,6 +40,8 @@ import gregapi.oredict.OreDictMaterial;
 import gregapi.oredict.OreDictMaterialStack;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
+import gregapi.tileentity.multiblocks.IMultiBlockInventory;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.OM;
 import gregapi.util.UT;
@@ -63,7 +65,7 @@ import java.util.*;
 import static gregapi.data.CS.*;
 import static gregapi.data.CS.SFX.MC_FIZZ;
 
-public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, IDummyCrucibleMaterialProvider, ITileSyncByteArrayLong, IWailaTile {
+public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implements IMultiBlockInventory, ITileEntityEnergy, IMultiBlockEnergy, IDummyCrucibleMaterialProvider, ITileSyncByteArrayLong, IWailaTile {
     public boolean mStopped = false, mContentChanged = true, mTempChanged = true;
     public long mEnergy = 0, mInputMax = 1024, mEnergyBaseConsume = 100, mMassSelf = 3200, mMassTotal = mMassSelf;
     public float mTemp = 0.0F, oldTemp = 0.0F, mTempMax = 32768.0F;
@@ -246,7 +248,7 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
                     " XXX "
             )
             .where('P', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31504)))
-            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
+            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18041)))
             .setOffset(-2,0,0);
 

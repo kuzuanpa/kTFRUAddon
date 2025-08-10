@@ -42,6 +42,8 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
+import gregapi.tileentity.multiblocks.IMultiBlockInventory;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.OM;
 import gregapi.util.ST;
@@ -70,7 +72,7 @@ import java.util.stream.Collectors;
 
 import static gregapi.data.CS.*;
 
-public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, IWailaTile {
+public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockInventory, IMultiBlockEnergy, IWailaTile {
     protected static final List<UUID> minedAsteroids = new ArrayList<>();
     public static final byte STATE_WAIT =0, STATE_WAIT_ROCKET =1, STATE_MINING=2, STATE_OUTPUTTING=3, EVENT_ROCKET_LAUNCH=1, EVENT_ROCKET_ARRIVE=2, EVENT_INV_EMPTY=3;
     public StateMgr mState = new StateMgr();
@@ -295,8 +297,8 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
                     " X   ",
                     "     "
             )
-            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
-            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
+            .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)))
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)))
             .setOffset(-1,0,0);
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {

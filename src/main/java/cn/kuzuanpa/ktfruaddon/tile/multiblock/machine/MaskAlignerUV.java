@@ -35,6 +35,7 @@ import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
+import gregapi.tileentity.multiblocks.IMultiBlockInventory;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
@@ -53,7 +54,7 @@ import java.util.List;
 
 import static gregapi.data.CS.SIDE_BOTTOM;
 import static gregapi.data.CS.T;
-public class MaskAlignerUV extends TileEntityBaseControlledMachine implements SpecialPartPredicate.IReceiveSpecialPart {
+public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IMultiBlockInventory, SpecialPartPredicate.IReceiveSpecialPart {
     ChunkCoordinates lastFailedPos=null;
     static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AB")
             .fixedLayer('A',
