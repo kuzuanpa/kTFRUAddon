@@ -325,7 +325,7 @@ public class materialPreInit {
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES,TD.ItemGenerator.ORES, TD.ItemGenerator.LIQUID);
         //纳米钛酸钡
         matList.NanoBariumTitanate.registerC(22105,"NanoBariumTitanate","Nano Barium Titanate",2400,3805,140,175,110,150,"BaTiO"+NUM_SUB[3])
-                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.PLATES);
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.FOILS,TD.ItemGenerator.PLATES);
         //氯化铝
         matList.AluminumChloride.registerC(22106,"AluminumChloride","Aluminum Chloride",184,192,140,175,110,150,"AlCl"+NUM_SUB[3])
                 .put(TD.ItemGenerator.DUSTS);
