@@ -48,7 +48,7 @@ import static gregapi.data.CS.*;
 import static gregapi.data.CS.T;
 
 public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, ITileEntityEnergyDataCapacitor, ITileEntityRunningActively, ITileEntitySwitchableOnOff, ITileEntitySwitchableMode, ITileEntityProgress, IMeterDetectable {
-    public long mEnergyStored=0, mCapacity=0, mMaxAmpere=1, mInputMin, mInputMax, mOutput,mOutputAmpereLast=0;
+    public long mEnergyStored=0, mCapacity=0, mMaxAmpere=1, mInputMin, mInputMax, mOutput,mOutputVoltageLast=0, mOutputAmpereLast=0;
     public float mLossPercent =0;
     public byte mMode = 0;
     public boolean mActive=false, mForceStopped=false;
@@ -92,7 +92,7 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
             aChatReturn.add(LH.Chat.CYAN + LH.get(LH.ENERGY_CONTAINED)+ ": "  + LH.Chat.WHITE + mEnergyStored + " / " + mCapacity + " EU");
-            IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,mEnergyTypeOut,mOutput,mOutputAmpereLast,aChatReturn);
+            IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,mEnergyTypeOut,mOutputVoltageLast,mOutputAmpereLast,aChatReturn);
             return 1;
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
@@ -107,7 +107,7 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
         if (!aIsServerSide) return;
         if(mEnergyStored > mCapacity) mEnergyStored=mCapacity;
         mActive = (mEnergyStored > mOutput);
-
+        mOutputVoltageLast = 0;
         mOutputAmpereLast=0;
         receivedEnergyLast = receivedEnergy;
         receivedEnergy = new ArrayList<>();
@@ -126,8 +126,9 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
         if (outputAmpere > 0) {
             long tAmountUsed = ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeOut, mOutput, outputAmpere, this);
             mOutputAmpereLast = tAmountUsed;
+            mOutputVoltageLast = mOutput;
             mEnergyStored -= mOutput * tAmountUsed;
-        }else mOutputAmpereLast=0;
+        }
     }
 
     @Override

@@ -103,8 +103,8 @@ public class Chemistry {
 
         RM.         Bath.               addRecipe1(T, 0, 20, OP.dust.mat(MT.OREMATS.Zeolite, 0), FL.array(flList.Bittern.make(1000)), FL.array(flList.Brine.make(800), MT.SaltedWater.liquid(U5, T)));
         RM.         Bath.               addRecipe1(T, 0, 40, OP.dust.mat(MT.Quicklime, 1), FL.array(flList.Brine.make(1000)), FL.array(flList.BrineMgFree.make(1000)), OP.dust.mat(matList.MagnesiumDihydroxide.get(), 2));
-        RM.         Bath.               addRecipe0(T, 0, 40, FL.array(FL.CarbonDioxide.make(1000), flList.BrineMgFree.make(1000)), FL.array(flList.BrineBrRich.make(1000)), OP.dust.mat(MT.CaCO3, 1));
-        RM.         Bath.               addRecipe0(T, 0, 100, FL.array(MT.Cl.gas(U5, F), flList.BrineBrRich.make(1000)), FL.array(MT.Br.liquid(U5, F), flList.BrineWaste.make(1000)));
+        RM.         Mixer.              addRecipe0(T, 32,40, FL.array(FL.CarbonDioxide.make(1000), flList.BrineMgFree.make(1000)), FL.array(flList.BrineBrRich.make(1000)), OP.dust.mat(MT.CaCO3, 1));
+        RM.         Mixer.              addRecipe0(T, 48,100, FL.array(MT.Cl.gas(U5, F), flList.BrineBrRich.make(1000)), FL.array(MT.Br.liquid(U5, F), flList.BrineWaste.make(1000)));
 
         // chemical recycling
         RM.         Bath.               addRecipe1(T, 0, 80, OP.dust.mat(matList.MagnesiumDihydroxide.get(), 5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(FL.Water.make(6000)), OP.dust.mat(MT.MgCl2, 1));
