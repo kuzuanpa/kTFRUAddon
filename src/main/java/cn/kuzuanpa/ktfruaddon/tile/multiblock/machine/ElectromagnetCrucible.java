@@ -55,9 +55,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.io.*;
 import java.util.*;
@@ -96,14 +98,22 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
     }
 
-    @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if(isServerSide())openGUI(aPlayer, aSide);
-        return T;
-    }
+        if (!isServerSide())return true;
 
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        openGUI(aPlayer, aSide);
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+    }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if(!aIsServerSide)return;

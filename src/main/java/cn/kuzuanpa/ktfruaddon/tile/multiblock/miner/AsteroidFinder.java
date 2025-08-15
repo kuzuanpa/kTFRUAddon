@@ -98,6 +98,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
     }
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (!isServerSide())return true;

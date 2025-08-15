@@ -30,7 +30,7 @@ public class materialPreInit {
         matList.AmmoniumIronIIISulfate.registerWithDust(22002, "AmmoniumIronIIISulfate", "Ammonium Iron(III) Sulfate", 368, 524, 230, 220, 242, 0, "NH"+NUM_SUB[4]+"Fe(SO"+NUM_SUB[4]+")"+NUM_SUB[2]);
         matList.AmmoniumSulfate.registerWithDust(22003, "AmmoniumSulfate", "Ammonium Sulfate",509, 510, 251, 251, 216, 2, "(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"SO"+NUM_SUB[4]);
         matList.CookedBauxide .registerWithDust(22004, "CookedBauxide", "Cooked Bauxide", 2370, 3234, 229, 141, 0, 4, null);
-        matList.AcidPickledBauxide.registerWithDust(22005, "AcidPickledCookedBauxide", "Acid Pickled Cooked Bauxide", 2370, 3234,200, 168, 0, 4, null);
+        matList.AcidPickledBauxide.registerWithDust(22005, "AcidPickledBauxide", "Acid Pickled Bauxide", 2370, 3234,200, 168, 0, 4, null);
         matList.BauxiteRedMud.registerWithDust(22006, "BauxiteRedMud", "Bauxite Red Mud", 1790, 3234, 148, 0, 12, 0,null);
         matList.LithiumCarbonate.registerWithDust(22007, "LithiumCarbonate", "Lithium Carbonate",943, 1582, 248, 244, 248, 0,  "Li"+NUM_SUB[2]+"CO"+NUM_SUB[3]);
         matList.MetatitanicAcid.registerWithDust(22008, "MetatitanicAcid", "Metatitanic Acid", 748,749, 248, 244, 248, 0, "TiO(OH)"+NUM_SUB[2]);
@@ -342,7 +342,7 @@ public class materialPreInit {
         matList.Ketene.registerC(22110,"Ketene","Ketene",10,32,211,223,211,150,"CH"+NUM_SUB[2]+"=C=O")
                 .put(TD.ItemGenerator.DUSTS);
         //硫酸钛
-        matList.TitanicSulfate.registerC(22111,"TitanicSulfate","TitanicSulfate",1800,2091,231,123,201,150,"Ti(SO"+NUM_SUB[4]+")"+NUM_SUB[2])
+        matList.TitanicSulfate.registerC(22111,"TitanicSulfate","Titanic Sulfate",1800,2091,231,123,201,150,"Ti(SO"+NUM_SUB[4]+")"+NUM_SUB[2])
                 .put(TD.ItemGenerator.DUSTS);
         //酰化钛
         matList.TitaniumAcylate.registerC(22112,"TitaniumAcylate","Titanium Acylate",1800,2091,231,123,201,150,"[TiO"+NUM_SUB[2]+"(OH)(H"+NUM_SUB[2]+"O)"+NUM_SUB[4]+"]")

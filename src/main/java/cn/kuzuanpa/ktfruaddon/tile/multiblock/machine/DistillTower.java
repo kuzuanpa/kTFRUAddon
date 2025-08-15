@@ -30,6 +30,7 @@ import gregapi.fluid.FluidTankGT;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.machines.ITileEntityAdjacentOnOff;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import gregapi.util.ST;
 import gregapi.util.WD;
@@ -60,11 +61,12 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
                     "AAA"
             ).fixedLayer('B',
                     "BBB",
-                    "BBB",
+                    "BBC",
                     "BBB"
             )
-            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18101)))
-            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18102)))
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18101, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18102, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18102, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN, 1)))
             .setOffset(-1,-1,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -86,10 +88,7 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
         return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get("gt.lang.structure") + ":");
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.3"));
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.4"));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.5"));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.distilltower.6"));

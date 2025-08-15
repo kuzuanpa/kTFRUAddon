@@ -111,5 +111,5 @@ public class MultiDynamo extends MultiTransformerBase{
     @Override public byte getDefaultSide() {return SIDE_FRONT;}
     @Override public boolean[] getValidSides() {return SIDES_VALID;}
 
-    @Override public String getTileEntityName() {return "gt.multitileentity.multiblock.dynamo";}
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.dynamo";}
 }

@@ -92,8 +92,8 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
     }
 
     @Override
-    public void receiveSpecialPart(TileEntity part) {
-        ConditionPartsPos.add(new ChunkCoordinates(part.xCoord, part.yCoord,part.zCoord));
+    public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
+        ConditionPartsPos.add(new ChunkCoordinates(partPos));
     }
     public final short sizeX = 3, sizeY = 2, sizeZ = 2;
     public final short xMapOffset = -1;
@@ -103,21 +103,13 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {
-        LH.add("ktfru.tooltip.multiblock.maskaligner.0.1", "2 set of 2x2x1 Al Wall. 1 Block gap between them.");
-        LH.add("ktfru.tooltip.multiblock.maskaligner.0.2", "Main Block facing outwards, in side-bottom of the gap");
-        LH.add("ktfru.tooltip.multiblock.maskaligner.0.3", "Light Module is in top of Main Block, Energy Module is behind the Main Block.");
-        LH.add("ktfru.tooltip.multiblock.maskaligner.0.4", "The left 1 block space is IO Manager.");
         LH.add("ktfru.tooltip.multiblock.maskaligner.0.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
         LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Fluid inputs from anyblock in upside, Item input from upside of IO manager, output from backside.");
     }
 
     @Override
     public void addToolTips (List < String > aList, ItemStack aStack,boolean aF3_H){
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.3"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.4"));
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.5"));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.6"));
         super.addToolTips(aList, aStack, aF3_H);

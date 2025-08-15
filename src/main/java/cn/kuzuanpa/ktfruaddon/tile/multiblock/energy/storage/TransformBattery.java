@@ -43,15 +43,19 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.ICustomPartValidator;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.TransformerPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.TransformerPart;
 import gregapi.block.multitileentity.IWailaTile;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.IL;
 import gregapi.data.LH;
@@ -64,6 +68,7 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
+import gregapi.util.WD;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
@@ -73,79 +78,24 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static gregapi.data.CS.*;
 
-public class TransformBattery extends MultiBatteryBase implements IMappedStructure, ICustomPartValidator, IWailaTile {
-    public List<TileEntity> partList = new ArrayList<>();
+public class TransformBattery extends MultiBatteryBase implements SpecialPartPredicate.IReceiveSpecialPart, IWailaTile {
+    public List<ChunkCoordinates> partPosList = new ArrayList<>();
 
     public boolean sealed = false;
 
-    public static final short sizeX = 4, sizeY = 7, sizeZ = 4;
-    public static final short xMapOffset = 0, zMapOffset = 0;
     public int invSize = 8;
 
-    public int mWall = 18006, mCoil = 18041, mCond = 31040, mBatt = 31041, trans = 32767;
-    public int[][][] blockIDMap;
-    public void initBlockIDMap(){
-        blockIDMap = new int[][][] {{
-                {  0  , trans, trans, trans},
-                {trans, mCond, mCond, trans},
-                {trans, mCond, mCond, trans},
-                {trans, trans, trans, trans},
-        },{
-                {trans, trans, trans, trans},
-                {trans, mCond, mCond, trans},
-                {trans, mCond, mCond, trans},
-                {trans, trans, trans, trans},
-        },{
-                {mCoil, mCoil, mCoil, mCoil},
-                {mCoil, mCond, mCond, mCoil},
-                {mCoil, mCond, mCond, mCoil},
-                {mCoil, mCoil, mCoil, mCoil},
-        },{
-                {mCoil, mCoil, mCoil, mCoil},
-                {mCoil, mCond, mCond, mCoil},
-                {mCoil, mCond, mCond, mCoil},
-                {mCoil, mCoil, mCoil, mCoil},
-        },{
-                {mCoil, mCoil, mCoil, mCoil},
-                {mCoil, mCond, mCond, mCoil},
-                {mCoil, mCond, mCond, mCoil},
-                {mCoil, mCoil, mCoil, mCoil},
-        },{
-                {mWall, mWall, mWall, mWall},
-                {mWall, mBatt, mBatt, mWall},
-                {mWall, mBatt, mBatt, mWall},
-                {mWall, mWall, mWall, mWall},
-        },{
-                {mWall, mWall, mWall, mWall},
-                {mWall, mBatt, mBatt, mWall},
-                {mWall, mBatt, mBatt, mWall},
-                {mWall, mWall, mWall, mWall},
-        }};
-    }
-    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-
-    @Override
-    public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
-        return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
-    }
-
-    @Override
-    public boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        if(getBlockID(mapPos.posX,mapPos.posY,mapPos.posZ) == trans){
-            TileEntity tile = getTileEntity(realPos);
-            if (tile instanceof TransformerPart) {return utils.setTarget(this, aClickedAt, aPlayer, aInventory, tile, 0, MultiTileEntityMultiBlockPart.NOTHING, false);
-            }else return utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, new TileDesc[]{new TileDesc(g,mWall,MultiTileEntityMultiBlockPart.NOTHING,0)});
-        }
-        else return utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, getTileDescs(mapPos.posX,mapPos.posY,mapPos.posZ));
-    }
+    public int mWall = 18006, mCoil = 18041, mCond = 31040, mBatt = 31041;
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -157,7 +107,54 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
         if(aNBT.hasKey(NBT_DESIGN+".coil")) mCoil = aNBT.getInteger(NBT_DESIGN+".coil");
         if(aNBT.hasKey(NBT_DESIGN+".batt")) mBatt = aNBT.getInteger(NBT_DESIGN+".batt");
         if(aNBT.hasKey(NBT_DESIGN+".cond")) mCond = aNBT.getInteger(NBT_DESIGN+".cond");
-        initBlockIDMap();
+        structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AABBBCC")
+                .fixedLayer('A',
+                        "TTTT",
+                        "TCCT",
+                        "TCCT",
+                        "TTTT"
+                ).fixedLayer('B',
+                        "OOOO",
+                        "OCCO",
+                        "OCCO",
+                        "OOOO"
+                ).fixedLayer('C',
+                        "WWWW",
+                        "WBBW",
+                        "WBBW",
+                        "WWWW"
+                )
+                .where('T', new TransformerPartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mWall, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+                .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mWall, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+                .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mCond)))
+                .where('O', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mCoil)))
+                .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mBatt)))
+                .setOffset(0,0,0) ;
+    }
+
+    //Structure
+    ChunkCoordinates lastFailedPos=null;
+    IStringBaseStructure structure;
+    @Override
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos==null;
+    }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+
+        openGUI(aPlayer, aSide);
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
     @Override
@@ -206,38 +203,10 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
         }
     }
 
-    public int getUsage(int mapX, int mapY, int mapZ) {
-        int blockID = getBlockID(mapX, mapY, mapZ);
-        if (blockID == mWall) {
-            return  MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN;
-        } else{return MultiTileEntityMultiBlockPart.NOTHING;}
-    }
-
-    public int getBlockID(int checkX, int checkY, int checkZ){
-        return blockIDMap[checkY][checkZ][checkX];
-    }
-
-    public  boolean isIgnored(int checkX, int checkY, int checkZ){
-        return false;
-    }
-    public MultiTileEntityRegistry getRegistryID(int checkX, int checkY, int checkZ){
-        int blockID = getBlockID(checkX, checkY, checkZ);
-        return blockID == mCond || blockID == mBatt || blockID == 0? k: g;
-    }
-
-    ChunkCoordinates lastFailedPos=null;
-    @Override
-    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos, sizeX, sizeY, sizeZ,xMapOffset,0,zMapOffset, aClickedAt, aPlayer, aInventory);
-        return lastFailedPos == null;
-    }
-
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if (aIsServerSide && sealed && checkStructure(false)) {
-            partList.stream().filter(tile -> tile instanceof TransformerPart).map(tile -> (TransformerPart) tile).filter(tile-> mEnergyStored > tile.mOutputVoltage * tile.mOutputAmpere).forEach(tile-> mEnergyStored -= tile.mOutputVoltage * tile.doInject(mEnergyTypeOut, SIDE_INSIDE, tile.mOutputVoltage, tile.mOutputAmpere,true));
+            partPosList.stream().map(pos-> (TransformerPart)WD.te(worldObj, pos,false)).filter(Objects::nonNull).filter(tile-> mEnergyStored > tile.mOutputVoltage * tile.mOutputAmpere).forEach(tile-> mEnergyStored -= tile.mOutputVoltage * tile.doInject(mEnergyTypeOut, SIDE_INSIDE, tile.mOutputVoltage, tile.mOutputAmpere,true));
         }
     }
 
@@ -246,47 +215,23 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
         return sealed && super.isEnergyAcceptingFrom(aEnergyType, aSide, aTheoretical);
     }
 
-    //这是设置主方块的物品提示
-    //controls tooltip of controller block
-    static {
-        LH.add("gt.tooltip.multiblock.example.complex.1", "5x5x2 of Stainless Steel Walls");
-        LH.add("gt.tooltip.multiblock.example.complex.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("gt.tooltip.multiblock.example.complex.3", "Input and Output at any Blocks");
-    }
-
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.1"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.2"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
         super.addToolTips(aList, aStack, aF3_H);
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
     }
-    //这里是设置该机器的内部区域
-    //controls areas inside the machine
+
+    public static final short sizeX = 4, sizeY = 7, sizeZ = 4;
+    public static final short xMapOffset = 0, zMapOffset = 0;
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
     }
 
     @Override
-    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if(isServerSide())return openGUI(aPlayer, aSide);
-        return false;
-    }
-
-    @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.multiblock.storage.transformer";
     }
-    @Override
-    public boolean isPartSpecial(TileEntity tile){return tile instanceof TransformerPart;}
-
-    @Override
-    public void receiveSpecialBlockList(List<TileEntity> list) {
-        partList = list;
-    }
-
     // Inventory Stuff
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[invSize];}
 
@@ -344,5 +289,10 @@ public class TransformBattery extends MultiBatteryBase implements IMappedStructu
         IWailaTile.super.getWailaBody(currentTip, accessor, config);
 
         return currentTip;
+    }
+
+    @Override
+    public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
+        partPosList.add(partPos);
     }
 }

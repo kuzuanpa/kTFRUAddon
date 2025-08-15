@@ -23,6 +23,7 @@ import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import zmaster587.libVulpes.block.BlockMeta;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class SpecialPartPredicate implements IStructurePredicate {
     @Override
     public boolean check(StructureContext ctx, int x, int y, int z) {
         boolean result = utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare);
-        if(result) ((IReceiveSpecialPart)ctx.controller).receiveSpecialPart(ctx.controller.getTileEntity(x,y,z));
+        if(result) ((IReceiveSpecialPart)ctx.controller).receiveSpecialPart(new ChunkCoordinates(x,y,z), ctx.controller.getTileEntity(x,y,z));
         return result;
     }
     @Override
@@ -76,7 +77,7 @@ public class SpecialPartPredicate implements IStructurePredicate {
     }
 
     public interface IReceiveSpecialPart {
-        void receiveSpecialPart(TileEntity part);
+        void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part);
     }
 }
 
