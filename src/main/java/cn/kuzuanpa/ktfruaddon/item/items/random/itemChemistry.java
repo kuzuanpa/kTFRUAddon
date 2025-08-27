@@ -33,5 +33,7 @@ public class itemChemistry extends MultiItemRandom {
     public void addItems() {
 
         ItemList.ProtonExchangeMembrane.set(addItem(0, "Proton Exchange Membrane", ""));
+        ItemList.AlkalineIonExchangeMembrane.set(addItem(1, "Alkaline Ion Exchange Membrane", ""));
+        ItemList.IrAlkalineIonExchangeMembrane.set(addItem(2, "Ir-Contained Alkaline Ion Exchange Membrane", ""));
     }
 }

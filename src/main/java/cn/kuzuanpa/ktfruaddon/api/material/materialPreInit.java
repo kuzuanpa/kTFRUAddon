@@ -211,7 +211,7 @@ public class materialPreInit {
                 .put();
         //全氟磺酸单体
         matList.PSVE.registerC(22067,"PSVE","PSVE",-42,135,255,255,255,130,"C"+NUM_SUB[7]+"F"+NUM_SUB[14]+"O"+NUM_SUB[4]+"S")
-                .put();
+                .put(TD.ItemGenerator.DUSTS);
         //四氯化硅
         matList.Tetrachorosilane.registerC(22068,"Tetrachorosilane","Tetrachorosilane",-70,57,255,255,255,130,"SiCl"+NUM_SUB[4])
                 .put(TD.ItemGenerator.LIQUID);
@@ -347,7 +347,51 @@ public class materialPreInit {
         //酰化钛
         matList.TitaniumAcylate.registerC(22112,"TitaniumAcylate","Titanium Acylate",1800,2091,231,123,201,150,"[TiO"+NUM_SUB[2]+"(OH)(H"+NUM_SUB[2]+"O)"+NUM_SUB[4]+"]")
                 .put(TD.ItemGenerator.DUSTS);
-
+        //三甲胺
+        matList.Trimethylamine.registerC(22113,"Trimethylamine","Trimethylamine",-117,4,255,255,255,130,"C"+NUM_SUB[3]+"H"+NUM_SUB[9]+"N")
+                .put(TD.ItemGenerator.DUSTS);
+        //二甲胺
+        matList.Dimethylamine.registerC(22114,"Dimethylamine","Dimethylamine",-93,7,255,255,255,130,"C"+NUM_SUB[2]+"H"+NUM_SUB[7]+"N")
+                .put(TD.ItemGenerator.DUSTS);
+        //二甲基-4-乙烯基苯甲胺
+        matList.DimethylaminomethylStyrene.registerC(22115,"DimethylaminomethylStyrene","Dimethylaminomethyl Styrene",77,217,255,255,255,130,"C"+NUM_SUB[11]+"H"+NUM_SUB[15]+"N")
+                .put(TD.ItemGenerator.DUSTS);
+        //对氯甲基苯乙烯
+        matList.VinylbenzylChloride.registerC(22116,"VinylbenzylChloride","Vinylbenzyl Chloride",-16,229,255,255,255,130,"C"+NUM_SUB[9]+"H"+NUM_SUB[9]+"Cl")
+                .put(TD.ItemGenerator.DUSTS);
+        //一氯乙酸乙酯
+        matList.EthylChloroacetate.registerC(22117,"EthylChloroacetate","Ethyl Chloroacetate",-26,143,255,255,255,130,"C"+NUM_SUB[4]+"H"+NUM_SUB[7]+"ClO"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //二甲基乙酰胺
+        matList.Dimethylglycine.registerC(22118,"Dimethylglycine","Dimethylglycine",-20,193,255,255,255,130,"C"+NUM_SUB[4]+"H"+NUM_SUB[9]+"NO"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //二正己基硫醚
+        matList.DinhexylSulfide.registerC(22119,"DinhexylSulfide","Dinhexyl Sulfide",-18,230,255,255,255,130,"C"+NUM_SUB[12]+"H"+NUM_SUB[26]+"S")
+                .put(TD.ItemGenerator.DUSTS);
+        //正己烷
+        matList.Hexane.registerC(22120,"Hexane","Hexane",-95,69,255,255,255,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[14])
+                .put(TD.ItemGenerator.DUSTS);
+        //焙烧铂族泥
+        matList.BakedPlatinumGroupSludge.registerC(22121,"BakedPlatinumGroupSludge","Baked PlatinumGroup Sludge",1000,3000,255,255,255,130,"")
+                .put(TD.ItemGenerator.DUSTS);
+        //四氧化锇
+        matList.OsmiumTetraoxide.registerC(22122,"OsmiumTetraoxide","Osmium Tetraoxide",40,132,155,155,225,130,"OsO"+NUM_SUB[4])
+                .put(TD.ItemGenerator.DUSTS);
+        //六氯铑酸铵
+        matList.AmmoniumHexachlororhodate.registerC(22123,"AmmoniumHexachlororhodate","AmmoniumHexachlororhodate",800,1200,255,255,255,130,"(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"RhCl"+NUM_SUB[6])
+                .put(TD.ItemGenerator.DUSTS);
+        //六氯铱酸铵
+        matList.AmmoniumHexachloroiridate.registerC(22124,"AmmoniumHexachloroiridate","AmmoniumHexachloroiridate",800,1200,255,255,255,130,"(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"IrCl"+NUM_SUB[6])
+                .put(TD.ItemGenerator.DUSTS);
+        //六氯钯酸铵
+        matList.AmmoniumHexachloropalladate.registerC(22125,"AmmoniumHexachloropalladate","AmmoniumHexachloropalladate",800,1200,255,255,255,130,"(NH"+NUM_SUB[4]+")"+NUM_SUB[2]+"PdCl"+NUM_SUB[6])
+                .put(TD.ItemGenerator.DUSTS);
+        //氯化银
+        matList.SilverChloride.registerC(22126,"SilverChloride","Silver Chloride",455,1550,255,255,255,130,"AgCl")
+                .put(TD.ItemGenerator.DUSTS);
+        //一甲胺
+        matList.Methylamine.registerC(22127,"Methylamine","Methylamine",-72,12,255,255,255,130,"C"+NUM_SUB[2]+"H"+NUM_SUB[7]+"N")
+                .put(TD.ItemGenerator.DUSTS);
         //22400-22499 reserved for Purification
     }
 }

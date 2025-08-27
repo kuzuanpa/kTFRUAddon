@@ -250,6 +250,46 @@ public class fluidPreInit {
         flList.PurifyTitaniumAcylate.register("PurifyTitaniumAcylate","PurifyTitaniumAcylate",null, LIQUID);
         // 酰化钛
         flList.TitaniumAcylate.register("TitaniumAcylate","TitaniumAcylate",matList.TitaniumAcylate.mat, LIQUID);
+        //三甲胺
+        flList.Trimethylamine.register("Trimethylamine","Trimethylamine",matList.Trimethylamine.get(), LIQUID);
+        //二甲胺
+        flList.Dimethylamine.register("Dimethylamine","Dimethylamine",matList.Dimethylamine.get(), LIQUID);
+        //对氯甲基苯乙烯
+        flList.VinylbenzylChloride.register("VinylbenzylChloride","VinylbenzylChloride",matList.VinylbenzylChloride.get(), LIQUID);
+        //一氯乙酸乙酯
+        flList.EthylChloroacetate.register("EthylChloroacetate","EthylChloroacetate",matList.EthylChloroacetate.get(), LIQUID);
+        //二正己基硫醚
+        flList.DinhexylSulfide.register("DinhexylSulfide","DinhexylSulfide",matList.DinhexylSulfide.get(), LIQUID);
+        //二甲基乙酰胺
+        flList.Dimethylglycine.register("Dimethylglycine","Dimethylglycine",matList.Dimethylglycine.get(), LIQUID);
+        //正己烷
+        flList.Hexane.register("Hexane","Hexane",matList.Hexane.get(), LIQUID);
+        //铂族泥粗处理液
+        flList.RoughPlatinumGroupSolution.register("RoughPlatinumGroupSolution","Rough Processed Platinum Group Solution",null, LIQUID);
+        //硫浸铂族泥处理液
+        flList.SulphurPlatinumGroupSolution.register("SulphurPlatinumGroupSolution","Sulphur Processed Platinum Group Solution",null, LIQUID);
+        //萃取铂族处理液上液
+        flList.ExtractedPlatinumGroupSolutionUp.register("ExtractedPlatinumGroupSolutionUp","Extracted Platinum Group Solution Up",null, LIQUID);
+        //盐酸化铂族处理液上液
+        flList.AcidPlatinumGroupSolutionUp.register("AcidPlatinumGroupSolutionUp","Acid Platinum Group Solution Up",null, LIQUID);
+        //二正己基硫醚化铂族处理液
+        flList.DinhexylSulfidePlatinumGroupSolution.register("DinhexylSulfidePlatinumGroupSolution","Dinhexyl Sulfide Platinum Group Solution",null, LIQUID);
+        //萃取铂族处理液下液
+        flList.ExtractedPlatinumGroupSolutionDown.register("ExtractedPlatinumGroupSolutionDown","Extracted Platinum Group Solution Down",null, LIQUID);
+        //蒸馏铂族处理下液
+        flList.DistilledPlatinumGroupSolutionDown.register("DistilledPlatinumGroupSolutionDown","Distilled Platinum Group Solution Up",null, LIQUID);
+        //硝酸-三甲胺化铂族处理液上液
+        flList.NitricPlatinumGroupSolutionUp.register("NitricPlatinumGroupSolutionUp","Nitric Platinum Group Solution Up",null, LIQUID);
+        //硝酸-三甲胺化铂族处理液上液余液
+        flList.DeprecatedNitricPlatinumGroupSolutionUp.register("DeprecatedNitricPlatinumGroupSolutionUp","Deprecated Nitric Platinum Group Solution Up",null, LIQUID);
+        //硝酸-三甲胺化铂族处理液下液
+        flList.NitricPlatinumGroupSolutionDown.register("NitricPlatinumGroupSolutionDown","Nitric Platinum Group Solution Down",null, LIQUID);
+        //电解硝酸-三甲胺化铂族处理液
+        flList.ElectrolyzedNitricPlatinumGroupSolution.register("ElectrolyzedNitricPlatinumGroupSolution","Electrolyzed Nitric Platinum Group Solution",null, LIQUID);
+        //铱铂族处理液
+        flList.IridiumPlatinumGroupSolution.register("IridiumPlatinumGroupSolution","Iridium Platinum Group Solution",null, LIQUID);
+        //一甲胺
+        flList.Methylamine.register("Methylamine" ,"Methylamine" , matList.Methylamine.mat, LIQUID);
 
         flList.RecycledFuel0.register("RecycledFuel0","#0 Recycled Fuel",null, LIQUID);
         flList.RecycledFuel1.register("RecycledFuel1","#1 Recycled Fuel",null, LIQUID);
@@ -273,7 +313,6 @@ public class fluidPreInit {
         flList.Butynediol.register("Butynediol","Butynediol", null, LIQUID);
         flList.Butanediol.register("Butanediol","Butanediol", null, LIQUID);
         flList.Butyrolactone.register("Butyrolactone" ,"Butyrolactone" , null, LIQUID);
-        flList.Methylamine.register("Methylamine" ,"Methylamine" , null, LIQUID);
         flList.Methylpyrrolidone.register("Methylpyrrolidone" ,"Methylpyrrolidone" , null, LIQUID);
         flList.Graphite_Methylpyrrolidone.register("Graphite_Methylpyrrolidone","Graphite_Methylpyrrolidone", null, LIQUID);
     }

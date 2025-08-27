@@ -124,7 +124,7 @@ public enum ItemList implements IItemContainer{
 
     VibrateDetector,UltrasonicGenerator,PiezoelectricCeramicPlate,
     //Chemistry
-    ProtonExchangeMembrane,
+    ProtonExchangeMembrane, AlkalineIonExchangeMembrane, IrAlkalineIonExchangeMembrane,
 
 
     //itemComputer

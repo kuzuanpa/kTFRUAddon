@@ -120,6 +120,8 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe0(F,156,420,FL.array(flList.Ethylbenzene.make(100),MT.Cl.gas(U10,false)),FL.array(MT.HCl.gas(U10,false),flList.ChloroPhenylethane.make(100)),ZL_IS);
 
+        recipeMaps.   HeatMixer          .addRecipe1(F,412,120,OP.dust.mat(MT.Cr,0),FL.array(flList.Ethylbenzene.make(100),FL.Water.make(50)),FL.array(flList.Styrene.make(100), FL.Hydrogen.make(50)),ZL_IS);
+
         RM.           Mixer              .addRecipe1(F,212,120,OP.dust.mat(MT.NaOH,1),FL.array(flList.ChloroPhenylethane.make(100)),FL.array(flList.Styrene.make(100),FL.Water.make(100)),OP.dust.mat(MT.NaCl,1));
 
         RM.           Mixer              .addRecipe0(F,348,120,FL.array(flList.Styrene.make(100),flList.Butadiene.make(100)),FL.array(flList.SBR.make(100)),ZL_IS);

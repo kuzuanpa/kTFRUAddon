@@ -87,8 +87,8 @@ public class OilProcessing {
         //Natural Gas
         RM.Centrifuge.addRecipe0(F,80,100,FL.array(FL.Gas_Natural.make(400)),FL.array(FL.CarbonDioxide.make(8),FL.Water.make(1),FL.Methane.make(380),FL.Nitrogen.make(8)),ZL_IS);
 
-        RM.BurnMixer.addRecipe0(false,64,80,FL.array(FL.Methane.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(40),FL.Hydrogen.make(280),FL.CarbonDioxide.make(30)));
-        RM.BurnMixer.addRecipe0(false,64,80,FL.array(flList.Naphtha.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(50),FL.Hydrogen.make(250),FL.CarbonDioxide.make(30)));
+        RM.BurnMixer.addRecipe1(false,64,80,ST.tag(0), FL.array(FL.Methane.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(40),FL.Hydrogen.make(280),FL.CarbonDioxide.make(30)));
+        RM.BurnMixer.addRecipe1(false,64,80,ST.tag(0), FL.array(flList.Naphtha.make(100),FL.Water.make(100)),FL.array(flList.CarbonMonoxide.make(50),FL.Hydrogen.make(250),FL.CarbonDioxide.make(30)));
 
         RM.BurnMixer.addRecipe1(false,16,40,OP.dust.mat(MT.C,1),FL.array(FL.Oxygen.make(80)),FL.array(flList.CarbonMonoxide.make(20),FL.CarbonDioxide.make(30)));
         RM.BurnMixer.addRecipe1(false,16,40, gem.mat(MT.CoalCoke,1),FL.array(FL.Oxygen.make(120)),FL.array(flList.CarbonMonoxide.make(30),FL.CarbonDioxide.make(45)));
@@ -106,10 +106,10 @@ public class OilProcessing {
         recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Mo,0),FL.array(flList.Propanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Propionaldehyde.make(100),FL.Water.make(100)));
         recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Ag,0),FL.array(flList.Propanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Propionaldehyde.make(100),FL.Water.make(100)));
 
-        RM.Mixer.addRecipe0(false,64,20,FL.array(flList.Propanol.make(100),MT.H2SO4.liquid(2000,false)),FL.array(FL.Propylene.make(100),MT.H2SO4.liquid(1000,false)));
+        RM.Mixer.addRecipe0(false,64,20,FL.array(flList.Propanol.make(100),MT.H2SO4.liquid(2*U,false)),FL.array(FL.Propylene.make(100),MT.H2SO4.liquid(U,false)));
 
 
-        RM.Mixer.addRecipe0(false,64,20,FL.array(FL.BioEthanol.make(100),MT.H2SO4.liquid(2000,false)),FL.array(FL.Ethylene.make(100),MT.H2SO4.liquid(1000,false)));
+        RM.Mixer.addRecipe0(false,64,20,FL.array(FL.BioEthanol.make(100),MT.H2SO4.liquid(2*U,false)),FL.array(FL.Ethylene.make(100),MT.H2SO4.liquid(U,false)));
 
         //Coal Boiling
         RM.Centrifuge.addRecipe0(false,64,200,FL.array(flList.CoalTar.make(100)),FL.array(flList.Benzene.make(30),FL.Hydrogen.make(20),FL.Nitrogen.make(10),flList.CarbonMonoxide.make(70)),matList.Naphthalene.getDustTiny(1),matList.Naphthalene.getDustTiny(1));

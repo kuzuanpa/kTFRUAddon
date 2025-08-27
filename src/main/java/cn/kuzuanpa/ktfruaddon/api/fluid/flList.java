@@ -57,12 +57,13 @@ public enum flList {
     ,/**磷酸三丁酯**/TributylPhosphate,/**丁醇**/Butanol,/**碳酸铀酰络合离子溶液**/UranylCarbonateSolution,/**甲基叔胺**/MethylTertiaryAmine,/**油酸乙酯**/EthylOleate,/**铀萃取剂**/UraniumExtractant,/**用过的铀萃取剂**/UsedUraniumExtractant,/**萃取的铀**/ExtractedUranium,/**萃取的铀**/ExtractedUranium2,/**硅烷**/Silane,/**四氟化硅**/SiliconTetrafluoride
     ,/**双酚钠盐溶液**/ SolutionBPASodium ,/**氧化钇锆电解质**/ YttriumZirconiumOxide, /**二氧化钼**/MolybdenumOxide, /**硫酸钡**/BariumSulfate, /**醋酸钡**/BariumAcetate
     ,/**乙烯酮**/Ketene,/**双乙烯酮**/Diketene
-
     ,/**含杂酰化钛**/ImpureTitaniumAcylate,/**粗制酰化钛**/CrudeTitaniumAcylate,/**净化酰化钛**/PurifyTitaniumAcylate,/**酰化钛**/TitaniumAcylate
     ,RecycledFuel0 ,RecycledFuel1 ,RecycledFuel2 ,RecycledFuel3 ,RecycledFuel4
     ,CrackedNaphthaLow,CrackedNaphthaMedium,CrackedNaphthaHigh, CrackedPetrolLow, CrackedPetrolMedium, CrackedPetrolHigh
     ,MoltenTeflon,MoltenBakelite,MoltenNaK,HotMoltenNaK, MoltenPolycarbonate
     ,/**苦卤**/Bittern,/**卤水**/Brine,/**除镁卤水**/BrineMgFree,/**富溴卤水**/BrineBrRich,/**废卤**/BrineWaste, /**丁炔二醇**/Butynediol, /**丁二醇**/Butanediol, /**γ-丁内酯**/Butyrolactone,/**一甲胺**/Methylamine, /**甲基吡咯烷酮**/Methylpyrrolidone, /**石墨-甲基吡咯烷酮**/Graphite_Methylpyrrolidone
+    ,/**三甲胺**/Trimethylamine,/**二甲胺**/Dimethylamine,/**对氯甲基苯乙烯**/VinylbenzylChloride,/**一氯乙酸乙酯**/EthylChloroacetate,/**二正己基硫醚**/DinhexylSulfide,/**正己烷**/Hexane, /**二甲基乙酰胺**/Dimethylglycine
+    ,/**铂族粗处理液**/RoughPlatinumGroupSolution, /**硫浸铂族处理液**/SulphurPlatinumGroupSolution, /**萃取铂族处理液上液**/ExtractedPlatinumGroupSolutionUp, /**盐酸化铂族处理液上液**/AcidPlatinumGroupSolutionUp, /**二正己基硫醚化铂族处理液**/DinhexylSulfidePlatinumGroupSolution, /**萃取铂族处理液下液**/ExtractedPlatinumGroupSolutionDown, /**蒸馏铂族处理下液**/ DistilledPlatinumGroupSolutionDown, /**硝酸-三甲胺化铂族处理液上液**/NitricPlatinumGroupSolutionUp, /**硝酸-三甲胺化铂族处理液上液余液**/DeprecatedNitricPlatinumGroupSolutionUp, /**硝酸-三甲胺化铂族处理液下液**/NitricPlatinumGroupSolutionDown, /**电解硝酸-三甲胺化铂族处理液下液**/ ElectrolyzedNitricPlatinumGroupSolution, /**铱铂族处理液**/ IridiumPlatinumGroupSolution
     ;
     public Fluid fluid;
     public String name;

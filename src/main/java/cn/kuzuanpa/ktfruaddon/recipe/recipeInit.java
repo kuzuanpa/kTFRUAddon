@@ -32,6 +32,7 @@ public class recipeInit {
         CompactItem.init();
         RocketBuilding.init();
         Fusion.init();
+        PlatinumGroupProcess.init();
         FakeRecipe.init();
 
         if(Loader.isModLoaded("terrafirmacraft"))TFCRecipe.init();

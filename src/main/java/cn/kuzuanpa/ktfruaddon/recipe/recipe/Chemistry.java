@@ -50,7 +50,7 @@ public class Chemistry {
 
         //fuel battery
         recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Ni,8),ZL_FS,ZL_FS,ItemList.BatteryPoleNickel.get(1));
-        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.C,8),ZL_FS,ZL_FS,ItemList.BatteryPoleCarbon.get(1));
+        recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Graphite,8),ZL_FS,ZL_FS,ItemList.BatteryPoleCarbon.get(1));
         recipeMaps.LaserCutter.addRecipe1(F,300,480,OP.plate.mat(MT.Pt,8),ZL_FS,ZL_FS,ItemList.BatteryPolePlatinum.get(1));
         RM.        BurnMixer  .addRecipe2(F,200,480,OP.dust.mat(MT.Ca,4),OP.dust.mat(MT.Ti,4),FL.array(FL.Oxygen.make(4000)),ZL_FS,ItemList.BatteryPoleCaTiO3.get(1));
         recipeMaps.HeatMixer  .addRecipe2(F,500,800,OP.dust.mat(MT.Y,4),OP.dust.mat(MT.Zr,4),FL.array(FL.Oxygen.make(4000)),FL.array(flList.YttriumZirconiumOxide.make(1000)));
@@ -99,7 +99,7 @@ public class Chemistry {
         recipeMaps. DistillTower.       addRecipe0(F, 64,  20, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
         recipeMaps. SmallDistillTower.  addRecipe0(F, 64,  30, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
         recipeMaps. TinyDistillTower.   addRecipe0(F, 64,  40, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
-        RM.         Distillery.         addRecipe0(F, 64, 100, FL.array(FL.Ocean.make(400)), FL.array(flList.Bittern.make(50), FL.DistW.make(200)), OP.dustSmall.mat(MT.NaCl, 1));
+        RM.         Distillery.         addRecipe1(F, 64, 100, ST.tag(1), FL.array(FL.Ocean.make(400)), FL.array(flList.Bittern.make(50), FL.DistW.make(200)), OP.dustSmall.mat(MT.NaCl, 1));
 
         RM.         Bath.               addRecipe1(T, 0, 20, OP.dust.mat(MT.OREMATS.Zeolite, 0), FL.array(flList.Bittern.make(1000)), FL.array(flList.Brine.make(800), MT.SaltedWater.liquid(U5, T)));
         RM.         Bath.               addRecipe1(T, 0, 40, OP.dust.mat(MT.Quicklime, 1), FL.array(flList.Brine.make(1000)), FL.array(flList.BrineMgFree.make(1000)), OP.dust.mat(matList.MagnesiumDihydroxide.get(), 2));
@@ -107,15 +107,14 @@ public class Chemistry {
         RM.         Mixer.              addRecipe0(T, 48,100, FL.array(MT.Cl.gas(U5, F), flList.BrineBrRich.make(1000)), FL.array(MT.Br.liquid(U5, F), flList.BrineWaste.make(1000)));
 
         // chemical recycling
-        RM.         Bath.               addRecipe1(T, 0, 80, OP.dust.mat(matList.MagnesiumDihydroxide.get(), 5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(FL.Water.make(6000)), OP.dust.mat(MT.MgCl2, 1));
-        RM.         Roasting.           addRecipe1(F, 256, 100, OP.dust.mat(MT.CaCO3, 5), OP.dust.mat(MT.Quicklime, 2));
+        RM.         Bath.               addRecipe1(T, 0, 80, OP.dust.mat(matList.MagnesiumDihydroxide.get(), 5), FL.array(MT.HCl.gas(U * 2, false)), FL.array(FL.DistW.make(6000)), OP.dust.mat(MT.MgCl2, 1));
+        RM.         Roasting.           addRecipe1(F, 256, 100, OP.dust.mat(MT.CaCO3, 5), FL.array(FL.Oxygen.make(1000)), ZL_FS, OP.dust.mat(MT.Quicklime, 2));
 
         //Graphene
         RM.        BurnMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.Cu, 0), FL.array(flList.Acetylene.make(1000), flList.Formaldehyde.make(2000)), FL.array(flList.Butynediol.make(1000)), ZL_IS);
         recipeMaps.HeatMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.Pd, 0), FL.array(flList.Butynediol.make(1000), FL.Hydrogen.make(1000)), FL.array(flList.Butanediol.make(1000)), ZL_IS);
         RM.        BurnMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.Cu, 0), FL.array(flList.Butanediol.make(1000)), FL.array(flList.Butyrolactone.make(1000), FL.Hydrogen.make(2000)), ZL_IS);
-        recipeMaps.HeatMixer.addRecipe0(F, 120, 80, FL.array(MT.NH3.gas(U, true), flList.Methanol.make(1000)), FL.array(flList.Methylamine.make(1000), FL.Water.make(1000)), ZL_IS);
-        recipeMaps.HeatMixer.addRecipe0(F, 120, 80, FL.array(flList.Methylamine.make(1000), flList.Butyrolactone.make(1000)), FL.array(flList.Methylpyrrolidone.make(1000), FL.Water.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe0(F, 120, 80, FL.array(flList.Methylamine.make(1000), flList.Butyrolactone.make(1000)), FL.array(flList.Methylpyrrolidone.make(1000), FL.DistW.make(1000)), ZL_IS);
         RM.        Mixer    .addRecipe1(F, 400, 800,OP.dust.mat(MT.Graphite, 7), FL.array(flList.Methylpyrrolidone.make(4000)), FL.array(flList.Graphite_Methylpyrrolidone.make(4000)), ZL_IS);
         recipeMaps.UltrasonicMixer.addRecipe1(F, 800, 3600, ST.tag(0), FL.array(flList.Graphite_Methylpyrrolidone.make(4000)), FL.array(flList.Methylpyrrolidone.make(4000)), OP.dust.mat(MT.Graphite, 6), OP.foil.mat(MT.Graphene, 4));
         recipeMaps.UltrasonicMixer.addRecipe1(F, 600, 18000, ST.tag(1), FL.array(flList.Graphite_Methylpyrrolidone.make(16000)), FL.array(flList.Methylpyrrolidone.make(16000)), OP.dust.mat(MT.Graphite, 24), OP.plate.mat(MT.Graphene, 4));
@@ -129,11 +128,11 @@ public class Chemistry {
 
         recipeMaps.HeatMixer.addRecipe1(F, 120, 80, matList.AluminumChloride.getDust(0), FL.array(flList.Benzene.make(200), flList.Chloromethane.make(100)), FL.array(flList.Toluene.make(200), MT.HCl.gas(U, false)), ZL_IS);
 
-        recipeMaps.UltrasonicMixer.addRecipe1(F, 800, 80, OP.dust.mat(MT.OREMATS.Barite, 4), FL.array(FL.DistW.make(1000)), FL.array(flList.BariumSulfate.make(1000)), ZL_IS);
+        recipeMaps.UltrasonicMixer.addRecipe1(F, 800, 80, OP.dust.mat(MT.OREMATS.Barite, 4), FL.array(FL.DistW.make(1000)), FL.array(flList.BariumSulfate.make(1000)), OP.dust.mat(MT.OREMATS.Barite, 3));
 
         recipeMaps.HeatMixer.addRecipe1(F, 480, 800, matList.SodiumAcetate.getDust(2), FL.array(flList.BariumSulfate.make(2000)), FL.array(flList.BariumAcetate.make(2000)), OP.dust.mat(MT.NaSO4, 1));
 
-        recipeMaps.HeatMixer.addRecipe0(F, 1040, 80, FL.array(flList.Acetone.make(1000)), FL.array(flList.Ketene.make(400), flList.Diketene.make(600), FL.Methane.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe1(F, 1040, 80, ST.tag(0), FL.array(flList.Acetone.make(1000)), FL.array(flList.Ketene.make(400), flList.Diketene.make(600), FL.Methane.make(1000)), ZL_IS);
         recipeMaps.HeatMixer.addRecipe0(F, 200, 200, FL.array(flList.Diketene.make(1000)), FL.array(flList.Ketene.make(600), flList.Diketene.make(400)), ZL_IS);
 
         RM.        BurnMixer.addRecipe1(F, 120, 80, OP.dust.mat(MT.P, 2), FL.array(FL.Oxygen.make(2500)), ZL_FS, matList.PhosphorusPentoxide.getDust(3));
@@ -144,11 +143,9 @@ public class Chemistry {
 
         RM.Mixer.addRecipe1(F, 200, 240, matList.TitanicSulfate.getDust(2), FL.array(flList.Ketene.make(1500)), FL.array(flList.ImpureTitaniumAcylate.make(1000)), ZL_IS);
 
-        recipeMaps.HeatMixer.addRecipe1(F, 450, 80, OP.dust.mat(MT.NaOH, 2), FL.array(flList.ImpureTitaniumAcylate.make(1000)), FL.array(flList.CrudeTitaniumAcylate.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe1(F, 450, 80, OP.dust.mat(MT.NaOH, 2), FL.array(flList.ImpureTitaniumAcylate.make(1000)), FL.array(flList.PurifyTitaniumAcylate.make(1000)), ZL_IS);
 
-        recipeMaps.HeatMixer.addRecipe0(F, 230, 120, FL.array(flList.CrudeTitaniumAcylate.make(1000)), FL.array(flList.PurifyTitaniumAcylate.make(1000)), ZL_IS);
-
-        RM.Distillery.addRecipe1(F, 250, 120,ST.tag(0), FL.array(flList.PurifyTitaniumAcylate.make(1000), MT.H2SO4.liquid(2*U, true)), FL.array(flList.TitaniumAcylate.make(1000)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe1(F, 250, 120,ST.tag(0), FL.array(flList.PurifyTitaniumAcylate.make(1000), MT.H2SO4.liquid(2*U, true)), FL.array(flList.TitaniumAcylate.make(1000)), ZL_IS);
 
         recipeMaps.HeatMixer.addRecipe0(F, 480, 800, FL.array(flList.TitaniumAcylate.make(1000), flList.BariumAcetate.make(1000)), ZL_FS, matList.NanoBariumTitanate.getDust(1));
 
