@@ -188,6 +188,10 @@ ktfru.tooltip.multiblock.storage.liquid.6=从第二层任意壁板接受RU
 ktfru.tooltip.multiblock.storage.liquid.7=从主方块下方自动输出流体
 ktfru.tooltip.multiblock.storage.liquid.8=在主方块下方2格放置原版石砖以关闭流体渲染
 ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速率:(输入KU)*10L/t
+ktfru.tooltip.multiblock.oreprocesssystem.0=从壁板输入能量, 原料和流体
+ktfru.tooltip.multiblock.oreprocesssystem.0=从右侧边角的前面自动输出物品, 侧面输出流体
+ktfru.tooltip.multiblock.rocket.builder.0=从驱动单元输入EU, 从不锈钢壁板输入原料和流体
+ktfru.tooltip.multiblock.rocket.builder.1=产品从结构右侧远端边的中心自动输出
 
 itemGroup.bladeLargeTurbine=LargeTurbines
 itemGroup.flywheel=Flywheels

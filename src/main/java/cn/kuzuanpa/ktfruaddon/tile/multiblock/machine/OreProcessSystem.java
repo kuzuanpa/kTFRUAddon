@@ -44,39 +44,43 @@ import java.util.List;
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class RocketBuilder extends TileEntityBase10MultiBlockMachine {
+public class OreProcessSystem extends TileEntityBase10MultiBlockMachine {
+
+    public final short machineX = 5, machineY = 3, machineZ = 3;
 
     //Structure
     ChunkCoordinates lastFailedPos=null;
     static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
             .fixedLayer('A',
-                    "AAA",
-                    " CC",
-                    "BBB",
-                    "BBB",
-                    "BBB",
-                    "ADA"
+                    "AAAAA",
+                    "AAAAA",
+                    "AAAAA",
+                    "BBBBB",
+                    "BBBBB",
+                    "NBBBB"
             )
             .fixedLayer('B',
-                    "AAA",
-                    "CCC",
-                    "   ",
-                    "   ",
-                    "   ",
-                    "AAA"
+                    "CCCCC",
+                    "CCCCC",
+                    "CCCCC",
+                    "BBDDD",
+                    "BBDDD",
+                    "BBDDD"
             ).fixedLayer('C',
-                    "   ",
-                    "A A",
-                    "   ",
-                    "   ",
-                    "   ",
-                    "A A"
+                    "     ",
+                    "     ",
+                    "     ",
+                    "EEDDD",
+                    "EEDDD",
+                    "EEDDD"
             )
-            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
-            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31046, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
-            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
-            .setOffset(-1,0,0) ;
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18003, MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18106, MultiTileEntityMultiBlockPart.NOTHING)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18100)))
+            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18108)))
+            .where('N', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18003, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
+            .setOffset(0,0,0) ;
 
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -85,33 +89,28 @@ public class RocketBuilder extends TileEntityBase10MultiBlockMachine {
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
-    static {
-        LH.add("ktfru.tooltip.multiblock.rocket.builder.0", "Input EU from Motor, Input item and liquid from stainless steel wall");
-        LH.add("ktfru.tooltip.multiblock.rocket.builder.1", "Item Auto Output to middle of far end on right side.");
-    }
+
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.rocket.builder.0"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.rocket.builder.1"));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return true;
-    }
+    public boolean isInsideStructure(int aX, int aY, int aZ) { return true;}
 
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
-        return getAdjacentTank(SIDE_UP);
+        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,6,0), this.yCoord , utils.getRealZ(mFacing,zCoord,6,0), mFacing, false);
+        if(te == null || !(te.mTileEntity instanceof IFluidHandler)) return this.getAdjacentTank(SIDE_INVALID);
+        return new DelegatorTileEntity<>((IFluidHandler)te.mTileEntity,FACING_TO_SIDE[mFacing][aSide]);
     }
 
     @Override
     public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,5,1), this.yCoord , utils.getRealZ(mFacing,zCoord,5,1), FACING_ROTATIONS[mFacing][SIDE_RIGHT], false);
+        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,5,-1), this.yCoord , utils.getRealZ(mFacing,zCoord,5,-1), mFacing, false);
         if(te == null || te.mTileEntity == null) return this.delegator(SIDE_INVALID);
-        return new DelegatorTileEntity<>(te.mTileEntity,FACING_TO_SIDE[mFacing][SIDE_RIGHT]);
+        return new DelegatorTileEntity<>(te.mTileEntity,mFacing);
     }
 
     @Override
@@ -137,6 +136,6 @@ public class RocketBuilder extends TileEntityBase10MultiBlockMachine {
     }
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.rocket.builder";
+        return "ktfru.multitileentity.multiblock.oreprocesssystem";
     }
 }

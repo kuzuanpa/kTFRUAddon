@@ -18,6 +18,7 @@ package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 import cn.kuzuanpa.ktfruaddon.api.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.api.material.matList;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
+import cn.kuzuanpa.ktfruaddon.recipe.recipe.listener.recipeOreProcess;
 import gregapi.data.FL;
 import gregapi.data.MT;
 import gregapi.data.OP;
@@ -29,6 +30,7 @@ import static gregapi.data.CS.*;
 
 public class OreProcessing {
     public static void init(){
+        OP.crushed.addListener(new recipeOreProcess.OneStepOreProcess());
   //Cr processing
         recipeMaps.HeatMixer.addRecipe1(F,100,400,OP.dust.mat(MT.Fe,0),FL.array(FL.Nitrogen.make(2000),FL.Hydrogen.make(3000)),FL.array(MT.NH3.gas(2*U,F)));
         RM.Bath.addRecipeX(T,0, 512 , ST.array(OP.dust.mat(MT.OREMATS.Chromite, 4), OP.dust.mat(matList.AmmoniumSulfate.get(), 9)), FL.array(MT.H2SO4.liquid(6*U,F)), FL.array(FL.Water.make(1500)), OP.dust.mat(matList.AmmoniumChromicSulfate.get(), 6), OP.dust.mat(matList.AmmoniumIronIIISulfate.mat, 3));

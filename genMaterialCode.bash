@@ -21,14 +21,18 @@ for i in $(cat genMaterialList)
         matList.$enUSName.registerC(++i,\"$enUSName\",\"$enUSName\",$meltpoint,$boilpoint,255,255,255,130,\"$formula\")
 	.put();" >> matPreInit.java
 echo ",/**$zhCNName**/$enUSName">>matList.java
+echo "gt.material.$enUSName=$zhCNName">>zh_CN.lang
 if [ $boilpoint -lt 0 ];then
 echo "        //$zhCNName
         flList.$enUSName.register(\"$enUSName\",\"$enUSName\",matList.$enUSName.get(), GAS);" >>flPreInit.java
 echo ",/**$zhCNName**/$enUSName">>flList.java
+echo "fluid.$enUSName=$zhCNName">>zh_CN.lang
 elif [ $meltpoint -lt 0 ] ;then
 echo "        //$zhCNName
         flList.$enUSName.register(\"$enUSName\",\"$enUSName\",matList.$enUSName.get(), LIQUID);" >>flPreInit.java
 echo ",/**$zhCNName**/$enUSName">>flList.java
+echo "fluid.$enUSName=$zhCNName">>zh_CN.lang
+
 fi
 
  fi

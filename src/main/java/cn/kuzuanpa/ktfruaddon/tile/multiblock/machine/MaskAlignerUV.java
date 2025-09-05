@@ -97,11 +97,6 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
     }
     public final short sizeX = 3, sizeY = 2, sizeZ = 2;
     public final short xMapOffset = -1;
-
-
-
-    //这是设置主方块的物品提示
-    //controls tooltip of controller block
     static {
         LH.add("ktfru.tooltip.multiblock.maskaligner.0.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
         LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Fluid inputs from anyblock in upside, Item input from upside of IO manager, output from backside.");
@@ -114,14 +109,12 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.maskaligner.0.6"));
         super.addToolTips(aList, aStack, aF3_H);
     }
-    //这里设置该机器的内部区域
-    //controls areas inside the machine
+
     @Override
     public boolean isInsideStructure ( int aX, int aY, int aZ){
         return new BoundingBox(utils.getRealX(mFacing, xCoord, xMapOffset, 0), yCoord, utils.getRealZ(mFacing, zCoord, xMapOffset, 0), utils.getRealX(mFacing, utils.getRealX(mFacing, xCoord, xMapOffset, 0), sizeX, sizeZ), yCoord + sizeY, utils.getRealZ(mFacing, utils.getRealZ(mFacing, zCoord, xMapOffset, 0), sizeX, sizeZ)).isXYZInBox(aX, aY, aZ);
     }
-    //下面四个是设置输入输出的地方,return null是任意面
-    //controls where to I/O, return null=any side
+
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget ( byte aSide, Fluid aOutput){
         return null;

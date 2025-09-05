@@ -14,7 +14,7 @@
  */
 
 
-package cn.kuzuanpa.ktfruaddon.tile.casing;
+package cn.kuzuanpa.ktfruaddon.tile.random;
 
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
