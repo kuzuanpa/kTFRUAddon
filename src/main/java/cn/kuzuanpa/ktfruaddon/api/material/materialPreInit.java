@@ -250,7 +250,7 @@ public class materialPreInit {
                 .put(TD.ItemGenerator.DUSTS);
         //环己酮
         matList.Cyclohexanone.registerC(22080,"Cyclohexanone","Cyclohexanone",-47,115,255,255,255,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[10]+"O")
-                .put();
+                .put(TD.ItemGenerator.DUSTS);
         //苊
         matList.Acenaphthylene.registerC(22081,"Acenaphthylene","Acenaphthylene",78,280,255,255,255,130,"C"+NUM_SUB[12]+"H"+NUM_SUB[8])
                 .put(TD.ItemGenerator.DUSTS);

@@ -23,6 +23,10 @@ import gregapi.data.TD;
 import gregapi.fluid.FluidTankGT;
 import gregapi.fluid.FluidTankGTRateLimitedPowerConducting;
 import gregapi.item.IItemRottable;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.ITileEntityFunnelAccessible;
 import gregapi.tileentity.ITileEntityTapAccessible;
@@ -52,6 +56,7 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
     public FluidTankGT mTank = new FluidTankGTRateLimitedPowerConducting(16000);
     public long mMeltingPoint = Long.MAX_VALUE;
     public boolean mGasProof = F, mAcidProof = F, mPlasmaProof = F, mMagicProof = F;
+    public int throttle, throttleMax = 8;
 
     @Override
     public String getTileEntityName() {
@@ -66,6 +71,9 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
         if (aNBT.hasKey(NBT_MAGICPROOF)) mMagicProof = aNBT.getBoolean(NBT_MAGICPROOF);
         if (aNBT.hasKey(NBT_PLASMAPROOF)) mPlasmaProof = aNBT.getBoolean(NBT_PLASMAPROOF);
         if (aNBT.hasKey(NBT_CAPACITY_HU)) mMeltingPoint = aNBT.getLong(NBT_CAPACITY_HU); else mMeltingPoint = (long)(mMaterial.mMeltingPoint * 1.25);
+        if (aNBT.hasKey("ktfru.throttle")) throttle = aNBT.getInteger("ktfru.throttle");
+        if (aNBT.hasKey("ktfru.throttle.max")) throttleMax = aNBT.getInteger("ktfru.throttle.max");
+
         mTank.setCapacity(aNBT.getLong(NBT_TANK_CAPACITY)).readFromNBT(aNBT, NBT_TANK);
     }
 
@@ -73,11 +81,7 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         mTank.writeToNBT(aNBT, NBT_TANK);
-    }
-    @Override
-    public NBTTagCompound writeItemNBT2(NBTTagCompound aNBT) {
-        mTank.writeToNBT(aNBT, NBT_TANK);
-        return super.writeItemNBT2(aNBT);
+        aNBT.setInteger("ktfru.throttle", throttle);
     }
 
     @Override
@@ -102,6 +106,13 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
         if (isClientSide()) return 0;
         if (aTool.equals(TOOL_plunger)) {
             return GarbageGT.trash(mTank, 1000);
+        }
+        if(aTool.equals(TOOL_monkeywrench)) {
+            if(aSneaking)throttle --;
+            else throttle ++;
+            if(throttle < 0)throttle = 0;
+            if(throttle > throttleMax)throttle = throttleMax;
+            aChatReturn.add(LH.get(LH.PIPE_STATS_BANDWIDTH) + (long)(Math.ceil(mTank.capacity() / 2F) * throttle / throttleMax));
         }
         if (aTool.equals(TOOL_thermometer)) {if (aChatReturn != null) aChatReturn.add("Temperature: " + FL.temperature(mTank) + "K"); return 10000;}
         if (aTool.equals(TOOL_magnifyingglass)) {
@@ -145,6 +156,8 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
                     UT.Sounds.send(SFX.MC_FIZZ, this, F);
                     GarbageGT.trash(mTank);
                 }
+
+                if(throttle>0)FL.move(mTank, getAdjacentTank(mFacing),(long)(Math.ceil(mTank.amount() / 2F) * throttle / throttleMax));
             }
         }
     }
@@ -209,14 +222,23 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
 
     @Override public byte getMaxStackSize(ItemStack aStack, byte aDefault) {return mTank.has() ? 1 : aDefault;}
 
-    @Override protected IFluidTank getFluidTankFillable2 (byte aSide, FluidStack aFluidToFill ) {return mTank;}
-    @Override protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {return mTank;}
+    @Override protected IFluidTank getFluidTankFillable2 (byte aSide, FluidStack aFluidToFill ) {return aSide == OPOS[mFacing]? mTank : null;}
+    @Override protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {return aSide == mFacing? mTank : null;}
     @Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTank.AS_ARRAY;}
-
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return null;
+        return aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[FACES_TBS[aSide]], mRGBa, mMaterial.contains(TD.Properties.GLOWING)), BlockTextureDefault.get(sOverlays[FACES_TBS[aSide]])) : null;
     }
+
+    public static IIconContainer sColoreds[] = new IIconContainer[] {
+            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/colored/bottom"),
+            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/colored/top"),
+            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/colored/side"),
+    }, sOverlays[] = new IIconContainer[] {
+            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/overlay/bottom"),
+            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/overlay/top"),
+            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/overlay/side"),
+    };
 
     @Override public ItemStack getRotten(ItemStack aStack) {return mMaterial.contains(TD.Properties.BETWEENLANDS) ? aStack : IItemRottable.RottingUtil.rotting(aStack, (IFluidContainerItem)aStack.getItem());}
     @Override public ItemStack getRotten(ItemStack aStack, World aWorld, int aX, int aY, int aZ) {return mMaterial.contains(TD.Properties.BETWEENLANDS) ? aStack : IItemRottable.RottingUtil.rotting(aStack, (IFluidContainerItem)aStack.getItem());}

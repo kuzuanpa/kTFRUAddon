@@ -103,7 +103,7 @@ public class ComputerBuilding {
         RM.CrystallisationCrucible.addRecipe1(T,16,72000, new long[]{5000},OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Helium.make(80000),flList.Silane.make(4000)),FL.array(ZL_FS),ItemList.SiliconBoulePure.get(1));
         RM.CrystallisationCrucible.addRecipe1(T,16,72000,OP.dustDiv72.mat(MT.Si,1),FL.array(MT.Kr.gas(20*U,false),flList.Silane.make(4000)),FL.array(ZL_FS),ItemList.SiliconBoulePure.get(1));
 
-        recipeMaps.HeatMixer.addRecipe1(F,1440,120,OP.dust.mat(MT.Mo, 4),FL.array(FL.Oxygen.make(1000)),ZL_FS,matList.MolybdenumOxide.getDust(2));
+        RM.BurnMixer.addRecipe1(F,1440,240,OP.dust.mat(MT.Mo, 4),FL.array(FL.Oxygen.make(1000)),ZL_FS,matList.MolybdenumOxide.getDust(2));
 
         RM.CrystallisationCrucible.addRecipe1(T,16,144000, new long[]{5000},OP.dustDiv72.mat(matList.MolybdenumOxide.get(),1),FL.array(FL.Helium.make(80000),flList.MolybdenumOxide.make(4000)),FL.array(ZL_FS),ItemList.MoO2Boule.get(1));
         RM.CrystallisationCrucible.addRecipe1(T,16,144000,OP.dustDiv72.mat(matList.MolybdenumOxide.get(),1),FL.array(MT.Kr.gas(20*U,false),flList.MolybdenumOxide.make(4000)),FL.array(ZL_FS),ItemList.MoO2Boule.get(1));

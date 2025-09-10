@@ -34,8 +34,8 @@ public class recipeOreProcess {
                 ItemStack[] outputList = new ItemStack[9];
                 outputList[0] = OP.dust.mat(aEvent.mMaterial, 6);
                 for (int i = 1; i < 9; i++) {
-                    if(i>aEvent.mMaterial.mByProducts.size())outputList[i] = OP.dustSmall.mat(aEvent.mMaterial, 4);
-                    else outputList[i] = OP.dustSmall.mat(aEvent.mMaterial.mByProducts.get(i-1), 4);
+                    if(i>aEvent.mMaterial.mByProducts.size())outputList[i] = OP.dustSmall.mat(aEvent.mMaterial, 2);
+                    else outputList[i] = OP.dustSmall.mat(aEvent.mMaterial.mByProducts.get(i-1), 2);
                 }
                 OreProcessSystem.addRecipe1(true, 128,100, OP.crushed.mat(aEvent.mMaterial, 4), FL.Water.make(4000), FL.Sluice.make(4000), outputList);
             }
