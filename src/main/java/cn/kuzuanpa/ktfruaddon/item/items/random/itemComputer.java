@@ -38,8 +38,8 @@ public class itemComputer extends MultiItemRandom {
     public void addItems() {
         ItemList.ComputerTF3386          .set(addItem(0 ,"TF3386 Computer"   ,"Computing Power: 40 MFLOPS"))                .registerOre("ktfruBasicComputer");
         ItemList.ComputerTF3386S         .set(addItem(1 ,"TF3386S Computer"  ,"Computing Power: 70 MFLOPS"))                .registerOre("ktfruBasicComputer");
-        ItemList.ComputerTF3586          .set(addItem(2 ,"TF3586 Computer"   ,"Computing Power: 840 MFLOPS"))               .registerOre("ktfruBasicComputer");
-        ItemList.ComputerTF3586S         .set(addItem(3 ,"TF3586S Computer"  ,"Computing Power: 1020 MFLOPS"))              .registerOre("ktfruBasicComputer");
+        ItemList.ComputerTF3586          .set(addItem(2 ,"TF3586 Computer"   ,"Computing Power: 840 MFLOPS"))               .registerOre("ktfruBasicComputer", "ktfruBasicComputerPlus");
+        ItemList.ComputerTF3586S         .set(addItem(3 ,"TF3586S Computer"  ,"Computing Power: 1020 MFLOPS"))              .registerOre("ktfruBasicComputer", "ktfruBasicComputerPlus");
         ItemList.ComputerGT1000          .set(addItem(4 ,"GT1000 Computer"   ,"Computing Power: 6530 MFLOPS"))              .registerOre(    "ktfruNoviceComputer");
         ItemList.ComputerGT1090          .set(addItem(5 ,"GT1090 Computer"   ,"Computing Power: 8160 MFLOPS"))              .registerOre(    "ktfruNoviceComputer");
         ItemList.ComputerGT2000          .set(addItem(6 ,"GT2000 Computer"   ,"Computing Power: 34220 MFLOPS"))             .registerOre(        "ktfruModerateComputer");

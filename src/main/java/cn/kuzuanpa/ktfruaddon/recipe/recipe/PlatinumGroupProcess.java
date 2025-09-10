@@ -42,7 +42,7 @@ public class PlatinumGroupProcess {
         recipeMaps.HeatMixer.addRecipe0(F,180,90 ,FL.array(flList.EthylChloroacetate.make(1000), flList.Dimethylamine.make(1000)),FL.array(flList.Dimethylglycine.make(1000)), ZL_IS);
 
     //main
-        RM.BurnMixer.addRecipeX(F,180,90 , ST.array(OP.dust.mat(MT.C,1),OP.dust.mat(MT.Al,3),OP.dust.mat(MT.PlatinumGroupSludge,1)), FL.array(MT.HCl.gas(U, true), MT.Cl.gas(2*U, true)),FL.array(flList.RoughPlatinumGroupSolution.make(1500)), OP.dustSmall.mat(MT.Al2O3, 2), OP.dust.mat(MT.SiO2, 2), OP.dust.mat(matList.SilverChloride.mat, 1));
+        RM.BurnMixer.addRecipeX(F,180,90 , ST.array(OP.dust.mat(MT.C,1),OP.dust.mat(MT.Al,3),OP.dust.mat(MT.PlatinumGroupSludge,1)), FL.array(MT.HCl.gas(U, true), MT.Cl.gas(2*U, true)),FL.array(flList.RoughPlatinumGroupSolution.make(1500)), OP.dustSmall.mat(MT.Al2O3, 2), OP.dust.mat(matList.SilverChloride.mat, 1));
         RM.    Electrolyzer.addRecipe1(F,180,90 , OP.dust.mat(matList.SilverChloride.mat, 1), ZL_FS,FL.array(MT.Cl.gas(U,false)), OP.dust.mat(MT.Ag, 2));
         recipeMaps.HeatMixer.addRecipe0(F,180,90 , FL.array(flList.RoughPlatinumGroupSolution.make(1000), MT.SO2.gas(U, true)),FL.array(flList.SulphurPlatinumGroupSolution.make(1500)), OP.dustSmall.mat(MT.Au, 2));
         RM.    Mixer     .addRecipe0(F,180,16 , FL.array(flList.SulphurPlatinumGroupSolution.make(2000), flList.Dimethylglycine.make(1000)),FL.array(flList.ExtractedPlatinumGroupSolutionUp.make(1500),flList.ExtractedPlatinumGroupSolutionDown.make(1500)), ZL_IS);

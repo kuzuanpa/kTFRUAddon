@@ -56,7 +56,7 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
     public FluidTankGT mTank = new FluidTankGTRateLimitedPowerConducting(16000);
     public long mMeltingPoint = Long.MAX_VALUE;
     public boolean mGasProof = F, mAcidProof = F, mPlasmaProof = F, mMagicProof = F;
-    public int throttle, throttleMax = 8;
+    public int throttle, throttleMax = 16;
 
     @Override
     public String getTileEntityName() {
@@ -227,17 +227,17 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
     @Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTank.AS_ARRAY;}
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[FACES_TBS[aSide]], mRGBa, mMaterial.contains(TD.Properties.GLOWING)), BlockTextureDefault.get(sOverlays[FACES_TBS[aSide]])) : null;
+        return aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(sColoreds[mFacing == aSide? 1 : OPOS[mFacing] == aSide? 0 : 2], mRGBa, mMaterial.contains(TD.Properties.GLOWING)), BlockTextureDefault.get(sOverlays[mFacing == aSide? 1 : OPOS[mFacing] == aSide? 0 : 2])) : null;
     }
 
     public static IIconContainer sColoreds[] = new IIconContainer[] {
-            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/colored/bottom"),
-            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/colored/top"),
-            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/colored/side"),
+            new Textures.BlockIcons.CustomIcon("machines/valve/colored/back"),
+            new Textures.BlockIcons.CustomIcon("machines/valve/colored/front"),
+            new Textures.BlockIcons.CustomIcon("machines/valve/colored/side"),
     }, sOverlays[] = new IIconContainer[] {
-            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/overlay/bottom"),
-            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/overlay/top"),
-            new Textures.BlockIcons.CustomIcon("machines/tanks/drum/overlay/side"),
+            new Textures.BlockIcons.CustomIcon("machines/valve/overlay/back"),
+            new Textures.BlockIcons.CustomIcon("machines/valve/overlay/front"),
+            new Textures.BlockIcons.CustomIcon("machines/valve/overlay/side"),
     };
 
     @Override public ItemStack getRotten(ItemStack aStack) {return mMaterial.contains(TD.Properties.BETWEENLANDS) ? aStack : IItemRottable.RottingUtil.rotting(aStack, (IFluidContainerItem)aStack.getItem());}
