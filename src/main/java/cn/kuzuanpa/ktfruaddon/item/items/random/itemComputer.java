@@ -69,7 +69,7 @@ public class itemComputer extends MultiItemRandom {
         ItemList.ComputerMasterCircuits  .set(addItem(28,"Master Circuits Computer","Computing Power: 42390 MFLOPS"))       .registerOre(        "ktfruModerateComputer");
         ItemList.ComputerUltimateCircuits.set(addItem(29,"Ultimate Circuits Computer","Computing Power: 126230 MFLOPS"))    .registerOre(            "ktfruAdvancedComputer");
 
-        ItemList.UnderClockedNoviceComputer  .set(addItem(30,"Under Clocked Novice Computer","Computing Power: 2000 MFLOPS"))     .registerOre("ktfruBasicComputer");
+        ItemList.UnderClockedNoviceComputer  .set(addItem(30,"Under Clocked Novice Computer","Computing Power: 2000 MFLOPS"))     .registerOre("ktfruBasicComputer", "ktfruBasicComputerPlus");
         ItemList.UnderClockedModerateComputer.set(addItem(31,"Under Clocked Moderate Computer","Computing Power: 12000 MFLOPS"))  .registerOre(    "ktfruNoviceComputer");
         ItemList.UnderClockedAdvancedComputer.set(addItem(32,"Under Clocked Advanced Computer","Computing Power: 50000 MFLOPS"))  .registerOre(        "ktfruModerateComputer");
         ItemList.UnderClockedEliteComputer   .set(addItem(33,"Under Clocked Elite Computer","Computing Power: 150000 MFLOPS"))    .registerOre(            "ktfruAdvancedComputer");
