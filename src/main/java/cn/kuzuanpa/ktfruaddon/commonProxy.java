@@ -26,6 +26,7 @@ import cn.kuzuanpa.ktfruaddon.item.ItemPostInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
+import cn.kuzuanpa.ktfruaddon.research.ResearchTrees;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit0;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -62,6 +63,7 @@ public class commonProxy extends Abstract_Proxy {
         tileEntityPreInit.init(aEvent);
         itemPreInit.init(aEvent);
         fluidPreInit.init(aEvent);
+        ResearchTrees.init();
     }
 
 

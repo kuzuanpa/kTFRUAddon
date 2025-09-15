@@ -43,6 +43,10 @@ import java.util.Map;
 
 public class ResearchTree {
 
+    public interface IResearchTreeTemplate{
+        ResearchTree applyTemplate(ResearchTree tree);
+    }
+    public static Map<Byte,IResearchTreeTemplate> ResearchTreeTemplate = new HashMap<>();
     public Map<String, ResearchProject> allResearch = new HashMap<>();
 
     public byte id;
@@ -52,8 +56,20 @@ public class ResearchTree {
 
     public ResearchTree(byte id){
         this.id = id;
+        applyTemplate(id);
     }
     public ResearchProject rootItem;
+
+    public boolean applyTemplate(byte id){
+        if (ResearchTreeTemplate.get(id) == null)return false;
+        ResearchTreeTemplate.get(id).applyTemplate(this);
+        return true;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     private void removeChildRecursively(ResearchProject current, ResearchProject target) {
         List<ResearchProject> children = current.getPrerequisites();
