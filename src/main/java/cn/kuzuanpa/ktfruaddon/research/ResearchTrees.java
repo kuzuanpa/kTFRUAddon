@@ -38,7 +38,7 @@ public class ResearchTrees {
                             .setPos(80, 20)
                             .addPrerequisite(tree.rootItem);
 
-                    ResearchProject c = new ResearchProject(tree, "芯片理论", "利用最初的芯片辅助你研究硅的特性，了解它的各项特性在芯片制造中的关键作用", Items.paper, 0, 3)
+                    ResearchProject c = new ResearchProject(tree, "硅理论", "利用最初的芯片辅助你研究硅的特性，了解它的各项特性在芯片制造中的关键作用", Items.paper, 0, 3)
                             .setPos(180, 10)
                             .addPrerequisite(a);
 
@@ -46,7 +46,7 @@ public class ResearchTrees {
                             .setPos(180, 130)
                             .addPrerequisite(a).addPrerequisite(b);
 
-                    ResearchProject f = new ResearchProject(tree, "进阶电路设计", "利用计算器进一步改进电路，你认为你离真正的自动化控制不远了", Items.paper, 0, 5)
+                    ResearchProject f = new ResearchProject(tree, "基础电路设计", "利用计算器进一步改进电路，你认为你离真正的自动化控制不远了", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(c).addPrerequisite(d);
 
@@ -58,7 +58,7 @@ public class ResearchTrees {
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject i = new ResearchProject(tree, "电磁感应", "你早已听闻法拉第的大名和他的电磁感应定律，只需要稍微总结一套方便的规律和程序即可制造大量的实用物品", Items.paper, 0, 5)
+                    ResearchProject i = new ResearchProject(tree, "电磁感应", "你早已听闻电磁感应定律，只需要稍微总结一套方便的规律和程序即可制造大量的实用物品", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
@@ -66,16 +66,27 @@ public class ResearchTrees {
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject k = new ResearchProject(tree, "激光", "研究如何利用电力激发二氧化碳产生激光，激光可将能量集中于极小的一点，非常适合精确加工", Items.paper, 0, 5)
+                    ResearchProject k = new ResearchProject(tree, "半导体制冷", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject l = new ResearchProject(tree, "精确制造", "研究如何利用激光的极度精确集中的能量加工物品", Items.paper, 0, 5)
+                    ResearchProject l = new ResearchProject(tree, "激光", "研究如何利用电力激发二氧化碳产生激光，激光可将能量集中于极小的一点，非常适合精确加工", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
+                    ResearchProject m = new ResearchProject(tree, "精确制造", "研究如何利用激光极度精确集中的能量加工物品", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(f);
 
-                    ResearchProject m = new ResearchProject(tree, "精确制造", "研究如何利用激光的极度精确集中的能量加工物品", Items.paper, 0, 5)
+                    ResearchProject n = new ResearchProject(tree, "单晶硅制造", "研究如何利用激光的极度精确集中的能量加工物品", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(f);
+
+                    ResearchProject o = new ResearchProject(tree, "低级电路设计", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(f);
+
+                    ResearchProject p = new ResearchProject(tree, "", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
