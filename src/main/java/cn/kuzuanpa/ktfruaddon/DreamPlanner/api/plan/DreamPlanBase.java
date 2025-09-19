@@ -15,15 +15,16 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
 import codechicken.lib.vec.BlockCoord;
 
 import java.util.List;
 
 public abstract class DreamPlanBase {
     public final BlockCoord InterfacePos;
-    public abstract boolean isInputEqual(List<ITransmittable> input);
+    public int complexity;
     public abstract List<ITransmittable> getResultList();
-    public abstract long getResultNum(ITransmittable output);
+    public abstract long getResultNum(ITransmittableType output);
     /**Get Recipe needed Ingredients from result**/
     public abstract List<ITransmittable> getIngredientList(ITransmittable result);
     public DreamPlanBase(BlockCoord interfacePos){

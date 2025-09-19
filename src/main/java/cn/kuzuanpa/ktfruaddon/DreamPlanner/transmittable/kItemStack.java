@@ -14,23 +14,45 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Objects;
 
 public class kItemStack implements ITransmittable{
     long amount =0;
-    ItemStack stack;
+    ItemType stack;
     public kItemStack(ItemStack stack){
-        this.stack = stack;
+        this.stack = new ItemType(stack.getItem(), stack.getItemDamage(), stack.stackTagCompound);
         this.amount = stack.stackSize;
     }
+    public kItemStack(ItemType stack, long amount) {
+        this.stack = new ItemType(stack.item, stack.meta, stack.nbt);
+        this.amount = amount;
+    }
     public kItemStack(ItemStack stack, long amount){
-        this.stack = stack;
+        this.stack = new ItemType(stack.getItem(), stack.getItemDamage(), stack.stackTagCompound);
+        this.amount = amount;
+    }
+    public kItemStack(Item item,long amount, int meta, NBTTagCompound nbt){
+        this.stack = new ItemType(item, meta, nbt);
         this.amount = amount;
     }
 
+    public ItemStack getStack(){
+        ItemStack is = new ItemStack(stack.item, (int)amount, stack.meta);
+        is.setTagCompound(stack.nbt);
+        return is;
+    }
     @Override
-    public ITransmittable getSingle() {
-        return new kItemStack(stack, 1);
+    public ITransmittable initFrom(ITransmittableType type, long amount) {
+        return new kItemStack(((ItemType) type), amount);
+    }
+
+    @Override
+    public ITransmittableType getType() {
+        return stack;
     }
 
     @Override
@@ -38,9 +60,32 @@ public class kItemStack implements ITransmittable{
         return amount;
     }
 
-    @Override
-    public ITransmittable setAmount(long amount) {
-        this.amount = amount;
-        return this;
+    public static class ItemType implements ITransmittableType{
+        Item item;
+        int meta;
+        NBTTagCompound nbt;
+        public ItemType(Item item, int meta, NBTTagCompound nbt){
+            this.item=item;
+            this.meta=meta;
+            this.nbt=nbt;
+        }
+
+        @Override
+        public ITransmittable make(long amount) {
+            return new kItemStack(this,amount);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemType itemType = (ItemType) o;
+            return meta == itemType.meta && Objects.equals(item, itemType.item) && Objects.equals(nbt, itemType.nbt);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(item, meta, nbt);
+        }
     }
 }

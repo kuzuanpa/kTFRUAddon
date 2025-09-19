@@ -15,10 +15,11 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 
 public interface ITransmittable {
-    ITransmittable getSingle();
+    ITransmittable initFrom(ITransmittableType type, long amount);
+    ITransmittableType getType();
     long getAmount();
-    ITransmittable setAmount(long amount);
     default boolean isTypeEqual(ITransmittable t){
-        return getSingle().equals(t.getSingle());
+        return getType().equals(t.getType());
     }
+    default ITransmittable copy(){ return initFrom(getType(), getAmount());}
 }

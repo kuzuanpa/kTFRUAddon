@@ -14,24 +14,41 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public class kFluidStack implements ITransmittable{
+import java.util.Objects;
 
+public class kFluidStack implements ITransmittable{
     long amount =0;
-    FluidStack stack;
+    FluidType stack;
     public kFluidStack(FluidStack stack){
-        this.stack = stack;
+        this.stack = new FluidType(stack.getFluid(), stack.tag);
         this.amount = stack.amount;
     }
+    public kFluidStack(FluidType stack, long amount) {
+        this.stack = new FluidType(stack.Fluid, stack.nbt);
+        this.amount = amount;
+    }
     public kFluidStack(FluidStack stack, long amount){
-        this.stack = stack;
+        this.stack = new FluidType(stack.getFluid(), stack.tag);
+        this.amount = amount;
+    }
+    public kFluidStack(Fluid Fluid, long amount, NBTTagCompound nbt){
+        this.stack = new FluidType(Fluid, nbt);
         this.amount = amount;
     }
 
     @Override
-    public ITransmittable getSingle() {
-        return new kFluidStack(stack, 1);
+    public ITransmittable initFrom(ITransmittableType type, long amount) {
+        return new kFluidStack(((FluidType) type), amount);
+    }
+
+    @Override
+    public ITransmittableType getType() {
+        return stack;
     }
 
     @Override
@@ -39,9 +56,29 @@ public class kFluidStack implements ITransmittable{
         return amount;
     }
 
-    @Override
-    public ITransmittable setAmount(long amount) {
-        this.amount = amount;
-        return this;
+    public static class FluidType implements ITransmittableType{
+        Fluid Fluid;
+        NBTTagCompound nbt;
+        public FluidType(Fluid Fluid, NBTTagCompound nbt){
+            this.Fluid=Fluid;
+            this.nbt=nbt;
+        }
+
+        @Override
+        public ITransmittable make(long amount) {
+            return new kFluidStack(this,amount);
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FluidType fluidType = (FluidType) o;
+            return Objects.equals(Fluid, fluidType.Fluid) && Objects.equals(nbt, fluidType.nbt);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(Fluid, nbt);
+        }
     }
 }

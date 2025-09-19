@@ -14,23 +14,29 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.kItemStack;
+import codechicken.lib.vec.BlockCoord;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
-public class DreamPool {
-    public Predicate<ITransmittableType> AbstractOverallCondition = t -> false;
-    public List<ITransmittableType> abstractTransmittableList = new ArrayList<>();
-
-    public void updateAbstractCondition(){
-        abstractTransmittableList.forEach(abs-> AbstractOverallCondition = AbstractOverallCondition.or(((AbstractTransmittable.AbstractTransmittableType) abs).condition));
+public class DreamPlanInternalAbstractCast extends DreamPlanBase{
+    public List<ITransmittable> getResultList(){return new ArrayList<>();};
+    public long getResultNum(ITransmittableType output) {return 0;};
+    /**Get Recipe needed Ingredients from result**/
+    public List<ITransmittable> getIngredientList(ITransmittable result){return new ArrayList<>();
+    };
+    public DreamPlanInternalAbstractCast(List<ITransmittableType> abstractItem, ITransmittableType realItem){
+        super(null);
+        this.absItem=abstractItem;
+        this.realItem=realItem;
     }
-    public long itemAmount(ITransmittable item, long required){
-        return 3;
+
+    List<ITransmittableType> absItem;
+    ITransmittableType realItem;
+    @Override
+    public String toString() {
+        return "PI-AC."+absItem+"->"+realItem;
     }
 }
