@@ -51,19 +51,32 @@ public class ResearchTree{
     }
 
     public void setCurrentProject(ResearchProject currentProject) {
+        if(this.currentProject == currentProject)return;
+        needUpdate = true;
         this.currentProject = currentProject;
     }
 
+    public void onResearchProjectUpdated(ResearchProject project){
+        needUpdate = true;
+    }
     public interface IResearchTreeTemplate{
         ResearchTree applyTemplate(ResearchTree tree);
     }
+
+    public void sendDataToViewerPlayers(){
+        for (EntityPlayerMP portableViewerPlayer : portableViewerPlayers) {
+            sendTreeData(portableViewerPlayer, this);
+        }
+    }
+
     public static Map<Byte,IResearchTreeTemplate> ResearchTreeTemplate = new HashMap<>();
     public static Map<UUID, ResearchTree> allTreeUUIDsClient = new HashMap<>();
     public static Map<UUID, ResearchTree> allTreeUUIDsServer = new HashMap<>();
     public UUID uuid = UUID.randomUUID();
+    public List<EntityPlayerMP> portableViewerPlayers = new ArrayList<>();
     public Map<String, ResearchProject> allResearch = new HashMap<>();
+    public boolean needUpdate = false;
 
-    public boolean treeNeedSync = false;
     protected ResearchProject currentProject = null;
     public byte id;
     public void addResearchItem(ResearchProject item) {
@@ -144,8 +157,8 @@ public class ResearchTree{
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(bos)){
             dos.writeByte(id);
-            dos.writeLong(uuid.getLeastSignificantBits());
             dos.writeLong(uuid.getMostSignificantBits());
+            dos.writeLong(uuid.getLeastSignificantBits());
             dos.writeBoolean(getCurrentProject() != null);
             if(getCurrentProject() != null)dos.writeUTF(getCurrentProject().id);
             for (Map.Entry<String, ResearchProject> entry : allResearch.entrySet()) {
@@ -183,10 +196,14 @@ public class ResearchTree{
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         DataInputStream dis = new DataInputStream(bis)){
         id = dis.readByte();
-        long UUIDDown = dis.readLong();
-        long UUIDup = dis.readLong();
-        this.uuid = new UUID(UUIDup, UUIDDown);
-        allTreeUUIDsClient.put(uuid, this);
+        UUID uuid = new UUID(dis.readLong(), dis.readLong());
+        ResearchTree tree = ResearchTree.allTreeUUIDsClient.get(uuid);
+        if(tree == null) {
+            applyTemplate(id);
+            this.uuid = uuid;
+            ResearchTree.allTreeUUIDsClient.put(uuid, this);
+        }
+
         if(dis.readBoolean()) setCurrentProject(allResearch.get(dis.readUTF()));
         while (dis.available() > 0) {
             String name = dis.readUTF();
@@ -241,7 +258,9 @@ public class ResearchTree{
             if(packetType == -1){
                 byte[] treeData = new byte[data.length-1];
                 System.arraycopy(data, 1, treeData, 0, data.length -1);
-                ResearchTree tree = new ResearchTree();
+
+                ResearchTree tree = ResearchTree.allTreeUUIDsClient.get(uuid);
+                if(tree == null) tree = new ResearchTree();
                 tree.loadFromArray(treeData);
                 return;
             }
@@ -253,31 +272,36 @@ public class ResearchTree{
                 researchTree.setCurrentProject(researchTree.allResearch.get(dis.readUTF()));
                 return;
             }
-            if(packetType == 2) {
-                String playerID = dis.readUTF();
-                EntityPlayerMP playerMP = (EntityPlayerMP) MinecraftServer.getServer().getConfigurationManager().playerEntityList.stream().filter(p-> playerID.equals(((EntityPlayerMP) p).getCommandSenderName())).findFirst().orElse(null);
-                if(playerMP == null)return;
-                if(researchTree == null) {
-                    kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, uuid, (byte)-2), playerMP);
-                    return;
-                }
-                byte[] researchTreeData = researchTree.saveToArray();
-                byte[] dataList = new byte[researchTreeData.length+1];
-                System.arraycopy(researchTreeData, 0, dataList, 1, researchTreeData.length);
-                dataList[0] = -1;
-                kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, uuid, dataList), playerMP);
+            if(packetType < 2) return;
+            String playerID = dis.readUTF();
+            EntityPlayerMP playerMP = (EntityPlayerMP) MinecraftServer.getServer().getConfigurationManager().playerEntityList.stream().filter(p-> playerID.equals(((EntityPlayerMP) p).getCommandSenderName())).findFirst().orElse(null);
+            if(playerMP == null)return;
+            if(researchTree == null) {
+                kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, uuid, (byte)-2), playerMP);
+                return;
             }
+            if(packetType == 2) sendTreeData(playerMP, researchTree);
+            if(packetType == 3) researchTree.portableViewerPlayers.add(playerMP);
+            if(packetType == 4) researchTree.portableViewerPlayers.remove(playerMP);
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
+    public static void sendTreeData(EntityPlayerMP playerMP, ResearchTree researchTree){
+        byte[] researchTreeData = researchTree.saveToArray();
+        byte[] dataList = new byte[researchTreeData.length+1];
+        System.arraycopy(researchTreeData, 0, dataList, 1, researchTreeData.length);
+        dataList[0] = -1;
+        kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, researchTree.uuid, dataList), playerMP);
+    }
 
-    public static void sendGetTreeDataPacket(String playerID, UUID treeUUID){
+    /**@param type 2: send data to current player, 3: add current player to viewer list, 4: remove player to viewer list**/
+    public static void sendGetTreeDataPacket(String playerID, UUID treeUUID, byte type){
         try{
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(bos);
-            dos.writeByte(2);
+            dos.writeByte(type);
             dos.writeUTF(playerID);
             dos.close();
             kNetworkHandler.sendToServer(new PacketUUIDAssignedData((byte) 0,treeUUID,bos.toByteArray()));

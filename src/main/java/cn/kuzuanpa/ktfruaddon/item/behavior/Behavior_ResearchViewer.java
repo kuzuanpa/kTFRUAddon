@@ -85,10 +85,11 @@ public class Behavior_ResearchViewer extends IBehavior.AbstractBehaviorDefault {
 
         ResearchTree tree = ResearchTree.allTreeUUIDsClient.get(uuid);
         if(tree == null){
-            ResearchTree.sendGetTreeDataPacket(aPlayer.getCommandSenderName(), uuid);
+            ResearchTree.sendGetTreeDataPacket(aPlayer.getCommandSenderName(), uuid, (byte) 2);
             aPlayer.addChatComponentMessage(new ChatComponentText("Syncing Research Tree Data"));
             return;
         }
+        ResearchTree.sendGetTreeDataPacket(aPlayer.getCommandSenderName(), uuid, (byte) 3);
         FMLCommonHandler.instance().showGuiScreen(new ContainerClientResearchTreeMonitor(tree));
     }
 

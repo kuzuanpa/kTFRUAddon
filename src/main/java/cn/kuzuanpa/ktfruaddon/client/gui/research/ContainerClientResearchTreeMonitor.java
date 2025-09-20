@@ -170,6 +170,12 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		if(keyCode == Keyboard.KEY_ESCAPE)close();
 	}
 
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		ResearchTree.sendGetTreeDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), theTree.uuid, (byte) 4);
+	}
+
 	public class researchButton extends kGuiButtonBase {
 		public researchButton(int id, ResearchProject researchProject) {
 			super(id, researchProject.posX, researchProject.posY, 80, 32, "");

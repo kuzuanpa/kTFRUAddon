@@ -29,6 +29,7 @@ public class ResearchProject {
     public final String desc;
     public final Item iconItem;
     public final int iconItemMeta;
+    public final ResearchTree tree;
     public int posX = 0;
     public int posY = 0;
     public int layer = 0;
@@ -48,6 +49,7 @@ public class ResearchProject {
         this.iconItem = icon;
         this.iconItemMeta = iconMeta;
         this.printItemMeta=(short)printItemMeta;
+        this.tree = tree;
         if(tree != null)tree.addResearchItem(this);
     }
     public ResearchProject setPos(int x, int y){
@@ -116,6 +118,7 @@ public class ResearchProject {
         long consumeAmount = 0;
         for (IResearchTask task : tasks) if (taskType.isInstance(task) && !task.isCompleted()) {
             consumeAmount = task.tryPromoteProgress(consume, dryRun);
+            if(consumeAmount >0)tree.onResearchProjectUpdated(this);
             break;
         }
         if(consumeAmount > 0 && tasks.stream().allMatch(IResearchTask::isCompleted))onCompleted();

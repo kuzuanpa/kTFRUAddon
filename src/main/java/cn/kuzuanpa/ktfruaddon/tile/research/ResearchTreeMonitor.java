@@ -101,10 +101,23 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
         theTree.loadFromArray(aData);
     }
-
+    boolean treeNeedUpdate = false;
     @Override
     public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer) || theTree!=null && (theTree.treeNeedSync || rng(10)==0);
+        boolean result = super.onTickCheck(aTimer) || (theTree!=null && treeNeedUpdate);
+        treeNeedUpdate = false;
+        return result;
+    }
+
+    @Override
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        super.onTick2(aTimer, aIsServerSide);
+        if(aTimer % 40 == 0)theTree.needUpdate = true;
+        if(theTree.needUpdate){
+            treeNeedUpdate = true;
+            theTree.sendDataToViewerPlayers();
+            theTree.needUpdate = false;
+        }
     }
 
     @Override
