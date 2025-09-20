@@ -20,20 +20,14 @@ import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
-import gregapi.code.ItemStackContainer;
-import gregapi.code.ItemStackSet;
 import gregapi.data.CS;
 import gregapi.tileentity.base.TileEntityBase04MultiTileEntities;
-import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFire;
-import net.minecraft.block.BlockRailBase;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -49,7 +43,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static gregapi.data.CS.*;
+import static gregapi.data.CS.T;
+import static gregapi.data.CS.W;
 
 public class utils {
     public static boolean resetTarget(ITileEntityMultiBlockController aController,int aX, int aY, int aZ, int aDesign) {
@@ -287,57 +282,6 @@ public class utils {
     }
     public static int dimID(World world){
         return world.provider.dimensionId;
-    }
-
-    public static int put(ItemStack aStackFrom, @SuppressWarnings("rawtypes") DelegatorTileEntity aTo, ItemStackSet<ItemStackContainer> aFilter, boolean aIgnoreSideFrom, boolean aInvertFilter, boolean aEjectItems, int aMaxMove, int aMinMove) {
-        if (aTo.mTileEntity != null) {
-            if (ST.TE_PIPES && aTo.mTileEntity instanceof cofh.api.transport.IItemDuct) {
-                if (aStackFrom != null && aMinMove <= aStackFrom.stackSize && (aFilter == null || aFilter.contains(aStackFrom, T) != aInvertFilter)) {
-                    // Actually Moving the Stack
-                    ItemStack tStackMoved = ST.amount(Math.min(aStackFrom.stackSize, aMaxMove), aStackFrom);
-                    ItemStack rStackMoved = ((cofh.api.transport.IItemDuct)aTo.mTileEntity).insertItem(aTo.getForgeSideOfTileEntity(), ST.copy(tStackMoved));
-                    int rMoved = (tStackMoved.stackSize - (rStackMoved == null ? 0 : rStackMoved.stackSize));
-                    if (rMoved > 0) {
-                        WD.mark(aTo);
-                        return rMoved;
-                    }
-                }
-                return 0;
-            }
-            if (ST.BC_PIPES && aTo.mTileEntity instanceof buildcraft.api.transport.IInjectable) {
-                if (aStackFrom != null && aMinMove <= aStackFrom.stackSize && (aFilter == null || aFilter.contains(aStackFrom, T) != aInvertFilter) ) {
-                    // Actually Moving the Stack
-                    ItemStack tStackMoved = ST.amount(Math.min(aStackFrom.stackSize, aMaxMove), aStackFrom);
-                    int rMoved = ((buildcraft.api.transport.IInjectable)aTo.mTileEntity).injectItem(ST.copy(tStackMoved), F, aTo.getForgeSideOfTileEntity(), null);
-                    if (rMoved >= aMinMove) {
-                        rMoved = (((buildcraft.api.transport.IInjectable)aTo.mTileEntity).injectItem(ST.amount(rMoved, tStackMoved), T, aTo.getForgeSideOfTileEntity(), null));
-                        WD.mark(aTo);
-                        return rMoved;
-                    }
-                }
-                return 0;
-            }
-        }
-
-        Block aBlock = aTo.getBlock();
-        if (aBlock instanceof BlockRailBase) {
-            // Do not eject shit onto Rails directly.
-        } else if (aBlock.getMaterial() == Material.lava || aBlock instanceof BlockFire || (ST.invalid(aBlock) && aTo.mY < 1)) {
-            if (aStackFrom != null && aMinMove <= aStackFrom.stackSize && (aFilter == null || aFilter.contains(aStackFrom, T) != aInvertFilter)) {
-                // Actually Moving the Stack
-                int rMoved = GarbageGT.trash(ST.amount(Math.min(aStackFrom.stackSize, aMaxMove), aStackFrom));
-                return rMoved;
-            }
-        } else if (!WD.hasCollide(aTo.mWorld, aTo.mX, aTo.mY, aTo.mZ, aBlock)) {
-            if (aEjectItems)
-                if (aStackFrom != null && aMinMove <= aStackFrom.stackSize && (aFilter == null || aFilter.contains(aStackFrom, T) != aInvertFilter)) {
-                    // Actually Moving the Stack
-                    ItemStack tStack = ST.amount(Math.min(aStackFrom.stackSize, aMaxMove), aStackFrom);
-                    ST.place(aTo.mWorld, aTo.mX+0.5, aTo.mY+0.5, aTo.mZ+0.5, tStack);
-                    return tStack.stackSize;
-                }
-        }
-        return 0;
     }
 }
 

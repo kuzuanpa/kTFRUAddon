@@ -99,7 +99,7 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle {
 
     public @Nullable ResearchProject getCurrentProject(){
         if(monitorCoord == null || monitor == null || monitor.isInvalid())return null;
-        return monitor.currentProject;
+        return monitor.theTree.getCurrentProject();
     }
 
 

@@ -16,7 +16,6 @@ package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTaskSimple;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.IWailaTile;
 import gregapi.gui.ContainerClientDefault;
@@ -93,11 +92,14 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
         if(aIsServerSide && slotHas(0) && consuming == null) {
             long count = tryPromoteCurrentProjectProgress(ItemConsumeTaskSimple.class, slot(0), true);
             int consume = (int)Math.min(speed, count);
-            if(consume > 0) {
+            if(consume < 1)return;
+            if(slot(0).stackSize > consume) {
                 consuming = slot(0).copy();
                 consuming.stackSize = consume;
                 slot(0).stackSize -= consume;
-                if(slot(0).stackSize <= 0) slotKill(0);
+            }else {
+                consuming = slot(0);
+                slotKill(0);
             }
         }
 
@@ -105,24 +107,27 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
             progress ++;
             if(progress < interval)return;
             long amount = tryPromoteCurrentProjectProgress(ItemConsumeTaskSimple.class, consuming, false);
-            if(amount < consuming.stackSize) utils.put(consuming, delegator(mFacing), null, true, false, false, 64, 0);
+            if(amount < consuming.stackSize) {
+                consuming.stackSize -= (int) amount;
+                setInventorySlotContents(1, consuming);
+            }
             progress = 0;
             consuming = null;
         }
     }
 
     //Inventory
-    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
     @Override public boolean canDrop(int aInventorySlot) {return T;}
 
-    private static final int[] ACCESSIBLE_SLOTS = new int[] {0};
+    private static final int[] ACCESSIBLE_SLOTS = new int[] {0, 1};
 
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
 
-    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 1;}
 
     @Override
-    public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
+    public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 0;}
 
     @Override
     public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {

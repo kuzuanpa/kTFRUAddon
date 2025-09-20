@@ -28,47 +28,65 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research;
 
+import cn.kuzuanpa.ktfruaddon.api.network.PacketUUIDAssignedData;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.util.UT;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IIcon;
 import org.apache.logging.log4j.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ResearchTree {
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
+
+public class ResearchTree{
+    public ResearchProject getCurrentProject() {
+        return currentProject;
+    }
+
+    public void setCurrentProject(ResearchProject currentProject) {
+        this.currentProject = currentProject;
+    }
 
     public interface IResearchTreeTemplate{
         ResearchTree applyTemplate(ResearchTree tree);
     }
     public static Map<Byte,IResearchTreeTemplate> ResearchTreeTemplate = new HashMap<>();
+    public static Map<UUID, ResearchTree> allTreeUUIDsClient = new HashMap<>();
+    public static Map<UUID, ResearchTree> allTreeUUIDsServer = new HashMap<>();
+    public UUID uuid = UUID.randomUUID();
     public Map<String, ResearchProject> allResearch = new HashMap<>();
 
+    public boolean treeNeedSync = false;
+    protected ResearchProject currentProject = null;
     public byte id;
     public void addResearchItem(ResearchProject item) {
         allResearch.put(item.getId(), item);
     }
 
-    public ResearchTree(byte id){
-        this.id = id;
-        applyTemplate(id);
+    public ResearchTree(){
+
     }
+
     public ResearchProject rootItem;
 
     public boolean applyTemplate(byte id){
+        this.id = id;
         if (ResearchTreeTemplate.get(id) == null)return false;
         ResearchTreeTemplate.get(id).applyTemplate(this);
+        onCreated();
         return true;
     }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public boolean createFromTemplate(byte id){
+        applyTemplate(id);
+        init();
+        return true;
     }
 
     private void removeChildRecursively(ResearchProject current, ResearchProject target) {
@@ -78,13 +96,23 @@ public class ResearchTree {
             removeChildRecursively(child, target);
         }
     }
-    public void init(){
+    public void onCreated(){
         rootItem.isUnlocked = true;
         rootItem.isCompleted = true;
         rootItem.onCompleted();
     }
+    public void init(){
+        if(cpw.mods.fml.common.FMLCommonHandler.instance().getEffectiveSide().isServer()) allTreeUUIDsServer.put(uuid, this);
+    }
+    public void dispose(){
+
+    }
     public NBTTagCompound save(){
         NBTTagCompound tag = new NBTTagCompound();
+        tag.setByte("tempID", id);
+        tag.setLong("UUIDdown", uuid.getLeastSignificantBits());
+        tag.setLong("UUIDup", uuid.getMostSignificantBits());
+        if(getCurrentProject() != null)tag.setString("currentProjectID", getCurrentProject().id);
         allResearch.forEach(((name, item) -> {
             //ONLY save task progress when research not completed
             if(item.isCompleted){
@@ -99,6 +127,11 @@ public class ResearchTree {
         return tag;
     }
     public void load(NBTTagCompound tag){
+        id = tag.getByte("tempID");
+        applyTemplate(id);
+        uuid = new UUID(tag.getLong("UUIDup"), tag.getLong("UUIDdown"));
+        if(tag.hasKey("currentProjectID")) setCurrentProject(allResearch.get(tag.getString("currentProjectID")));
+        init();
         allResearch.forEach(((name, item) -> {
             if(tag.hasKey(name+".c")) item.onCompleted();
             else if(tag.hasKey(name)){
@@ -111,6 +144,10 @@ public class ResearchTree {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(bos)){
             dos.writeByte(id);
+            dos.writeLong(uuid.getLeastSignificantBits());
+            dos.writeLong(uuid.getMostSignificantBits());
+            dos.writeBoolean(getCurrentProject() != null);
+            if(getCurrentProject() != null)dos.writeUTF(getCurrentProject().id);
             for (Map.Entry<String, ResearchProject> entry : allResearch.entrySet()) {
                 String name = entry.getKey();
                 ResearchProject item = entry.getValue();
@@ -144,8 +181,13 @@ public class ResearchTree {
     }
     public void loadFromArray(byte[] bytes) {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        DataInputStream dis = new DataInputStream(bis)){;
+        DataInputStream dis = new DataInputStream(bis)){
         id = dis.readByte();
+        long UUIDDown = dis.readLong();
+        long UUIDup = dis.readLong();
+        this.uuid = new UUID(UUIDup, UUIDDown);
+        allTreeUUIDsClient.put(uuid, this);
+        if(dis.readBoolean()) setCurrentProject(allResearch.get(dis.readUTF()));
         while (dis.available() > 0) {
             String name = dis.readUTF();
             ResearchProject item = allResearch.get(name);
@@ -185,4 +227,74 @@ public class ResearchTree {
         @Override public String getIdentifier() {return "d";}
         @Override public String getDesc() {return "";}
     }
+
+    public static void receiveUUIDAssignedData(UUID uuid, byte @Nullable [] data) {
+        if(data == null)return;
+
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+             DataInputStream dis = new DataInputStream(bis)){
+            byte packetType = dis.readByte();
+            if(packetType == -2) {
+                Minecraft.getMinecraft().thePlayer.sendChatMessage("Research Tree Not Found, your research viewer may unloaded or broken.");
+                return;
+            }
+            if(packetType == -1){
+                byte[] treeData = new byte[data.length-1];
+                System.arraycopy(data, 1, treeData, 0, data.length -1);
+                ResearchTree tree = new ResearchTree();
+                tree.loadFromArray(treeData);
+                return;
+            }
+
+            ResearchTree researchTree = allTreeUUIDsServer.get(uuid);
+
+            if(packetType == 1) {
+                if(researchTree == null)return;
+                researchTree.setCurrentProject(researchTree.allResearch.get(dis.readUTF()));
+                return;
+            }
+            if(packetType == 2) {
+                String playerID = dis.readUTF();
+                EntityPlayerMP playerMP = (EntityPlayerMP) MinecraftServer.getServer().getConfigurationManager().playerEntityList.stream().filter(p-> playerID.equals(((EntityPlayerMP) p).getCommandSenderName())).findFirst().orElse(null);
+                if(playerMP == null)return;
+                if(researchTree == null) {
+                    kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, uuid, (byte)-2), playerMP);
+                    return;
+                }
+                byte[] researchTreeData = researchTree.saveToArray();
+                byte[] dataList = new byte[researchTreeData.length+1];
+                System.arraycopy(researchTreeData, 0, dataList, 1, researchTreeData.length);
+                dataList[0] = -1;
+                kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, uuid, dataList), playerMP);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void sendGetTreeDataPacket(String playerID, UUID treeUUID){
+        try{
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos);
+            dos.writeByte(2);
+            dos.writeUTF(playerID);
+            dos.close();
+            kNetworkHandler.sendToServer(new PacketUUIDAssignedData((byte) 0,treeUUID,bos.toByteArray()));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void sendUpdateCurrentProjectPacket(String projectID){
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             DataOutputStream dos = new DataOutputStream(bos)){
+            dos.writeByte(1);
+            dos.writeUTF(projectID);
+            dos.flush();
+            kNetworkHandler.sendToServer(new PacketUUIDAssignedData((byte) 0,uuid,bos.toByteArray()));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }

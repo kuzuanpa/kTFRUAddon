@@ -28,16 +28,20 @@
 
 package cn.kuzuanpa.ktfruaddon.item.behavior;
 
+import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
+import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
+import cpw.mods.fml.common.FMLCommonHandler;
 import gregapi.item.multiitem.MultiItem;
 import gregapi.item.multiitem.behaviors.IBehavior;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
+
+import java.util.UUID;
 
 import static gregapi.data.CS.T;
 
@@ -48,8 +52,8 @@ public class Behavior_ResearchViewer extends IBehavior.AbstractBehaviorDefault {
     public boolean onItemUse(MultiItem aItem, ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, byte aSide, float hitX, float hitY, float hitZ) {
         if (aPlayer instanceof EntityPlayerMP) {
             if(aPlayer.isSneaking()) {
-                if (aWorld.getTileEntity(aX, aY, aZ) instanceof ResearchTreeMonitor) bindStackToPos(aStack, aWorld, aX, aY, aZ);
-                else if(aStack.hasTagCompound()) aStack.getTagCompound().removeTag("x");
+                if (aWorld.getTileEntity(aX, aY, aZ) instanceof ResearchTreeMonitor) bindStackTo(aStack, (ResearchTreeMonitor) aWorld.getTileEntity(aX, aY, aZ));
+                else if(aStack.hasTagCompound()) aStack.getTagCompound().removeTag("UUIDup");
             }
             return T;
         }
@@ -58,33 +62,34 @@ public class Behavior_ResearchViewer extends IBehavior.AbstractBehaviorDefault {
 
     @Override
     public ItemStack onItemRightClick(MultiItem aItem, ItemStack aStack, World aWorld, EntityPlayer aPlayer) {
-        if (aPlayer instanceof EntityPlayerMP && !aPlayer.isSneaking()) tryOpenViewer(aPlayer, aStack);
+        if (aWorld.isRemote && !aPlayer.isSneaking()) tryOpenViewer(aPlayer, aStack);
         return aStack;
     }
 
-    public void bindStackToPos(ItemStack aStack, World aWorld, int aX, int aY, int aZ){
+    public void bindStackTo(ItemStack aStack, ResearchTreeMonitor treeMonitor){
         NBTTagCompound tag = aStack.getTagCompound();
         if(tag == null) tag = new NBTTagCompound();
-        tag.setInteger("x", aX);
-        tag.setInteger("y", aY);
-        tag.setInteger("z", aZ);
-        tag.setInteger("w", aWorld.provider.dimensionId);
+        if(treeMonitor.theTree == null)return;
+        tag.setLong("UUIDup", treeMonitor.theTree.uuid.getMostSignificantBits());
+        tag.setLong("UUIDdown", treeMonitor.theTree.uuid.getLeastSignificantBits());
         aStack.setTagCompound(tag);
     }
 
     public void tryOpenViewer(EntityPlayer aPlayer, ItemStack aStack){
         NBTTagCompound tag = aStack.getTagCompound();
-        if(tag == null || !tag.hasKey("x")) return;
+        if(tag == null || !tag.hasKey("UUIDup")) return;
 
-        int x = tag.getInteger("x");
-        int y = tag.getInteger("y");
-        int z = tag.getInteger("z");
-        World w = DimensionManager.getWorld(tag.getInteger("w"));
-        if (w == null)return;
-        TileEntity tile = w.getTileEntity(x, y, z);
-        if(!(tile instanceof ResearchTreeMonitor) || !((ResearchTreeMonitor) tile).allowInteraction(aPlayer)) return;
+        long UUIDup = tag.getLong("UUIDup");
+        long UUIDdown = tag.getLong("UUIDdown");
+        UUID uuid = new UUID(UUIDup, UUIDdown);
 
-        ((ResearchTreeMonitor) tile).openGUI(aPlayer);
+        ResearchTree tree = ResearchTree.allTreeUUIDsClient.get(uuid);
+        if(tree == null){
+            ResearchTree.sendGetTreeDataPacket(aPlayer.getCommandSenderName(), uuid);
+            aPlayer.addChatComponentMessage(new ChatComponentText("Syncing Research Tree Data"));
+            return;
+        }
+        FMLCommonHandler.instance().showGuiScreen(new ContainerClientResearchTreeMonitor(tree));
     }
 
 }

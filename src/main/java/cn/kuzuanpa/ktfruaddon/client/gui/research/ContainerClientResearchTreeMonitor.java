@@ -33,21 +33,16 @@ import cn.kuzuanpa.kGuiLib.client.anime.animeMoveSlowIn;
 import cn.kuzuanpa.kGuiLib.client.anime.animeScaleLinear;
 import cn.kuzuanpa.kGuiLib.client.anime.animeScaleQuad;
 import cn.kuzuanpa.kGuiLib.client.anime.shortcut.animeTransparency;
-import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
+import cn.kuzuanpa.kGuiLib.client.kGuiScreenBase;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
-import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
+import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -55,24 +50,20 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
-import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 @SideOnly(Side.CLIENT)
-public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implements IHiddenNei {
-	private ContainerCommonResearchTreeMonitor mContainer;
+public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implements IHiddenNei {
 
-	public ContainerClientResearchTreeMonitor(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID) {
-		super(new ContainerCommonResearchTreeMonitor(aInventoryPlayer, aTileEntity,aGUIID));
-
-		this.mContainer=(ContainerCommonResearchTreeMonitor)inventorySlots;
+	public ContainerClientResearchTreeMonitor(ResearchTree researchTree) {
+		super();
+		theTree = researchTree;
 	}
+	ResearchTree theTree;
 	final ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
 	final ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
-	final Random rng = new Random();
 	public ResearchProject pointingItem = null;
 	public ResearchProject selectedItem = null;
 	public ResearchCommonElements.CurrentPanel currentPanel= null;
@@ -80,23 +71,18 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 	public ResearchCommonElements.SidePanel sidePanelA = null;
 	public ResearchCommonElements.SidePanel sidePanelB = null;
 	public float xOffset=0, yOffset=0, xOld=0, yOld =0;
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		mc.getTextureManager().bindTexture(background);
-		GL11.glColor4f(1,1,1,0.1f);
-		this.drawTexturedModalRect(0,0, 0, 14, width, height);
-	}
 
 	@Override
 	public void drawScreen2(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-		tickMouseOffset();
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glColor4f(1,1,1,1);
-
 		pointingItem = null;
+		//draw buttons(they will update some variable)
 		super.drawScreen2(p_73863_1_, p_73863_2_, p_73863_3_);
 
+		tickMouseOffset();
+		drawBackground();
 		//Just pointed on some item
 		if(hoveringPanel.researchProject == null && pointingItem != null)hoveringPanel.join(p_73863_1_,p_73863_2_);
 		//Just not point on any item
@@ -104,7 +90,13 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 
 		hoveringPanel.update(pointingItem, selectedItem);
 
-		currentPanel.currentProject = ((ResearchTreeMonitor) mContainer.mTileEntity).currentProject;
+		currentPanel.currentProject = theTree.getCurrentProject();
+	}
+
+	public void drawBackground(){
+		mc.getTextureManager().bindTexture(background);
+		GL11.glColor4f(1,1,1,0.1f);
+		this.drawTexturedModalRect(0,0, 0, 14, width, height);
 	}
 
 	int mouseLastX=0 , mouseLastY=0;
@@ -134,7 +126,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 	public void addButtons() {
 
 		AtomicInteger i = new AtomicInteger();
-		((ResearchTreeMonitor)mContainer.mTileEntity).theTree.allResearch.forEach((s, researchItem) -> {
+		theTree.allResearch.forEach((s, researchItem) -> {
 			researchIDToIntIDMap.put(s,i.get());
 			int rate = 400;
 			int layer = researchItem.layer;
@@ -155,9 +147,8 @@ public class ContainerClientResearchTreeMonitor extends kGuiContainerBase implem
 	@Override
 	public boolean onButtonPressed(GuiButton button, int mouseX, int mouseY) {
 		if(button instanceof researchButton && researchIDToIntIDMap.containsValue(button.id)){
-			TileEntity t = (TileEntity) mContainer.mTileEntity;
 			if(selectedItem == ((researchButton)button).researchProject){
-				if(selectedItem.isUnlocked)kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(t.getWorldObj()), t.xCoord,t.yCoord,t.zCoord,button.id, utils.UTFToBytes(selectedItem.getId())));
+				theTree.sendUpdateCurrentProjectPacket(selectedItem.getId());
 				return true;
 			}
 			selectedItem = ((researchButton)button).researchProject;

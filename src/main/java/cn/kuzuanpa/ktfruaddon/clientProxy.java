@@ -16,17 +16,18 @@
 package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
+import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
+import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
 import cn.kuzuanpa.ktfruaddon.client.render.*;
-import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
 import cn.kuzuanpa.ktfruaddon.tile.machine.TFCPresser;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidMiner;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.DummyCrucibleScreen;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.ElectromagnetCrucible;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMachineModel;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidMiner;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.DummyCrucibleScreen;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -39,6 +40,7 @@ import net.minecraftforge.common.MinecraftForge;
 import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.isAdvancedRocketryTFRU;
 
 public class clientProxy extends commonProxy {
+    ResearchTree researchTree = null;
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
     }

@@ -89,8 +89,6 @@ public class ResearchTrees {
                     ResearchProject p = new ResearchProject(tree, "", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
-
-                    tree.init();
             return tree;
         }
         );

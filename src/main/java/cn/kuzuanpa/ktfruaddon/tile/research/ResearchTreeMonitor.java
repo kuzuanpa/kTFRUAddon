@@ -39,17 +39,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 
 public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick {
-    public boolean treeNeedSync = false;
     @Override public boolean isUseableByPlayerGUI(EntityPlayer aPlayer) {return !isDead() && allowInteraction(aPlayer);}
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
-    public ResearchTree theTree = new ResearchTree((byte)0);
-    public ResearchProject currentProject = null;
+    public ResearchTree theTree = new ResearchTree();
 
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         aNBT.setTag("researchTree",  theTree.save());
-        aNBT.setString("current", currentProject==null?"null":currentProject.id);
     }
 
     @Override
@@ -65,12 +62,14 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if(aNBT.hasKey("researchTree"))theTree.load(aNBT.getCompoundTag("researchTree"));
-        if(aNBT.hasKey("current")) currentProject = theTree.allResearch.get(aNBT.getString("current"));
+        if(aNBT.hasKey("researchTree"))
+            theTree.load(aNBT.getCompoundTag("researchTree"));
+        else if(worldObj != null)
+            theTree.createFromTemplate((byte)0);
     }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerClientResearchTreeMonitor(aPlayer.inventory, this, aGUIID);
+        return new ContainerClientResearchTreeMonitor(theTree);
     }
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerCommonResearchTreeMonitor(aPlayer.inventory, this,aGUIID);
@@ -85,23 +84,7 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     }
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        byte[] data;
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             DataOutputStream dos = new DataOutputStream(bos)){
-            dos.writeByte(getDirectionData());
-
-            byte[] treeData = theTree.saveToArray();
-            dos.writeInt(treeData.length);
-            dos.write(treeData);
-            dos.writeUTF(currentProject==null?"null":currentProject.id);
-
-            dos.flush();
-            data = bos.toByteArray();
-        }catch (IOException e){
-            e.printStackTrace();
-            data = new byte[0];
-        }
-        return getClientDataPacketByteArrayLong(aSendAll, data);
+        return getClientDataPacketByteArrayLong(aSendAll, theTree.saveToArray());
     }
 
     @Override
@@ -116,22 +99,12 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
-        try(ByteArrayInputStream bis = new ByteArrayInputStream(aData);
-        DataInputStream dis = new DataInputStream(bis)){
-            setDirectionData(dis.readByte());
-
-            byte[] treeData = new byte[dis.readInt()];
-            dis.readFully(treeData);
-            theTree.loadFromArray(treeData);
-            currentProject = theTree.allResearch.get(dis.readUTF());
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        theTree.loadFromArray(aData);
     }
 
     @Override
     public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer) || treeNeedSync || rng(10)==0;
+        return super.onTickCheck(aTimer) || theTree!=null && (theTree.treeNeedSync || rng(10)==0);
     }
 
     @Override
@@ -143,7 +116,7 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
             String id = dis.readUTF();
             ResearchProject project = theTree.allResearch.get(id);
             if(project == null || !project.isUnlocked)return;
-            currentProject = project;
+            theTree.setCurrentProject(project);
         } catch (IOException e) {}
     }
     // Icons
