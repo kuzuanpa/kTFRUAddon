@@ -113,6 +113,7 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if(aTimer % 40 == 0)theTree.needUpdate = true;
+        theTree.update();
         if(theTree.needUpdate){
             treeNeedUpdate = true;
             theTree.sendDataToViewerPlayers();

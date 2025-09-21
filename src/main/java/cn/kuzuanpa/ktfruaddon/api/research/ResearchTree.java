@@ -36,6 +36,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,7 @@ public class ResearchTree{
         this.currentProject = currentProject;
     }
 
+    public long lastUpdateTick = 0;
     public void onResearchProjectUpdated(ResearchProject project){
         needUpdate = true;
     }
@@ -87,6 +89,9 @@ public class ResearchTree{
 
     }
 
+    public void update(){
+        lastUpdateTick = MinecraftServer.getServer().getTickCounter();
+    }
     public ResearchProject rootItem;
 
     public boolean applyTemplate(byte id){
@@ -123,8 +128,8 @@ public class ResearchTree{
     public NBTTagCompound save(){
         NBTTagCompound tag = new NBTTagCompound();
         tag.setByte("tempID", id);
-        tag.setLong("UUIDdown", uuid.getLeastSignificantBits());
         tag.setLong("UUIDup", uuid.getMostSignificantBits());
+        tag.setLong("UUIDdown", uuid.getLeastSignificantBits());
         if(getCurrentProject() != null)tag.setString("currentProjectID", getCurrentProject().id);
         allResearch.forEach(((name, item) -> {
             //ONLY save task progress when research not completed
@@ -197,10 +202,10 @@ public class ResearchTree{
         DataInputStream dis = new DataInputStream(bis)){
         id = dis.readByte();
         UUID uuid = new UUID(dis.readLong(), dis.readLong());
+        this.uuid = uuid;
         ResearchTree tree = ResearchTree.allTreeUUIDsClient.get(uuid);
         if(tree == null) {
             applyTemplate(id);
-            this.uuid = uuid;
             ResearchTree.allTreeUUIDsClient.put(uuid, this);
         }
 
@@ -251,8 +256,12 @@ public class ResearchTree{
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
              DataInputStream dis = new DataInputStream(bis)){
             byte packetType = dis.readByte();
+            if(packetType == -3) {
+                Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Research Tree Not update for a while, your research viewer may unloaded or broken."));
+                return;
+            }
             if(packetType == -2) {
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("Research Tree Not Found, your research viewer may unloaded or broken.");
+                Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Research Tree Not Found, your research viewer may unloaded or broken."));
                 return;
             }
             if(packetType == -1){
@@ -281,7 +290,10 @@ public class ResearchTree{
                 return;
             }
             if(packetType == 2) sendTreeData(playerMP, researchTree);
-            if(packetType == 3) researchTree.portableViewerPlayers.add(playerMP);
+            if(packetType == 3) {
+                researchTree.portableViewerPlayers.add(playerMP);
+                if(MinecraftServer.getServer().getTickCounter() - researchTree.lastUpdateTick > 20)kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData((byte) 0, uuid, (byte)-3), playerMP);
+            }
             if(packetType == 4) researchTree.portableViewerPlayers.remove(playerMP);
         }catch (IOException e){
             e.printStackTrace();
