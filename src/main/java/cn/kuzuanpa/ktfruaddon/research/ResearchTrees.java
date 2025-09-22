@@ -66,7 +66,7 @@ public class ResearchTrees {
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject k = new ResearchProject(tree, "半导体制冷", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
+                    ResearchProject k = new ResearchProject(tree, "半导体制冷", "", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
@@ -78,15 +78,15 @@ public class ResearchTrees {
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject n = new ResearchProject(tree, "单晶硅制造", "研究如何利用激光的极度精确集中的能量加工物品", Items.paper, 0, 5)
+                    ResearchProject n = new ResearchProject(tree, "单晶硅制造", "", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject o = new ResearchProject(tree, "低级电路设计", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
+                    ResearchProject o = new ResearchProject(tree, "低级电路设计", "", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject p = new ResearchProject(tree, "", "利用已知的电解原理进行电力储存", Items.paper, 0, 5)
+                    ResearchProject p = new ResearchProject(tree, "", "", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
             return tree;
