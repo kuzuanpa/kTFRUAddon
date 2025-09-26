@@ -7,17 +7,19 @@ buildscript {
         }
     }
     dependencies {
-        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {
-            changing = true
-        }
+        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') 
     }
 }
 
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id("dev.skidfuscator") version "0.1.4"
 }
 
+skidfuscator {
+    skidfuscatorVersion = "latest"
+}
 apply plugin: 'forge'
 
 // These settings allow you to choose what version of Java you want to be compatible with. Forge 1.7.10 runs on Java 6 to 8.
@@ -25,6 +27,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name = "forge"
         url = "https://maven.minecraftforge.net/"
@@ -39,7 +42,7 @@ repositories {
     }
     maven {
         name = "gtnh"
-        url = "http://jenkins.usrv.eu:8081/nexus/content/groups/public/"
+        url = "https://nexus.gtnewhorizons.com/repository/releases/"
         allowInsecureProtocol = true
     }
 }
@@ -87,6 +90,17 @@ dependencies {
     implementation "openmods:OpenModsLib:1.7.10-0.10:deobf"
     implementation "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
     implementation "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
+
+    implementation "cn.kuzuanpa:gregtech6-TFRU:6.17.05.1:dev"
+    implementation "cn.kuzuanpa:AdvancedRocketry-TFRU:1.4.1:dev"
+    implementation "cn.kuzuanpa:TFCraft-TFRU:0.82.1:dev"
+    implementation "cn.kuzuanpa:kguilib:1.2.1:dev"
+    implementation "cn.kuzuanpa:Botania-TFRU:1.3.2:dev"
+    implementation "cn.kuzuanpa:LibVulpes-TFRU:0.2.10:universal"
+    implementation "cn.kuzuanpa:Draconic-Evolution-TFRU:1.0.3:dev"
+    implementation "cn.kuzuanpa:ForestryMC-TFRU:4.2.1.0:dev"
+    implementation "cn.kuzuanpa:TFCTech-TFRU:0.3.0:dev"
+
 }
 
 processResources {
@@ -135,7 +149,8 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-        // Add any other artifacts here that you would like to publish!
+            groupId = 'cn.kuzuanpa'
+            // Add any other artifacts here that you would like to publish!
             artifact(jar) {
                 builtBy build
             }
@@ -150,6 +165,7 @@ publishing {
 
     // This block selects the repositories you want to publish to.
     repositories {
+        mavenLocal()
         // Add the repositories you want to publish to here.
     }
 }
