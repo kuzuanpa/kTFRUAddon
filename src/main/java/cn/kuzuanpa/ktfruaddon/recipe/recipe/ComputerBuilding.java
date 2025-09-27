@@ -18,6 +18,7 @@ import cn.kuzuanpa.ktfruaddon.api.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.material.matList;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.*;
 import gregapi.oredict.OreDictManager;
@@ -27,10 +28,39 @@ import gregapi.util.ST;
 import static gregapi.data.CS.*;
 
 public class ComputerBuilding {
-    public static void init(){
-        MultiTileEntityRegistry gRegistry = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
-        MultiTileEntityRegistry kRegistry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
+    static MultiTileEntityRegistry gRegistry = GTTileEntityRegistry.gregtech;
+    static MultiTileEntityRegistry kRegistry = GTTileEntityRegistry.ktfruaddon;
 
+    public static void init(){
+        initParts();
+        initChemicals();
+        initEDA();
+        initPurify();
+        initBoule();
+        initWafer();
+        initMaskAlign();
+        initDevelop();
+        initHardBake();
+        initDoping();
+        initCheck();
+        initCutting();
+        initPackaging();
+        initAssembling0();
+        initAssembling1();
+        initDowngrading();
+    }
+
+    public static void initParts(){
+        //Boards
+        recipeMaps.LaserCutter.addRecipe2(F,64,140 ,ST.tag(1),IL.Circuit_Plate_Copper.get(1),ZL_FS,ZL_FS,ItemList.RAMBoardT1.get(14));
+        recipeMaps.LaserCutter.addRecipe2(F,64,400 ,ST.tag(1),IL.Circuit_Plate_Gold.get(1),ZL_FS,ZL_FS,ItemList.RAMBoardT2.get(14));
+        recipeMaps.LaserCutter.addRecipe2(F,64,1000,ST.tag(1),IL.Circuit_Plate_Platinum.get(1),ZL_FS,ZL_FS,ItemList.RAMBoardT3.get(14));
+
+        recipeMaps.LaserCutter.addRecipe2(F,64,140 ,ST.tag(0),IL.Circuit_Plate_Copper.get(1),ZL_FS,ZL_FS,ItemList.CPUBoardT1.get(25));
+        recipeMaps.LaserCutter.addRecipe2(F,64,400 ,ST.tag(0),IL.Circuit_Plate_Gold.get(1),ZL_FS,ZL_FS,ItemList.CPUBoardT2.get(25));
+        recipeMaps.LaserCutter.addRecipe2(F,64,1000,ST.tag(0),IL.Circuit_Plate_Platinum.get(1),ZL_FS,ZL_FS,ItemList.CPUBoardT3.get(25));
+    }
+    public static void initChemicals(){
 //Photoresist
         recipeMaps.HeatMixer.addRecipeX(F,32 ,120, ST.array(OP.dust.mat(matList.Naphthalene.get(), 1)),FL.array(MT.Cl.gas(U5,false),FL.Water.make(200)),FL.array(MT.HCl.gas(U5,false)), matList.Naphthalenol.getDust(1));
         RM.           Mixer    .addRecipeX(F,100,80, ST.array(OP.dust.mat(matList.Naphthalenol.get(), 1),OP.dust.mat(MT.NaNO3,1)),FL.array(MT.HCl.gas(U5,false)),ZL_FS, matList.DiazoNaphthol.getDust(1));
@@ -49,7 +79,8 @@ public class ComputerBuilding {
 //Colloid
         RM.           Mixer    .addRecipe2(F,120,120,OP.dust.mat(MT.NaOH, 4),OP.dust.mat(matList.OleicAcid.mat,4),FL.array(FL.DistW.make(100),flList.Toluene.make(1000)),FL.array(flList.NegativeColloid.make(1000)),ZL_IS);
 
-
+    }
+    public static void initEDA(){
 //EDA 设计电路 EU
         recipeMaps.EDA.addRecipeX(T,16,36000, ST.array(IL.Circuit_Good.get(0), gRegistry.getItem(10102,0),gRegistry.getItem(10112,0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),ZL_FS,ItemList.CPUPhotomask200um.get(1));
         recipeMaps.EDA.addRecipeX(T,16,18000, ST.array(IL.Circuit_Good.get(0),IL.Circuit_Part_Good.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.CircuitPartPhotomaskT3.get(1));
@@ -86,16 +117,19 @@ public class ComputerBuilding {
 
         //recipeMaps.EDA.addRecipeX(T,16,288000, ST.array(IL.Circuit_Master.get(0), gRegistry.getItem(10105,0),gRegistry.getItem(10115,0),gRegistry.getItem(10044,0),ItemList.CPUGT1090.get(0),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),ZL_FS,ItemList.InterLayerPhotomask32nm.get(1));
         //recipeMaps.EDA.addRecipeX(T,16,216000, ST.array(IL.Circuit_Master.get(0),ST.make(MD.AE,"item.ItemMultiMaterial",0,23),ST.make(MD.AE,"item.ItemMultiMaterial",0,24),ST.make(MD.AE,"item.ItemMultiMaterial",0,22),OP.paneGlass.mat(MT.Black,1)), FL.array(MT.HF.gas(U100,F)),FL.array(ZL_FS),ItemList.InterLayerPhotomask14nm.get(1));
-
+    }
+    public static void initPurify(){
 //Purify Silicon
-    //Method1
+        //Method1
         recipeMaps.HeatMixer.addRecipe2(F,80,10,OP.dust.mat(MT.Si,1),OP.dust.mat(MT.Mg,2),ZL_FS,ZL_FS,matList.MagnesiumSilicide.getDust(1));
         recipeMaps.HeatMixer.addRecipe1(F,120,60,OP.dust.mat(MT.NaCl,1),FL.array(MT.NH3.gas(U,false),FL.Water.make(1000)),ZL_FS,OP.dust.mat(MT.NaOH,1),matList.AmmoniumChloride.getDust(1));
         RM           .Mixer    .addRecipe2(F,150,20,OP.dust.mat(matList.MagnesiumSilicide.mat, 3),matList.AmmoniumChloride.getDust(12),ZL_FS,FL.array(MT.NH3.gas(12*U,false),flList.Silane.make(3000)),OP.dust.mat(MT.MgCl2,6));
-    //Method2
+        //Method2
         recipeMaps.HeatMixer.addRecipe0(F,290,10,FL.array(MT.H2SiF6.liquid(3*U,false)),FL.array(flList.SiliconTetrafluoride.make(1000),MT.HF.gas(2*U,false)),ZL_IS);
         RM           .Mixer    .addRecipe2(F,380,20,OP.dust.mat(MT.Na,1),OP.dust.mat(MT.Al,1),FL.array(FL.Hydrogen.make(2000)),FL.array(flList.SodiumAluminate.make(1000)),OP.dust.mat(matList.SodiumAluminiumHydride.mat, 1));
         recipeMaps.HeatMixer.addRecipe1(F,410,40,matList.SodiumAluminiumHydride.getDust(1),FL.array(flList.SiliconTetrafluoride.make(1000)),FL.array(flList.Silane.make(1000)), OP.dust.mat(MT.Na3AlF6,1));
+    }
+    public static void initBoule(){
 
 //Make Boule 制作单晶硅 HU
         RM.CrystallisationCrucible.addRecipe1(T,16,36000,OP.dustDiv72.mat(MT.Si,1),FL.array(FL.Nitrogen.make(80000),MT.Si.liquid(U*4,false)),FL.array(ZL_FS),OP.bouleGt.mat(MT.Si,1));
@@ -116,6 +150,8 @@ public class ComputerBuilding {
         recipeMaps.LaserCutter.addRecipeX(T,2048,2000, ST.array(ItemList.MoO2Boule.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.MoO2PlateT1.get(9));
         recipeMaps.LaserCutter.addRecipeX(T,2048,6000, ST.array(ItemList.MoO2BoulePure.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.MoO2PlateT2.get(9));
 
+    }
+    public static void initWafer(){
 //Clean 清洗 TU
         //T1 skip clean
         RM.Bath.addRecipeX(T,0,800, ST.array( ItemList.SiliconPlateT2.get(1)),FL.array(FL.DistW.make(100)/*TODO*/),FL.array(ZL_FS), ItemList.SiliconPlateCleanedT2.get(1));
@@ -143,7 +179,8 @@ public class ComputerBuilding {
 
         RM.Drying.addRecipeX(T,16,600, ST.array(ItemList.MoO2PlateCoatedT1.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.MoO2PlateSoftBakedT1.get(1));
         RM.Drying.addRecipeX(T,16,600, ST.array(ItemList.MoO2PlateCoatedT2.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.MoO2PlateSoftBakedT2.get(1));
-
+    }
+    public static void initMaskAlign(){
 //MaskAlign 光刻 EU+LU
         recipeMaps.MaskAligner.addRecipeX(T,   128, 4000, ST.array(ItemList.SiliconPlateCoatedT1   .get(1),ItemList.CPUPhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer200um.get(1));
         recipeMaps.MaskAligner.addRecipeX(T,   256, 4000, ST.array(ItemList.SiliconPlateCoatedT1   .get(1),ItemList.CPUPhotomask72um .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWafer72um .get(1));
@@ -173,7 +210,8 @@ public class ComputerBuilding {
 
         recipeMaps.MaskAligner.addRecipeX(T, 180, 3000, ST.array(ItemList.SiliconPlateCoatedT1.get(1),ItemList.DiodePhotomask200um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.DiodeWafer200um.get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 842, 9000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.DiodePhotomask28um.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.DiodeWafer28um.get(1));
-
+    }
+    public static void initDevelop(){
 //Develop 显影 TU
         RM.Bath.addRecipeX(T,0, 400, ST.array(ItemList.CPUWafer200um.get(1)),FL.array(flList.NegativeColloid.make(100)),FL.array(ZL_FS), ItemList.CPUWafer200umDeveloped.get(1));
         RM.Bath.addRecipeX(T,0, 400, ST.array(ItemList.CPUWafer72um.get(1)),FL.array(flList.NegativeColloid.make(100)),FL.array(ZL_FS), ItemList.CPUWafer72umDeveloped.get(1));
@@ -203,7 +241,8 @@ public class ComputerBuilding {
 
         RM.Bath.addRecipeX(T,0,400 , ST.array(ItemList.DiodeWafer200um.get(1)),FL.array(flList.NegativeColloid.make(100)),FL.array(ZL_FS), ItemList.DiodeWafer200umDeveloped.get(1));
         RM.Bath.addRecipeX(T,0,1200, ST.array(ItemList. DiodeWafer28um.get(1)),FL.array(flList.NegativeColloid.make(100)),FL.array(ZL_FS), ItemList. DiodeWafer28umDeveloped.get(1));
-
+    }
+    public static void initHardBake(){
 //HardBake 除胶 HU
         RM.add_smelting(ItemList.CPUWafer200umDeveloped.get(1),ItemList.CPUWafer200umHardBaked.get(1),100);
         RM.add_smelting(ItemList. CPUWafer72umDeveloped.get(1),ItemList. CPUWafer72umHardBaked.get(1),150);
@@ -233,7 +272,8 @@ public class ComputerBuilding {
 
         RM.add_smelting(ItemList.DiodeWafer200umDeveloped.get(1), ItemList.DiodeWafer200umHardBaked.get(1),200);
         RM.add_smelting(ItemList. DiodeWafer28umDeveloped.get(1), ItemList. DiodeWafer28umHardBaked.get(1),250);
-
+    }
+    public static void initDoping(){
 //Dope 掺杂 TU
         RM.Lightning.addRecipeX(T,32,400, ST.array(ItemList.CPUWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer200umDoped.get(1));
         RM.Lightning.addRecipeX(T,32,400, ST.array(ItemList.CPUWafer72umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.CPUWafer72umDoped.get(1));
@@ -263,7 +303,8 @@ public class ComputerBuilding {
 
         RM.Lightning.addRecipeX(T,32,400, ST.array(ItemList.DiodeWafer200umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList.DiodeWafer200umDoped.get(1));
         RM.Lightning.addRecipeX(T,32,320, ST.array(ItemList. DiodeWafer28umHardBaked.get(1),OP.dustDiv72.mat(MT.B,1),OP.dustDiv72.mat(MT.P,1)),FL.array(FL.DistW.make(100)),FL.array(ZL_FS), ItemList. DiodeWafer28umDoped.get(1));
-
+    }
+    public static void initCheck(){
 //Check 检测 EU
         recipeMaps.WaferTester.addRecipeX(T,60  ,400, ST.array(ItemList.CPUWafer200umDoped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUWafer200umChecked.get(1));
         recipeMaps.WaferTester.addRecipeX(T,150 ,400, ST.array(ItemList.CPUWafer72umDoped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUWafer72umChecked.get(1));
@@ -294,6 +335,9 @@ public class ComputerBuilding {
         recipeMaps.WaferTester.addRecipeX(T,120 ,400, ST.array(ItemList.DiodeWafer200umDoped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.DiodeWafer200umChecked.get(1));
         recipeMaps.WaferTester.addRecipeX(T,200 ,400, ST.array(ItemList. DiodeWafer28umDoped.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList. DiodeWafer28umChecked.get(1));
 
+    }
+
+    public static void initCutting(){
 //Cut into Die 切割 LU
         recipeMaps.LaserCutter.addRecipeX(T, 120, 400,new long[]{3500,1200},    ST.array(ItemList.CPUWafer200umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3386.get(10),ItemList.CPUDieTF3386S.get(7));
         recipeMaps.LaserCutter.addRecipeX(T, 250, 400,new long[]{2000,800},     ST.array(ItemList. CPUWafer72umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.CPUDieTF3586.get(12),ItemList.CPUDieTF3586S.get(5));
@@ -323,9 +367,11 @@ public class ComputerBuilding {
 
         recipeMaps.LaserCutter.addRecipeX(T,170,400,new long[]{4800,4800}, ST.array(ItemList.DiodeWafer200umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.DiodeT2Part.get(64), ItemList.DiodeT2Part.get(24));
         recipeMaps.LaserCutter.addRecipeX(T,440,400,new long[]{3200,3200}, ST.array(ItemList. DiodeWafer28umChecked.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.DiodeT3Part.get(64), ItemList.DiodeT3Part.get(24));
+    }
+    public static void initPackaging(){
 
 //Packaging 封装 EU
-    //CPU
+        //CPU
         recipeMaps.Assembler.addRecipeX(F,90 ,280,ST.array(ItemList.CPUBoardT1.get(1),ItemList.CPUDieTF3386 .get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUTF3386 .get(1));
         recipeMaps.Assembler.addRecipeX(F,128,280,ST.array(ItemList.CPUBoardT1.get(1),ItemList.CPUDieTF3386S.get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUTF3386S.get(1));
         recipeMaps.Assembler.addRecipeX(F,200,280,ST.array(ItemList.CPUBoardT1.get(1),ItemList.CPUDieTF3586 .get(1)),FL.array(MT.SolderingAlloy.liquid(U8,F)),ZL_FS,ItemList.CPUTF3586 .get(1));
@@ -348,13 +394,13 @@ public class ComputerBuilding {
         recipeMaps.Assembler.addRecipeX(F,620,10800,ST.array(ST.tag(1), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(2)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v3.get(1));
         recipeMaps.Assembler.addRecipeX(F,700,7800 ,ST.array(ST.tag(0), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3680v4.get(1));
         recipeMaps.Assembler.addRecipeX(F,780,16000,ST.array(ST.tag(1), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(2),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3699v4.get(1));
-        
+
         recipeMaps.Assembler.addRecipeX(F,700,12000,ST.array(ST.tag(10), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(1),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3680v3E.get(1));
         recipeMaps.Assembler.addRecipeX(F,780,13000,ST.array(ST.tag(11), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v3.get(2),ItemList.InterLayerT1.get(1)),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.CPUGT3699v3E.get(1));
         recipeMaps.Assembler.addRecipeX(F,700,18000,ST.array(ST.tag(10), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(1),ItemList.InterLayerT2.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3680v4E.get(1));
         recipeMaps.Assembler.addRecipeX(F,780,20000,ST.array(ST.tag(11), ItemList.CPUBoardT3.get(1),ItemList.CPUDieGT3680v4.get(2),ItemList.InterLayerT2.get(1)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.CPUGT3699v4E.get(1));
 
-    //RAM
+        //RAM
         recipeMaps.Assembler.addRecipeX(F,42 ,80 ,ST.array(ST.tag(0),ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K  .get(4 )),FL.array(MT.SolderingAlloy.liquid(U4,F)),ZL_FS,ItemList.RAMBar2K4 .get(1));
         recipeMaps.Assembler.addRecipeX(F,50 ,300,ST.array(ST.tag(1),ItemList.RAMBoardT1.get(1),ItemList.RAMDie2K  .get(8 )),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.RAMBar2K8 .get(1));
 
@@ -388,6 +434,11 @@ public class ComputerBuilding {
         recipeMaps.Assembler.addRecipeX(F,4400,300 ,ST.array(ST.tag(1),ItemList.RAMBoardT2.get(1),ItemList.RAMDie2G  .get(8 )),FL.array(MT.SolderingAlloy.liquid(U2  ,F)),ZL_FS,ItemList.RAMBar2G8 .get(1));
         recipeMaps.Assembler.addRecipeX(F,4900,900 ,ST.array(ST.tag(2),ItemList.RAMBoardT2.get(1),ItemList.RAMDie2G  .get(16)),FL.array(MT.SolderingAlloy.liquid(U   ,F)),ZL_FS,ItemList.RAMBar2G16.get(1));
         recipeMaps.Assembler.addRecipeX(F,4800,3200,ST.array(ST.tag(3),ItemList.RAMBoardT2.get(1),ItemList.RAMDie2G  .get(32)),FL.array(MT.SolderingAlloy.liquid(2*U ,F)),ZL_FS,ItemList.RAMBar2G32.get(1));
+
+
+
+    }
+    public static void initAssembling0() {
 
 //Assemble 组装电脑 EU
         //TF3386
@@ -461,6 +512,8 @@ public class ComputerBuilding {
         recipeMaps.Assembler.addRecipeX(F,92,80,ST.array(IL.Circuit_Plate_Copper.get(1),ItemList.CPUTF3586S.get(1), OreDictManager.INSTANCE.getFirstOre("ktfruRAM1M", 1),ItemList.CoilT2.get(4),ItemList.ResistanceT1.get(28),ItemList.CapacitorT2.get(16)),FL.array(MT.SolderingAlloy.liquid(U,F)),ZL_FS,ItemList.ComputerTF3586S.get(1));
         recipeMaps.Assembler.addRecipeX(F,92,80,ST.array(IL.Circuit_Plate_Copper.get(1),ItemList.CPUTF3586S.get(1), OreDictManager.INSTANCE.getFirstOre("ktfruRAM1M", 1),ItemList.CoilT2.get(4),ItemList.ResistanceT2.get(12),ItemList.CapacitorT2.get(16)),FL.array(MT.SolderingAlloy.liquid(U,F)),ZL_FS,ItemList.ComputerTF3586S.get(1));
 
+    }
+    public static void initAssembling1(){
         //GT1000
         recipeMaps.Assembler.addRecipeX(F,120,60,ST.array(IL.Circuit_Plate_Gold.get(1),ItemList.CPUGT1000.get(1), OreDictManager.INSTANCE.getFirstOre("ktfruRAM1M", 8),ItemList.CoilT2.get(8),ItemList.ResistanceT1.get(52),ItemList.CapacitorT2.get(28)),FL.array(MT.SolderingAlloy.liquid(U,F)),ZL_FS,ItemList.ComputerGT1000.get(1));
         recipeMaps.Assembler.addRecipeX(F,120,60,ST.array(IL.Circuit_Plate_Gold.get(1),ItemList.CPUGT1000.get(1), OreDictManager.INSTANCE.getFirstOre("ktfruRAM1M", 8),ItemList.CoilT2.get(8),ItemList.ResistanceT2.get(28),ItemList.CapacitorT2.get(28)),FL.array(MT.SolderingAlloy.liquid(U,F)),ZL_FS,ItemList.ComputerGT1000.get(1));
@@ -531,18 +584,6 @@ public class ComputerBuilding {
 
 //TODO Assemble Computer 3660vX
 
-
-        //Boards
-        recipeMaps.LaserCutter.addRecipe2(F,64,140 ,ST.tag(1),IL.Circuit_Plate_Copper.get(1),ZL_FS,ZL_FS,ItemList.RAMBoardT1.get(14));
-        recipeMaps.LaserCutter.addRecipe2(F,64,400 ,ST.tag(1),IL.Circuit_Plate_Gold.get(1),ZL_FS,ZL_FS,ItemList.RAMBoardT2.get(14));
-        recipeMaps.LaserCutter.addRecipe2(F,64,1000,ST.tag(1),IL.Circuit_Plate_Platinum.get(1),ZL_FS,ZL_FS,ItemList.RAMBoardT3.get(14));
-
-        recipeMaps.LaserCutter.addRecipe2(F,64,140 ,ST.tag(0),IL.Circuit_Plate_Copper.get(1),ZL_FS,ZL_FS,ItemList.CPUBoardT1.get(25));
-        recipeMaps.LaserCutter.addRecipe2(F,64,400 ,ST.tag(0),IL.Circuit_Plate_Gold.get(1),ZL_FS,ZL_FS,ItemList.CPUBoardT2.get(25));
-        recipeMaps.LaserCutter.addRecipe2(F,64,1000,ST.tag(0),IL.Circuit_Plate_Platinum.get(1),ZL_FS,ZL_FS,ItemList.CPUBoardT3.get(25));
-
-
-
         //Computers made by Circuit
         recipeMaps.Assembler.addRecipeX(F,16,80,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,16),IL.Circuit_Basic.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerBasicCircuits.get(1));
         recipeMaps.Assembler.addRecipeX(F,16,160,ST.array(OP.plate.mat(MT.SteelGalvanized,4),OP.screw.mat(MT.Steel,16),IL.Circuit_Good.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerGoodCircuits.get(1));
@@ -550,7 +591,8 @@ public class ComputerBuilding {
         recipeMaps.Assembler.addRecipeX(F,16,640,ST.array(OP.plate.mat(MT.StainlessSteel,4),OP.screw.mat(MT.Steel,32),IL.Circuit_Elite.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerEliteCircuits.get(1));
         recipeMaps.Assembler.addRecipeX(F,32,960,ST.array(OP.plate.mat(MT.StainlessSteel,4),OP.screw.mat(MT.StainlessSteel,64),IL.Circuit_Master.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerMasterCircuits.get(1));
         recipeMaps.Assembler.addRecipeX(F,32,1280,ST.array(OP.plate.mat(MT.TungstenSteel,4),OP.screw.mat(MT.StainlessSteel,64),IL.Circuit_Ultimate.get(8)),FL.array(MT.SolderingAlloy.liquid(U2,F)),ZL_FS,ItemList.ComputerUltimateCircuits.get(1));
-
+    }
+    public static void initDowngrading(){
         //downgrading computer
         CR.shapeless(ItemList.UnderClockedNoviceComputer.get(1), new Object[]{"ktfruNoviceComputer"});
         CR.shapeless(ItemList.UnderClockedModerateComputer.get(1),new Object[]{"ktfruModerateComputer"});
@@ -558,6 +600,5 @@ public class ComputerBuilding {
         CR.shapeless(ItemList.UnderClockedEliteComputer.get(1),new Object[]{"ktfruEliteComputer"});
         CR.shapeless(ItemList.UnderClockedMasterComputer.get(1),new Object[]{"ktfruMasterComputer"});
         CR.shapeless(ItemList.UnderClockedUltimateComputer.get(1),new Object[]{"ktfruUltimateComputer"});
-
     }
 }

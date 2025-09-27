@@ -14,12 +14,8 @@ buildscript {
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id("dev.skidfuscator") version "0.1.4"
 }
 
-skidfuscator {
-    skidfuscatorVersion = "latest"
-}
 apply plugin: 'forge'
 
 // These settings allow you to choose what version of Java you want to be compatible with. Forge 1.7.10 runs on Java 6 to 8.
@@ -43,7 +39,6 @@ repositories {
     maven {
         name = "gtnh"
         url = "https://nexus.gtnewhorizons.com/repository/releases/"
-        allowInsecureProtocol = true
     }
 }
 version = project.version
@@ -145,6 +140,12 @@ jar {
         )
     }
 }
+reobf {
+    //reobf(coreJar) {
+    //	spec -> spec.classpath = sourceSets.main.compileClasspath
+    //}
+}
+
 // This block configures any maven publications you want to make.
 publishing {
     publications {
