@@ -53,7 +53,8 @@ minecraft {
     version = project.minecraft_version + "-" + project.forge_version
     runDir = "run"
     accessTransformer("src/main/resources/META-INF/ktfruaddon_at.cfg")
-    accessTransformer("kguilib_at.cfg")
+    accessTransformer("libs/kguilib_at.cfg")
+    accessTransformer("libs/tfc_at.cfg")
 }
 
 dependencies {
@@ -85,8 +86,9 @@ dependencies {
     implementation "openmods:OpenModsLib:1.7.10-0.10:deobf"
     implementation "com.azanor.baubles:Baubles:1.7.10-1.0.1.10:deobf"
     implementation "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
+    implementation "eu.usrv:YAMCore:1.7.10-0.5.80:deobf"
 
-    implementation "cn.kuzuanpa:gregtech6-TFRU:6.17.05.1:dev"
+    implementation "cn.kuzuanpa:gregtech6-TFRU:6.17.05.3:dev"
     implementation "cn.kuzuanpa:AdvancedRocketry-TFRU:1.4.1:dev"
     implementation "cn.kuzuanpa:TFCraft-TFRU:0.82.1:dev"
     implementation "cn.kuzuanpa:kguilib:1.2.1:dev"

@@ -15,9 +15,7 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.kItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,7 @@ public class DreamPool {
     public void updateAbstractCondition(){
         abstractTransmittableList.forEach(abs-> AbstractOverallCondition = AbstractOverallCondition.or(((AbstractTransmittable.AbstractTransmittableType) abs).condition));
     }
-    public long itemAmount(ITransmittable item, long required){
+    public long requestConsumeItem(ITransmittableType item, long required){
         return 3;
     }
 }

@@ -33,8 +33,12 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregapi.data.LH;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 
 import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.isAdvancedRocketryTFRU;
@@ -71,5 +75,21 @@ public class clientProxy extends commonProxy {
 
         MinecraftForge.EVENT_BUS.register(new FxRenderBlockOutline());
         codechicken.nei.api.API.registerNEIGuiHandler(new NeiHiddener());
+    }
+
+    @Override
+    public void sendMessage(PlayerEvent.PlayerLoggedInEvent e) {
+        if(!EnvironmentHelper.TFRUVer.equalsIgnoreCase(EnvironmentHelper.checkedTFRUVer))EnvironmentHelper.changelog.forEach(s->e.player.addChatComponentMessage(new ChatComponentText(s)));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.0"));
+        e.player.addChatComponentMessage(new ChatComponentText(LH.get("ktfru.msg.join.1")+EnvironmentHelper.TFRUVer));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.2"));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.3"));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.4"));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.5"));
+        if(EnvironmentHelper.checkedTFRUVer == null)e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.6.check_fail"));
+        else if(!EnvironmentHelper.TFRUVer.equalsIgnoreCase(EnvironmentHelper.checkedTFRUVer))e.player.addChatComponentMessage(new ChatComponentText(LH.get("ktfru.msg.join.6.outdated")+ EnvironmentHelper.checkedTFRUVer+LH.get("ktfru.msg.join.6.outdated.suffix")));
+        else e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.6"));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.7"));
+        e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.join.8"));
     }
 }

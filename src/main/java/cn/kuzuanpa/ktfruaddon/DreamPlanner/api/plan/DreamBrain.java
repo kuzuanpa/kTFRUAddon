@@ -38,7 +38,13 @@ public class DreamBrain {
         return list==null?new ArrayList<>():list;
     }
 
-    public long tryMakeAbstractItem(ITransmittableType requiredItem,long amount, PlanTreeNode treeNode){
+
+    public byte tryMakeAbstractItem(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode) {
+        if(!dreamPool.AbstractOverallCondition.test(requiredItem))return -1;
+        return tryMakeAbstractItem0(requiredItem, amount, treeNode);
+    }
+
+    public byte tryMakeAbstractItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
         List<ITransmittableType> list = dreamPool.abstractTransmittableList.stream().filter(t->t instanceof AbstractTransmittable.AbstractTransmittableType).map(t-> ((AbstractTransmittable.AbstractTransmittableType) t)).filter(t-> t.condition.test(requiredItem)).collect(Collectors.toList());
         if(list.isEmpty())return -1;
 
@@ -57,32 +63,34 @@ public class DreamBrain {
         return 0;
     }
 
-    public long makeItem(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode, ITransmittableType requiredItemReal){
+    protected byte makeItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
         if(PlanPoolLock.get())return -2;
+
+        amount -= dreamPool.requestConsumeItem(requiredItem, amount);
+
+        if(amount <= 0)return 0;
+
         List<DreamPlanBase> planList = searchItemPlan(requiredItem);
 
-        if(planList.isEmpty()){
-            if(!dreamPool.AbstractOverallCondition.test(requiredItem))return -1;
-            return tryMakeAbstractItem(requiredItem, amount, treeNode);
-        }
+        if(planList.isEmpty()) return tryMakeAbstractItem(requiredItem,amount,  treeNode);
 
         for (DreamPlanBase plan : planList) {
             PlanTreeNode subNode = new PlanTreeNode();
-            makePlan( plan,ceilDiv(amount,plan.getResultNum(requiredItem)) , requiredItemReal==null?null :requiredItemReal.make(amount), subNode);
+            makePlan( plan,ceilDiv(amount,plan.getResultNum(requiredItem)) , requiredItem.make(amount), subNode);
             treeNode.subNodes.add(subNode);
         }
 
-        if(dreamPool.AbstractOverallCondition.test(requiredItem))tryMakeAbstractItem(requiredItem,amount,  treeNode);
+        tryMakeAbstractItem(requiredItem,amount,  treeNode);
 
         return 0;
     }
 
-    public long makePlan(DreamPlanBase plan, long count, ITransmittable requiredItem, PlanTreeNode treeNode){
+    public long makePlan(DreamPlanBase plan, long count, ITransmittable requiredItemReal, PlanTreeNode treeNode){
         treeNode.count = count;
         treeNode.plan = plan;
-        for (ITransmittable ing : plan.getIngredientList(requiredItem)) {
-            long makeAmount = makeItem(ing.getType(), ing.getAmount() * count,treeNode, null);
-            if(makeAmount == -1) treeNode.reqItems.add(ing.initFrom(ing.getType(), ing.getAmount()*count));
+        for (ITransmittable ing : plan.getIngredientList(requiredItemReal)) {
+            long result = makeItem0(ing.getType(), ing.getAmount() * count,treeNode);
+            if(result == -1) treeNode.reqItems.add(ing.initFrom(ing.getType(), ing.getAmount()*count));
         }
         return 0;
     }
@@ -112,7 +120,7 @@ public class DreamBrain {
         brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("Abs1-A", 3)), Collections.singletonList(new kTestTrans("D", 1))));
         brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("E", 1)), Collections.singletonList(new kTestTrans("Abs0-A", 1))));
         PlanTreeNode treeNode = new PlanTreeNode();
-        brain.makeItem(new kTestTrans("D", 1).getType(), 5, treeNode, null);
+        brain.makeItem0(new kTestTrans("D", 1).getType(), 5, treeNode);
         brain.printTree(treeNode, 0);
     }
     public boolean addPlan(DreamPlanBase plan){

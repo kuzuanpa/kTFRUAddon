@@ -29,11 +29,11 @@ import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit0;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import gregapi.api.Abstract_Proxy;
 import gregapi.network.NetworkHandler;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 
 import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.updateTFRUEnvironment;
@@ -93,9 +93,11 @@ public class commonProxy extends Abstract_Proxy {
 
     public void serverStopped(FMLServerStoppedEvent aEvent) {
     }
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e){
+        sendMessage(e);
+    }
     public void sendMessage(PlayerEvent.PlayerLoggedInEvent e){
-        if(!EnvironmentHelper.TFRUVer.equalsIgnoreCase(EnvironmentHelper.checkedTFRUVer)) e.player.addChatComponentMessage(new ChatComponentTranslation("ktfru.msg.outdated"));
     }
 }
 

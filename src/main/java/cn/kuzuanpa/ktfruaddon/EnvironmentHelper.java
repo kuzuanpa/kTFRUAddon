@@ -15,14 +15,12 @@
 package cn.kuzuanpa.ktfruaddon;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
 
@@ -30,11 +28,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EnvironmentHelper {
     public static boolean isInTFRU = false, isGregtechTFRU = false, isAdvancedRocketryTFRU = false, isTFCTFRU = false, isBotaniaTFRU = false, isDraconicEvolutionTFRU = false, isForestryTFRU = false;
 
-    public static String checkedTFRUVer = null, TFRUVer = "";
+    public static String checkedTFRUVer = null, TFRUVer = "4.3.0.0";
+    public static List<String> changelog = new ArrayList<>();
     public static void updateTFRUEnvironment(FMLPreInitializationEvent event){
         try {if(                         gregtech.TFRUEnvHelper.isModTFRU)isGregtechTFRU          = true;}catch (Throwable e){isGregtechTFRU          = false;}
         try {if(      zmaster587.advancedRocketry.TFRUEnvHelper.isModTFRU)isAdvancedRocketryTFRU  = true;}catch (Throwable e){isAdvancedRocketryTFRU  = false;}
@@ -54,7 +56,8 @@ public class EnvironmentHelper {
                                      forestry.TFRUEnvHelper.isInTFRU=true;
         }catch (Throwable e){
             FMLLog.log(Level.FATAL,e,"Error Occured when setting up TFRU pack environment! are you using right version of TFRU mods?");
-            throw new IllegalArgumentException("Illegal TFRU Environment");
+            isInTFRU = false;
+            return;
         }
 
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
@@ -65,6 +68,10 @@ public class EnvironmentHelper {
         new Thread(new updateChecker()).start();
     }
 
+    public static void main(String[] args){
+        new Thread(new updateChecker()).start();
+
+    }
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String MODDRINTH_URL = "https://api.modrinth.com/v2/project/o0CuW5i0/version";
 
@@ -93,20 +100,41 @@ public class EnvironmentHelper {
                 }
                 in.close();
 
-                checkedTFRUVer = getVersionFromResponse(response.toString());
-                if(!TFRUVer.equalsIgnoreCase(checkedTFRUVer))FMLLog.log(Level.ERROR, I18n.format("ktfru.msg.outdated"));
+                processResponse(response.toString());
             }catch (Exception e) {}
         }
     }
 
-    public static String getVersionFromResponse(String jsonResponse) {
+    public static void processResponse(String jsonResponse) {
         try {
             JsonArray jsonArray = new JsonParser().parse(jsonResponse).getAsJsonArray();
-            if (jsonArray.size() <= 0) return null;
+            if (jsonArray.size() <= 0) return;
             JsonObject firstObject = jsonArray.get(0).getAsJsonObject();
             JsonElement versionNumberElement = firstObject.get("version_number");
-            if (versionNumberElement != null && !versionNumberElement.isJsonNull()) return versionNumberElement.getAsString();
-        }catch (Exception ignored){}
-        return null;
+            if (versionNumberElement != null && !versionNumberElement.isJsonNull()) checkedTFRUVer = versionNumberElement.getAsString();
+            if(!TFRUVer.equalsIgnoreCase(checkedTFRUVer)){
+                boolean foundCurrentVersion = false;
+                for (JsonElement jsonElement : jsonArray) {
+                    JsonObject obj = jsonElement.getAsJsonObject();
+                    if(obj.get("version_number").getAsString().equalsIgnoreCase(TFRUVer)){
+                        foundCurrentVersion=true;
+                        break;
+                    }
+                    changelog.add(obj.get("version_number").getAsString());
+                    String singleLog = obj.get("changelog").getAsString().replaceAll("\n *\n","\n");
+                    changelog.addAll(Arrays.asList(singleLog.split("\n")));
+                }
+                if(!foundCurrentVersion){
+                    changelog.clear();
+                    //no i18n, because changeLog itself is pure chinese
+                    changelog.add("获取changeLog失败: 无法找到当前版本.");
+                }
+            }
+        }catch (Exception e){
+            changelog.clear();
+            changelog.add("获取changeLog失败: java抛出错误.");
+            e.printStackTrace();
+        }
+        changelog.forEach(System.out::println);
     }
 }

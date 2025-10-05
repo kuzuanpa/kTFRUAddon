@@ -44,7 +44,7 @@ public class ResearchTrees {
 
                     ResearchProject d = new ResearchProject(tree, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si, 0).getItem(), MT.Si.mID, 4)
                             .setPos(180, 130)
-                            .addPrerequisite(a).addPrerequisite(b);
+                            .addPrerequisite(c);
 
                     ResearchProject f = new ResearchProject(tree, "基础电路设计", "利用计算器进一步改进电路，你认为你离真正的自动化控制不远了", Items.paper, 0, 5)
                             .setPos(340, 10)
@@ -76,19 +76,31 @@ public class ResearchTrees {
 
                     ResearchProject m = new ResearchProject(tree, "精确制造", "研究如何利用激光极度精确集中的能量加工物品", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(f);
+                            .addPrerequisite(l);
 
                     ResearchProject n = new ResearchProject(tree, "单晶硅制造", "", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(f);
+                            .addPrerequisite(m);
 
                     ResearchProject o = new ResearchProject(tree, "低级电路设计", "", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(f);
+                            .addPrerequisite(n);
 
-                    ResearchProject p = new ResearchProject(tree, "", "", Items.paper, 0, 5)
+                    ResearchProject p = new ResearchProject(tree, "赛特斯石英应用", "", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(f);
+                            .addPrerequisite(o);
+
+                    ResearchProject q = new ResearchProject(tree, "智能赛特斯", "", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(p);
+
+                    ResearchProject r = new ResearchProject(tree, "高压发电", "", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(o);
+
+                    ResearchProject s = new ResearchProject(tree, "光刻理论", "", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(r);
             return tree;
         }
         );
