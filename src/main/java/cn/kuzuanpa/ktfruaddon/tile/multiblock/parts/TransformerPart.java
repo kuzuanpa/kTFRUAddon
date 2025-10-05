@@ -80,7 +80,7 @@ public class TransformerPart extends TileEntityBase09FacingSingle implements IMu
         super.onTick2(aTimer, aIsServerSide);
         if (aIsServerSide) {
             long ampere = Math.min(mOutputAmpere, mEnergy / mOutputVoltage);
-            mEnergy -= ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyType, mOutputVoltage, ampere, this) * mOutputVoltage;
+            if(ampere != 0)mEnergy -= ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyType, mOutputVoltage, ampere, this) * mOutputVoltage;
         }
     }
 

@@ -18,8 +18,11 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTurbine;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTurbine;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
@@ -46,8 +49,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.Collection;
 import java.util.List;
@@ -76,6 +81,19 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if (aNBT.hasKey("ktfru.turbine.efficiency")) mTurbineEfficiency = aNBT.getLong("ktfru.turbine.efficiency") / 1000F;
 		if (aNBT.hasKey("ktfru.turbine.checked")) usingCheckedTurbine = aNBT.getBoolean("ktfru.turbine.checked");
 		if (aNBT.hasKey("ktfru.turbine.overclock")) mOverclock = aNBT.getBoolean("ktfru.turbine.overclock");
+		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABA")
+				.fixedLayer('A',
+						"AAAA",
+						"AAAA",
+						"AAAA"
+				).fixedLayer('B',
+						"AAAA",
+						"AAAB",
+						"AAAA"
+				)
+				.where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
+				.where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, 4)))
+				.setOffset(-1,-1,0) ;
 	}
 	@Override
 	public void writeToNBT2(NBTTagCompound aNBT) {
@@ -86,38 +104,29 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		UT.NBT.setBoolean(aNBT,"ktfru.turbine.checked",usingCheckedTurbine);
 		UT.NBT.setBoolean(aNBT,"ktfru.turbine.overclock",mOverclock);
 	}
+	//Structure
+	ChunkCoordinates lastFailedPos=null;
+	IStringBaseStructure structure;
 	@Override
 	public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-		int
-		tMinX = xCoord-(SIDE_X_NEG==mFacing?0:SIDE_X_POS==mFacing?3:1),
-		tMinY = yCoord-(SIDE_Y_NEG==mFacing?0:SIDE_Y_POS==mFacing?3:1),
-		tMinZ = zCoord-(SIDE_Z_NEG==mFacing?0:SIDE_Z_POS==mFacing?3:1),
-		tMaxX = xCoord+(SIDE_X_POS==mFacing?0:SIDE_X_NEG==mFacing?3:1),
-		tMaxY = yCoord+(SIDE_Y_POS==mFacing?0:SIDE_Y_NEG==mFacing?3:1),
-		tMaxZ = zCoord+(SIDE_Z_POS==mFacing?0:SIDE_Z_NEG==mFacing?3:1),
-		tOutX = getOffsetXN(mFacing, 3),
-		tOutY = getOffsetYN(mFacing, 3),
-		tOutZ = getOffsetZN(mFacing, 3);
+		int tX = xCoord, tY = yCoord, tZ = zCoord;
+		if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+		lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+		return lastFailedPos==null;
+	}
+	public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+		if (!isServerSide())return true;
 
-		if (worldObj.blockExists(tMinX, tMinY, tMinZ) && worldObj.blockExists(tMaxX, tMaxY, tMaxZ)) {
-			mEmittingTo = null;
-			boolean tSuccess = T;
-			for (int tX = tMinX; tX <= tMaxX; tX++) for (int tY = tMinY; tY <= tMaxY; tY++) for (int tZ = tMinZ; tZ <= tMaxZ; tZ++) {
-				int tBits = 0;
-				if (tX == tOutX && tY == tOutY && tZ == tOutZ) {
-					tBits = MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT;
-				} else {
-					if ((SIDES_AXIS_X[mFacing] && tX == xCoord) || (SIDES_AXIS_Y[mFacing] && tY == yCoord) || (SIDES_AXIS_Z[mFacing] && tZ == zCoord)) {
-						tBits = (tY == tMinY ? MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID     : MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN);
-					} else {
-						tBits = (tY == tMinY ? MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_OUT : MultiTileEntityMultiBlockPart.NOTHING);
-					}
-				}
-				if (!utils.checkAndSetTarget(this, tX, tY, tZ, aClickedAt, aPlayer, aInventory, new TileDesc(GTTileEntityRegistry.gregtech, mTurbineWalls, tX == tOutX && tY == tOutY && tZ == tOutZ ? 3 : 0, tBits))) tSuccess = F;
-			}
-			return tSuccess;
+		if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+		ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+		if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+			structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+			return true;
 		}
-		return mStructureOkay;
+
+		openGUI(aPlayer, aSide);
+		return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
 	}
 	
 	@Override
@@ -167,11 +176,13 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if(!mActive&&mTurbineEfficiency==0&&slotHas(0)) mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(slot(0).getItemDamage()));
 		doConversion(aTimer);
 		float factor = mOverclock? (float) (mTurbineEfficiency / Math.floor(mTurbineEfficiency)) :Math.min(mTurbineEfficiency,2);
-		if(mEnergyStored > mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1)){
+		long ampere = mOverclock? (long) Math.floor(mTurbineEfficiency) :1L;
+		if(mEnergyStored >= mRate*factor*ampere){
 			setActive(true);
-			ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), mOverclock? (long) Math.floor(mTurbineEfficiency) :1, this, getEmittingTileEntity());
-			mEnergyStored-= (long) (mRate*factor*(mOverclock?Math.floor(mTurbineEfficiency) :1));
+			long consumed = ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), ampere, this, getEmittingTileEntity());
+			mEnergyStored-= (long) (mRate*factor*consumed);
 		}else setActive(false);
+
 		if(mEnergyStored<0)mEnergyStored=0;
 		if(mForcedStopped)return;
 	}
@@ -197,12 +208,6 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	@Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
 
 	@Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return !mActive;}
-
-	@Override
-	public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-		if (isServerSide()) openGUI(aPlayer, aSide);
-		return T;
-	}
 
 	@Override
 	public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {

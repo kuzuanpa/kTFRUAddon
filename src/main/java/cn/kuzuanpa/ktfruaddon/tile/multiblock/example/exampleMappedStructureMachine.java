@@ -18,6 +18,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 //这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
@@ -30,12 +31,15 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
 
@@ -43,7 +47,9 @@ import static gregapi.data.CS.SIDES_VALID;
 import static gregapi.data.CS.SIDE_BOTTOM;
 
 public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMachine {
-    IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("A")
+    //Structure
+    ChunkCoordinates lastFailedPos=null;
+    static final IStringBaseStructure structure  = new LayerStructure(StructureContext.Axis.Y).layerRule("A")
             .layer('A',
                     new ExpandableLayer(6)
                             .variation("CXXX",
@@ -61,22 +67,35 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
             .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
             .setOffset(-2,0,0);
-    //决定机器大小
-    //this controls the size of machine.
-    public final short sizeX = 5, sizeY = 1, sizeZ = 4;
-    //决定结构检测的起始位置，默认情况下是从主方块起始
-    //This controls where is the start point to check structure,Default is the position of controller block
-    public final short xMapOffset = -2, zMapOffset = 0;
-
-    ChunkCoordinates lastFailedPos=null;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord,zCoord,mFacing, aPlayer, aInventory));
-        return lastFailedPos == null;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos==null;
     }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
 
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+    }
+    public final short sizeX = 5, sizeY = 1, sizeZ = 4;
+    //决定结构检测的起始位置，默认情况下是从主方块起始
+    //This controls where is the start point to check structure,Default is the position of controller block
+    public final short xMapOffset = -2, zMapOffset = 0;
+    //这里是设置该机器的内部区域
+    //controls areas inside the machine
+    @Override
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
+    }
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {
@@ -93,12 +112,7 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
         aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
-    //这里是设置该机器的内部区域
-    //controls areas inside the machine
-    @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
-    }
+
     //下面四个是设置输入输出的地方,return null是任意面
     //controls where to I/O, return null=any side
     @Override

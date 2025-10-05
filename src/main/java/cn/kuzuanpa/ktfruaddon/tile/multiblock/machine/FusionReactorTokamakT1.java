@@ -180,6 +180,10 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         if(mRateCharging==0)mEnergyCharged= (long) Math.max(0,Math.max(mEnergyCharged-100,mEnergyCharged*(1-dischargeRate)));
         mRateCharging=0;
 
+        doNormalRun(isInputEmpty);
+}
+
+    protected void doNormalRun(boolean isInputEmpty){
         //AutoOutput
         if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(mFacing));
 
@@ -208,6 +212,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         }
 
         if (mEnergyCharged > recipeChargeRequired && mState==STATE_CHARGING && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0),slot(1)))setState(STATE_RUNNING);
+
     }
 
     protected void setState(byte state){
@@ -370,7 +375,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
     //Structure
     ChunkCoordinates lastFailedPos=null;
-    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCDEFGGFEKLMM")
+    static final IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCDEFGGFEKLMM")
             .fixedLayer('A',
                     "                           ",
                     "             BBB           ",

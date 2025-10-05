@@ -1,3 +1,16 @@
+ktfru.msg.join.0=§l  - - - - -
+ktfru.msg.join.1=§l   欢迎来到峦屿梦星群 §b§l
+ktfru.msg.join.2=§a   按下~键打开任务书开始游戏
+ktfru.msg.join.3=§9   详情页: https://www.mcmod.cn/modpack/749.html
+ktfru.msg.join.4=§c   前往详情页的Github页面反馈bug
+ktfru.msg.join.5=§f   加入我们的QQ交流群: 1046723658
+ktfru.msg.join.6=§f
+ktfru.msg.join.7=§a   更新整合包后, 务必键入指令 "/bq_admin default load" 来更新任务书！
+ktfru.msg.join.8=§l  - - - - -"
+
+ktfru.msg.join.6.outdated=§d§l   有新版本可用: §a§l
+ktfru.msg.join.6.outdated.suffix=§r 打开聊天框查看更新日志
+ktfru.msg.join.6.check_fail=§l   无法检测版本更新
 
 ktfru.research.task.compute=提供%s 点算力
 ktfru.research.task.minigame.fill=研究%s 点空间规划
@@ -130,8 +143,6 @@ ktfru.ui.research.table.fill.title=将芯片填入电路板!完成此电路将�
 ktfru.ui.research.table.fill.win=电路运行顺利!你获得了空间规划点数
 ktfru.ui.research.table.fill.scores=当前可用的空间规划点数
 ktfru.ui.research.table.fill.reload=更换新的电路板
-
-ktfru.msg.outdated=检测到TFRU有更新, 请及时升级! 如果遇到bug, 请升级重新测试后再反馈!
 
 ktfru.tooltip.multiblock.distilltower.1=3x1x3 热吸收装置
 ktfru.tooltip.multiblock.distilltower.2=3x9x3 实心蒸馏塔壁
