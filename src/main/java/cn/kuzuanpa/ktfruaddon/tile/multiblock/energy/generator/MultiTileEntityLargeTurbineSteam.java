@@ -123,14 +123,11 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && FL.steam(aFluidToFill) ? mTanks[0] : null;}
 	@Override protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {return mTanks[1];}
 	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
+
 	@Override
-	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-		if (aSlot >= 1||! (prefixList.turbineLargeSteam.contains(aStack) || prefixList.turbineLargeSteamChecked.contains(aStack))) return F;
-		if (slot(0)== null) {
-			mTurbineDurability =0;
-			return T;
-		}
-		return F;
+	public boolean isItemValidForSlot(int aSlot, ItemStack aStack) {
+		return super.isItemValidForSlot(aSlot, aStack) && (prefixList.turbineLargeSteam.contains(aStack) || prefixList.turbineLargeSteamChecked.contains(aStack));
 	}
+
 	@Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.turbine.steam";}
 }

@@ -23,13 +23,13 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientTurbine;
-import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonTurbine;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
+import gregapi.gui.ContainerClientDefault;
+import gregapi.gui.ContainerCommonDefault;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
 import gregapi.old.Textures;
@@ -170,9 +170,10 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	public void onTick2(long aTimer, boolean aIsServerSide) {
 		super.onTick2(aTimer, aIsServerSide);
 		if (!aIsServerSide)return;
-		if(!mStructureOkay) {setActive(false); return;}
-
+		if(!mStructureOkay || !slotHas(0) || mForcedStopped) {setActive(false); return;}
 		updateClientData();
+
+		if(mEnergyStored<0)mEnergyStored=0;
 		if(!mActive&&mTurbineEfficiency==0&&slotHas(0)) mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(slot(0).getItemDamage()));
 		doConversion(aTimer);
 		float factor = mOverclock? (float) (mTurbineEfficiency / Math.floor(mTurbineEfficiency)) :Math.min(mTurbineEfficiency,2);
@@ -182,9 +183,6 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 			long consumed = ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), ampere, this, getEmittingTileEntity());
 			mEnergyStored-= (long) (mRate*factor*consumed);
 		}else setActive(false);
-
-		if(mEnergyStored<0)mEnergyStored=0;
-		if(mForcedStopped)return;
 	}
 	public ITileEntityUnloadable mEmittingTo = null;
 
@@ -207,7 +205,22 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 
 	@Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
 
+	@Override
+	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
+		if (aSlot >= 1||! isItemValidForSlot(aSlot, aStack)) return F;
+		if (slot(0)== null) {
+			mTurbineDurability =0;
+			return T;
+		}
+		return F;
+	}
+
 	@Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return !mActive;}
+
+	@Override
+	public boolean canTakeOutOfSlotGUI(int aSlot) {
+		return !mActive;
+	}
 
 	@Override
 	public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
@@ -251,10 +264,10 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	}
 
 	@Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-		return new ContainerClientTurbine(aPlayer.inventory, this, aGUIID, "");
+		return new ContainerClientDefault(aPlayer.inventory, this, aGUIID);
 	}
 	@Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
-		return new ContainerCommonTurbine(aPlayer.inventory, this, aGUIID);
+		return new ContainerCommonDefault(aPlayer.inventory, this, aGUIID);
 	}
 
 	@Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return mRate;}

@@ -152,16 +152,11 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 		}
 		return null;
 	}
-	@Override
-	public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {
-		if (aSlot >= 1||! (prefixList.turbineLargeGas.contains(aStack) || prefixList.turbineLargeGasChecked.contains(aStack))) return F;
-		if (slot(0)== null) {
-			mTurbineDurability =0;
-			return T;
-		}
-		return F;
-	}
 
+	@Override
+	public boolean isItemValidForSlot(int aSlot, ItemStack aStack) {
+		return super.isItemValidForSlot(aSlot, aStack) && (prefixList.turbineLargeGas.contains(aStack) || prefixList.turbineLargeGasChecked.contains(aStack));
+	}
 
 	@Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.turbine.gas";}
 
