@@ -18,6 +18,7 @@ import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
+import cn.kuzuanpa.ktfruaddon.api.tile.IResearchTable;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 
-public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick {
+public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick, IResearchTable {
     @Override public boolean isUseableByPlayerGUI(EntityPlayer aPlayer) {return !isDead() && allowInteraction(aPlayer);}
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
     public ResearchTree theTree = new ResearchTree();
@@ -148,5 +149,10 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     @Override
     public boolean canDrop(int aSlot) {
         return false;
+    }
+
+    @Override
+    public @Nullable ResearchTreeMonitor getMonitor() {
+        return this;
     }
 }

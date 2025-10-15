@@ -21,8 +21,9 @@ import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonFillThePack;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
+import gregapi.render.ITexture;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,10 +52,6 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
         return getClientDataPacketByteArrayLong(aSendAll, theGame.saveToByteArray());
     }
     @Override
-    public void updateMonitorCoord() {
-        monitorCoord = new ChunkCoordinates(xCoord, yCoord -1, zCoord);
-    }
-    @Override
     public INetworkHandler getNetworkHandler() {
         return ktfruaddon.kNetworkHandler;
     }
@@ -72,6 +69,11 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
     @Override
     public boolean onTickCheck(long aTimer) {
         return super.onTickCheck(aTimer) || rng(10)==0;
+    }
+
+    @Override
+    public ITexture getTexture2(Block block, int i, byte b, boolean[] booleans) {
+        return null;
     }
 
     @Override

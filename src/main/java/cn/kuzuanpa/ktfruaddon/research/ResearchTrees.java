@@ -66,7 +66,7 @@ public class ResearchTrees {
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
-                    ResearchProject k = new ResearchProject(tree, "半导体制冷", "", Items.paper, 0, 5)
+                    ResearchProject k = new ResearchProject(tree, "半导体制冷", "探索半导体通过电流时的热学行为, 制作半导体制冷器", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(f);
 
@@ -78,27 +78,43 @@ public class ResearchTrees {
                             .setPos(340, 10)
                             .addPrerequisite(l);
 
-                    ResearchProject n = new ResearchProject(tree, "单晶硅制造", "", Items.paper, 0, 5)
+                    ResearchProject n = new ResearchProject(tree, "单晶硅制造", "研究如何制作原子排列规整的单晶硅", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(m);
 
-                    ResearchProject o = new ResearchProject(tree, "低级电路设计", "", Items.paper, 0, 5)
+                    ResearchProject o = new ResearchProject(tree, "低级电路设计", "利用性能更好的硅晶片制作算力更强的芯片", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(n);
 
-                    ResearchProject p = new ResearchProject(tree, "赛特斯石英应用", "", Items.paper, 0, 5)
+                    ResearchProject p = new ResearchProject(tree, "赛特斯石英应用", "研究异世界特有的独特晶体-赛特斯, 对赛特斯压缩物体的能力进行探索", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(o);
 
-                    ResearchProject q = new ResearchProject(tree, "智能赛特斯", "", Items.paper, 0, 5)
+                    ResearchProject q = new ResearchProject(tree, "智能赛特斯", "研究更为罕见的智金, 对其指导赛特斯流动的能力进行控制和规律利用", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(p);
 
-                    ResearchProject r = new ResearchProject(tree, "高压发电", "", Items.paper, 0, 5)
+                    ResearchProject r = new ResearchProject(tree, "高压发电", "研究如何利用更高算力的电路来控制更高电压的发电机", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(o);
 
-                    ResearchProject s = new ResearchProject(tree, "光刻理论", "", Items.paper, 0, 5)
+                    ResearchProject s = new ResearchProject(tree, "光刻理论", "普通的方法已经达到极限, 你需要研究光刻及相关的设备以制造更精密的芯片", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(r);
+
+                    ResearchProject t = new ResearchProject(tree, "计算机系统", "设计一套合理的输入输出标准, 以组装出完整的计算机", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(r);
+
+                    ResearchProject u = new ResearchProject(tree, "数控车床", "通过计算机自动化精确控制电机制作数控车床", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(r);
+
+                    ResearchProject v = new ResearchProject(tree, "太空理论", "", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(r);
+
+                    ResearchProject w = new ResearchProject(tree, "入门光刻", "", Items.paper, 0, 5)
                             .setPos(340, 10)
                             .addPrerequisite(r);
             return tree;

@@ -16,20 +16,20 @@ package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cn.kuzuanpa.ktfruaddon.api.tile.IResearchTable;
+import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
 import gregapi.data.CS;
-import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
+import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ResearchTableBase extends TileEntityBase09FacingSingle {
+public abstract class ResearchTableBase extends TileEntityBase09FacingSingle implements IResearchTable {
     protected @Nullable ChunkCoordinates monitorCoord;
     protected @Nullable ResearchTreeMonitor monitor;
     protected long lastUsedTime = 0;
@@ -41,13 +41,6 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle {
         }
         return false;
     }
-
-    @Override
-    public void readFromNBT2(NBTTagCompound aNBT) {
-        super.readFromNBT2(aNBT);
-        monitorCoord = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, -1,0,0);
-    }
-
     @Override
     public boolean[] getValidSides() {
         return CS.SIDES_HORIZONTAL;
@@ -67,30 +60,49 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle {
     }
 
     @Override
-    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return null;
-    }
-
-    @Override
     public boolean canDrop(int aSlot) {
         return true;
     }
 
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
-        updateMonitorCoord();
-        checkMonitor(aTimer);
         super.onTick2(aTimer, aIsServerSide);
+        tryFindMonitor();
     }
 
-    public void updateMonitorCoord(){}
+    @Override
+    public @Nullable ResearchTreeMonitor getMonitor() {
+        return monitor;
+    }
 
-    public void checkMonitor(long aTimer){
-        if(monitorCoord == null || aTimer % 10 != 0)return;
+    public void tryFindMonitor(){
+        if(monitor != null)return;
+
+        monitorCoord = new ChunkCoordinates(xCoord+1,yCoord,zCoord);
+        if(checkMonitor())return;
+        monitorCoord = new ChunkCoordinates(xCoord-1,yCoord,zCoord);
+        if(checkMonitor())return;
+        monitorCoord = new ChunkCoordinates(xCoord,yCoord,zCoord+1);
+        if(checkMonitor())return;
+        monitorCoord = new ChunkCoordinates(xCoord,yCoord,zCoord-1);
+        if(checkMonitor())return;
+        monitorCoord = null;
+    }
+
+    public boolean checkMonitor(){
+        if(monitorCoord == null)return false;
         TileEntity tile = WD.te(getWorldObj(),monitorCoord, false);
-        if(tile instanceof ResearchTreeMonitor) monitor = ((ResearchTreeMonitor) tile);
-        else if(tile instanceof ResearchTableBase) monitor = ((ResearchTableBase) tile).monitor;
+        if(tile instanceof IResearchTable) monitor = ((IResearchTable) tile).getMonitor();
+        else if(tile instanceof MultiTileEntityMultiBlockPart){
+            ITileEntityMultiBlockController multi = ((MultiTileEntityMultiBlockPart) tile).getTarget(true);
+            if(multi != null)monitor = ((IResearchTable) multi).getMonitor();
+        }
+        else if(tile instanceof IMultiBlockPart){
+            ITileEntityMultiBlockController multi = ((IMultiBlockPart) tile).getTarget(true);
+            if(multi != null)monitor = ((IResearchTable) multi).getMonitor();
+        }
         else monitor = null;
+        return monitor != null;
     }
 
     public long tryPromoteCurrentProjectProgress(Class<? extends IResearchTask> taskType, @Nullable Object consume, boolean dryRun){
