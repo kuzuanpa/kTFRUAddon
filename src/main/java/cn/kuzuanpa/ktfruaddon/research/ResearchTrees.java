@@ -104,20 +104,34 @@ public class ResearchTrees {
 
                     ResearchProject t = new ResearchProject(tree, "计算机系统", "设计一套合理的输入输出标准, 以组装出完整的计算机", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(r);
+                            .addPrerequisite(s);
 
                     ResearchProject u = new ResearchProject(tree, "数控车床", "通过计算机自动化精确控制电机制作数控车床", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(r);
+                            .addPrerequisite(t);
 
-                    ResearchProject v = new ResearchProject(tree, "太空理论", "", Items.paper, 0, 5)
+                    ResearchProject v = new ResearchProject(tree, "太空基础理论", "火箭与太空探索所需的基本理论", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(r);
+                            .addPrerequisite(t);
 
-                    ResearchProject w = new ResearchProject(tree, "入门光刻", "", Items.paper, 0, 5)
+                    ResearchProject w = new ResearchProject(tree, "火箭基础", "研究火箭的气动外形，引擎推力的改进等基本内容", Items.paper, 0, 5)
                             .setPos(340, 10)
-                            .addPrerequisite(r);
-            return tree;
+                            .addPrerequisite(v);
+
+                    ResearchProject x = new ResearchProject(tree, "空间概论", "研究太空中如何进行航行和维持生命等", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(v);
+
+                    ResearchProject y = new ResearchProject(tree, "保护气应用", "研究如何利用保护气制作纯度更高，性能更好的物品", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(t);
+
+                    ResearchProject z = new ResearchProject(tree, "入门计算机", "利用初代计算机的算力进一步优化电路设计，以提高算力制作下一代计算机", Items.paper, 0, 5)
+                            .setPos(340, 10)
+                            .addPrerequisite(y);
+
+
+                    return tree;
         }
         );
     }

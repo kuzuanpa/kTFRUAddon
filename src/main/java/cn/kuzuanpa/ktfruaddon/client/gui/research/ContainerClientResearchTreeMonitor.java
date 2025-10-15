@@ -186,11 +186,15 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		@Override
 		public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
 			if(!visible)return;
-			float colorTimer = ((float) Math.sin(System.currentTimeMillis()%3141/1000f))/2f+0.5f;
-			Tessellator tessellator = Tessellator.instance;
 
 			xPosition = (int) (researchProject.posX + xOld);
 			yPosition = (int) (researchProject.posY + yOld);
+
+			if(xPosition < -64-width || xPosition > mc.currentScreen.width+64)return;
+			if(yPosition < -64-height || yPosition > mc.currentScreen.height+64)return;
+
+			Tessellator tessellator = Tessellator.instance;
+			float colorTimer = ((float) Math.sin(System.currentTimeMillis()%3141/1000f))/2f+0.5f;
 
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
 			drawBackground(tessellator,colorTimer);
