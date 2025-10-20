@@ -134,9 +134,25 @@ public class ResearchTrees {
                             .setPos(1440, 70)
                             .addPrerequisite(z);
 
-                    ResearchProject ab = new ResearchProject(tree, "原子核理论", "通过研究原子核在各种情况下的状态，提出可能修改原子核的理论", Items.paper, 0, 27)
+                    ResearchProject ab = new ResearchProject(tree, "原子核理论", "通过研究原子核在各种情况下的状态，提出可能实现裂变或聚变的理论", Items.paper, 0, 27)
                             .setPos(1540, 70)
-                            .addPrerequisite(y);
+                            .addPrerequisite(aa);
+
+                    ResearchProject ac = new ResearchProject(tree, "裂变控制理论", "研究如何在宏观层面来监视和控制裂变反应", Items.paper, 0, 28)
+                            .setPos(1640, 0)
+                            .addPrerequisite(ab);
+
+                    ResearchProject ad = new ResearchProject(tree, "放射成像", "研究如何利用强穿透性的放射线对物体内部进行成像", Items.paper, 0, 29)
+                            .setPos(1540, 70)
+                            .addPrerequisite(aa);
+
+                    ResearchProject ae = new ResearchProject(tree, "叶片气动力学", "研究各种形状的叶片流过流体时对气流和叶片的影响", Items.paper, 0, 30)
+                            .setPos(1340, 140)
+                            .addPrerequisite(z);
+
+                    ResearchProject ba = new ResearchProject(tree, "聚变材料", "研究能够允许内部物质发生聚变时保持结构强度的材料", Items.paper, 0, 40)
+                            .setPos(1540, 140)
+                            .addPrerequisite(ab);
 
                     return tree;
         }
