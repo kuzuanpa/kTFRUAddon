@@ -15,7 +15,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
@@ -23,16 +22,25 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.code.TagData;
+import gregapi.computer.ITileEntityComputerizable;
 import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.fluid.FluidTankGT;
+import gregapi.old.Textures;
 import gregapi.oredict.OreDictManager;
 import gregapi.oredict.OreDictMaterialStack;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
+import gregapi.render.ITexture;
 import gregapi.tileentity.data.ITileEntityTemperature;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
+import gregapi.tileentity.energy.ITileEntityEnergy;
+import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -49,17 +57,16 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine implements ITileEntityTemperature {
+public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine implements ITileEntityEnergy, IMultiBlockEnergy, ITileEntityTemperature, ITileEntityComputerizable {
 
-    public TagData mEnergyTypeHeat = TD.Energy.HU;
-    public long mTempMax = Integer.MAX_VALUE, mMassTotal=1,mMassSelf=1,maxStrictEUt=1024,mMassLast=1;
+    public long mTempMax = 4000, mMassTotal=1,mMassSelf=1,maxStrictEUt=1024,mMassLast=1;
     public float mTemp = C, recipeBestTemp= C, recipeFactor = 0.1F;
     @Override
     public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
         if (mStopped) return 0;
         boolean tPositive = (aSize > 0);
         aSize = Math.abs(aSize);
-        if (aEnergyType == mEnergyTypeHeat) {
+        if (aEnergyType == mEnergyTypeCharged) {
             if (aDoInject) mTemp += (aSize * aAmount)*64F/mMassTotal;
             this.receivedEnergy.add(new MeterData(aEnergyType,aSize, aAmount));
             return aAmount;
@@ -77,10 +84,14 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
     }
 
     @Override
+    public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {
+        return super.isEnergyAcceptingFrom(aEnergyType, aSide, aTheoretical);
+    }
+
+    @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         mSpecialIsStartEnergy=false;
-        if (aNBT.hasKey(NBT_ENERGY_ACCEPTED_2)) mEnergyTypeHeat = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED_2));
         if (aNBT.hasKey("ktfru.nbt.massSelf")) mMassTotal = mMassSelf = aNBT.getLong("ktfru.nbt.massSelf");
         if (aNBT.hasKey(NBT_TEMPERATURE+".max")) mTempMax = aNBT.getLong(NBT_TEMPERATURE+".max");
 
@@ -108,6 +119,8 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
             updateMass();
         }
         super.onTick2(aTimer, aIsServerSide);
+
+        if(getStateRunningPassively())checkTempAndCauseBlockUpdate();
     }
 
     public void updateMass(){
@@ -141,7 +154,12 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
         return super.doActive(aTimer, aEnergy);
     }
 
-
+    protected byte lastTickStrength = 0;
+    public void checkTempAndCauseBlockUpdate(){
+        byte strength = (byte)(7+(mTemp - recipeBestTemp)/50F);
+        if(lastTickStrength != strength)causeBlockUpdate();
+        lastTickStrength = strength;
+    }
     @Override
     public int checkRecipe(boolean aApplyRecipe, boolean aUseAutoIO) {
         int i = super.checkRecipe(aApplyRecipe, aUseAutoIO);
@@ -150,6 +168,8 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
             updateMass();
             recipeBestTemp = mCurrentRecipe.mSpecialValue;
             recipeFactor = 20.1F-20*Math.min(1F, mCurrentRecipe.mEUt*1F/maxStrictEUt);
+        }else {
+            recipeBestTemp = 1;
         }
         return i;
     }
@@ -195,12 +215,12 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
 
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
-        return getAdjacentTank(SIDE_BOTTOM);
+        return getAdjacentTank(SIDE_UP);
     }
 
     @Override
     public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-        return getAdjacentTileEntity(SIDE_BOTTOM);
+        return getAdjacentTileEntity(SIDE_UP);
     }
 
     @Override
@@ -484,8 +504,8 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
                     "           ",
                     "           "
                     )
-            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31037)))
-            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31037, MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_IN)))
             .where('P', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31038)))
             .setOffset(-6,-1,-1) ;
     @Override
@@ -496,15 +516,45 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
         return lastFailedPos==null;
     }
 
-    public final short sizeX = 11, sizeY = 19, sizeZ = 14;
     public final short xMapOffset = -6, zMapOffset = 0;
 
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
-    }
+    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}
+
+
+    // Icons
+    public final static IIconContainer
+            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/fuelDeburner/base"),
+            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/fuelDeburner/front");
+
+
     @Override
-    public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.fuel_deburner";
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if(aSide==mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlayStop ));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
+
+    public static final String[] METHODS = {"getbest", "getcurrent"}, ARGS = {"void", "void"}, HELPS = {"gets the best temperature of current recipe", "gets the current temperature"};
+    public static final Class<?>[] RETURNS = {int.class, int.class};
+
+    @Override public String     getComputerizableName       (DelegatorTileEntity<TileEntity> aDelegator) {return "ktfru_fuel_deburner";}
+    @Override public String[]   allComputerizableArgs       (DelegatorTileEntity<TileEntity> aDelegator) {return ARGS;}
+    @Override public String[]   allComputerizableHelps      (DelegatorTileEntity<TileEntity> aDelegator) {return HELPS;}
+    @Override public String[]   allComputerizableMethods    (DelegatorTileEntity<TileEntity> aDelegator) {return METHODS;}
+    @Override public Class<?>[] allComputerizableReturns    (DelegatorTileEntity<TileEntity> aDelegator) {return RETURNS;}
+    @Override public String     getComputerizableArgs       (DelegatorTileEntity<TileEntity> aDelegator, int aFunctionIndex) {return ARGS[aFunctionIndex];}
+    @Override public String     getComputerizableHelp       (DelegatorTileEntity<TileEntity> aDelegator, int aFunctionIndex) {return HELPS[aFunctionIndex];}
+    @Override public String     getComputerizableMethod     (DelegatorTileEntity<TileEntity> aDelegator, int aFunctionIndex) {return METHODS[aFunctionIndex];}
+    @Override public Class<?>   getComputerizableReturn     (DelegatorTileEntity<TileEntity> aDelegator, int aFunctionIndex) {return RETURNS[aFunctionIndex];}
+
+    @Override
+    public Object[] callComputerizableMethod(DelegatorTileEntity<TileEntity> aDelegator, int aFunctionIndex, Object[] aArguments) {
+        return new Object[] {aFunctionIndex == 1 ? mTemp : recipeBestTemp};
+    }
+
+    public byte isProvidingStrongPower2(byte aSide) {return (byte) (7+(mTemp - recipeBestTemp)/50F);}
+    public byte isProvidingWeakPower2(byte aSide) {return (byte) (7+(mTemp - recipeBestTemp)/50F);}
+    @Override
+    public String getTileEntityName() {return "ktfru.multitileentity.multiblock.fuel_deburner";}
 }
