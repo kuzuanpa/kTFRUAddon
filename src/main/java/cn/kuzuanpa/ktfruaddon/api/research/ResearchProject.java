@@ -17,6 +17,7 @@ package cn.kuzuanpa.ktfruaddon.api.research;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import gregapi.util.ST;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +38,7 @@ public class ResearchProject {
     public final List<ResearchProject> postResearches = new ArrayList<>();
     public final List<IResearchTask> tasks = new ArrayList<>();
     public final short printItemMeta;
+    public final List<ItemStack> unlockItems = new ArrayList<>();
     public boolean isUnlocked = false;
     public boolean isCompleted = false;
 
@@ -82,6 +84,12 @@ public class ResearchProject {
     }
     public ResearchProject addTasks(IResearchTask... tasks) {
         this.tasks.addAll(Arrays.asList(tasks));
+        return this;
+    }
+    public ResearchProject addUnlockItem(ItemStack stack){
+        stack.stackSize = 1;
+        unlockItems.add(stack);
+        ResearchItemManager.addItemData(tree.id, printItemMeta, stack);
         return this;
     }
     public boolean removePrerequisite(ResearchProject prerequisite) {

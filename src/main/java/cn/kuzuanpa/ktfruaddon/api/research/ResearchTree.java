@@ -51,10 +51,10 @@ public class ResearchTree{
         return currentProject;
     }
 
-    public void setCurrentProject(ResearchProject project) {
-        if(this.currentProject == project || !project.isUnlocked || project.isCompleted)return;
+    public void setCurrentProject(ResearchProject currentProject) {
+        if(this.currentProject == currentProject)return;
         needUpdate = true;
-        this.currentProject = project;
+        this.currentProject = currentProject;
     }
 
     public long lastUpdateTick = 0;
@@ -170,7 +170,7 @@ public class ResearchTree{
                 String name = entry.getKey();
                 ResearchProject item = entry.getValue();
                 //ONLY save task progress when research not completed
-                if (!item.isUnlocked) continue;
+                if (!item.isUnlocked || (!item.isCompleted && item.getProgress() == 0)) continue;
                 dos.writeUTF(name);
                 dos.writeShort(item.isCompleted ? -1 : item.tasks.size());
                 if (item.isCompleted) continue;

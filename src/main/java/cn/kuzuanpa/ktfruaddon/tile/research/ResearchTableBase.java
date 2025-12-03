@@ -67,7 +67,7 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle imp
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        tryFindMonitor();
+        updateMonitor();
     }
 
     @Override
@@ -75,21 +75,21 @@ public abstract class ResearchTableBase extends TileEntityBase09FacingSingle imp
         return monitor;
     }
 
-    public void tryFindMonitor(){
-        if(monitor != null)return;
-
+    public void updateMonitor(){
+        if(monitor != null && !monitor.isInvalid())return;
+        monitor = null;
         monitorCoord = new ChunkCoordinates(xCoord+1,yCoord,zCoord);
-        if(checkMonitor())return;
+        if(checkMonitorByCoord())return;
         monitorCoord = new ChunkCoordinates(xCoord-1,yCoord,zCoord);
-        if(checkMonitor())return;
+        if(checkMonitorByCoord())return;
         monitorCoord = new ChunkCoordinates(xCoord,yCoord,zCoord+1);
-        if(checkMonitor())return;
+        if(checkMonitorByCoord())return;
         monitorCoord = new ChunkCoordinates(xCoord,yCoord,zCoord-1);
-        if(checkMonitor())return;
+        if(checkMonitorByCoord())return;
         monitorCoord = null;
     }
 
-    public boolean checkMonitor(){
+    public boolean checkMonitorByCoord(){
         if(monitorCoord == null)return false;
         TileEntity tile = WD.te(getWorldObj(),monitorCoord, false);
         if(tile instanceof IResearchTable) monitor = ((IResearchTable) tile).getMonitor();

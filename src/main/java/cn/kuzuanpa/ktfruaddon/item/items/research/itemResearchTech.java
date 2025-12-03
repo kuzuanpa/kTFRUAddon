@@ -12,7 +12,7 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.item.items.random;
+package cn.kuzuanpa.ktfruaddon.item.items.research;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import gregapi.item.CreativeTab;
@@ -20,10 +20,10 @@ import gregapi.item.multiitem.MultiItemRandom;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class itemResearch extends MultiItemRandom {
-    public itemResearch() {
-        super(MOD_ID, "ktfru.item.research");
-        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Research", this, (short) 0));
+public class itemResearchTech extends itemResearch {
+    public itemResearchTech() {
+        super(MOD_ID, "ktfru.item.research.0");
+        setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Tech Research", this, (short) 0));
     }
 
     @Override
@@ -36,5 +36,10 @@ public class itemResearch extends MultiItemRandom {
         ItemList.ResearchItem      .set(addItem(32766, "Common Research Data",  "A common data, You shouldn't get this."));
 
 
+    }
+
+    @Override
+    public byte getTreeId() {
+        return 0;
     }
 }

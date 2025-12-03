@@ -22,6 +22,7 @@ import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.item.items.random.*;
+import cn.kuzuanpa.ktfruaddon.item.items.research.itemResearchTech;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import gregapi.item.ItemBase;
 import gregapi.item.prefixitem.PrefixItem;
@@ -40,7 +41,7 @@ public class itemPreInit {
         new itemCompact();
         new itemChemistry();
         new itemCover();
-        new itemResearch();
+        new itemResearchTech();
 
 
         new PrefixItem(MOD_DATA,"ktfru.item.meta.turbine.blade", prefixList.largeTurbineBlade);

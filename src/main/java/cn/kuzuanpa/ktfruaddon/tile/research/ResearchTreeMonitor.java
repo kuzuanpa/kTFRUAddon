@@ -81,7 +81,7 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
             openGUI(aPlayer, aSide);
             return true;
         }
-        return !aPlayer.isSneaking();
+        return false;
     }
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {

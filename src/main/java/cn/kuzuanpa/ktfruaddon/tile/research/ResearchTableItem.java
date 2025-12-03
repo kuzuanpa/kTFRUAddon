@@ -139,7 +139,7 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
     @Override
     public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         IWailaTile.super.getWailaBody(currentTip, accessor, config);
-        currentTip.add("Progress: " + accessor.getNBTData().getInteger("progress")*100F/interval + "%");
+        currentTip.add("Progress: " + progress*1F/interval + "%");
         return currentTip;
     }
 }
