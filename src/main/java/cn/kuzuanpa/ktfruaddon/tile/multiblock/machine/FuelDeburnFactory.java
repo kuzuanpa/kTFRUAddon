@@ -24,6 +24,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.code.TagData;
 import gregapi.computer.ITileEntityComputerizable;
+import gregapi.data.IL;
 import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.fluid.FluidTankGT;
@@ -127,7 +128,7 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
         mMassLast = mMassTotal;
         mMassTotal = mMassSelf;
         for (int i = 0; i < invsize(); i++) {
-            if(!slotHas(i) || OreDictManager.INSTANCE.getItemData(slot(i)) == null)continue;
+            if(!slotHas(i) || IL.Circuit_Selector.equal(slot(i)) || OreDictManager.INSTANCE.getItemData(slot(i)) == null)continue;
             mMassTotal += (long) OreDictManager.INSTANCE.getItemData(slot(i)).getAllMaterialStacks().stream().mapToDouble(OreDictMaterialStack::weight).sum();
         }
         for (FluidTankGT tankGT:mTanksInput) {
@@ -201,7 +202,7 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
     static {
         LH.add("ktfru.multitileentity.multiblock.fuel_deburner.1", "Store Energy into Fuel.");
         LH.add("ktfru.multitileentity.multiblock.fuel_deburner.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("ktfru.multitileentity.multiblock.fuel_deburner.3", "Input and Output at any Blocks");
+        LH.add("ktfru.multitileentity.multiblock.fuel_deburner.3", "Input at any Blocks, Auto output from top of controller");
     }
 
     @Override
