@@ -34,10 +34,10 @@ import cpw.mods.fml.common.FMLLog;
 import gregapi.util.UT;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IIcon;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -245,7 +245,7 @@ public class ResearchTree{
         public long tryPromoteProgress(Object consumed, boolean dryRun) {return 0;}
         @Override
         public void setProgress(long progress) {}
-        @Override public IIcon getIcon() {return null;}
+        @Override public ItemStack getIcon() {return null;}
         @Override public String getIdentifier() {return "d";}
         @Override public String getDesc() {return "";}
     }

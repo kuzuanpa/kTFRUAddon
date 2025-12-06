@@ -14,11 +14,11 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research;
 
+import cn.kuzuanpa.ktfruaddon.api.code.SingleItemStack;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import gregapi.util.ST;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ResearchProject {
     public final List<ResearchProject> postResearches = new ArrayList<>();
     public final List<IResearchTask> tasks = new ArrayList<>();
     public final short printItemMeta;
-    public final List<ItemStack> unlockItems = new ArrayList<>();
+    public final List<SingleItemStack> unlockItems = new ArrayList<>();
     public boolean isUnlocked = false;
     public boolean isCompleted = false;
 
@@ -61,8 +61,8 @@ public class ResearchProject {
     }
 
     @Nullable
-    public IIcon getIcon(){
-        return iconItem != null ? iconItem.getIconFromDamage(iconItemMeta) : null;
+    public ItemStack getIcon(){
+        return iconItem != null ? new ItemStack(iconItem, 1,iconItemMeta): null;
     }
     public String getId() {
         return id;
@@ -86,8 +86,7 @@ public class ResearchProject {
         this.tasks.addAll(Arrays.asList(tasks));
         return this;
     }
-    public ResearchProject addUnlockItem(ItemStack stack){
-        stack.stackSize = 1;
+    public ResearchProject addUnlockItem(SingleItemStack stack){
         unlockItems.add(stack);
         ResearchItemManager.addItemData(tree.id, printItemMeta, stack);
         return this;
@@ -178,8 +177,8 @@ public class ResearchProject {
         }
 
         @Override
-        public IIcon getIcon() {
-            return item.getIconFromDamage(0);
+        public ItemStack getIcon() {
+            return new ItemStack(item);
         }
     }
 }

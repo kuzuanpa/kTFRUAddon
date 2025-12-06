@@ -17,7 +17,7 @@ package cn.kuzuanpa.ktfruaddon.api.research.task.minigame;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchGameTypes;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import gregapi.data.LH;
-import net.minecraft.util.IIcon;
+import net.minecraft.item.ItemStack;
 
 public class MiniGameFillTask implements IResearchTask {
     public long requiredAmount;
@@ -48,7 +48,7 @@ public class MiniGameFillTask implements IResearchTask {
     }
 
     @Override
-    public IIcon getIcon() {
+    public ItemStack getIcon() {
         return null;
     }
 

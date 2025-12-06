@@ -138,8 +138,8 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		buttons.add(hoveringPanel);
 		currentPanel = (ResearchCommonElements.CurrentPanel) new ResearchCommonElements.CurrentPanel(this,i.getAndIncrement(), 96).setJoinLeaveTime(200,Integer.MAX_VALUE).addAnime(new animeTransparency(200,800,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(200,800, -120,0,3f));
 		buttons.add(currentPanel);
-		sidePanelA = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),96, 48).setJoinLeaveTime(400,Integer.MAX_VALUE).addAnime(new animeTransparency(400,1000,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(400,1000, -120,0,3f));
-		sidePanelB = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),96, 48).setJoinLeaveTime(-1,0);
+		sidePanelA = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),116, 48).setJoinLeaveTime(400,Integer.MAX_VALUE).addAnime(new animeTransparency(400,1000,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(400,1000, -120,0,3f));
+		sidePanelB = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),116, 48).setJoinLeaveTime(-1,0);
 		buttons.add(sidePanelA);
 		buttons.add(sidePanelB);
 	}
@@ -155,8 +155,8 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 			ResearchCommonElements.SidePanel panelOld = sidePanelA;
 			sidePanelB.getGuiAnimeList().clear();
 			sidePanelA.getGuiAnimeList().clear();
-			sidePanelB.setJoinLeaveTime(getTimer(), Integer.MAX_VALUE).addAnime(new animeMoveSlowIn(getTimer(), getTimer() +1000, mc.currentScreen.width-96 - button.xPosition,48- button.yPosition, 4)).addAnime(new animeMoveLinear(0,0, button.xPosition, button.yPosition)).addAnime(new animeScaleLinear(0,0,0.1F)).addAnime(new animeScaleQuad(getTimer(), getTimer() +1000, 10.0F,4)).addAnime(new animeMoveLinear(0,0,-sidePanelB.xPosition, -sidePanelB.yPosition)).addAnime(new animeTransparency(getTimer(), getTimer() +700, 0,255));
-			sidePanelA.setJoinLeaveTime(0, getTimer() +1000).addAnime(new animeMoveSlowIn(getTimer(), getTimer() +1000, 96,0, 4));
+			sidePanelB.setJoinLeaveTime(getTimer(), Integer.MAX_VALUE).addAnime(new animeMoveSlowIn(getTimer(), getTimer() +1000, mc.currentScreen.width-sidePanelB.width - button.xPosition,48- button.yPosition, 4)).addAnime(new animeMoveLinear(0,0, button.xPosition, button.yPosition)).addAnime(new animeScaleLinear(0,0,0.1F)).addAnime(new animeScaleQuad(getTimer(), getTimer() +1000, 10.0F,4)).addAnime(new animeMoveLinear(0,0,-sidePanelB.xPosition, -sidePanelB.yPosition)).addAnime(new animeTransparency(getTimer(), getTimer() +700, 0,255));
+			sidePanelA.setJoinLeaveTime(0, getTimer() +1000).addAnime(new animeMoveSlowIn(getTimer(), getTimer() +1000, sidePanelA.width,0, 4));
 			sidePanelB.selectedProject = selectedItem;
 			sidePanelA = sidePanelB;
 			sidePanelB = panelOld;

@@ -18,7 +18,7 @@ import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import gregapi.data.IL;
 import gregapi.data.LH;
-import net.minecraft.util.IIcon;
+import net.minecraft.item.ItemStack;
 
 public class ComputeTask implements IResearchTask{
     public ComputePower type;
@@ -53,8 +53,8 @@ public class ComputeTask implements IResearchTask{
     }
 
     @Override
-    public IIcon getIcon() {
-        return IL.Circuit_Elite.getItem().getIconFromDamage(30304);
+    public ItemStack getIcon() {
+        return IL.Circuit_Elite.get(1);
     }
 
     @Override

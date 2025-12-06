@@ -16,7 +16,6 @@ package cn.kuzuanpa.ktfruaddon.api.research.task;
 
 import gregapi.util.ST;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ItemConsumeTaskBase implements IResearchTask{
@@ -55,8 +54,8 @@ public abstract class ItemConsumeTaskBase implements IResearchTask{
     }
 
     @Override
-    public IIcon getIcon() {
-        return item.getIconIndex();
+    public ItemStack getIcon() {
+        return item;
     }
 
     @Override

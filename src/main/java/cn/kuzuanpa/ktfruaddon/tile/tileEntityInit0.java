@@ -42,11 +42,9 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidFinder;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidMiner;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.OilMiner;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.*;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.research.ResearchAssembler;
 import cn.kuzuanpa.ktfruaddon.tile.random.rustBronzeCasing;
-import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableFillInPack;
-import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableItem;
-import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTablePrinter;
-import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
+import cn.kuzuanpa.ktfruaddon.tile.research.*;
 import cn.kuzuanpa.ktfruaddon.tile.space.dysonSphere.dysonSphereMonitor;
 import cn.kuzuanpa.ktfruaddon.tile.tank.CompressedGasTank;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -116,6 +114,8 @@ public class tileEntityInit0 {
         aMat = MT.StainlessSteel;      kRegistry0.add("Research Table Item"                              , "ktfruaddon: Energy",  9812, 1304, ResearchTableItem.class        , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Research Table Printer"                           , "ktfruaddon: Energy",  9813, 1304, ResearchTablePrinter.class     , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
 
+        aMat = MT.StainlessSteel;      kRegistry0.add("Research Database item"                           , "ktfruaddon: Energy",  9814, 1304, ResearchDatabaseItem.class  , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        aMat = MT.StainlessSteel;      kRegistry0.add("Research Database online"                         , "ktfruaddon: Energy",  9815, 1304, ResearchDatabaseOnline.class  , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         //9900-9999, Reactor Rods
         aMat = MT.Co;                   kRegistry0.add("Co-60 Breeder Rod"                               , "ktfruaddon: Energy",  9980,  9200, MultiTileEntityReactorRodBreeder.class  , aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  10.0F, NBT_RESISTANCE,  10.0F, NBT_MAXDURABILITY,   6400000L, NBT_NUCLEAR_LOSS,  1000, NBT_VALUE, 9990));
         //aMat = MT.U_238;                kRegistry0.add("Uranium-238 Breeder Rod"                                 , "ktfruaddon: Energy",  9981,  9200, MultiTileEntityReactorRodBreeder.class  , aMat.mToolQuality, 16, aMachine     , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  10.0F, NBT_RESISTANCE,  10.0F, NBT_MAXDURABILITY,  256000000L, NBT_NUCLEAR_LOSS,  2500, NBT_VALUE, 9991)); RM.Canner.addRecipe2(F, 16, 16, OP.bolt.mat(aMat, 4), IL.Reactor_Rod_Empty.get(1), kRegistry0.getItem());
@@ -449,8 +449,12 @@ public class tileEntityInit0 {
 
         aMat = MT.Ti;              kRegistry0.add("Ore Processing System"                  , "kTFRUAddon: Multiblock", 30041, 17200, OreProcessSystem.class , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F, NBT_INPUT_MIN, 1024, NBT_INPUT, 2048, NBT_INPUT_MAX,16384, NBT_ENERGY_ACCEPTED, TD.Energy.EU, NBT_RECIPEMAP, recipeMaps.OreProcessSystem ,NBT_TEXTURE, "oreprocesssystem", NBT_INV_SIDE_AUTO_IN, SIDE_UP ,NBT_INV_SIDE_AUTO_OUT, SIDE_BOTTOM, NBT_TANK_SIDE_AUTO_IN, SIDE_UP, NBT_TANK_SIDE_AUTO_OUT, SIDE_RIGHT, NBT_PARALLEL, 64, NBT_PARALLEL_DURATION, T), "CSC", "AMw", "CEC" , 'M', OP.casingMachineDouble.dat(aMat),  'A', OP.gearGt.dat(aMat),'S', IL.SENSORS[5],'E', IL.EMITTERS[5], 'C', "ktfruModerateComputer");
 
+        aMat = MT.Al;              kRegistry0.add("Research Assembler"                      , "kTFRUAddon: Multiblock", 30042, 17200, ResearchAssembler.class          , aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.0F, NBT_RESISTANCE, 4.0F,NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "maskAlignerUV"    , NBT_INPUT,  128, NBT_INPUT_MIN, 64  , NBT_INPUT_MAX,  256, NBT_ENERGY_ACCEPTED, TD.Energy.LU, NBT_RECIPEMAP, recipeMaps.MaskAligner      ,NBT_INV_SIDE_AUTO_IN, SIDE_UP, NBT_INV_SIDE_AUTO_OUT, SIDE_BACK                                                                   ), "SLS", "XwX", "CMC", 'L', IL.Comp_Laser_Gas_Ar, 'S', OP.stickLong.dat(aMat), 'X', OP.wireGt02.dat(MT.Cu), 'C', CS.OD_CIRCUITS[2], 'M', OP.casingMachine.dat(aMat));
+
+
         aMat = MT.Steel;           kRegistry0.add("Steel Compressed Gas Tank Main Valve"          , "kTFRUAddon: Multiblock", 30100, 17200, LargeCompressedGasTank.class      , aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.0F, NBT_RESISTANCE, 6.0F, NBT_TEXTURE, "tankmetal"               , NBT_TANK_CAPACITY,    6912000000L, NBT_DESIGN, 18029, NBT_GASPROOF, T, NBT_ACIDPROOF, F, NBT_PLASMAPROOF, F  ), " R ", "hMs", " R ", 'M', gRegistry.getItem(18029), 'R', OP.ring.dat(aMat));
         aMat = MT.StainlessSteel;  kRegistry0.add("Stainless Steel Compressed Gas Tank Main Valve", "kTFRUAddon: Multiblock", 30101, 17200, LargeCompressedGasTank.class      , aMat.mToolQuality, 16, aMachine, UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.0F, NBT_RESISTANCE, 6.0F, NBT_TEXTURE, "tankmetal"               , NBT_TANK_CAPACITY,    6912000000L, NBT_DESIGN, 18022, NBT_GASPROOF, T, NBT_ACIDPROOF, T, NBT_PLASMAPROOF, F  ), " R ", "hMs", " R ", 'M', gRegistry.getItem(18022), 'R', OP.ring.dat(aMat));
+
 
         aMat = MT.Ti;              kRegistry0.add("Test Controller"                  , "kTFRUAddon: Multiblock", 30132, 17200, exampleMappedStructureMachine.class        , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS, 6.0F, NBT_RESISTANCE, 6.0F, NBT_COLOR, UT.Code.getRGBInt(aMat.fRGBaSolid), NBT_TEXTURE, "dummycrucible"),"SCS","wMh","WPW", 'S', gRegistry.getItem(29269), 'P', OP.plateDouble.dat(aMat), 'M', OP.casingMachineDouble.dat(aMat), 'W', gRegistry.getItem(24900), 'C', "ktfruAdvancedComputer");
         //parts

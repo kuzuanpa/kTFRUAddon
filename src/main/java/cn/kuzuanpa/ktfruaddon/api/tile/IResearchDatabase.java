@@ -1,7 +1,7 @@
 package cn.kuzuanpa.ktfruaddon.api.tile;
 
-import net.minecraft.item.ItemStack;
+import cn.kuzuanpa.ktfruaddon.api.code.SingleItemStack;
 
 public interface IResearchDatabase {
-    public boolean isItemUnlocked(ItemStack singleItem);
+    public boolean isItemUnlocked(SingleItemStack stack);
 }

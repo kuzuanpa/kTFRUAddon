@@ -14,7 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.api.research.task;
 
-import net.minecraft.util.IIcon;
+import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public interface IResearchTask {
@@ -24,7 +24,7 @@ public interface IResearchTask {
     /**@return amount consumed**/
     long tryPromoteProgress(@Nullable Object consumed, boolean dryRun);
     void setProgress(long progress);
-    IIcon getIcon();
+    ItemStack getIcon();
     String getIdentifier();
     String getDesc();
 }
