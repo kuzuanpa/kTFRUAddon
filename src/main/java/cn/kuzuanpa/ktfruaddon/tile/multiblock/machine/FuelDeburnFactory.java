@@ -24,6 +24,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.code.TagData;
 import gregapi.computer.ITileEntityComputerizable;
+import gregapi.data.IL;
 import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.fluid.FluidTankGT;
@@ -127,7 +128,7 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
         mMassLast = mMassTotal;
         mMassTotal = mMassSelf;
         for (int i = 0; i < invsize(); i++) {
-            if(!slotHas(i) || OreDictManager.INSTANCE.getItemData(slot(i)) == null)continue;
+            if(!slotHas(i) || IL.Circuit_Selector.equal(slot(i)) || OreDictManager.INSTANCE.getItemData(slot(i)) == null)continue;
             mMassTotal += (long) OreDictManager.INSTANCE.getItemData(slot(i)).getAllMaterialStacks().stream().mapToDouble(OreDictMaterialStack::weight).sum();
         }
         for (FluidTankGT tankGT:mTanksInput) {

@@ -14,7 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
-import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTaskSimple;
+import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.IWailaTile;
@@ -25,7 +25,6 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.util.ST;
 import gregapi.util.UT;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -40,9 +39,8 @@ import java.util.List;
 
 import static gregapi.data.CS.T;
 
-public class ResearchTableItem extends ResearchTableBase implements IMultiTileEntity.IMTE_SyncDataByteArray, IWailaTile {
-    public int interval=10, speed=1, progress;
-    protected ItemStack consuming = null;
+public class ResearchTableCopyer extends ResearchTableBase implements IMultiTileEntity.IMTE_SyncDataByteArray, IWailaTile {
+    public int interval=100, progress;
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerClientDefault(aPlayer.inventory, this, aGUIID);
@@ -54,20 +52,17 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        ST.save(aNBT,"consuming", consuming);
         UT.NBT.setNumber(aNBT, aNBT, progress);
     }
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if(aNBT.hasKey("consuming"))consuming = ST.load(aNBT, "consuming");
-        if(aNBT.hasKey("progress"))progress = aNBT.getInteger("progress");
         if(aNBT.hasKey(kTileNBT.INTERVAL))interval = aNBT.getInteger(kTileNBT.INTERVAL);
-        if(aNBT.hasKey(kTileNBT.SPEED))speed = aNBT.getInteger(kTileNBT.SPEED);
+        if(aNBT.hasKey("progress"))progress = aNBT.getInteger("progress");
     }
 
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.item";}
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.copyer";}
 
     @Override
     public boolean allowInteraction(Entity aEntity) {
@@ -75,8 +70,8 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
     }
     // Icons
     public final static IIconContainer
-            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/research/table/item/base"),
-            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/research/table/item/front");
+            sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/research/table/printer/base"),
+            sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/research/table/printer/front");
 
 
     @Override
@@ -89,45 +84,29 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if(aIsServerSide && slotHas(0) && consuming == null) {
-            long count = tryPromoteCurrentProjectProgress(ItemConsumeTaskSimple.class, slot(0), true);
-            int consume = (int)Math.min(speed, count);
-            if(consume < 1)return;
-            if(slot(0).stackSize > consume) {
-                consuming = slot(0).copy();
-                consuming.stackSize = consume;
-                slot(0).stackSize -= consume;
-            }else {
-                consuming = slot(0);
-                slotKill(0);
-            }
-        }
-
-        if(aIsServerSide && consuming!=null){
+        if(aIsServerSide && slotHas(0) && ItemList.ResearchItem.equal(slot(0))) {
             progress ++;
             if(progress < interval)return;
-            long amount = tryPromoteCurrentProjectProgress(ItemConsumeTaskSimple.class, consuming, false);
-            if(amount < consuming.stackSize) {
-                consuming.stackSize -= (int) amount;
-                setInventorySlotContents(1, consuming);
-            }
+            slot(0).stackSize ++ ;
             progress = 0;
-            consuming = null;
+            return;
         }
+        progress = 0;
     }
 
     //Inventory
-    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
     @Override public boolean canDrop(int aInventorySlot) {return T;}
 
-    private static final int[] ACCESSIBLE_SLOTS = new int[] {0, 1};
+    private static final int[] ACCESSIBLE_SLOTS = new int[] {0};
 
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
 
-    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 1;}
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
 
     @Override
-    public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 0;}
+    public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
+
 
     @Override
     public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
@@ -139,7 +118,7 @@ public class ResearchTableItem extends ResearchTableBase implements IMultiTileEn
     @Override
     public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         IWailaTile.super.getWailaBody(currentTip, accessor, config);
-        currentTip.add("Progress: " + accessor.getNBTData().getInteger("progress")*100F/interval + "%");
+        currentTip.add("Progress: " + accessor.getNBTData().getLong("progress")*100F/interval + "%");
         return currentTip;
     }
 }

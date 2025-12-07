@@ -170,7 +170,7 @@ public class ResearchTree{
                 String name = entry.getKey();
                 ResearchProject item = entry.getValue();
                 //ONLY save task progress when research not completed
-                if (!item.isUnlocked || (!item.isCompleted && item.getProgress() == 0)) continue;
+                if (!item.isUnlocked) continue;
                 dos.writeUTF(name);
                 dos.writeShort(item.isCompleted ? -1 : item.tasks.size());
                 if (item.isCompleted) continue;
