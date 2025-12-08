@@ -47,6 +47,7 @@ public class commonProxy extends Abstract_Proxy {
     public void preInit(FMLPreInitializationEvent aEvent) {
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
+        FMLCommonHandler.instance().registerCrashCallable(new EnvironmentHelper.TFRUValidator.TFRUValidatorCallable());
         updateTFRUEnvironment(aEvent);
         kNetworkHandler = new NetworkHandler(MOD_ID, "kAdd", new PacketFxBlockOutline(), new PacketContainerButtonPressed(), new PacketUUIDAssignedData()
                 , new PacketSyncDataByteArrayLong( 0), new PacketSyncDataByteArrayLong( 1), new PacketSyncDataByteArrayLong( 2), new PacketSyncDataByteArrayLong( 3), new PacketSyncDataByteArrayLong( 4), new PacketSyncDataByteArrayLong( 5), new PacketSyncDataByteArrayLong( 6), new PacketSyncDataByteArrayLong( 7)
