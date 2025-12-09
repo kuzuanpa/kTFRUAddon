@@ -143,10 +143,11 @@ public class EnvironmentHelper {
         public static byte state = STATE_INIT;
         public static List<String> mismatchedFiles = new ArrayList<>();
         public static String totalStringOfMismatchedFile = "";
+        public static final List<String> excludedPaths = Arrays.asList("InvTweaks.cfg","splash.properties","carpentersblocks/CarpentersBlocksCachedResources.zip");//they changed every launch
         @Override
         public void run() {
             try {
-                if(Files.exists(Paths.get("config/TFRU/SkipCheck"))){
+                if(Files.exists(Paths.get("validate/SkipCheck"))){
                     state=STATE_SKIPPED;
                     return;
                 }
@@ -154,8 +155,8 @@ public class EnvironmentHelper {
 
                 for (String dir : Arrays.asList("config","docs","ideas","resources","scripts","mods")){
                     Map<String, String> map = walkPathSHA1(dir);
-                    List<String> list = validateFiles("validate/TFRU-validate-info-"+dir,map);
-                    mismatchedFiles.addAll(list.stream().map(str-> dir+str).collect(Collectors.toList()));
+                    List<String> list = validateFiles("validate/TFRU-validate-info-"+dir,map, !dir.equals("config"));
+                    mismatchedFiles.addAll(list.stream().map(str-> dir+" "+str).collect(Collectors.toList()));
                 }
                 state = mismatchedFiles.isEmpty()?STATE_PASSED :STATE_MISMATCH;
 
@@ -228,7 +229,7 @@ public class EnvironmentHelper {
          * @param sha1Map 计算的SHA1 Map
          * @return 不符合的文件路径列表
          */
-        public static List<String> validateFiles(String infoFilePath, Map<String, String> sha1Map) {
+        public static List<String> validateFiles(String infoFilePath, Map<String, String> sha1Map, boolean detectMoreFiles) {
             List<String> mismatchedFiles = new ArrayList<>();
             Path validatePath = Paths.get(infoFilePath);
 
@@ -251,21 +252,25 @@ public class EnvironmentHelper {
                         String filePath = parts[0].replaceAll("^'|'$", "").trim();
                         String expectedSHA1 = parts[1].replaceAll("^'|'$", "").trim();
 
+                        if(excludedPaths.stream().anyMatch(str->str.equals(filePath))){
+                            sha1Map.remove(filePath);
+                            continue;
+                        }
+
                         String actualSHA1 = sha1Map.get(filePath);
                         if (actualSHA1 == null) {
                             mismatchedFiles.add("- "+filePath);
                         } else if (!actualSHA1.equalsIgnoreCase(expectedSHA1)) {
-                            mismatchedFiles.add("x "+filePath);
-                        }else{
-                            sha1Map.remove(filePath);
+                            mismatchedFiles.add("x " + filePath);
                         }
+                        sha1Map.remove(filePath);
                     }
                 }
             }catch (IOException e){
                 FMLLog.log(Level.ERROR,"[TFRUValidator] Error: " + e.getMessage());
 
             }
-            sha1Map.forEach((str,sha1)-> mismatchedFiles.add("+ "+str));
+            if(detectMoreFiles)sha1Map.forEach((str,sha1)-> mismatchedFiles.add("+ "+str));
             return mismatchedFiles;
         }
 
