@@ -41,23 +41,22 @@ public class ResearchTrees {
                             .addUnlockItem(new SingleItemStack(ST.make(MD.GC_ADV_ROCKETRY, "circuitIC", 1,4)))
                             .addUnlockItem(new SingleItemStack(ST.make(MD.GC_ADV_ROCKETRY, "circuitIC", 1,5)));
 
-                    ResearchProject projector = new ResearchProject(tree, "投影", "你需要探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, 2)
+                    ResearchProject projector = new ResearchProject(tree, "投影", "在光下探索光学成像的原理，设计基础投影设备，来将你对机器的构想投射到世界中", AdvancedRocketryItems.itemSatellitePrimaryFunction, 0, 2)
                             .setPos(80, 0)
                             .addPrerequisite(tree.rootItem)
-                            .addTask(new ItemConsumeTaskSimple(ST.make(Blocks.glass_pane, 4, 0)))
+                            .addTask(new ItemConsumeTaskSimple(ST.make(Blocks.glass_pane, 8, 0)))
                             .addUnlockItem(new SingleItemStack(ST.make(MD.VULPES, "item.holoProjector", 1)));
 
                     ResearchProject siliconBasic = new ResearchProject(tree, "硅理论", "利用最初的芯片辅助你研究硅的特性，了解它的各项特性在芯片制造中的关键作用", Items.paper, 0, 3)
                             .setPos(180, 70)
                             .addPrerequisite(circuitBasic)
-                            .addTask(new ItemConsumeTaskSimple(OP.dustSmall.mat(MT.Si,4)));
+                            .addTask(new ItemConsumeTaskSimple(OP.plateTiny.mat(MT.Si,24)));
 
                     ResearchProject crystallizer = new ResearchProject(tree, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si, 0).getItem(), MT.Si.mID, 4)
                             .setPos(280, 70)
                             .addPrerequisite(siliconBasic)
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cupronickel,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.IronMagnetic,2)))
-                            .addTask(new ItemConsumeTaskSimple(OP.gem.mat(MT.NetherQuartz,1)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cupronickel,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.gem.mat(MT.NetherQuartz,8)))
                             .addUnlockItem(new SingleItemStack(ST.make(MD.GC_ADV_ROCKETRY, "crystallizer", 1)))
                             .addUnlockItem(new SingleItemStack(GTTileEntityRegistry.gregtech.getItem(20251)))
                             .addUnlockItem(new SingleItemStack(GTTileEntityRegistry.gregtech.getItem(20252)))
@@ -66,7 +65,6 @@ public class ResearchTrees {
 
                     ResearchProject circuitDesignT1 = new ResearchProject(tree, "基础电路设计", "利用计算器进一步改进电路，你认为你离真正的自动化控制不远了", Items.paper, 0, 5)
                             .setPos(380, 70)
-                            .addPrerequisite(siliconBasic)
                             .addPrerequisite(crystallizer);
 
                     ResearchProject lightningProcess = new ResearchProject(tree, "电弧处理", "你的记忆中总能见到电弧，但如何利用它而不损坏材料，需要你进一步研究", Items.paper, 0, 6)

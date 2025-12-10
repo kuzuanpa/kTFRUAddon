@@ -51,10 +51,10 @@ public class ResearchTree{
         return currentProject;
     }
 
-    public void setCurrentProject(ResearchProject currentProject) {
-        if(this.currentProject == currentProject)return;
+    public void setCurrentProject(ResearchProject project) {
+        if(this.currentProject == project || !project.isUnlocked || project.isCompleted)return;
         needUpdate = true;
-        this.currentProject = currentProject;
+        this.currentProject = project;
     }
 
     public long lastUpdateTick = 0;
