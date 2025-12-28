@@ -64,7 +64,7 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
     }
     public void addEnergyToolTips(List<String> aList, ItemStack aStack, boolean aF3_H){
         aList.add(LH.Chat.GREEN + LH.get(LH.ENERGY_INPUT)  + ": " + LH.Chat.WHITE + mInputMin  + " - " +mInputMax  + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * max " + LH.Chat.CYAN + mMaxAmpere + "A/t");
-        if(mOutput > 0)aList.add(LH.Chat.RED   + LH.get(LH.ENERGY_OUTPUT) + ": " + LH.Chat.WHITE + mOutput + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * max " + LH.Chat.CYAN + mMaxAmpere + "A/t");
+        if(mOutput > 0)aList.add(LH.Chat.RED   + LH.get(LH.ENERGY_OUTPUT) + ": " + LH.Chat.WHITE + mOutput + mEnergyTypeOut.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * max " + LH.Chat.CYAN + mMaxAmpere + "A/t");
     }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -97,6 +97,7 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
+
     @Override
     public void onMagnifyingGlass2(List<String> aChatReturn) {
         super.onMagnifyingGlass2(aChatReturn);

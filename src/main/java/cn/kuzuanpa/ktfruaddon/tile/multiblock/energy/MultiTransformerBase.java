@@ -58,7 +58,7 @@ public abstract class MultiTransformerBase extends MultiBatteryBase {
     public void addEnergyToolTips(List<String> aList, ItemStack aStack, boolean aF3_H){
         aList.add(LH.Chat.YELLOW + LH.get(LH.EFFICIENCY)  + ": " + LH.Chat.WHITE + mEfficiency/100F + "%");
         aList.add(LH.Chat.GREEN + LH.get(LH.ENERGY_INPUT)  + ": " + LH.Chat.WHITE + mInputMin  + " - " +mInputMax  + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * max " + LH.Chat.CYAN + mMaxAmpere + "A/t");
-        aList.add(LH.Chat.RED   + LH.get(LH.ENERGY_OUTPUT) + ": " + LH.Chat.WHITE + mOutputMin + " - " +mOutputMax + mEnergyType.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * max " + LH.Chat.CYAN + mMaxAmpere + "A/t");
+        aList.add(LH.Chat.RED   + LH.get(LH.ENERGY_OUTPUT) + ": " + LH.Chat.WHITE + mOutputMin + " - " +mOutputMax + mEnergyTypeOut.getLocalisedChatNameShort() + LH.Chat.WHITE + "/A * max " + LH.Chat.CYAN + mMaxAmpere + "A/t");
     }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
