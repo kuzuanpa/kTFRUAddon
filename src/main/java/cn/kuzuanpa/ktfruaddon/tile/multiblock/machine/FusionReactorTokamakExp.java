@@ -25,6 +25,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructur
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
@@ -67,12 +68,11 @@ import net.minecraftforge.fluids.IFluidTank;
 import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory {
+public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory , SpecialPartPredicate.IReceiveSpecialPart {
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
     public static final short MAX_FIELD_STRENGTH=400, KEEP_CHARGE_EUt=512;
     public static final long MAX_CHARGE =16*1024L*1024L;
@@ -368,10 +368,10 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
     MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
-    public void receiveSpecialBlockList(List<TileEntity> list) {
-        computeNodesCoord = list.stream().map(tile -> new ChunkCoordinates(tile.xCoord,tile.yCoord,tile.zCoord)).collect(Collectors.toList());
+    @Override
+    public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
+        computeNodesCoord.add(partPos);
     }
-
     private ChunkCoordinates lastFailedPos=null;
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
@@ -543,13 +543,14 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
             .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31018)))
             .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31019)))
             .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31024)))
-            .where('H', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
+            .where('H', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
             .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .setOffset(-1,-1,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        computeNodesCoord.clear();
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }

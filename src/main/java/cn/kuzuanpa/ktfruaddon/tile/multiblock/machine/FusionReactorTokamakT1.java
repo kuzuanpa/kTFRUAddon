@@ -25,6 +25,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructur
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
@@ -69,12 +70,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory {
+public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory, SpecialPartPredicate.IReceiveSpecialPart {
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
     public static final short MAX_FIELD_STRENGTH=1000, KEEP_CHARGE_EUt=8192;
     public static final long MAX_CHARGE = 1073741824L;//1024^3
@@ -665,13 +665,14 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31027)))
             .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31028)))
             .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31024)))
-            .where('H', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
+            .where('H', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
             .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .setOffset(-12,-1,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        computeNodesCoord.clear();
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
@@ -694,10 +695,6 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public final short machineX = 27, machineY = 14, machineZ = 27;
     public final short xMapOffset = -12,yMapOffset = -1, zMapOffset = 0;
 
-    public void receiveSpecialBlockList(List<TileEntity> list) {
-        computeNodesCoord = list.stream().map(tile -> new ChunkCoordinates(tile.xCoord,tile.yCoord,tile.zCoord)).collect(Collectors.toList());
-    }
-
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
@@ -712,5 +709,10 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     @Override public boolean[] getValidSides() {return SIDES_HORIZONTAL;}
     @Override public String getTileEntityName() {
         return "ktfru.multitileentity.multiblock.fusion.tokamak.1";
+    }
+
+    @Override
+    public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
+        computeNodesCoord.add(partPos);
     }
 }
