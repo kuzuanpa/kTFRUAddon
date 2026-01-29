@@ -249,21 +249,22 @@ public class EnvironmentHelper {
                     // 解析格式：'相对路径' > 'sha1值'
                     String[] parts = line.split("\\s*>\\s*");
                     if (parts.length == 2) {
-                        String filePath = parts[0].replaceAll("^'|'$", "").trim();
+                        String fileName = parts[0].replaceAll("^'|'$", "").trim();
+                        Path filePath = Paths.get(fileName);
                         String expectedSHA1 = parts[1].replaceAll("^'|'$", "").trim();
 
-                        if(excludedPaths.stream().anyMatch(str->str.equals(filePath))){
-                            sha1Map.remove(filePath);
+                        if(excludedPaths.stream().anyMatch(str->Paths.get(str).equals(filePath))){
+                            sha1Map.remove(fileName);
                             continue;
                         }
 
-                        String actualSHA1 = sha1Map.get(filePath);
+                        String actualSHA1 = sha1Map.get(fileName);
                         if (actualSHA1 == null) {
                             mismatchedFiles.add("- "+filePath);
                         } else if (!actualSHA1.equalsIgnoreCase(expectedSHA1)) {
                             mismatchedFiles.add("x " + filePath);
                         }
-                        sha1Map.remove(filePath);
+                        sha1Map.remove(fileName);
                     }
                 }
             }catch (IOException e){
