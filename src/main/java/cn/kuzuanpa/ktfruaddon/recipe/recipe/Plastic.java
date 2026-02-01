@@ -75,11 +75,11 @@ public class Plastic {
         recipeMaps.   HeatMixer          .addRecipe1(F,83 , 100,OP.dust.mat(MT.K2SO4,0),FL.array(MT.SO3.gas(U, true) ),ZL_FS,OP.dust.mat(MT.K2S2O7,1));
         RM.           Mixer              .addRecipe1(F,115, 100,OP.dust.mat(MT.K2SO4,0),FL.array(MT.H2SO4.liquid(U, true)),FL.Water.make(0),OP.dust.mat(MT.K2S2O7,1));
 
-        RM.           Mixer              .addRecipe1(F,256,1200,OP.dust.mat(MT.K2S2O7,0),FL.array(flList.Tetrafluoroethylene.make(1000),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.Teflon,7));
+        RM.           Mixer              .addRecipe1(F,256,1000,OP.dust.mat(MT.K2S2O7,0),FL.array(flList.Tetrafluoroethylene.make(1000),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.Teflon,7));
 
         recipeMaps.   HeatMixer          .addRecipeX(F,320,1200, ST.array(ItemList.ProtonExchangeMembrane.get(0),matList.BPA.getDust(1),OP.dust.mat(MT.NaOH,2)),FL.array(flList.Epichlorohydrin.make(1000)),FL.array(FL.Saltwater.make(800)),matList.EpoxyResin.getDust(6));
 
-        RM.           Mixer              .addRecipe1(F,148, 870,matList.TriethylAluminium.getDust(0),FL.array(FL.Ethylene.make(100),MT.TiCl4.liquid(0,false)),ZL_FS,OP.dust.mat(MT.Plastic,1));
+        RM.           Mixer              .addRecipe1(F,148, 170,matList.TriethylAluminium.getDust(0),FL.array(FL.Ethylene.make(100),MT.TiCl4.liquid(0,false)),ZL_FS,OP.dust.mat(MT.Plastic,1));
 
         RM.           Mixer              .addRecipe0(F,220,1200,FL.array(MT.H2SO4.liquid(0,false),flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
         recipeMaps.   HeatMixer          .addRecipe1(F,180,1200,OP.dust.mat(MT.NaOH,0),FL.array(flList.Phenol.make(1000),flList.Formaldehyde.make(1000)),ZL_FS,OP.dust.mat(MT.Bakelite,8));
@@ -114,7 +114,7 @@ public class Plastic {
 
         recipeMaps.   HeatMixer          .addRecipe0(F,144,320,FL.array(flList.DichloroEthane.make(100)),FL.array(flList.VinylChloride.make(100),MT.HCl.gas(U10,false)),ZL_IS);
 
-        recipeMaps.   HeatMixer          .addRecipe0(F,256,120,FL.array(flList.VinylChloride.make(100),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.PVC,1));
+        recipeMaps.   HeatMixer          .addRecipe0(F,146,120,FL.array(flList.VinylChloride.make(100),FL.Water.make(0)),ZL_FS,OP.dust.mat(MT.PVC,1));
 
         recipeMaps.   HeatMixer          .addRecipe0(F,156, 80,FL.array(flList.Benzene.make(100),FL.Ethylene.make(100)),FL.array(flList.Ethylbenzene.make(100)),ZL_IS);
 

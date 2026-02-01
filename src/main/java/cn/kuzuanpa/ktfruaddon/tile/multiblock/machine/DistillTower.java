@@ -66,7 +66,7 @@ public class DistillTower extends TileEntityBase10MultiBlockMachine {
             )
             .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18101, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
             .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18102, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18102, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN, 1)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18102, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_OUT, 1)))
             .setOffset(-1,-1,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
