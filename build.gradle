@@ -90,7 +90,7 @@ dependencies {
 
     implementation "cn.kuzuanpa:gregtech6-TFRU:6.17.05.5:dev"
     implementation "cn.kuzuanpa:AdvancedRocketry-TFRU:1.4.1:dev"
-    implementation "cn.kuzuanpa:TFCraft-TFRU:0.82.3:dev"
+    implementation "cn.kuzuanpa:TerraFirmaCraft-TFRU:0.82.4:dev"
     implementation "cn.kuzuanpa:kguilib:1.2.1:dev"
     implementation "cn.kuzuanpa:Botania-TFRU:1.3.2:dev"
     implementation "cn.kuzuanpa:LibVulpes-TFRU:0.2.10:universal"
