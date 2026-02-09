@@ -122,7 +122,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(Chat.CYAN     + LH.get(LH.RECIPES) + ": " + Chat.WHITE + LH.get(mRecipes.mNameInternal));
         aList.add(Chat.GREEN    + LH.get(LH.FLUID_INPUT)+ ": " + Chat.WHITE + LH.get(I18nHandler.SIDE_RIGHT)+", "+LH.get(I18nHandler.SIDE_LEFT));
-        aList.add(Chat.RED      + LH.get(LH.FLUID_OUTPUT)+ ": " + Chat.WHITE + LH.get(I18nHandler.SIDE_FRONT)+" "+LH.get(I18nHandler.AUTO)+", "+LH.get(I18nHandler.SIDE_BACK)+" "+LH.get(I18nHandler.AUTO));
+        aList.add(Chat.RED      + LH.get(LH.FLUID_OUTPUT)+ ": " + Chat.WHITE + LH.get(I18nHandler.SIDE_BOTTOM)+" "+LH.get(I18nHandler.AUTO));
         LH.addEnergyToolTips(this, aList, null, mEnergyTypeEmitted, null, LH.get(LH.FACE_TOP));
         aList.add(Chat.WHITE    + String.format(LH.get(I18nHandler.FUEL_BATTERY_0), mElectrolyteRequired));
         aList.add(Chat.ORANGE   + LH.get(LH.NO_GUI_FUNNEL_TAP_TO_TANK));
@@ -152,8 +152,8 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
 
             if (mEnergy < 0) mEnergy = 0;
             //AutoOutput
-            if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(mFacing));
-            if (mTanks[3]!=null) FL.move(mTanks[3], getAdjacentTank(OPOS[mFacing]));
+            if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(SIDE_BOTTOM));
+            if (mTanks[3]!=null) FL.move(mTanks[3], getAdjacentTank(SIDE_BOTTOM));
             //doRecipe
             if (changingStaticTank || mEnergy >= mRate * 2 || mStopped || slot(0)==null || slot(1)==null || mTankStatic.amount() < mElectrolyteRequired)
                 return;
