@@ -16,7 +16,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import net.minecraft.block.Block;
 import net.minecraft.util.ChunkCoordinates;
 import zmaster587.libVulpes.block.BlockMeta;
@@ -51,7 +51,7 @@ public class BlockPredicate implements IStructurePredicate {
 
     @Override
     public boolean project(StructureContext ctx, int x, int y, int z) {
-        kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z,  new BlockMeta(expected, expectedMeta));
+        kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z,  new BlockMeta(expected, expectedMeta));
         return true;
     }
 }

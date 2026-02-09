@@ -17,7 +17,7 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.block.multitileentity.MultiTileEntityContainer;
@@ -69,11 +69,11 @@ public class ChangeablePartPredicate implements IStructurePredicate {
     @Override
     public boolean project(StructureContext ctx, int x, int y, int z) {
         if(expected == null)return false;
-        if(expected.length == 1) kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z,  getMetaBlockForGTTile(expected[0].aRegistry, expected[0].aRegistryMeta));
+        if(expected.length == 1) kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z,  getMetaBlockForGTTile(expected[0].aRegistry, expected[0].aRegistryMeta));
         else {
             List<BlockMeta> list = new ArrayList<>();
             for(TileDesc desc : expected)list.add(getMetaBlockForGTTile(desc.aRegistry, desc.aRegistryMeta));
-            kTFRUAddonARProjectorRegister.setProjectBlock(ctx.world, x,y,z, list);
+            kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z, list);
         }
         return true;
     }

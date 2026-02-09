@@ -297,14 +297,16 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     @Override public boolean getStateOnOff() {return !mStopped;}
 
     public FluidTankGT getAvailInputTank(Fluid input) {
-        if (changingStaticTank&&!mTankStatic.isFull()) return mTankStatic;
-        else {
-            for (FluidTankGT tank : mTanksInput) if (tank.fluid() != null && tank.fluid() == input) {
-                if (!tank.isFull()) return tank;
-                else return null;
-            }
-            for (FluidTankGT tank : mTanksInput) if (tank.isEmpty()) return tank;
+        if (changingStaticTank){
+            return mTankStatic.isFull()?null:mTankStatic;
         }
+
+        for (FluidTankGT tank : mTanksInput) if (tank.fluid() != null && tank.fluid() == input) {
+            if (!tank.isFull()) return tank;
+            else return null;
+        }
+        for (FluidTankGT tank : mTanksInput) if (tank.isEmpty()) return tank;
+
         return null;
     }
 

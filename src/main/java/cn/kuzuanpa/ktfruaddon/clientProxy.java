@@ -18,7 +18,7 @@ package cn.kuzuanpa.ktfruaddon;
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
-import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorRegister;
+import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import cn.kuzuanpa.ktfruaddon.client.render.*;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
 import cn.kuzuanpa.ktfruaddon.tile.machine.TFCPresser;
@@ -52,7 +52,7 @@ public class clientProxy extends commonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         if(isAdvancedRocketryTFRU)try{
-            zmaster587.libVulpes.LibVulpes.addDummyMultiBlockRegisterer(new kTFRUAddonARProjectorRegister());
+            zmaster587.libVulpes.LibVulpes.addDummyMultiBlockRegisterer(new kTFRUAddonARProjectorCompact());
         }catch (Exception ignored){}
     }
 

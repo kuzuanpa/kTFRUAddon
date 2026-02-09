@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class kTFRUAddonARProjectorRegister implements IDummyMultiBlockRegisterer {
+public class kTFRUAddonARProjectorCompact implements IDummyMultiBlockRegisterer {
     static MultiTileEntityRegistry g;
     static MultiTileEntityRegistry k;
     public static List<DummyTileMultiBlock> dummyStructures = new ArrayList<>();
-    public kTFRUAddonARProjectorRegister(){
+    public kTFRUAddonARProjectorCompact(){
         g = MultiTileEntityRegistry.getRegistry("gt.multitileentity");
         k = ktfruaddon.kTileRegistry0;
     }
@@ -52,11 +52,11 @@ public class kTFRUAddonARProjectorRegister implements IDummyMultiBlockRegisterer
     public List<DummyTileMultiBlock> getDummyMultiBlocks() {
         return dummyStructures;
     }
-    public static boolean setProjectBlock(World world, int x, int y, int z, BlockMeta block){
-        return setProjectBlock(world, x, y, z, Collections.singletonList(block));
+    public static boolean projectBlock(World world, int x, int y, int z, BlockMeta block){
+        return projectBlock(world, x, y, z, Collections.singletonList(block));
     }
 
-    public static boolean setProjectBlock(World world, int x, int y, int z, List<BlockMeta> block){
+    public static boolean projectBlock(World world, int x, int y, int z, List<BlockMeta> block){
         if(!(world.isAirBlock(x, y, z) || world.getBlock(x, y, z).isReplaceable(world, x, y, z)) && block.get(0).getBlock().getMaterial() != Material.air) return false;
         world.setBlock(x, y, z, LibVulpesBlocks.blockPhantom, block.get(0).getMeta(), 3);
         TileEntity newTile = world.getTileEntity(x, y, z);
