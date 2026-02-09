@@ -174,17 +174,18 @@ public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
                     " AA",
                     "WAA"
             ).fixedLayer('B',
-                    "WWW",
-                    "WWW",
-                    "WWW"
+                    "WOO",
+                    "WOO",
+                    "WOO"
             )
             .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31014)))
             .where('W', new ChangeablePartPredicate())
+            .where('O', new ChangeablePartPredicate())
             .setOffset(-1,0,0);
 
     @Override
     public TileDesc[] getChangeablePartDesc(char identifier) {
-        return new TileDesc[]{new TileDesc(GTTileEntityRegistry.gregtech, wallID, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN)};
+        return new TileDesc[]{new TileDesc(GTTileEntityRegistry.gregtech, wallID, identifier == 'W'? MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_IN : MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY_OUT)};
     }
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
