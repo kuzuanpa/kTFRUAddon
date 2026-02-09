@@ -147,44 +147,48 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (aIsServerSide) {
             //emitEnergy
-            if (mEnergy >= mRate) {
-                ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeEmitted, mRate, 1, this);
-                mEnergy -= mRate;
-            }
-            //doRecipe
-            if (!changingStaticTank&&mEnergy < mRate * 2 && !mStopped &&slot(0)!=null&&slot(1)!=null && mTankStatic.amount() >= mElectrolyteRequired) {
-                mActivity.mActive = F;
-                Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, T, Long.MAX_VALUE, NI, mTanksRecipe, slot(0),slot(1));
-                if (tRecipe != null) {
-                    if (tRecipe.mFluidOutputs.length < 1 || mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])&&(tRecipe.mFluidOutputs.length<2||mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1]))) {
-                    if (tRecipe.mFluidInputs.length >1&&mTanksInput[0].fluid()!=tRecipe.mFluidInputs[0].getFluid()){
-                        //swap Tanks when Input Fluids in wrong order
-                        FluidStack tmp = mTanksInput[0].get();
-                        mTanksInput[0].setEmpty();
-                        mTanksInput[0].fillAll(mTanksInput[1].get());
-                        mTanksInput[1].setEmpty();
-                        mTanksInput[1].fillAll(tmp);
-                    }
-                        if (tRecipe.isRecipeInputEqual(T, F, mTanksRecipe,slot(0),slot(1))) {
-                            mActivity.mActive = T;
-                            mLastRecipe = tRecipe;
-                            mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
-                            if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
-                            if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
-                            while (mEnergy < mRate * 2 && (tRecipe.mFluidOutputs.length < 1 || tRecipe.mFluidOutputs.length == 1&&mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])||tRecipe.mFluidOutputs.length == 2&&mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])&&mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1])) && tRecipe.isRecipeInputEqual(T, F, mTanksInput, ZL_IS)) {
-                                mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
-                                if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
-                                if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
-                                if (mTanksInput[0].isEmpty()||(mTanksInput[1].isEmpty()&&tRecipe.mFluidInputs[1]!=null)) break;
-                            }
-                        }
-                    }
-                }
-            }
+            if (mEnergy >= mRate)
+                mEnergy -= mRate * ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyTypeEmitted, mRate, 1, this);
+
             if (mEnergy < 0) mEnergy = 0;
             //AutoOutput
             if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(mFacing));
             if (mTanks[3]!=null) FL.move(mTanks[3], getAdjacentTank(OPOS[mFacing]));
+            //doRecipe
+            if (changingStaticTank || mEnergy >= mRate * 2 || mStopped || slot(0)==null || slot(1)==null || mTankStatic.amount() < mElectrolyteRequired)
+                return;
+
+            mActivity.mActive = F;
+            Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, T, Long.MAX_VALUE, NI, mTanksRecipe, slot(0), slot(1));
+
+            if (tRecipe == null
+                    || tRecipe.mFluidOutputs.length > 0 && !mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])
+                    || tRecipe.mFluidOutputs.length == 2 && !mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1]))
+                return;
+
+            if (tRecipe.mFluidInputs.length > 1 && mTanksInput[0].fluid() != tRecipe.mFluidInputs[0].getFluid()) {
+                //swap Tanks when Input Fluids in wrong order
+                FluidStack tmp = mTanksInput[0].get();
+                mTanksInput[0].setEmpty();
+                mTanksInput[0].fillAll(mTanksInput[1].get());
+                mTanksInput[1].setEmpty();
+                mTanksInput[1].fillAll(tmp);
+            }
+
+            if (tRecipe.isRecipeInputEqual(T, F, mTanksRecipe, slot(0), slot(1))) {
+                mActivity.mActive = T;
+                mLastRecipe = tRecipe;
+                mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
+                if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
+                if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
+                while (mEnergy < mRate * 2 && (tRecipe.mFluidOutputs.length < 1 || tRecipe.mFluidOutputs.length == 1 && mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0]) || tRecipe.mFluidOutputs.length == 2 && mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0]) && mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1])) && tRecipe.isRecipeInputEqual(T, F, mTanksInput, ZL_IS)) {
+                    mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
+                    if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
+                    if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
+                    if (mTanksInput[0].isEmpty() || (mTanksInput[1].isEmpty() && tRecipe.mFluidInputs[1] != null))
+                        break;
+                }
+            }
         }
     }
 
@@ -222,7 +226,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
 
     @Override
     protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
-        return getAvailInputTank(aFluidToFill.getFluid());
+        return aSide != mFacing && aSide != OPOS[mFacing] ? getAvailInputTank(aFluidToFill.getFluid()) : null;
     }
 
     @Override
