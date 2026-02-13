@@ -23,10 +23,13 @@ import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
 import cn.kuzuanpa.ktfruaddon.item.ItemPostInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
+import cn.kuzuanpa.ktfruaddon.nei.CrucibleNEIHandler;
+import cn.kuzuanpa.ktfruaddon.nei.MaterialShapeNEIHandler;
 import cn.kuzuanpa.ktfruaddon.recipe.recipeInit;
 import cn.kuzuanpa.ktfruaddon.research.ResearchTrees;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityInit0;
 import cn.kuzuanpa.ktfruaddon.tile.tileEntityPreInit;
+import codechicken.nei.api.API;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -72,6 +75,9 @@ public class commonProxy extends Abstract_Proxy {
     public void init(FMLInitializationEvent aEvent) {
         tileEntityInit0.init(aEvent);
         PROXY.registerRenderers();
+        API.registerRecipeHandler(new CrucibleNEIHandler());
+        API.registerRecipeHandler(new MaterialShapeNEIHandler());
+
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
