@@ -123,7 +123,7 @@ public class ComputerBuilding {
         //Method1
         recipeMaps.HeatMixer.addRecipe2(F,80,10,OP.dust.mat(MT.Si,1),OP.dust.mat(MT.Mg,2),ZL_FS,ZL_FS,matList.MagnesiumSilicide.getDust(1));
         recipeMaps.HeatMixer.addRecipe1(F,120,60,OP.dust.mat(MT.NaCl,1),FL.array(MT.NH3.gas(U,false),FL.Water.make(1000)),ZL_FS,OP.dust.mat(MT.NaOH,1),matList.AmmoniumChloride.getDust(1));
-        RM           .Mixer    .addRecipe2(F,150,20,OP.dust.mat(matList.MagnesiumSilicide.mat, 3),matList.AmmoniumChloride.getDust(12),ZL_FS,FL.array(MT.NH3.gas(12*U,false),flList.Silane.make(3000)),OP.dust.mat(MT.MgCl2,6));
+        RM           .Mixer    .addRecipe2(F,150,20,OP.dust.mat(matList.MagnesiumSilicide.mat, 3),matList.AmmoniumChloride.getDust(12),ZL_FS,FL.array(MT.NH3.gas(12*U,false),flList.Silane.make(3000)),OP.dust.mat(MT.MgCl2,18));
         //Method2
         recipeMaps.HeatMixer.addRecipe0(F,290,10,FL.array(MT.H2SiF6.liquid(3*U,false)),FL.array(flList.SiliconTetrafluoride.make(1000),MT.HF.gas(2*U,false)),ZL_IS);
         RM           .Mixer    .addRecipe2(F,380,20,OP.dust.mat(MT.Na,1),OP.dust.mat(MT.Al,1),FL.array(FL.Hydrogen.make(2000)),FL.array(flList.SodiumAluminate.make(1000)),OP.dust.mat(matList.SodiumAluminiumHydride.mat, 1));
