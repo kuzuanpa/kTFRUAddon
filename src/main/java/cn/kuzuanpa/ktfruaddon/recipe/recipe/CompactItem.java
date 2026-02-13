@@ -61,6 +61,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 65, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft1.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 65, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder1.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 65, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo1.get(1),    OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual1.get(1),new Object[]{ItemList.EngineCrankShaft1.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual1.get(1),new Object[]{ItemList.EngineCylinder1.get(1)});
 
             aMat = MT.ArsenicCopper;
             RM.Lathe.addRecipe1(F, 32, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual2.get(1));
@@ -68,6 +70,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 65, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft2.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 65, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder2.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 65, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo2.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual2.get(1),new Object[]{ItemList.EngineCrankShaft2.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual2.get(1),new Object[]{ItemList.EngineCylinder2.get(1)});
 
             aMat = MT.ArsenicBronze;
             RM.Lathe.addRecipe1(F, 32, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual3.get(1));
@@ -75,6 +79,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 65, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft3.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 65, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder3.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 65, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo3.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual3.get(1),new Object[]{ItemList.EngineCrankShaft3.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual3.get(1),new Object[]{ItemList.EngineCylinder3.get(1)});
 
             aMat = MT.Steel;
             RM.Lathe.addRecipe1(F, 48, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual4.get(1));
@@ -82,6 +88,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 96, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft4.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 96, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder4.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 96, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo4.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual4.get(1),new Object[]{ItemList.EngineCrankShaft4.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual4.get(1),new Object[]{ItemList.EngineCylinder4.get(1)});
 
             aMat = MT.Invar;
             RM.Lathe.addRecipe1(F, 48, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual5.get(1));
@@ -89,6 +97,9 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 128, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft5.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 128, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder5.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 128, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo5.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual5.get(1),new Object[]{ItemList.EngineCrankShaft5.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual5.get(1),new Object[]{ItemList.EngineCylinder5.get(1)});
+
 
             aMat = MT.Ti;
             RM.Lathe.addRecipe1(F, 64, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual6.get(1));
@@ -96,6 +107,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 172, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft6.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 172, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder6.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 172, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo6.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual6.get(1),new Object[]{ItemList.EngineCrankShaft6.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual6.get(1),new Object[]{ItemList.EngineCylinder6.get(1)});
 
             aMat = MT.TungstenSteel;
             RM.Lathe.addRecipe1(F, 96, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual7.get(1));
@@ -103,6 +116,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 256, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft7.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder7.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo7.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual7.get(1),new Object[]{ItemList.EngineCrankShaft7.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual7.get(1),new Object[]{ItemList.EngineCylinder7.get(1)});
 
             aMat = MT.Ir;
             RM.Lathe.addRecipe1(F, 128, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManual8.get(1));
@@ -110,6 +125,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 256, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft8.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder8.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo8.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCrankShaftManual8.get(1),new Object[]{ItemList.EngineCrankShaft8.get(1)});
+            CR.shapeless(ItemList.EngineCylinderManual8.get(1),new Object[]{ItemList.EngineCylinder8.get(1)});
 
             aMat = MT.Cr;
             RM.Lathe.addRecipe1(F, 96, 600, OP.stickLong.mat(aMat, 3), ItemList.EngineCrankShaftManualCr.get(1));
@@ -117,6 +134,8 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 256, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaftCr.get(1), OP.dust.mat(aMat, 1));
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinderCr.get(1), OP.dustSmall.mat(aMat, 4));
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurboCr.get(1), OP.dustSmall.mat(aMat, 4));
+            CR.shapeless(ItemList.EngineCylinderManualCr.get(1),new Object[]{ItemList.EngineCylinderCr.get(1)});
+            CR.shapeless(ItemList.EngineCrankShaftManualCr.get(1),new Object[]{ItemList.EngineCrankShaftCr.get(1)});
         }
         CR.shaped(ItemList.VibrateDetector.get(1),CR.DEF,"hR ","RBR"," Rw",'R', OP.ring.mat(MT.StainlessSteel,1),'B',OP.nugget.mat(MT.StainlessSteel   ,1));
         recipeMaps.Assembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
@@ -128,26 +147,4 @@ public class CompactItem {
         RM.Canner.addRecipe2(F, 16, 16, OP.bolt.mat(MT.Co, 4), IL.Reactor_Rod_Empty.get(1), kRegistry.getItem(9980));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
