@@ -46,7 +46,7 @@ public class CrucibleNEIHandler extends TemplateRecipeHandler {
     }
 
     public void loadTransferRects() {
-            this.transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(61, 9, 18, 18), "gtCrucible"));
+            this.transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(96, 0, 16, 16), "gtCrucible"));
         }
 
         private void addRecipe(Predicate<? super CachedCrucibleRecipe> condition){
@@ -57,11 +57,10 @@ public class CrucibleNEIHandler extends TemplateRecipeHandler {
             else super.loadCraftingRecipes(outputId, results);
         }
 
-        public void loadCraftingRecipes(ItemStack result) {
+        public void loadCraftingRecipes(ItemStack resultStack) {
             this.arecipes.clear();
-            addRecipe(recipe-> OM.materialcontained(result, recipe.material));
+            addRecipe(recipe -> OM.materialcontained(resultStack, recipe.material) && recipe.availPrefixes.stream().anyMatch(op -> op.contains(resultStack)));
         }
-
         public void loadUsageRecipes(ItemStack ingredient) {
             this.arecipes.clear();
             addRecipe(recipe -> OP.dust.contains(ingredient) && OM.materialcontained(ingredient, recipe.material));
@@ -73,22 +72,29 @@ public class CrucibleNEIHandler extends TemplateRecipeHandler {
             if (cachedRecipes.isEmpty()) materials.forEach(mat->cachedRecipes.add(new CachedCrucibleRecipe(mat)));
             return super.newInstance();
         }
+    public static ItemStack getIngredientFromMaterial(OreDictMaterial material) {
+            ItemStack dust = OP.dust.mat(material,1);
+            ItemStack tube = OP.chemtube.mat(material,1);
+            return dust!=null?dust:tube!=null?tube:new ItemStack(Items.paper,1);
+    }
 
         public class CachedCrucibleRecipe extends TemplateRecipeHandler.CachedRecipe {
             final List<PositionedStack> result = new ArrayList<>();
             final OreDictMaterial material;
+            final PositionedStack ingredient;
+            final List<OreDictPrefix> availPrefixes = new ArrayList<>();
 
             public CachedCrucibleRecipe(OreDictMaterial material) {
                 this.material = material;
+                ingredient = new PositionedStack(getIngredientFromMaterial(material), 64, 0);
                 int x = 0, y=16;
-                ArrayList<OreDictPrefix> addedPrefixes = new ArrayList<>();
                 Collection<OreDictPrefix> prefixes = new ArrayList<>(MultiTileEntityMold.MOLD_RECIPES.values());
                 prefixes.add(OP.blockSolid);
                 for (OreDictPrefix op : prefixes) {
-                    if (op.mat(material, 1) != null && !addedPrefixes.contains(op)) {
+                    if (op.mat(material, 1) != null && !availPrefixes.contains(op)) {
                         this.result.add(new PositionedStack(op.mat(material, 1), x, y+16));
                         this.result.add(new PositionedStack(getRawClayMold(op, 1), x, y));
-                        addedPrefixes.add(op);
+                        availPrefixes.add(op);
                         x+=16;
                         if(x > 144){
                             x = 0;
@@ -97,7 +103,13 @@ public class CrucibleNEIHandler extends TemplateRecipeHandler {
                     }
                 }
                 FluidStack fl = material.liquid(1,false);   if(fl != null && !FL.Error.is(fl))this.result.add(new PositionedStack(FL.display(fl.getFluid()), 0,0));
-              }
+            }
+
+
+            @Override
+            public PositionedStack getIngredient() {
+                return ingredient;
+            }
 
             public PositionedStack getResult() {
                 return null;

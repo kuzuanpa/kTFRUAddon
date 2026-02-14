@@ -8,7 +8,6 @@ import gregapi.data.TD;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.oredict.OreDictPrefix;
 import gregapi.util.OM;
-import gregtech.tileentity.tools.MultiTileEntityMold;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -18,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static cn.kuzuanpa.ktfruaddon.nei.CrucibleNEIHandler.getIngredientFromMaterial;
 import static com.bioxx.tfc.Core.TFC_Core.l10n;
 
 public class MaterialShapeNEIHandler extends TemplateRecipeHandler {
@@ -42,7 +42,7 @@ public class MaterialShapeNEIHandler extends TemplateRecipeHandler {
     }
 
     public void loadTransferRects() {
-            this.transferRects.add(new RecipeTransferRect(new Rectangle(61, 9, 18, 18), "gtCrucible"));
+            this.transferRects.add(new RecipeTransferRect(new Rectangle(96, 0, 16, 16), "gtMaterialShape"));
         }
 
         private void addRecipe(Predicate<? super CachedMaterialShapeRecipe> condition){
@@ -53,9 +53,9 @@ public class MaterialShapeNEIHandler extends TemplateRecipeHandler {
             else super.loadCraftingRecipes(outputId, results);
         }
 
-        public void loadCraftingRecipes(ItemStack result) {
+        public void loadCraftingRecipes(ItemStack resultStack) {
             this.arecipes.clear();
-            addRecipe(recipe-> OM.materialcontained(result, recipe.material));
+            addRecipe(recipe-> OM.materialcontained(resultStack, recipe.material) && recipe.availPrefixes.stream().anyMatch(op->op.contains(resultStack)));
         }
 
         public void loadUsageRecipes(ItemStack ingredient) {
@@ -74,16 +74,19 @@ public class MaterialShapeNEIHandler extends TemplateRecipeHandler {
         public class CachedMaterialShapeRecipe extends CachedRecipe {
             final PositionedStack ingred;
             final List<PositionedStack> result = new ArrayList<>();
+            final List<OreDictPrefix> availPrefixes = new ArrayList<>();
             final OreDictMaterial material;
 
             public CachedMaterialShapeRecipe(OreDictMaterial material) {
                 this.material = material;
-                this.ingred = null;
+                this.ingred = new PositionedStack(getIngredientFromMaterial(material), 64, 0);
+
                 int x = 0, y=16;
                 for (OreDictPrefix op : OreDictPrefix.VALUES_SORTED) {
                     if(op.contains(TD.Prefix.STANDARD_ORE))continue;
                     if (op.mat(material, 1) != null) {
-                        this.result.add(new PositionedStack(op.mat(material, 1), x, y));
+                        result.add(new PositionedStack(op.mat(material, 1), x, y));
+                        availPrefixes.add(op);
                         x+=16;
                         if(x > 144){
                             x = 0;
