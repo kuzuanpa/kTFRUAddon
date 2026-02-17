@@ -31,13 +31,20 @@ public class recipeOreProcess {
         @Override
         public void onOreRegistration(OreDictRegistrationContainer aEvent) {
             if (TD.ItemGenerator.ORES.isTrue(aEvent.mMaterial)) {
-                ItemStack[] outputList = new ItemStack[9];
-                outputList[0] = OP.dust.mat(aEvent.mMaterial, 6);
+                ItemStack[] largeOreOutputList = new ItemStack[9];
+                largeOreOutputList[0] = OP.dust.mat(aEvent.mMaterial, 3);
                 for (int i = 1; i < 9; i++) {
-                    if(i>aEvent.mMaterial.mByProducts.size())outputList[i] = OP.dustSmall.mat(aEvent.mMaterial, 2);
-                    else outputList[i] = OP.dustSmall.mat(aEvent.mMaterial.mByProducts.get(i-1), 2);
+                    if(i>aEvent.mMaterial.mByProducts.size())largeOreOutputList[i] = OP.dustSmall.mat(aEvent.mMaterial, 1);
+                    else largeOreOutputList[i] = OP.dustSmall.mat(aEvent.mMaterial.mByProducts.get(i-1), 1);
                 }
-                OreProcessSystem.addRecipe1(true, 128,100, OP.crushed.mat(aEvent.mMaterial, 4), FL.Water.make(4000), FL.Sluice.make(4000), outputList);
+                OreProcessSystem.addRecipe1(true, 128,100, OP.crushed.mat(aEvent.mMaterial, 2), FL.Water.make(3600), FL.Sluice.make(3600), largeOreOutputList);
+                ItemStack[] smallOreOutputList = new ItemStack[9];
+                smallOreOutputList[0] = OP.dustDiv72.mat(aEvent.mMaterial, 12);
+                for (int i = 1; i < 9; i++) {
+                    if(i>aEvent.mMaterial.mByProducts.size())smallOreOutputList[i] = OP.dustDiv72.mat(aEvent.mMaterial, 1);
+                    else smallOreOutputList[i] = OP.dustDiv72.mat(aEvent.mMaterial.mByProducts.get(i-1), 1);
+                }
+                OreProcessSystem.addRecipe1(true, 128,100, OP.crushedTiny.mat(aEvent.mMaterial, 1), FL.Water.make(200), FL.Sluice.make(200), smallOreOutputList);
             }
         }
     }
