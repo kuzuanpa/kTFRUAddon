@@ -22,6 +22,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.code.TagData;
 import gregapi.computer.ITileEntityComputerizable;
 import gregapi.data.IL;
@@ -41,6 +42,7 @@ import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
+import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -200,28 +202,32 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {
-        LH.add("ktfru.multitileentity.multiblock.fuel_deburner.1", "Store Energy into Fuel.");
-        LH.add("ktfru.multitileentity.multiblock.fuel_deburner.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("ktfru.multitileentity.multiblock.fuel_deburner.3", "Input and Output at any Blocks");
+        LH.add("ktfru.tooltip.multiblock.fuel_deburner.0", "Store Energy into Fuel.");
+        LH.add("ktfru.tooltip.multiblock.fuel_deburner.1", "Main Block centered on Side-Bottom and facing outwards");
+        LH.add("ktfru.tooltip.multiblock.fuel_deburner.2", "Input and Output at any Blocks");
     }
 
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.multitileentity.multiblock.fuel_deburner.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.multitileentity.multiblock.fuel_deburner.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.multitileentity.multiblock.fuel_deburner.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.fuel_deburner.0"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.fuel_deburner.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.fuel_deburner.2"));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
-        return getAdjacentTank(SIDE_UP);
+        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,-6,8), this.yCoord - 2, utils.getRealZ(mFacing,zCoord,-6,8), mFacing, false);
+        if(te == null || !(te.mTileEntity instanceof IFluidHandler)) return this.getAdjacentTank(SIDE_INVALID);
+        return new DelegatorTileEntity<>((IFluidHandler)te.mTileEntity,SIDE_TOP);
     }
 
     @Override
     public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-        return getAdjacentTileEntity(SIDE_UP);
+        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,-7,8), this.yCoord - 1, utils.getRealZ(mFacing,zCoord,-7,8), mFacing, false);
+        if(te == null || te.mTileEntity == null) return this.delegator(SIDE_INVALID);
+        return new DelegatorTileEntity<>(te.mTileEntity,FACING_TO_SIDE[mFacing][SIDE_RIGHT]);
     }
 
     @Override
@@ -250,7 +256,7 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
     ChunkCoordinates lastFailedPos=null;
     static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCDCEFGHIJKLMNOPQQ")
             .fixedLayer('A',
-                    " FFFFF  FFF",
+                    " FFFFF  FGF",
                     " FWWWF  FFF",
                     " FWWWF  FFF",
                     " FWWWF  FFF",
@@ -506,6 +512,7 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
                     "           "
                     )
             .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31037, MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31037, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
             .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_IN)))
             .where('P', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31038)))
             .setOffset(-6,-1,-1) ;
