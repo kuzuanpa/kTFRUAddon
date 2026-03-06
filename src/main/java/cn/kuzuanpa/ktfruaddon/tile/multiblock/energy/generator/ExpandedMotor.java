@@ -89,6 +89,8 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 		if (aNBT.hasKey(kTileNBT.MAX_AMPERE)) mAmpere = aNBT.getLong(kTileNBT.MAX_AMPERE);
 		if (aNBT.hasKey(NBT_ENERGY)) mEnergyStored = aNBT.getLong(NBT_ENERGY);
 		if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
+		boolean kRegistry = false;
+		if (aNBT.hasKey("ktfru.use.kRegistry")) kRegistry = true;
 		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(mRateMax*16);
 		mInputTank.readFromNBT(aNBT, NBT_TANK).setCapacity(mRateMax*4);
 		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("BA")
@@ -99,8 +101,8 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 						"AAB",
 						"AAA"
 				)
-				.where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
-				.where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, 4)))
+				.where('A', new PartPredicate(new TileDesc(kRegistry?GTTileEntityRegistry.ktfruaddon:GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
+				.where('B', new PartPredicate(new TileDesc(kRegistry?GTTileEntityRegistry.ktfruaddon:GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, 7)))
 				.setOffset(0,0,0) ;
 	}
 	@Override

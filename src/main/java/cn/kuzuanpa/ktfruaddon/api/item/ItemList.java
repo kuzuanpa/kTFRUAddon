@@ -116,10 +116,9 @@ public enum ItemList implements IItemContainer{
     //Twilight Forest
     TwilightCore, NaturalCore, FlowerCluster,
     //engine parts made by machine
-    EngineCrankShaft1, EngineCrankShaft2,EngineCrankShaft3, EngineCrankShaft4,EngineCrankShaft5, EngineCrankShaft6,EngineCrankShaft7, EngineCrankShaft8, EngineCrankShaftCr,
-    EngineCylinder1, EngineCylinder2,EngineCylinder3, EngineCylinder4,EngineCylinder5, EngineCylinder6,EngineCylinder7, EngineCylinder8, EngineCylinderCr,
-
-    EngineTurbo1, EngineTurbo2,EngineTurbo3, EngineTurbo4,EngineTurbo5, EngineTurbo6,EngineTurbo7, EngineTurbo8, EngineTurboCr,
+    EngineCrankShaft1, EngineCrankShaft2,EngineCrankShaft3, EngineCrankShaft4,EngineCrankShaft5, EngineCrankShaft6,EngineCrankShaft7, EngineCrankShaft8, EngineCrankShaftCr, EngineCrankShaftOs, EngineCrankShaft9,
+    EngineCylinder1, EngineCylinder2,EngineCylinder3, EngineCylinder4,EngineCylinder5, EngineCylinder6,EngineCylinder7, EngineCylinder8, EngineCylinderCr,EngineCylinderOs,EngineCylinder9,
+    EngineTurbo1, EngineTurbo2,EngineTurbo3, EngineTurbo4,EngineTurbo5, EngineTurbo6,EngineTurbo7, EngineTurbo8, EngineTurboCr,EngineTurboOs,EngineTurbo9,
 
 
     VibrateDetector,UltrasonicGenerator,PiezoelectricCeramicPlate,

@@ -296,7 +296,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	}
 	public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler){
 		super.receiveDataByteArray(aData,aNetworkHandler);
-		mActive=aData[5]==1;
+		mActive= aData.length >= 6 && aData[5] == 1;
 		return true;
 	}
 }

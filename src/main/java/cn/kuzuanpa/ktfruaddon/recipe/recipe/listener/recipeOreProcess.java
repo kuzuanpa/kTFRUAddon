@@ -30,6 +30,7 @@ public class recipeOreProcess {
     public static class OneStepOreProcess implements IOreDictListenerEvent {
         @Override
         public void onOreRegistration(OreDictRegistrationContainer aEvent) {
+
             if (TD.ItemGenerator.ORES.isTrue(aEvent.mMaterial)) {
                 ItemStack[] largeOreOutputList = new ItemStack[9];
                 largeOreOutputList[0] = OP.dust.mat(aEvent.mMaterial, 3);

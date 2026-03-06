@@ -26,7 +26,21 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy;
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
+ */
+
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
@@ -69,7 +83,7 @@ public class MultiDynamo extends MultiTransformerBase{
         if (worldObj.blockExists(tMinX, tMinY, tMinZ) && worldObj.blockExists(tMaxX, tMaxY, tMaxZ)) {
             mEmitter = null;
             boolean tSuccess = T;
-            for (int tX = tMinX; tX <= tMaxX; tX++) for (int tY = tMinY; tY <= tMaxY; tY++) for (int tZ = tMinZ; tZ <= tMaxZ; tZ++) if (!utils.checkAndSetTarget(this, tX, tY, tZ, aCoordinates, aPlayer, aInventory, GTTileEntityRegistry.gregtech, (SIDES_AXIS_X[mFacing]?tX!=tMinX&&tX!=tMaxX:SIDES_AXIS_Z[mFacing]?tZ!=tMinZ&&tZ!=tMaxZ:tY!=tMinY&&tY!=tMaxY) ? 18040 : mDynamoWalls, tX == tOutX && tY == tOutY && tZ == tOutZ ? 2 : 0, tX == tOutX && tY == tOutY && tZ == tOutZ ? MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT : MultiTileEntityMultiBlockPart.NOTHING)) tSuccess = F;
+            for (int tX = tMinX; tX <= tMaxX; tX++) for (int tY = tMinY; tY <= tMaxY; tY++) for (int tZ = tMinZ; tZ <= tMaxZ; tZ++) if (!utils.checkAndSetTarget(this, tX, tY, tZ, aCoordinates, aPlayer, aInventory, (SIDES_AXIS_X[mFacing]?tX!=tMinX&&tX!=tMaxX:SIDES_AXIS_Z[mFacing]?tZ!=tMinZ&&tZ!=tMaxZ:tY!=tMinY&&tY!=tMaxY) ? GTTileEntityRegistry.gregtech : GTTileEntityRegistry.ktfruaddon, (SIDES_AXIS_X[mFacing]?tX!=tMinX&&tX!=tMaxX:SIDES_AXIS_Z[mFacing]?tZ!=tMinZ&&tZ!=tMaxZ:tY!=tMinY&&tY!=tMaxY) ? 18040 : mDynamoWalls, tX == tOutX && tY == tOutY && tZ == tOutZ ? 2 : 0, tX == tOutX && tY == tOutY && tZ == tOutZ ? MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT : MultiTileEntityMultiBlockPart.NOTHING)) tSuccess = F;
             return tSuccess;
         }
         return mStructureOkay;

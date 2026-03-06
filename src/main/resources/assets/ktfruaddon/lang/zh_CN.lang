@@ -106,6 +106,7 @@ ktfru.text.common.usb_have_data=USB中已存在数据，再次右键以覆盖这
 ktfru.text.common.hint.multi_ampere_input=提示: 需要多A输入
 ktfru.text.common.part_share=允许结构共用
 ktfru.text.common.structure.err=结构不完整或存在错误
+ktfru.text.common.energy.need_to_run=运行需要输入能量:
 ktfru.text.item.turbine.powerrate=涡轮能量系数:
 ktfru.text.item.turbine.durability=涡轮耐久:
 ktfru.text.item.turbine.unchecked=这个涡轮未经检测, 可能在高速旋转时碎裂并导致爆炸

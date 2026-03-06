@@ -49,6 +49,7 @@ public class I18nHandler {
             , USB_ALREAY_HAVE_DATA ="ktfru.text.common.usb_have_data"
             , HINT_NEED_MULTI_AMPERE_INPUT = "ktfru.text.common.hint.multi_ampere_input"
             , STRUCTURE_ERR ="ktfru.text.common.structure.err"
+            , ENERGY_NEED_TO_RUN ="ktfru.text.common.energy.need_to_run"
 
             , COMPUTE_POWER  = "ktfru.text.compute.power"
             , COMPUTE_POWER_NORMAL   = "ktfru.text.compute.power.0"

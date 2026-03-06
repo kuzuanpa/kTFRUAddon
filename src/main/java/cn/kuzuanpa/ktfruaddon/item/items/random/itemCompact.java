@@ -96,6 +96,8 @@ public class itemCompact extends MultiItemRandom {
         ItemList.EngineCrankShaft7 .set(addItem(2206, "Engine Crank Shaft (Tungsten Steel)", ""),new OreDictItemData(MT.TungstenSteel,2*U));
         ItemList.EngineCrankShaft8 .set(addItem(2207, "Engine Crank Shaft (Iridium)"       , ""),new OreDictItemData(MT.Ir           ,2*U));
         ItemList.EngineCrankShaftCr.set(addItem(2208, "Engine Crank Shaft (Chromium)"      , ""),new OreDictItemData(MT.Cr           ,2*U));
+        ItemList.EngineCrankShaftOs.set(addItem(2209, "Engine Crank Shaft (Osmium)"      , ""),new OreDictItemData(MT.Os           ,2*U));
+        ItemList.EngineCrankShaft9.set(addItem(2210, "Engine Crank Shaft (Trinaquadalloy)"      , ""),new OreDictItemData(MT.Trinaquadalloy           ,2*U));
 
         ItemList.EngineCylinder1 .set(addItem(2300, "Engine Cylinder (Bronze)"        , ""),new OreDictItemData(MT.Bronze       ,2*U+U2));
         ItemList.EngineCylinder2 .set(addItem(2301, "Engine Cylinder (Arsenic Copper)", ""),new OreDictItemData(MT.ArsenicCopper,2*U+U2));
@@ -106,6 +108,8 @@ public class itemCompact extends MultiItemRandom {
         ItemList.EngineCylinder7 .set(addItem(2306, "Engine Cylinder (Tungsten Steel)", ""),new OreDictItemData(MT.TungstenSteel,2*U+U2));
         ItemList.EngineCylinder8 .set(addItem(2307, "Engine Cylinder (Iridium)"       , ""),new OreDictItemData(MT.Ir           ,2*U+U2));
         ItemList.EngineCylinderCr.set(addItem(2308, "Engine Cylinder (Chromium)"      , ""),new OreDictItemData(MT.Cr           ,2*U+U2));
+        ItemList.EngineCylinderOs.set(addItem(2309, "Engine Cylinder (Osmium)"      , ""),new OreDictItemData(MT.Os           ,2*U+U2));
+        ItemList.EngineCylinder9.set(addItem(2310, "Engine Cylinder (Trinaquadalloy)"      , ""),new OreDictItemData(MT.Trinaquadalloy           ,2*U+U2));
 
         ItemList.EngineTurbo1 .set(addItem(2400, "Engine Turbo (Bronze)"        , ""),new OreDictItemData(MT.Bronze       ,6*U+U4));
         ItemList.EngineTurbo2 .set(addItem(2401, "Engine Turbo (Arsenic Copper)", ""),new OreDictItemData(MT.ArsenicCopper,6*U+U4));
@@ -116,6 +120,8 @@ public class itemCompact extends MultiItemRandom {
         ItemList.EngineTurbo7 .set(addItem(2406, "Engine Turbo (Tungsten Steel)", ""),new OreDictItemData(MT.TungstenSteel,6*U+U4));
         ItemList.EngineTurbo8 .set(addItem(2407, "Engine Turbo (Iridium)"       , ""),new OreDictItemData(MT.Ir           ,6*U+U4));
         ItemList.EngineTurboCr.set(addItem(2408, "Engine Turbo (Chromium)"      , ""),new OreDictItemData(MT.Cr           ,6*U+U4));
+        ItemList.EngineTurboOs.set(addItem(2409, "Engine Turbo (Osmium)"      , ""),new OreDictItemData(MT.Os           ,6*U+U4));
+        ItemList.EngineTurbo9.set(addItem(2410, "Engine Turbo (Trinaquadalloy)"      , ""),new OreDictItemData(MT.Trinaquadalloy           ,6*U+U4));
 
         ItemList.VibrateDetector        .set(addItem(2500, "Vibrate Detector"       , ""),new OreDictItemData(MT.StainlessSteel,U+U9));
         ItemList.UltrasonicGenerator    .set(addItem(2501, "Ultrasonic Generator"       , ""));

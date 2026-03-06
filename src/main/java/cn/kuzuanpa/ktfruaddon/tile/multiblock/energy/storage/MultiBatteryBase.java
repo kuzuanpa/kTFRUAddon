@@ -134,7 +134,7 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
 
     @Override
     public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
-        if(mCapacity==0)return 0;
+        if(mCapacity==0 || !mEnergyType.equals(aEnergyType))return 0;
         aSize = Math.abs(aSize);
         if (aSize > getEnergySizeInputMax(aEnergyType, aSide)) {
             if (aDoInject) overcharge(aSize, aEnergyType);

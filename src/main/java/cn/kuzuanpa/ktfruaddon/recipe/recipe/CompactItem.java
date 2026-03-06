@@ -136,6 +136,17 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurboCr.get(1), OP.dustSmall.mat(aMat, 4));
             CR.shapeless(ItemList.EngineCylinderManualCr.get(1),new Object[]{ItemList.EngineCylinderCr.get(1)});
             CR.shapeless(ItemList.EngineCrankShaftManualCr.get(1),new Object[]{ItemList.EngineCrankShaftCr.get(1)});
+
+
+            aMat = MT.Os;
+            recipeMaps.CNC.addRecipeX(F, 256, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaftOs.get(1), OP.dust.mat(aMat, 1));
+            recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinderOs.get(1), OP.dustSmall.mat(aMat, 4));
+            recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurboOs.get(1), OP.dustSmall.mat(aMat, 4));
+
+            aMat = MT.Trinaquadalloy;
+            recipeMaps.CNC.addRecipeX(F, 256, 600, ST.array(OP.stickLong  .mat(aMat, 3), ST.tag(0)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCrankShaft9.get(1), OP.dust.mat(aMat, 1));
+            recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.ingotDouble.mat(aMat, 1), OP.plateCurved.mat(aMat, 1), OP.stick.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineCylinder9.get(1), OP.dustSmall.mat(aMat, 4));
+            recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo9.get(1), OP.dustSmall.mat(aMat, 4));
         }
         CR.shaped(ItemList.VibrateDetector.get(1),CR.DEF,"hR ","RBR"," Rw",'R', OP.ring.mat(MT.StainlessSteel,1),'B',OP.nugget.mat(MT.StainlessSteel   ,1));
         recipeMaps.Assembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
