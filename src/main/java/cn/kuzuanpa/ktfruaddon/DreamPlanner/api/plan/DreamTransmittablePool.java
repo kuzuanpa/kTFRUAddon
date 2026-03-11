@@ -21,14 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class DreamPool {
+public class DreamTransmittablePool {
     public Predicate<ITransmittableType> AbstractOverallCondition = t -> false;
     public List<ITransmittableType> abstractTransmittableList = new ArrayList<>();
 
     public void updateAbstractCondition(){
         abstractTransmittableList.forEach(abs-> AbstractOverallCondition = AbstractOverallCondition.or(((AbstractTransmittable.AbstractTransmittableType) abs).condition));
     }
-    public long requestConsumeItem(ITransmittableType item, long required){
-        return 3;
+    public long requestAddItem(ITransmittableType item, long required){
+        System.out.print("Requested Add: "+item +"x"+required+"\n");
+        return 0;
     }
+    public long requestRemoveItem(ITransmittableType item, long required){
+        System.out.print("Requested Remove: "+item +"x"+required+"\n");
+        return 0;
+    }
+
 }

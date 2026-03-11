@@ -72,5 +72,10 @@ public class kTestTrans implements ITransmittable{
         public int hashCode() {
             return Objects.hashCode(string);
         }
+
+        @Override
+        public String toString() {
+            return string;
+        }
     }
 }
