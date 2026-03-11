@@ -30,7 +30,7 @@ import gregapi.network.INetworkHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
-@Mod(modid = cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID, name = ktfruaddon.MOD_NAME, version = ktfruaddon.VERSION,dependencies= ktfruaddon.DEPENDS , acceptedMinecraftVersions = "1.7.10")
+@Mod(modid = ktfruaddon.MOD_ID, name = ktfruaddon.MOD_NAME, version = ktfruaddon.VERSION,dependencies= ktfruaddon.DEPENDS , acceptedMinecraftVersions = "1.7.10")
 public final class ktfruaddon extends Abstract_Mod {
     public static final String MOD_ID = "ktfruaddon";
     public static final String MOD_NAME = "kTFRUAddon";

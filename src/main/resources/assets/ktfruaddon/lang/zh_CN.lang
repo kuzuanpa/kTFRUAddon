@@ -110,9 +110,9 @@ ktfru.text.item.turbine.powerrate=涡轮能量系数:
 ktfru.text.item.turbine.durability=涡轮耐久:
 ktfru.text.item.turbine.unchecked=这个涡轮未经检测, 可能在高速旋转时碎裂并导致爆炸
 ktfru.text.item.turbine.damaged=这个涡轮已受损，你可以回收它
+ktfru.text.machine.compressedgasinputer=与压缩气体储罐配合工作,速率:(输入KU)*10L/t
 ktfru.text.item.flywheel.maxRPM=最高转速:
 ktfru.text.item.flywheel.storage=可存储能量:
-
 
 ktfru.text.machine.cruciblemodel.0=还需要
 ktfru.text.machine.cruciblemodel.1=个粘土
@@ -198,11 +198,13 @@ ktfru.tooltip.multiblock.storage.liquid.5=从主方块正面输出RU
 ktfru.tooltip.multiblock.storage.liquid.6=从第二层任意壁板接受RU
 ktfru.tooltip.multiblock.storage.liquid.7=从主方块下方自动输出流体
 ktfru.tooltip.multiblock.storage.liquid.8=在主方块下方2格放置原版石砖以关闭流体渲染
-ktfru.tooltip.machine.compressedgasinputer=与压缩气体储罐配合工作,速率:(输入KU)*10L/t
 ktfru.tooltip.multiblock.oreprocesssystem.0=从壁板输入能量, 原料和流体
-ktfru.tooltip.multiblock.oreprocesssystem.0=从右侧边角的前面自动输出物品, 侧面输出流体
+ktfru.tooltip.multiblock.oreprocesssystem.1=从右侧边角的前面自动输出物品, 侧面输出流体
 ktfru.tooltip.multiblock.rocket.builder.0=从驱动单元输入EU, 从不锈钢壁板输入原料和流体
 ktfru.tooltip.multiblock.rocket.builder.1=产品从结构右侧远端边的中心自动输出
+ktfru.tooltip.multiblock.fuel_deburner.0=将能量存储为燃油
+ktfru.tooltip.multiblock.fuel_deburner.1=主方块在侧面面朝外
+ktfru.tooltip.multiblock.fuel_deburner.2=在左后管道组终端方块输出，下面输出流体，左面输出物品
 
 itemGroup.bladeLargeTurbine=LargeTurbines
 itemGroup.flywheel=Flywheels

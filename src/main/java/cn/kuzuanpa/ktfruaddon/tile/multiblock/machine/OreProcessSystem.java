@@ -90,9 +90,15 @@ public class OreProcessSystem extends TileEntityBase10MultiBlockMachine {
         return lastFailedPos==null;
     }
 
+    static {
+        LH.add("ktfru.tooltip.multiblock.oreprocesssystem.0", "Input Item, fluid and Energy from Walls");
+        LH.add("ktfru.tooltip.multiblock.oreprocesssystem.1", "Output from right corner, item output to front side, fluid to right side.");
+    }
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
+        aList.add(LH.Chat.WHITE+LH.get("ktfru.tooltip.multiblock.oreprocesssystem.0"));
+        aList.add(LH.Chat.WHITE+LH.get("ktfru.tooltip.multiblock.oreprocesssystem.1"));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
@@ -103,14 +109,14 @@ public class OreProcessSystem extends TileEntityBase10MultiBlockMachine {
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
         DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,6,0), this.yCoord , utils.getRealZ(mFacing,zCoord,6,0), mFacing, false);
         if(te == null || !(te.mTileEntity instanceof IFluidHandler)) return this.getAdjacentTank(SIDE_INVALID);
-        return new DelegatorTileEntity<>((IFluidHandler)te.mTileEntity,FACING_TO_SIDE[mFacing][aSide]);
+        return new DelegatorTileEntity<>((IFluidHandler)te.mTileEntity,FACING_TO_SIDE[mFacing][SIDE_LEFT]);
     }
 
     @Override
     public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
         DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,5,-1), this.yCoord , utils.getRealZ(mFacing,zCoord,5,-1), mFacing, false);
         if(te == null || te.mTileEntity == null) return this.delegator(SIDE_INVALID);
-        return new DelegatorTileEntity<>(te.mTileEntity,mFacing);
+        return new DelegatorTileEntity<>(te.mTileEntity,OPOS[mFacing]);
     }
 
     @Override
