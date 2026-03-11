@@ -19,6 +19,7 @@ import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.kTestTrans;
 import codechicken.lib.vec.BlockCoord;
+import com.google.common.collect.Lists;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -29,7 +30,7 @@ import static java.lang.System.out;
 
 public class DreamBrain {
     protected List<DreamPlanBase> plans = new ArrayList<>();
-    public DreamPool dreamPool = new DreamPool();
+    public DreamTransmittablePool dreamTransmittablePool = new DreamTransmittablePool();
     public Map<ITransmittableType, List<DreamPlanBase>> PlanSearchPool = new HashMap<>();
     public AtomicBoolean PlanPoolLock = new AtomicBoolean(false);
 
@@ -40,12 +41,12 @@ public class DreamBrain {
 
 
     public byte tryMakeAbstractItem(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode) {
-        if(!dreamPool.AbstractOverallCondition.test(requiredItem))return -1;
+        if(!dreamTransmittablePool.AbstractOverallCondition.test(requiredItem))return -1;
         return tryMakeAbstractItem0(requiredItem, amount, treeNode);
     }
 
     public byte tryMakeAbstractItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
-        List<ITransmittableType> list = dreamPool.abstractTransmittableList.stream().filter(t->t instanceof AbstractTransmittable.AbstractTransmittableType).map(t-> ((AbstractTransmittable.AbstractTransmittableType) t)).filter(t-> t.condition.test(requiredItem)).collect(Collectors.toList());
+        List<ITransmittableType> list = dreamTransmittablePool.abstractTransmittableList.stream().filter(t->t instanceof AbstractTransmittable.AbstractTransmittableType).map(t-> ((AbstractTransmittable.AbstractTransmittableType) t)).filter(t-> t.condition.test(requiredItem)).collect(Collectors.toList());
         if(list.isEmpty())return -1;
 
         for (ITransmittableType absItem : list) {
@@ -66,7 +67,7 @@ public class DreamBrain {
     protected byte makeItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
         if(PlanPoolLock.get())return -2;
 
-        amount -= dreamPool.requestConsumeItem(requiredItem, amount);
+        amount -= dreamTransmittablePool.requestRemoveItem(requiredItem, amount);
 
         if(amount <= 0)return 0;
 
@@ -88,6 +89,7 @@ public class DreamBrain {
     public long makePlan(DreamPlanBase plan, long count, ITransmittable requiredItemReal, PlanTreeNode treeNode){
         treeNode.count = count;
         treeNode.plan = plan;
+        treeNode.resultItem = requiredItemReal.getType();
         for (ITransmittable ing : plan.getIngredientList(requiredItemReal)) {
             long result = makeItem0(ing.getType(), ing.getAmount() * count,treeNode);
             if(result == -1) treeNode.reqItems.add(ing.initFrom(ing.getType(), ing.getAmount()*count));
@@ -97,7 +99,7 @@ public class DreamBrain {
 
     public static long ceilDiv(long a,long b){return (a+b-1)/b;}
 
-    public void printTree(PlanTreeNode treeNode, long depth){
+    public void printTreeNode(PlanTreeNode treeNode, long depth){
         for (long i = 0; i < depth; i++) {
             out.print("|");
         }
@@ -107,21 +109,27 @@ public class DreamBrain {
         }
         out.print(treeNode.plan+"*"+treeNode.count+sb.toString()+"\n");
         for (PlanTreeNode subNode : treeNode.subNodes) {
-            printTree(subNode, depth +1);
+            printTreeNode(subNode, depth +1);
         }
     }
 
     public static void main(String[] args){
         DreamBrain brain = new DreamBrain();
-        brain.dreamPool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs0-", 1).getType());
-        brain.dreamPool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs1-", 1).getType());
-        brain.dreamPool.updateAbstractCondition();
+        brain.dreamTransmittablePool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs0-", 1).getType());
+        brain.dreamTransmittablePool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs1-", 1).getType());
+        brain.dreamTransmittablePool.updateAbstractCondition();
         brain.addPlan(new DreamPlanTestAbstract(new BlockCoord(), "Abs0-", "Abs1-"));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("Abs1-A", 3)), Collections.singletonList(new kTestTrans("D", 1))));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("E", 1)), Collections.singletonList(new kTestTrans("Abs0-A", 1))));
-        PlanTreeNode treeNode = new PlanTreeNode();
-        brain.makeItem0(new kTestTrans("D", 1).getType(), 5, treeNode);
-        brain.printTree(treeNode, 0);
+        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("Abs1-A", 3)), Collections.singletonList(new kTestTrans("A", 1))));
+        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("B", 1)), Collections.singletonList(new kTestTrans("Abs0-A", 1))));
+        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Lists.newArrayList(new kTestTrans("G", 1)), Collections.singletonList(new kTestTrans("D", 3))));
+        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Lists.newArrayList(new kTestTrans("D", 1), new kTestTrans("K", 11)), Collections.singletonList(new kTestTrans("B", 1))));
+        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Lists.newArrayList(new kTestTrans("V", 1), new kTestTrans("H", 17)), Collections.singletonList(new kTestTrans("G", 1))));
+        PlanTreeNode treeNode = new PlanTreeNode(-1);
+        brain.makeItem0(new kTestTrans("A", 1).getType(), 5, treeNode);
+        brain.printTreeNode(treeNode, 0);
+
+        DreamerPool pool = new DreamerPool();
+        pool.doTreeNode(treeNode);
     }
     public boolean addPlan(DreamPlanBase plan){
         PlanPoolLock.set(true);
@@ -154,11 +162,16 @@ public class DreamBrain {
 
     public static class PlanTreeNode{
         public DreamPlanBase plan;
+        public ITransmittableType resultItem;
         public long count;
         public List<PlanTreeNode> subNodes = new ArrayList<>();
         public List<ITransmittable> reqItems = new ArrayList<>();
 
         public PlanTreeNode() {
+        }
+
+        public PlanTreeNode(long signal) {
+            count = signal;
         }
     }
 }
