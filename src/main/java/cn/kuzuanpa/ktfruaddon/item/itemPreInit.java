@@ -54,10 +54,10 @@ public class itemPreInit {
 
         flywheel                 = new itemFlywheel(MOD_DATA,"ktfru.item.meta.flywheel", prefixList.flywheel);
         turbineLargeGas          = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.gas", prefixList.turbineLargeGas);
-        turbineLargeSteam        = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.steam.checked", prefixList.turbineLargeSteamChecked);
-        turbineLargeSteamChecked = new itemPrefixWithTooltip(MOD_DATA,"ktfru.item.meta.turbine.gas.damaged", prefixList.turbineLargeGasDamaged);
-        turbineLargeGasChecked   = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.steam", prefixList.turbineLargeSteam);
-        turbineLargeGasDamaged   = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.gas.checked", prefixList.turbineLargeGasChecked);
+        turbineLargeGasChecked   = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.gas.checked", prefixList.turbineLargeGasChecked);
+        turbineLargeGasDamaged   = new itemPrefixWithTooltip(MOD_DATA,"ktfru.item.meta.turbine.gas.damaged", prefixList.turbineLargeGasDamaged);
+        turbineLargeSteam        = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.steam", prefixList.turbineLargeSteam);
+        turbineLargeSteamChecked = new itemTurbine(MOD_DATA,"ktfru.item.meta.turbine.steam.checked", prefixList.turbineLargeSteamChecked);
         turbineLargeSteamDamaged = new itemPrefixWithTooltip(MOD_DATA,"ktfru.item.meta.turbine.steam.damaged", prefixList.turbineLargeSteamDamaged);
 
     }

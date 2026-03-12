@@ -77,7 +77,7 @@ public class I18nHandler {
             , TURBINE_POWERRATE="ktfru.text.item.turbine.powerrate"
             , TURBINE_DURABILITY="ktfru.text.item.turbine.durability"
             , TURBINE_UNCHECKED="ktfru.text.item.turbine.unchecked"
-            , TURBINE_DAMAGED="ktfru.text.item.turbine.damaged"
+            , TURBINE_USED ="ktfru.text.item.turbine.used"
             , FLYWHEEL_MaxRPM="ktfru.text.item.flywheel.maxRPM"
             , FLYWHEEL_STORAGE="ktfru.text.item.flywheel.storage"
             , MINER="ktfru.text.item.flywheel.miner"

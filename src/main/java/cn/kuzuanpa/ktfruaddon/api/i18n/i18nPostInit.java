@@ -25,8 +25,8 @@ import gregapi.data.LH;
 public class i18nPostInit {
     public static void init(FMLPostInitializationEvent aEvent){
         itemPreInit.turbineLargeGas         .addTooltips(LH.Chat.RED+LH.get(I18nHandler.TURBINE_UNCHECKED));
-        itemPreInit.turbineLargeGasChecked  .addTooltips(LH.Chat.RED+LH.get(I18nHandler.TURBINE_UNCHECKED));
-        itemPreInit.turbineLargeSteamChecked.addTooltips(LH.Chat.WHITE+LH.get(I18nHandler.TURBINE_DAMAGED));
-        itemPreInit.turbineLargeSteamDamaged.addTooltips(LH.Chat.WHITE+LH.get(I18nHandler.TURBINE_DAMAGED));
+        itemPreInit.turbineLargeSteam       .addTooltips(LH.Chat.RED+LH.get(I18nHandler.TURBINE_UNCHECKED));
+        itemPreInit.turbineLargeGasDamaged  .addTooltips(LH.Chat.WHITE+LH.get(I18nHandler.TURBINE_USED));
+        itemPreInit.turbineLargeSteamDamaged.addTooltips(LH.Chat.WHITE+LH.get(I18nHandler.TURBINE_USED));
     }
 }
