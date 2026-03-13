@@ -194,13 +194,15 @@ public class Miner extends TileEntityBase09FacingSingle implements ITileEntityEn
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
-        aList.add(LH.Chat.CYAN    + LH.get(I18nHandler.MINER));
+        aList.add(LH.Chat.CYAN    + String.format(LH.get(I18nHandler.MINER_0), mRange*2+1, mRange*2+1));
+        aList.add(LH.Chat.CYAN    + String.format(LH.get(I18nHandler.MINER_1), mSpeed, mMaxHardness));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_RESET_SOFT_HAMMER));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
 
     static {
-        LH.add(I18nHandler.MINER,"");
+        LH.add(I18nHandler.MINER_0,"Mine blocks around, Range: %s x %s Chunks");
+        LH.add(I18nHandler.MINER_1,"Speed: %s, Max block hardness: %s");
     }
 
     @Override

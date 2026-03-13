@@ -24,7 +24,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStr
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
 import gregapi.old.Textures;
@@ -160,8 +159,7 @@ public class MaskAlignerUVPlus extends TileEntityBaseControlledMachine implement
         CS.GarbageGT.trash(mOutputFluids);
         return super.breakBlock();
     }
-    @Override
-    public boolean allowCover(byte aSide, ICover aCover) {return false;}
+
     public static IIconContainer
             sTextureSides      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/common"),
             sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/overlay/front"),

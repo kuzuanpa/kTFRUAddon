@@ -14,13 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 public class DreamerPool {
     public void requestMakeItem(DreamPlanBase plan, ITransmittable result, long required){
@@ -30,8 +24,8 @@ public class DreamerPool {
 
             for (int i = 0; i < required; i++) {
                 plan.getIngredientList(result).forEach(ing -> pool.requestRemoveItem(ing.getType(), ing.getAmount()));
-                Thread.sleep(1000);
-                plan.getResultList().forEach(ing -> pool.requestAddItem(ing.getType(), ing.getAmount()));
+                Thread.sleep(10);
+                pool.requestAddItem(result.getType(), result.getAmount());
             }
             } catch (InterruptedException e) {
             throw new RuntimeException(e);

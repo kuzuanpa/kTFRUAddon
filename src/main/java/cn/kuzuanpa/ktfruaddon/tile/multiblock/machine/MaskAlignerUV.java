@@ -26,7 +26,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.cover.ICover;
 import gregapi.data.CS;
 import gregapi.data.LH;
 import gregapi.old.Textures;
@@ -174,8 +173,7 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
         CS.GarbageGT.trash(mOutputFluids);
         return super.breakBlock();
     }
-    @Override
-    public boolean allowCover(byte aSide, ICover aCover) {return false;}
+
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (mStructureOkay) {

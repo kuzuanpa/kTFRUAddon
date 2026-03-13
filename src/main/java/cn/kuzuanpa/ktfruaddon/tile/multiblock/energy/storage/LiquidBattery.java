@@ -77,25 +77,25 @@ public class LiquidBattery extends MultiAdaptiveOutputBattery implements IMultiB
 
         aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE));
         aList.add(LH.Chat.WHITE + "3x2x1 "+g.getItem(wallID).getDisplayName());
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.3")+(maxRange*2)+"x"+(maxRange*2));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.4")+ maxLayer);
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.5"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.6"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.7"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.storage.liquid.8"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.3")+(maxRange*2)+"x"+(maxRange*2));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.4")+ maxLayer);
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.5"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.6"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.7"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.text.multiblock.storage.liquid.8"));
         super.addToolTips(aList, aStack, aF3_H);
     }
     static {
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.1", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.2", "A big sink in back of main block");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.3", "max sink size: ");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.4", "max sink height: ");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.5", "Emit RU from front of main block");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.6", "Accept energies from wall layer 2");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.7", "Auto Output Liquid from bottom of main block");
-        LH.add("ktfru.tooltip.multiblock.storage.liquid.8", "Place a Vanilla Stone Brick 2m away from main block bottom to Disable TESR");
+        LH.add("ktfru.text.multiblock.storage.liquid.1", "Main Block centered on Side-Bottom and facing outwards");
+        LH.add("ktfru.text.multiblock.storage.liquid.2", "A big sink in back of main block");
+        LH.add("ktfru.text.multiblock.storage.liquid.3", "max sink size: ");
+        LH.add("ktfru.text.multiblock.storage.liquid.4", "max sink height: ");
+        LH.add("ktfru.text.multiblock.storage.liquid.5", "Emit RU from front of main block");
+        LH.add("ktfru.text.multiblock.storage.liquid.6", "Accept energies from wall layer 2");
+        LH.add("ktfru.text.multiblock.storage.liquid.7", "Auto Output Liquid from bottom of main block");
+        LH.add("ktfru.text.multiblock.storage.liquid.8", "Place a Vanilla Stone Brick 2m away from main block bottom to Disable TESR");
     }
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {

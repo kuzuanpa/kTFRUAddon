@@ -88,9 +88,11 @@ public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         super.addToolTips(aList, aStack, aF3_H);
         aList.add(LH.Chat.YELLOW+LH.get(LH.CHEAP_OVERCLOCKING));
         LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
-        aList.add(LH.Chat.CYAN+LH.get(LH.STRUCTURE)+": ");
-        aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_3));
         aList.add(LH.Chat.CYAN+LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
+        aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_0));
+        aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_1));
+        aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_2));
+        aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_3));
 
     }
 

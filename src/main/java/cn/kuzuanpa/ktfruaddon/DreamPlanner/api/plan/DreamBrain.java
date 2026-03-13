@@ -138,7 +138,6 @@ public class DreamBrain {
         PlanPoolLock.set(false);
         return true;
     }
-
     public boolean removePlan(DreamPlanBase plan){
         PlanPoolLock.set(true);
         plans.remove(plan);
