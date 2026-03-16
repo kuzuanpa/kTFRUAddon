@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.pool.DreamItemPool;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
@@ -30,7 +31,7 @@ import static java.lang.System.out;
 
 public class DreamBrain {
     protected List<DreamPlanBase> plans = new ArrayList<>();
-    public DreamTransmittablePool dreamTransmittablePool = new DreamTransmittablePool();
+    public DreamItemPool dreamItemPool = new DreamItemPool();
     public Map<ITransmittableType, List<DreamPlanBase>> PlanSearchPool = new HashMap<>();
     public AtomicBoolean PlanPoolLock = new AtomicBoolean(false);
 
@@ -41,12 +42,12 @@ public class DreamBrain {
 
 
     public byte tryMakeAbstractItem(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode) {
-        if(!dreamTransmittablePool.AbstractOverallCondition.test(requiredItem))return -1;
+        if(!dreamItemPool.AbstractOverallCondition.test(requiredItem))return -1;
         return tryMakeAbstractItem0(requiredItem, amount, treeNode);
     }
 
     public byte tryMakeAbstractItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
-        List<ITransmittableType> list = dreamTransmittablePool.abstractTransmittableList.stream().filter(t->t instanceof AbstractTransmittable.AbstractTransmittableType).map(t-> ((AbstractTransmittable.AbstractTransmittableType) t)).filter(t-> t.condition.test(requiredItem)).collect(Collectors.toList());
+        List<ITransmittableType> list = dreamItemPool.abstractTransmittableList.stream().filter(t->t instanceof AbstractTransmittable.AbstractTransmittableType).map(t-> ((AbstractTransmittable.AbstractTransmittableType) t)).filter(t-> t.condition.test(requiredItem)).collect(Collectors.toList());
         if(list.isEmpty())return -1;
 
         for (ITransmittableType absItem : list) {
@@ -67,7 +68,7 @@ public class DreamBrain {
     protected byte makeItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
         if(PlanPoolLock.get())return -2;
 
-        amount -= dreamTransmittablePool.requestRemoveItem(requiredItem, amount);
+        amount -= dreamItemPool.requestRemoveItem(requiredItem, amount);
 
         if(amount <= 0)return 0;
 
@@ -115,9 +116,9 @@ public class DreamBrain {
 
     public static void main(String[] args){
         DreamBrain brain = new DreamBrain();
-        brain.dreamTransmittablePool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs0-", 1).getType());
-        brain.dreamTransmittablePool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs1-", 1).getType());
-        brain.dreamTransmittablePool.updateAbstractCondition();
+        brain.dreamItemPool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs0-", 1).getType());
+        brain.dreamItemPool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs1-", 1).getType());
+        brain.dreamItemPool.updateAbstractCondition();
         brain.addPlan(new DreamPlanTestAbstract(new BlockCoord(), "Abs0-", "Abs1-"));
         brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("Abs1-A", 3)), Collections.singletonList(new kTestTrans("A", 1))));
         brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("B", 1)), Collections.singletonList(new kTestTrans("Abs0-A", 1))));

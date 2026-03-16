@@ -14,12 +14,13 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.pool.DreamItemPool;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
 
 public class DreamerPool {
     public void requestMakeItem(DreamPlanBase plan, ITransmittable result, long required){
         try {
-            DreamTransmittablePool pool = new DreamTransmittablePool();
+            DreamItemPool pool = new DreamItemPool();
             System.out.print("makeing plan: "+plan +"x"+required+"\n");
 
             for (int i = 0; i < required; i++) {

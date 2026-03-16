@@ -12,16 +12,19 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
+package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.pool;
 
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
-public class DreamTransmittablePool {
+public class DreamItemPool {
     public Predicate<ITransmittableType> AbstractOverallCondition = t -> false;
     public List<ITransmittableType> abstractTransmittableList = new ArrayList<>();
 
