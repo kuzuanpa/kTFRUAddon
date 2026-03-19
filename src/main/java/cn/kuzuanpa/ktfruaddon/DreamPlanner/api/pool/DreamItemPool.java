@@ -17,14 +17,15 @@ package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.pool;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 public class DreamItemPool {
+    public UUID uuid ;
+    protected ConcurrentHashMap<ITransmittableType, Long> items = new ConcurrentHashMap<>();
     public Predicate<ITransmittableType> AbstractOverallCondition = t -> false;
     public List<ITransmittableType> abstractTransmittableList = new ArrayList<>();
 
@@ -32,12 +33,13 @@ public class DreamItemPool {
         abstractTransmittableList.forEach(abs-> AbstractOverallCondition = AbstractOverallCondition.or(((AbstractTransmittable.AbstractTransmittableType) abs).condition));
     }
     public long requestAddItem(ITransmittableType item, long required){
-        System.out.print("Requested Add: "+item +"x"+required+"\n");
-        return 0;
+        if (items.computeIfPresent(item, (k,v)-> v + required) == null)items.put(item,required);
+        return required;
     }
-    public long requestRemoveItem(ITransmittableType item, long required){
-        System.out.print("Requested Remove: "+item +"x"+required+"\n");
-        return 0;
+    public long tryRemoveItem(ITransmittableType item, long required){
+        long count = Math.min(required,items.getOrDefault(item, 0L));
+        items.computeIfPresent(item, (k,v)-> v - count);
+        return count;
     }
 
 }

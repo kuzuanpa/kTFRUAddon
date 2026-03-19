@@ -24,7 +24,7 @@ public class DreamerPool {
             System.out.print("makeing plan: "+plan +"x"+required+"\n");
 
             for (int i = 0; i < required; i++) {
-                plan.getIngredientList(result).forEach(ing -> pool.requestRemoveItem(ing.getType(), ing.getAmount()));
+                plan.getIngredientList(result).forEach(ing -> pool.tryRemoveItem(ing.getType(), ing.getAmount()));
                 Thread.sleep(10);
                 pool.requestAddItem(result.getType(), result.getAmount());
             }

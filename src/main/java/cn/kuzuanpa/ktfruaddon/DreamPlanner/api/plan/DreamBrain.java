@@ -68,7 +68,7 @@ public class DreamBrain {
     protected byte makeItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
         if(PlanPoolLock.get())return -2;
 
-        amount -= dreamItemPool.requestRemoveItem(requiredItem, amount);
+        amount -= dreamItemPool.tryRemoveItem(requiredItem, amount);
 
         if(amount <= 0)return 0;
 
