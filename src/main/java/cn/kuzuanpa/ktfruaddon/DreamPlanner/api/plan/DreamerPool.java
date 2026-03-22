@@ -15,18 +15,18 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.pool.DreamItemPool;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
 
 public class DreamerPool {
-    public void requestMakeItem(DreamPlanBase plan, ITransmittable result, long required){
+    public void requestMakeItem(DreamPlanBase plan, TransferableStack result, long required){
         try {
             DreamItemPool pool = new DreamItemPool();
             System.out.print("makeing plan: "+plan +"x"+required+"\n");
 
             for (int i = 0; i < required; i++) {
-                plan.getIngredientList(result).forEach(ing -> pool.tryRemoveItem(ing.getType(), ing.getAmount()));
+                plan.getIngredientList(result).forEach(ing -> pool.tryRemoveItem(ing.type, ing.amount));
                 Thread.sleep(10);
-                pool.requestAddItem(result.getType(), result.getAmount());
+                pool.requestAddItem(result.type, result.amount);
             }
             } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -35,7 +35,7 @@ public class DreamerPool {
 
     public void doTreeNode(DreamBrain.PlanTreeNode node){
         if(!node.subNodes.isEmpty()) node.subNodes.forEach(this::doTreeNode);
-        if(node.count <= 0)return;
-        requestMakeItem(node.plan, node.resultItem.make(node.count), (long) Math.ceil(node.count*1F/node.plan.getResultNum(node.resultItem)));
+        if(node.planRepeatCount <= 0)return;
+        requestMakeItem(node.plan, node.resultItem.make(node.planRepeatCount), (long) Math.ceil(node.planRepeatCount *1F/node.plan.getResultNum(node.resultItem)));
     }
 }

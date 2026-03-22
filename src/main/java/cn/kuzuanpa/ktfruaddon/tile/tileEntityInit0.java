@@ -15,6 +15,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile;
 
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.tile.TileDreamBrain;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.material.matList;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
@@ -32,10 +33,10 @@ import cn.kuzuanpa.ktfruaddon.tile.energy.storage.FlywheelBox;
 import cn.kuzuanpa.ktfruaddon.tile.energy.storage.FlywheelBoxElec;
 import cn.kuzuanpa.ktfruaddon.tile.machine.*;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.LargeCompressedGasTank;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform.MultiDynamo;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator.*;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.TransformBattery;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform.MultiDynamo;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform.MultiSeparateExciteDynamo;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMappedStructureMachine;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.*;
@@ -102,6 +103,7 @@ public class tileEntityInit0 {
         aMat = MT.StainlessSteel;      kRegistry0.add("Test Wired Controller"                            , "ktfruaddon: Energy",  1102, 1304, ControllerWired.class          , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Test User"                                        , "ktfruaddon: Energy",  1103, 1304, TestUser.class                 , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Network Wire"                                     , "ktfruaddon: Energy",  1104, 1304, NetworkCable.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        aMat = MT.StainlessSteel;      kRegistry0.add("Tile Dream Brain"                                 , "ktfruaddon: Energy",  1105, 1304, TileDreamBrain.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
 
 
 

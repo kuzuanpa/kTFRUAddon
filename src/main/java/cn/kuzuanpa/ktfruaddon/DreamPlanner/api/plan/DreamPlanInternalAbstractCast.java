@@ -14,27 +14,26 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
-import codechicken.lib.vec.BlockCoord;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransferable;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DreamPlanInternalAbstractCast extends DreamPlanBase{
-    public List<ITransmittable> getResultList(){return new ArrayList<>();};
-    public long getResultNum(ITransmittableType output) {return 0;};
+    public List<TransferableStack> getResultList(){return new ArrayList<>();};
+    public long getResultNum(ITransferable output) {return 0;};
     /**Get Recipe needed Ingredients from result**/
-    public List<ITransmittable> getIngredientList(ITransmittable result){return new ArrayList<>();
+    public List<TransferableStack> getIngredientList(TransferableStack result){return new ArrayList<>();
     };
-    public DreamPlanInternalAbstractCast(List<ITransmittableType> abstractItem, ITransmittableType realItem){
+    public DreamPlanInternalAbstractCast(List<ITransferable> abstractItem, ITransferable realItem){
         super(null);
         this.absItem=abstractItem;
         this.realItem=realItem;
     }
 
-    List<ITransmittableType> absItem;
-    ITransmittableType realItem;
+    List<ITransferable> absItem;
+    ITransferable realItem;
     @Override
     public String toString() {
         return "PI-AC."+absItem+"->"+realItem;

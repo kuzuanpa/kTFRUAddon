@@ -14,18 +14,6 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 
-import net.minecraft.nbt.NBTTagCompound;
-
-public interface ITransmittable {
-    ITransmittable initFrom(ITransmittableType type, long amount);
-    ITransmittableType getType();
-    long getAmount();
-    default NBTTagCompound save() {return new NBTTagCompound();}
-    default boolean isTypeEqual(ITransmittable t){
-        return getType().equals(t.getType());
-    }
-    default ITransmittable copy(){ return initFrom(getType(), getAmount());}
-    static ITransmittable load(NBTTagCompound nbt){
-        return new kTestTrans("1");
-    }
+public interface IAbstractTransferable extends ITransferable{
+    boolean isFit(ITransferable t);
 }

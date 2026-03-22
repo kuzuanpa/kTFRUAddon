@@ -15,15 +15,14 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.pool.DreamItemPool;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.AbstractTransmittable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.kTestTrans;
-import codechicken.lib.vec.BlockCoord;
-import com.google.common.collect.Lists;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransferable;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -32,25 +31,19 @@ import static java.lang.System.out;
 public class DreamBrain {
     protected List<DreamPlanBase> plans = new ArrayList<>();
     public DreamItemPool dreamItemPool = new DreamItemPool();
-    public Map<ITransmittableType, List<DreamPlanBase>> PlanSearchPool = new HashMap<>();
+    public Map<ITransferable, List<DreamPlanBase>> PlanSearchPool = new HashMap<>();
     public AtomicBoolean PlanPoolLock = new AtomicBoolean(false);
 
-    public List<DreamPlanBase> searchItemPlan(ITransmittableType requiredType){
+    public List<DreamPlanBase> searchItemPlan(ITransferable requiredType){
         List<DreamPlanBase> list = PlanSearchPool.get(requiredType);
         return list==null?new ArrayList<>():list;
     }
 
-
-    public byte tryMakeAbstractItem(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode) {
-        if(!dreamItemPool.AbstractOverallCondition.test(requiredItem))return -1;
-        return tryMakeAbstractItem0(requiredItem, amount, treeNode);
-    }
-
-    public byte tryMakeAbstractItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
-        List<ITransmittableType> list = dreamItemPool.abstractTransmittableList.stream().filter(t->t instanceof AbstractTransmittable.AbstractTransmittableType).map(t-> ((AbstractTransmittable.AbstractTransmittableType) t)).filter(t-> t.condition.test(requiredItem)).collect(Collectors.toList());
+    public byte tryMakeAbstractItem(ITransferable requiredItem, long amount, PlanTreeNode treeNode){
+        List<ITransferable> list = dreamItemPool.abstractTransmittableList.stream().filter(t-> t.isFit(requiredItem)).collect(Collectors.toList());
         if(list.isEmpty())return -1;
 
-        for (ITransmittableType absItem : list) {
+        for (ITransferable absItem : list) {
             List<DreamPlanBase> planList = searchItemPlan(absItem);
 
             if(planList.isEmpty())return -1;
@@ -65,7 +58,7 @@ public class DreamBrain {
         return 0;
     }
 
-    protected byte makeItem0(ITransmittableType requiredItem, long amount, PlanTreeNode treeNode){
+    public byte makeItem(ITransferable requiredItem, long amount, PlanTreeNode treeNode){
         if(PlanPoolLock.get())return -2;
 
         amount -= dreamItemPool.tryRemoveItem(requiredItem, amount);
@@ -87,13 +80,13 @@ public class DreamBrain {
         return 0;
     }
 
-    public long makePlan(DreamPlanBase plan, long count, ITransmittable requiredItemReal, PlanTreeNode treeNode){
-        treeNode.count = count;
+    public long makePlan(DreamPlanBase plan, long count, TransferableStack requiredItemReal, PlanTreeNode treeNode){
+        treeNode.planRepeatCount = count;
         treeNode.plan = plan;
-        treeNode.resultItem = requiredItemReal.getType();
-        for (ITransmittable ing : plan.getIngredientList(requiredItemReal)) {
-            long result = makeItem0(ing.getType(), ing.getAmount() * count,treeNode);
-            if(result == -1) treeNode.reqItems.add(ing.initFrom(ing.getType(), ing.getAmount()*count));
+        treeNode.resultItem = requiredItemReal.type;
+        for (TransferableStack ing : plan.getIngredientList(requiredItemReal)) {
+            long result = makeItem(ing.type, ing.amount * count,treeNode);
+            if(result == -1) treeNode.reqItems.add(ing.clone(ing.amount*count));
         }
         return 0;
     }
@@ -105,54 +98,36 @@ public class DreamBrain {
             out.print("|");
         }
         StringBuilder sb = new StringBuilder("-");
-        for (ITransmittable reqItem : treeNode.reqItems) {
-            sb.append(reqItem.toString());
+        for (TransferableStack reqItem : treeNode.reqItems) {
+            sb.append(reqItem.toString()).append(", ");
         }
-        out.print(treeNode.plan+"*"+treeNode.count+sb.toString()+"\n");
+        out.print(treeNode.planRepeatCount +" * "+ treeNode.plan + " Required Items: "+ sb +"\n");
         for (PlanTreeNode subNode : treeNode.subNodes) {
             printTreeNode(subNode, depth +1);
         }
     }
 
-    public static void main(String[] args){
-        DreamBrain brain = new DreamBrain();
-        brain.dreamItemPool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs0-", 1).getType());
-        brain.dreamItemPool.abstractTransmittableList.add(new DreamPlanTestAbstract.TestAbsTransmittable("Abs1-", 1).getType());
-        brain.dreamItemPool.updateAbstractCondition();
-        brain.addPlan(new DreamPlanTestAbstract(new BlockCoord(), "Abs0-", "Abs1-"));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("Abs1-A", 3)), Collections.singletonList(new kTestTrans("A", 1))));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Collections.singletonList(new kTestTrans("B", 1)), Collections.singletonList(new kTestTrans("Abs0-A", 1))));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Lists.newArrayList(new kTestTrans("G", 1)), Collections.singletonList(new kTestTrans("D", 3))));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Lists.newArrayList(new kTestTrans("D", 1), new kTestTrans("K", 11)), Collections.singletonList(new kTestTrans("B", 1))));
-        brain.addPlan(new DreamPlanSimple(new BlockCoord(), Lists.newArrayList(new kTestTrans("V", 1), new kTestTrans("H", 17)), Collections.singletonList(new kTestTrans("G", 1))));
-        PlanTreeNode treeNode = new PlanTreeNode(-1);
-        brain.makeItem0(new kTestTrans("A", 1).getType(), 5, treeNode);
-        brain.printTreeNode(treeNode, 0);
-
-        DreamerPool pool = new DreamerPool();
-        pool.doTreeNode(treeNode);
-    }
     public boolean addPlan(DreamPlanBase plan){
         PlanPoolLock.set(true);
         plans.add(plan);
-        plan.getResultList().forEach(transmittable -> addPlanSearchInfo(transmittable.getType(), plan));
+        plan.getResultList().forEach(transmittable -> addPlanSearchInfo(transmittable.type, plan));
         PlanPoolLock.set(false);
         return true;
     }
     public boolean removePlan(DreamPlanBase plan){
         PlanPoolLock.set(true);
         plans.remove(plan);
-        plan.getResultList().forEach(item -> removePlanSearchInfo(item.getType(), plan));
+        plan.getResultList().forEach(item -> removePlanSearchInfo(item.type, plan));
         PlanPoolLock.set(false);
         return true;
     }
-    protected boolean addPlanSearchInfo(ITransmittableType result, DreamPlanBase plan){
+    protected boolean addPlanSearchInfo(ITransferable result, DreamPlanBase plan){
         PlanSearchPool.putIfAbsent(result, new ArrayList<>());
         PlanSearchPool.get(result).add(plan);
         return true;
     }
     /**@return true if removed something, false otherwise**/
-    protected boolean removePlanSearchInfo(ITransmittableType output, @Nullable DreamPlanBase plan){
+    protected boolean removePlanSearchInfo(ITransferable output, @Nullable DreamPlanBase plan){
         List<DreamPlanBase> list = PlanSearchPool.get(output);
         if(list == null)return false;
         boolean result = list.remove(plan);
@@ -162,16 +137,16 @@ public class DreamBrain {
 
     public static class PlanTreeNode{
         public DreamPlanBase plan;
-        public ITransmittableType resultItem;
-        public long count;
+        public ITransferable resultItem;
+        public long planRepeatCount;
         public List<PlanTreeNode> subNodes = new ArrayList<>();
-        public List<ITransmittable> reqItems = new ArrayList<>();
+        public List<TransferableStack> reqItems = new ArrayList<>();
 
         public PlanTreeNode() {
         }
 
         public PlanTreeNode(long signal) {
-            count = signal;
+            planRepeatCount = signal;
         }
     }
 }

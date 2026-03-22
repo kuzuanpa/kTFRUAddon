@@ -14,8 +14,8 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
 
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransmittableType;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransferable;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
 import codechicken.lib.vec.BlockCoord;
 
 import java.util.List;
@@ -23,10 +23,10 @@ import java.util.List;
 public abstract class DreamPlanBase {
     public final BlockCoord InterfacePos;
     public int complexity;
-    public abstract List<ITransmittable> getResultList();
-    public abstract long getResultNum(ITransmittableType output);
+    public abstract List<TransferableStack> getResultList();
+    public abstract long getResultNum(ITransferable output);
     /**Get Recipe needed Ingredients from result**/
-    public abstract List<ITransmittable> getIngredientList(ITransmittable result);
+    public abstract List<TransferableStack> getIngredientList(TransferableStack result);
     public DreamPlanBase(BlockCoord interfacePos){
         InterfacePos = interfacePos;
     }

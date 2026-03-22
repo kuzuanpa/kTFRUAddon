@@ -12,42 +12,41 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan;
+package cn.kuzuanpa.ktfruaddon.DreamPlanner.test;
 
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransferable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan.DreamPlanBase;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.*;
 import codechicken.lib.vec.BlockCoord;
 
+import java.util.Collections;
 import java.util.List;
 
-public class DreamPlanSimple extends DreamPlanBase{
+public class DreamPlanTestAbstract extends DreamPlanBase {
     public long complexity;
-    List<TransferableStack> recipe, result;
+    AbstractStringTestTransferable recipe, result;
+
     public List<TransferableStack> getResultList(){
-        return result;
+        return Collections.singletonList(result.make(1));
     };
     public long getResultNum(ITransferable output){
-        return result.stream().filter(re-> re.type.equals(output)).mapToLong(st -> st.amount).sum();
+        return 1;
     }
     public List<TransferableStack> getIngredientList(TransferableStack result){
-        return recipe;
+        return Collections.singletonList(new StringTestTransferable(recipe.prefix + ((StringTestTransferable) result.type).content.replaceFirst(this.result.prefix, "")).make(1));
     }
-    public DreamPlanSimple(BlockCoord interfacePos, List<TransferableStack> recipe, List<TransferableStack> result){
+    public DreamPlanTestAbstract(BlockCoord interfacePos, String recipe, String result){
         super(interfacePos);
-        this.recipe=recipe;
-        this.result=result;
+        this.recipe=new AbstractStringTestTransferable(recipe);
+        this.result=new AbstractStringTestTransferable(result);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Plan.");
-        for (TransferableStack iTransmittable : recipe) {
-            sb.append(iTransmittable.toString()).append(", ");
-        }
-        sb.append(" -> ");
-        for (TransferableStack iTransmittable : result) {
-            sb.append(iTransmittable).append(", ");
-        }
+        StringBuilder sb = new StringBuilder("PTA");
+            sb.append(recipe.toString());
+        sb.append("->");
+            sb.append(result.toString());
         return sb.toString();
     }
+
 }
