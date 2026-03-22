@@ -81,18 +81,23 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if (aNBT.hasKey("ktfru.turbine.efficiency")) mTurbineEfficiency = aNBT.getLong("ktfru.turbine.efficiency") / 1000F;
 		if (aNBT.hasKey("ktfru.turbine.checked")) usingCheckedTurbine = aNBT.getBoolean("ktfru.turbine.checked");
 		if (aNBT.hasKey("ktfru.turbine.overclock")) mOverclock = aNBT.getBoolean("ktfru.turbine.overclock");
-		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABA")
+		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
 				.fixedLayer('A',
 						"AAAA",
-						"AAAA",
+						"AAAC",
 						"AAAA"
 				).fixedLayer('B',
 						"AAAA",
 						"AAAB",
 						"AAAA"
+				).fixedLayer('C',
+						"AAAA",
+						"AAAA",
+						"AAAA"
 				)
 				.where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
 				.where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, 4)))
+				.where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
 				.setOffset(-1,-1,0) ;
 	}
 	@Override
