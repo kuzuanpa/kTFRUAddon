@@ -16,32 +16,32 @@ package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 
 import net.minecraft.item.ItemStack;
 
-public class TransferableRenderDescriber {
+public class TransferableDescriber {
     ItemStack stack;
     String name = null;
     String desc = null;
     int height = 0;
     int width = 0;
-    public TransferableRenderDescriber(ItemStack stack){
+    public TransferableDescriber(ItemStack stack){
         this.stack=stack;
     }
-    public TransferableRenderDescriber setName(String name){
+    public TransferableDescriber setName(String name){
         this.name=name;
         return this;
     }
-    public TransferableRenderDescriber setDesc(String desc){
+    public TransferableDescriber setDesc(String desc){
         this.desc=desc;
         return this;
     }
-    public TransferableRenderDescriber setHeight(int height){
+    public TransferableDescriber setHeight(int height){
         this.height=height;
         return this;
     }
-    public TransferableRenderDescriber setWidth(int width){
+    public TransferableDescriber setWidth(int width){
         this.width=width;
         return this;
     }
-    public ItemStack getDescribeStack(){
+    public ItemStack getItemStack(){
         return stack;
     };
     public String getName(){return stack.getDisplayName();};

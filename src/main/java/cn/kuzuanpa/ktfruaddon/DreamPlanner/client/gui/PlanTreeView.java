@@ -51,7 +51,7 @@ public class PlanTreeView extends kGuiContainerBase implements IHiddenNei {
 
     @Override
     public void addButtons() {
-        buttons.add(new TransferableDetail(0, new StringTestTransferable("Test1").getRenderDescriber()));
+        buttons.add(new TransferableDetail(0, new StringTestTransferable("Test1").describe()));
     }
 
     @Override
