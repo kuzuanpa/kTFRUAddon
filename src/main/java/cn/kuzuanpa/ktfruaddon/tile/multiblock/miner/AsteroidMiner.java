@@ -133,6 +133,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);
+        LH.addEnergyToolTips(this, aList, mEnergyType, null, null, null);
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
     }
 
