@@ -16,5 +16,5 @@ public interface ITransferable {
         return TransferableManager.getDefault(nbt.getInteger("typeID")).loadFrom(nbt);
     }
     int typeID();
-    TransferableRenderDescriber getRenderDescriber();
+    TransferableDescriber describe();
 }

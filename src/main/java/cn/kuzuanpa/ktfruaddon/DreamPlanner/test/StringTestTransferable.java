@@ -15,7 +15,7 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.test;
 
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransferable;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableRenderDescriber;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableDescriber;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -51,8 +51,8 @@ public class StringTestTransferable implements ITransferable {
     }
 
     @Override
-    public TransferableRenderDescriber getRenderDescriber() {
-        return new TransferableRenderDescriber(new ItemStack(Items.apple)).setName("String Test").setDesc(content);
+    public TransferableDescriber describe() {
+        return new TransferableDescriber(new ItemStack(Items.apple)).setName("String Test").setDesc(content);
     }
 
     @Override

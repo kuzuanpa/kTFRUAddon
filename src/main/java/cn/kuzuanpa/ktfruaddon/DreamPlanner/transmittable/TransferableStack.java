@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 
+import java.util.Map;
 import java.util.Objects;
 
 public final class TransferableStack {
@@ -22,6 +23,10 @@ public final class TransferableStack {
     public TransferableStack(ITransferable type, long amount){
         this.type=type;
         this.amount=amount;
+    }
+    public TransferableStack(Map.Entry<ITransferable,Long> itemAndAmount){
+        this.type=itemAndAmount.getKey();
+        this.amount=itemAndAmount.getValue();
     }
     public boolean isEqual(TransferableStack t){
         return t != null && Objects.equals(t.type, this.type) && t.amount == this.amount;

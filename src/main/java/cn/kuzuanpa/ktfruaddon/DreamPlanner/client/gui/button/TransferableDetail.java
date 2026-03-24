@@ -16,7 +16,7 @@ package cn.kuzuanpa.ktfruaddon.DreamPlanner.client.gui.button;
 
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.client.gui.util;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableRenderDescriber;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableDescriber;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -24,8 +24,8 @@ import org.lwjgl.opengl.GL11;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
 public class TransferableDetail extends kGuiButtonBase {
-    TransferableRenderDescriber describer;
-    public TransferableDetail(int id, TransferableRenderDescriber describer) {
+    TransferableDescriber describer;
+    public TransferableDetail(int id, TransferableDescriber describer) {
         super(id, 0, 0, describer.getWidth(), describer.getHeight(), "");
         this.describer=describer;
         setAnimatedInFBO(true);
@@ -42,7 +42,7 @@ public class TransferableDetail extends kGuiButtonBase {
         util.drawTexturedModalRect(0,0, (int) this.zLevel,0,0,width,height);
 
         //draw item icon
-        util.itemRender.renderItemAndEffectIntoGUI(mc.fontRenderer,mc.getTextureManager(), describer.getDescribeStack(), 0, 0);
+        util.itemRender.renderItemAndEffectIntoGUI(mc.fontRenderer,mc.getTextureManager(), describer.getItemStack(), 0, 0);
         GL11.glEnable(GL11.GL_BLEND);
 
         //draw name&desc
