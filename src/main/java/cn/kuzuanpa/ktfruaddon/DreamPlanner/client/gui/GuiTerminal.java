@@ -1,28 +1,41 @@
 package cn.kuzuanpa.ktfruaddon.DreamPlanner.client.gui;
 
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.test.StringTestTransferable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.ITransferable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable.TransferableStack;
-import gregapi.gui.ContainerCommon;
-import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 
 public class GuiTerminal extends kGuiContainerBase {
     private float scrollPosition = 0.0F;
+    InventoryPlayer aInventoryPlayer;
     private ContainerTerminal container;
 
-    public GuiTerminal(ContainerTerminal container) {
-        super(container);
-        this.container = container;
+    public GuiTerminal(InventoryPlayer aInventoryPlayer, int aGUIID) {
+        super(new ContainerTerminal(aInventoryPlayer));
+        this.aInventoryPlayer = aInventoryPlayer;
+        this.container= (ContainerTerminal) inventorySlots;
+        ySize = 108;
+    }
+
+    @Override
+    public void initGui2() {
+        super.initGui2();
+        int ContainerY = (height - ySize) / 2;
+
+        this.inventorySlots = new ContainerTerminal(aInventoryPlayer, Math.max(3, (height / 18) - 9), ContainerY);
+        this.container= (ContainerTerminal) inventorySlots;
     }
 
     public void onDeltaSyncReceived(ContainerTerminal container, Map<ITransferable, Long> changes) {
@@ -75,7 +88,13 @@ public class GuiTerminal extends kGuiContainerBase {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        // 绘制背景和根据 scrollPosition 绘制滚动条滑块...
+        int ContainerX = (width - xSize) / 2;
+        int ContainerY = (height - ySize) / 2;
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4d(0.5,0.5,0.5,0.5);
+        util.drawTexturedModalRect(ContainerX,30,0,0,0,xSize, (container.row + 5)*18 + 16);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+
     }
 
     @Override
@@ -85,36 +104,50 @@ public class GuiTerminal extends kGuiContainerBase {
 
     @Override
     public void onKeyTyped(char c, int i) {
-
+        close();
     }
 
-    public static class ContainerTerminal extends ContainerCommon {
+    public static class ContainerTerminal extends Container {
+        int row;
+        int containerY;
         // 虚拟物品栏，专供这 54 个槽位显示使用
-        private InventoryBasic virtualInv = new InventoryBasic("virtual", false, 54);
-
+        private final InventoryBasic virtualInv ;
+        InventoryPlayer aInventoryPlayer;
         // 客户端缓存的所有网络物品列表（按名称或数量排序好）
         public List<TransferableStack> clientNetworkItems = new ArrayList<>();
 
-        public ContainerTerminal(InventoryPlayer playerInv, ITileEntityInventoryGUI tile) {
-            super(playerInv, tile);
-            // 注册 54 个虚拟槽位 (9x6)
-            for (int i = 0; i < 6; ++i) {
-                for (int j = 0; j < 9; ++j) {
-                    this.addSlotToContainer(new SlotVirtual(virtualInv, j + i * 9, 8 + j * 18, 18 + i * 18));
-                }
-            }
-            // ... 注册玩家背包槽位 (略) ...
+        public ContainerTerminal(InventoryPlayer aInventoryPlayer) {
+            this(aInventoryPlayer, 3, 0);
+        }
+        public ContainerTerminal(InventoryPlayer aInventoryPlayer, int row, int containerY) {
+            this.aInventoryPlayer = aInventoryPlayer;
+            this.row=row;
+            this.containerY = containerY;
+            this.virtualInv = new InventoryBasic("virtual", false, row*9);
+
+            addSlots();
         }
 
+        public void addSlots(){
+            bindPlayerInventory(aInventoryPlayer, row*18 + 54 - containerY);
+
+            for (int i = 0; i < row; ++i) {
+                for (int j = 0; j < 9; ++j) {
+                    this.addSlotToContainer(new SlotVirtual(virtualInv, j + i * 9, 8 + j * 18,  36 - containerY + i * 18));
+                }
+            }
+
+        }
         // 核心：客户端根据滚动条位置，动态刷新 54 个槽位的内容
         public void updateScroll(float scrollPosition) {
             int totalRows = (int) Math.ceil((double) clientNetworkItems.size() / 9.0);
-            int maxOffset = totalRows - 6;
+            int maxOffset = totalRows - row;
             if (maxOffset < 0) maxOffset = 0;
 
             int rowOffset = (int) (maxOffset * scrollPosition);
 
-            for (int i = 0; i < 54; i++) {
+            clientNetworkItems.add(new StringTestTransferable("Test").make(12));
+            for (int i = 0; i < row*9; i++) {
                 int itemIndex = (rowOffset * 9) + i;
                 if (itemIndex < clientNetworkItems.size()) {
                     virtualInv.setInventorySlotContents(i, clientNetworkItems.get(itemIndex).type.describe().getItemStack());
@@ -127,7 +160,7 @@ public class GuiTerminal extends kGuiContainerBase {
         @Override
         public ItemStack slotClick(int slotId, int dragType, int clickTypeIn, EntityPlayer player) {
             // 拦截虚拟槽位的原版点击，改为发送自定义封包
-            if (slotId >= 0 && slotId < 54) {
+            if (slotId >= 36) {
                 if (player.worldObj.isRemote) { // 仅限客户端
                     ItemStack clicked = virtualInv.getStackInSlot(slotId);
                     if (clicked != null) {
@@ -137,6 +170,25 @@ public class GuiTerminal extends kGuiContainerBase {
                 return null; // 阻止原版逻辑
             }
             return super.slotClick(slotId, dragType, clickTypeIn, player);
+        }
+
+        @Override
+        public boolean canInteractWith(EntityPlayer p_75145_1_) {
+            return true;
+        }
+
+        protected void bindPlayerInventory(InventoryPlayer aInventoryPlayer, int aOffset) {
+            int i;
+            for(i = 0; i < 3; ++i) {
+                for(int j = 0; j < 9; ++j) {
+                    this.addSlotToContainer(new Slot(aInventoryPlayer, j + i * 9 + 9, 8 + j * 18, aOffset + i * 18));
+                }
+            }
+
+            for(i = 0; i < 9; ++i) {
+                this.addSlotToContainer(new Slot(aInventoryPlayer, i, 8 + i * 18, aOffset + 58));
+            }
+
         }
     }
     // 自定义影子槽位，禁止原版物品放入和取出

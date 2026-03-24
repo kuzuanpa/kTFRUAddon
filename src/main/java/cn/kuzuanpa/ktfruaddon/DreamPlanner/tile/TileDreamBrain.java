@@ -17,7 +17,7 @@ package cn.kuzuanpa.ktfruaddon.DreamPlanner.tile;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan.DreamBrain;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan.DreamPlanSimple;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.api.plan.DreamerPool;
-import cn.kuzuanpa.ktfruaddon.DreamPlanner.client.gui.PlanTreeView;
+import cn.kuzuanpa.ktfruaddon.DreamPlanner.client.gui.GuiTerminal;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.test.AbstractStringTestTransferable;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.test.DreamPlanTestAbstract;
 import cn.kuzuanpa.ktfruaddon.DreamPlanner.test.StringTestTransferable;
@@ -62,10 +62,10 @@ public class TileDreamBrain extends TileEntityBase09FacingSingle {
     }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new PlanTreeView(aPlayer.inventory, this, aGUIID);
+        return new GuiTerminal(aPlayer.inventory, aGUIID);
     }
     @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
-        return new PlanTreeView.PlanTreeViewContainer(aPlayer.inventory, this, aGUIID);
+        return new GuiTerminal.ContainerTerminal(aPlayer.inventory);
     }
 
     @Override
