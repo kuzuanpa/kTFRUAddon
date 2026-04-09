@@ -172,7 +172,6 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
         }
         if(aTool.equals(TOOL_magnifyingglass)){
             if(mCapacity > 0 )aChatReturn.add(String.format("%.4f", mEnergyStored*100F/mCapacity) + " %");
-            aChatReturn.add(mEnergyStored + " / " +mCapacity + mEnergyType.getLocalisedChatNameShort());
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }

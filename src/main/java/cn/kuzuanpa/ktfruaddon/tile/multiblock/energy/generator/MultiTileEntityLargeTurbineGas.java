@@ -15,6 +15,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -37,6 +38,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static gregapi.data.CS.*;
@@ -44,6 +46,8 @@ import static gregapi.data.CS.*;
 public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine {
 	public FluidTankGT mInputTank = new FluidTankGT(), mTanksOutput[] = new FluidTankGT[] {new FluidTankGT(), new FluidTankGT(), new FluidTankGT()};
 	public FluidTankGT[] mTanks = new FluidTankGT[] {mInputTank, mTanksOutput[0], mTanksOutput[1], mTanksOutput[2]};
+	public IWailaInfoProvider tankInfoInput = new InfoTank(LH.get(I18nHandler.INPUT), "", mInputTank);
+	public IWailaInfoProvider tankInfoOutput = new InfoTank(LH.get(I18nHandler.OUTPUT), "", mTanksOutput);
 	public RecipeMap mRecipes = FM.Gas;
 	public Recipe mLastRecipe = null;
 
@@ -114,7 +118,7 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 			FL.move(tank, WD.te(worldObj,pos,mFacing,false));
 			if (FL.gas(tank) && !WD.hasCollide(worldObj, pos)) tank.setEmpty();
 		}
-		if (!mForcedStopped && mInputTank.has() && slotHas(0) && mTanksOutput[0].underHalf() && mTanksOutput[1].underHalf() && mTanksOutput[2].underHalf()) {
+		if (!mForcedStopped && mInputTank.has() && slotHas(0) && Arrays.stream(mTanksOutput).noneMatch(FluidTankGT::isFull)) {
 			Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, F, Integer.MAX_VALUE, NI, mInputTank.AS_ARRAY, ZL_IS);
 			if (tRecipe != null) {
 				if(isTurbineAboutToBreak&&getRandomNumber(10)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
@@ -127,9 +131,7 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 						mEnergyStored -= tParallel * tRecipe.mEUt * tRecipe.mDuration;
 						damageTurbine(tParallel * tRecipe.mEUt * tRecipe.mDuration,TURBINE_GAS);
 						for (int i = 0; i < tRecipe.mFluidOutputs.length && i < mTanksOutput.length; i++) {
-							if (!mTanksOutput[i].fillAll(tRecipe.mFluidOutputs[i], tParallel)) {
-								mEnergyStored = 0;
-							}
+							mTanksOutput[i].add((long) tRecipe.mFluidOutputs[i].amount * tParallel, tRecipe.mFluidOutputs[i]);
 						}
 						return;
 					}
@@ -157,7 +159,15 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	public boolean isItemValidForSlot(int aSlot, ItemStack aStack) {
 		return super.isItemValidForSlot(aSlot, aStack) && (prefixList.turbineLargeGas.contains(aStack) || prefixList.turbineLargeGasChecked.contains(aStack));
 	}
+	@Override public boolean getStateRunningPossible() {return super.getStateRunningPossible() && !mTanks[0].isEmpty();}
 
 	@Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.turbine.gas";}
 
+	@Override
+	public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+		super.getWailaInfos(current);
+		current.add(tankInfoInput);
+		current.add(tankInfoOutput);
+		return current;
+	}
 }

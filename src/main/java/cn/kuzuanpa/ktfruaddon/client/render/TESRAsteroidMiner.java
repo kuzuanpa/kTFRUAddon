@@ -51,11 +51,10 @@ public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
 
 
     @Override
-    public void renderTileEntityAt(TileEntity til, double x,
-                                   double y, double z, float f) {
+    public void renderTileEntityAt(TileEntity til, double x, double y, double z, float f) {
         if (! (til instanceof AsteroidMiner )) return;
         AsteroidMiner tile = (AsteroidMiner)til;
-        if(!tile.mStructureOkay || (!tile.clientIsSlotHas && tile.clientRocketSendTimer == 0) || tile.clientRocketSendTimer > 800)return;
+        if(!tile.mStructureOkay || (!tile.isSlotRocket && tile.clientRocketSendTimer == 0) || tile.clientRocketSendTimer > 800)return;
         GL11.glPushMatrix();
 
         //Initial setup
@@ -68,7 +67,10 @@ public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
 
         float rocketFlyHeight = (float) (tile.clientRocketSendTimer>0?Math.pow(tile.clientRocketSendTimer/80F, 3F): tile.clientRocketSendTimer<0?Math.pow(10+tile.clientRocketSendTimer/80F, 2.4F):0);
         GL11.glTranslatef(0.5f, rocketFlyHeight, 0.5f);
-
+        if(rocketFlyHeight != 0) {
+            tile.getWorld().spawnParticle("smoke", (float) utils.getRealX(tile.mFacing, tile.xCoord, 1D, 4D) - 1F + tile.rng(10) / 5f, tile.yCoord + 0.9F + rocketFlyHeight, (float) utils.getRealZ(tile.mFacing, tile.zCoord, 1D, 4D) - 1F + tile.rng(10) / 5f, tile.rng(10) / 50f - 0.1f, -2f, tile.rng(10) / 50f - 0.1f);
+            tile.getWorld().spawnParticle("flame", (float) utils.getRealX(tile.mFacing, tile.xCoord, 1D, 4D) - 1F + tile.rng(10) / 5f, tile.yCoord + 0.9F + rocketFlyHeight, (float) utils.getRealZ(tile.mFacing, tile.zCoord, 1D, 4D) - 1F + tile.rng(10) / 5f, tile.rng(10) / 50f - 0.1f, -2f, tile.rng(10) / 50f - 0.1f);
+        }
         if(tile.clientRocketSendTimer > 0) tile.clientRocketSendTimer ++;
         if(tile.clientRocketSendTimer < 0 && tile.clientRocketSendTimer > -800) tile.clientRocketSendTimer --;
 

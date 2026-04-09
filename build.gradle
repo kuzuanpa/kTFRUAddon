@@ -88,7 +88,7 @@ dependencies {
     implementation "mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10:dev"
     implementation "eu.usrv:YAMCore:1.7.10-0.5.80:deobf"
 
-    implementation "cn.kuzuanpa:gregtech6-TFRU:6.17.05.5:dev"
+    implementation "cn.kuzuanpa:gregtech6-TFRU:6.17.05.7:dev"
     implementation "cn.kuzuanpa:AdvancedRocketry-TFRU:1.4.1:dev"
     implementation "cn.kuzuanpa:TerraFirmaCraft-TFRU:0.82.4:dev"
     implementation "cn.kuzuanpa:kguilib:1.2.1:dev"

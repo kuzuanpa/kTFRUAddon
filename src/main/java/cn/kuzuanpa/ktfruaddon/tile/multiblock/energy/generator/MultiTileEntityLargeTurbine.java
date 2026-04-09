@@ -25,6 +25,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -39,6 +40,8 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.ITileEntityUnloadable;
 import gregapi.tileentity.energy.ITileEntityEnergy;
+import gregapi.tileentity.machines.ITileEntityRunningActively;
+import gregapi.tileentity.machines.ITileEntityRunningPowerSaving;
 import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.*;
 import gregapi.util.UT;
@@ -59,11 +62,11 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler,IMultiBlockEnergy, IFluidHandler, ITileEntitySwitchableOnOff, IMultiBlockInventory, IMultiTileEntity.IMTE_SyncDataByte {
+public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler,IMultiBlockEnergy, IFluidHandler, ITileEntitySwitchableOnOff, IMultiBlockInventory, IMultiTileEntity.IMTE_SyncDataByte, IWailaTile, ITileEntityRunningActively, ITileEntityRunningPowerSaving {
 	public short mTurbineWalls = 18022;
 	public long mEnergyStored=0,mRate=0,mRateMax=0,mTurbineDurability = 0;
 	public float mTurbineEfficiency=0;
-	public boolean mOverclock=false,mActive=false,mForcedStopped=false, isTurbineAboutToBreak=false, usingCheckedTurbine=false;
+	public boolean mOverclock=false,mActive=false,mForcedStopped=false, isTurbineAboutToBreak=false, usingCheckedTurbine=false, outputting = false;
 	public static final IIconContainer mTextureActive   = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/turbine_active");
 	public static final IIconContainer mTextureInactive = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/turbine");
 	protected TagData mEnergyTypeEmitted= TD.Energy.RU;
@@ -175,9 +178,11 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	public void onTick2(long aTimer, boolean aIsServerSide) {
 		super.onTick2(aTimer, aIsServerSide);
 		if (!aIsServerSide)return;
+		outputting = false;
+		if (slot(0)== null) mTurbineDurability =0;
+
 		if(!mStructureOkay || !slotHas(0) || mForcedStopped) {setActive(false); return;}
 		updateClientData();
-
 		if(mEnergyStored<0)mEnergyStored=0;
 		if(!mActive&&mTurbineEfficiency==0&&slotHas(0)) mTurbineEfficiency = itemTurbine.getTurbineEfficiency(OreDictMaterial.get(slot(0).getItemDamage()));
 		doConversion(aTimer);
@@ -186,6 +191,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		if(mEnergyStored >= mRate*factor*ampere){
 			setActive(true);
 			long consumed = ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, getEmittingSide(), (long) Math.min(mRate*factor,mEnergyStored), ampere, this, getEmittingTileEntity());
+			if(consumed > 0)outputting = true;
 			mEnergyStored-= (long) (mRate*factor*consumed);
 		}else setActive(false);
 	}
@@ -220,11 +226,11 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		return F;
 	}
 
-	@Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return !mActive;}
+	@Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return isTurbineAboutToBreak || mForcedStopped;}
 
 	@Override
 	public boolean canTakeOutOfSlotGUI(int aSlot) {
-		return !mActive;
+		return isTurbineAboutToBreak || !mActive;
 	}
 
 	@Override
@@ -238,7 +244,14 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
 		if (aTool.equals(TOOL_screwdriver)) {
 			mOverclock=!mOverclock;
-			aChatReturn.add(LH.Chat.ORANGE+LH.get(I18nHandler.OVERCLOCKING)+" "+mOverclock);
+			aChatReturn.add(LH.Chat.ORANGE+LH.get(I18nHandler.OVERCLOCKING)+": "+mOverclock);
+			return 1;
+		}
+
+		if (aTool.equals(TOOL_softhammer)) {
+			mForcedStopped = !mForcedStopped;
+			aChatReturn.add(LH.Chat.ORANGE + LH.get(LH.STATE_STOPPED_FORCE) + ": " + mForcedStopped);
+			return 1;
 		}
 		return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
 	}
@@ -248,24 +261,16 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	static final byte TURBINE_STEAM=0,TURBINE_GAS=1;
 
 	public void damageTurbine(long amount, byte turbineType){
+		if(!usingCheckedTurbine&&mTimer%20==0&&getRandomNumber(1000)==1)explode(3);
 		if(mTurbineDurability == 0) {
 			transformTurbineItem();
 			isTurbineAboutToBreak=false;
-			causeBlockUpdate();
 		}
 		if(!isTurbineAboutToBreak && mTurbineDurability < -amount*1200){
 			isTurbineAboutToBreak=true;
-			causeBlockUpdate();
 		}
-		if(mTurbineDurability < 0) explode(3);
-		if(!usingCheckedTurbine&&mTimer%20==0&&getRandomNumber(1000)==1)explode(3);
-		mTurbineDurability +=amount;
-	}
-	public byte isProvidingStrongPower2(byte aSide) {
-		return (byte) (isTurbineAboutToBreak?15:0);
-	}
-	public byte isProvidingWeakPower2(byte aSide) {
-		return (byte) (isTurbineAboutToBreak?15:0);
+		if(mTurbineDurability < 10) setStateOnOff(false);
+		mTurbineDurability =Math.max(1, mTurbineDurability + amount*100);
 	}
 
 	@Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
@@ -280,8 +285,12 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	@Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {return mRateMax;}
 	@Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeEmitted.AS_LIST;}
 
-	@Override
-	public boolean setStateOnOff(boolean b) {
+	@Override public boolean getStateRunningPowerSaving() {return mActive && !outputting;}
+	@Override public boolean getStateRunningPossible() {return !mActive && mStructureOkay && mTurbineDurability > 0;}
+	@Override public boolean getStateRunningPassively() {return mActive;}
+	@Override public boolean getStateRunningActively() {return mActive;}
+
+	@Override public boolean setStateOnOff(boolean b) {
 		this.mForcedStopped=!b;
 		if(mActive)setActive(!mForcedStopped);
 		return b;
@@ -291,9 +300,8 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	public boolean getStateOnOff() {return !mForcedStopped;}
 
 	public void setActive(boolean active) {
-		boolean isStateChanged = mActive != active;
 		this.mActive = active;
-		if(isStateChanged) updateClientData();
+		updateClientData();
 	}
 
 	public IPacket getClientDataPacket(boolean aSendAll) {
@@ -303,5 +311,12 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 		super.receiveDataByteArray(aData,aNetworkHandler);
 		mActive= aData.length >= 6 && aData[5] == 1;
 		return true;
+	}
+
+	@Override
+	public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+		current.add(IWailaTile.instanceInfoState);
+		current.add(IWailaTile.instanceInfoEnergyIORange);
+		return current;
 	}
 }

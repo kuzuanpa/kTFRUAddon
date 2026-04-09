@@ -13,6 +13,7 @@ ktfru.msg.join.6.outdated.suffix=§r 打开聊天框查看更新日志
 ktfru.msg.join.6.check_fail=§l   无法检测版本更新
 
 ktfru.research.task.compute=提供%s 点算力
+ktfru.research.task.energy=提供%2$d %1$s, 最低电压%3$d
 ktfru.research.task.minigame.fill=研究%s 点空间规划
 ktfru.research.task.item.simple=研究%2$d个%1$s
 ktfru.research.task.item.scope=显微镜下观察%2$d个%1$s

@@ -7,7 +7,7 @@ import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class MultiResearchBasicMachine extends TileEntityBase10MultiBlockMachine {
+public abstract class MultiResearchRequiredBasicMachine extends TileEntityBase10MultiBlockMachine {
     public SingleItemStack lastItemStack=null;
     @Override
     public int checkRecipe(boolean aApplyRecipe, boolean aUseAutoIO) {
