@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ResearchItemManager {
-    protected static Map<Byte,Map<Short, List<SingleItemStack>>> data = new HashMap<>();
+    public static Map<Byte,Map<Short, List<SingleItemStack>>> data = new HashMap<>();
     @Nullable
     public static List<SingleItemStack> getItems(byte treeID, short researchItemID){
         if (data.get(treeID) == null)return null;
