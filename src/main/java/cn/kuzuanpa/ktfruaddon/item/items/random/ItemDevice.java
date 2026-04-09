@@ -24,8 +24,8 @@ import net.minecraft.item.ItemStack;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class itemDevice extends MultiItemRandom {
-    public itemDevice() {
+public class ItemDevice extends MultiItemRandom {
+    public ItemDevice() {
         super(MOD_ID, "ktfru.item.device");
         setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Devices", this,  (short) 0));
     }
@@ -67,7 +67,7 @@ public class itemDevice extends MultiItemRandom {
         else return null;
     }
     public static boolean isDeviceAsteroidMinerRocket(ItemStack stack){
-        return stack != null && stack.getItem() instanceof itemDevice && stack.getItemDamage() <= 9;
+        return stack != null && stack.getItem() instanceof ItemDevice && stack.getItemDamage() <= 9;
     }
     public static int[] asteroidMinerRocketLevel = new int[] {1,1,2,2,3,3,4,4,5,5};
 

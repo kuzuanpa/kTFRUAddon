@@ -61,60 +61,60 @@ public class itemIT extends MultiItemRandom {
         ItemList.MoO2PlateSoftBakedT1.set(addItem(9842, "MoO2PlateSoftBakedT1", "Next Step:"+ LH.Chat._CYAN+"Photo Align"));
         ItemList.MoO2PlateSoftBakedT2.set(addItem(9843, "MoO2PlateSoftBakedT2", "Next Step:"+ LH.Chat._CYAN+"Photo Align"));
 
-        ItemList.CPUPhotomask200um.set(addItem(9900, "CPU Photo Mask (200um)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask72um.set(addItem(9901, "CPU Photo Mask (72um)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask28um.set(addItem(9902, "CPU Photo Mask (28um)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask8um.set(addItem(9903, "CPU Photo Mask (8um)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask400nm.set(addItem(9904, "CPU Photo Mask (400nm)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask80nm.set(addItem(9905, "CPU Photo Mask (80nm)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask32nm.set(addItem(9906, "CPU Photo Mask (32nm)", "A plate with complex images, used to craft CPUs"));
-        ItemList.CPUPhotomask14nm.set(addItem(9907, "CPU Photo Mask (14nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT1.set(addItem(9900, "CPU Photo Mask (200um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT2.set(addItem(9901, "CPU Photo Mask (72um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT3.set(addItem(9902, "CPU Photo Mask (28um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT4.set(addItem(9903, "CPU Photo Mask (8um)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT5.set(addItem(9904, "CPU Photo Mask (400nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT6.set(addItem(9905, "CPU Photo Mask (80nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT7.set(addItem(9906, "CPU Photo Mask (32nm)", "A plate with complex images, used to craft CPUs"));
+        ItemList.CPUPhotomaskT8.set(addItem(9907, "CPU Photo Mask (14nm)", "A plate with complex images, used to craft CPUs"));
 
 
-        ItemList.CPUWafer200um.set(addItem(9950, "CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer72um .set(addItem(9951, "CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer28um .set(addItem(9952, "CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer8um  .set(addItem(9953, "CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer400nm.set(addItem(9954, "CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer80nm .set(addItem(9955, "CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer32nm .set(addItem(9956, "CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.CPUWafer14nm .set(addItem(9957, "CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT1.set(addItem(9950, "CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT2 .set(addItem(9951, "CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT3 .set(addItem(9952, "CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT4  .set(addItem(9953, "CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT5.set(addItem(9954, "CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT6 .set(addItem(9955, "CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT7 .set(addItem(9956, "CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.CPUWaferT8 .set(addItem(9957, "CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
 
-        ItemList.CPUWafer200umDeveloped.set(addItem(10000, "Developed CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer72umDeveloped .set(addItem(10001, "Developed CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer28umDeveloped .set(addItem(10002, "Developed CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer8umDeveloped  .set(addItem(10003, "Developed CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer400nmDeveloped.set(addItem(10004, "Developed CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer80nmDeveloped .set(addItem(10005, "Developed CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer32nmDeveloped .set(addItem(10006, "Developed CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.CPUWafer14nmDeveloped .set(addItem(10007, "Developed CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT1Developed.set(addItem(10000, "Developed CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT2Developed .set(addItem(10001, "Developed CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT3Developed .set(addItem(10002, "Developed CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT4Developed  .set(addItem(10003, "Developed CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT5Developed.set(addItem(10004, "Developed CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT6Developed .set(addItem(10005, "Developed CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT7Developed .set(addItem(10006, "Developed CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.CPUWaferT8Developed .set(addItem(10007, "Developed CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
 
-        ItemList.CPUWafer200umHardBaked.set(addItem(10050, "HardBaked CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer72umHardBaked .set(addItem(10051, "HardBaked CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer28umHardBaked .set(addItem(10052, "HardBaked CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer8umHardBaked  .set(addItem(10053, "HardBaked CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer400nmHardBaked.set(addItem(10054, "HardBaked CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer80nmHardBaked .set(addItem(10055, "HardBaked CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer32nmHardBaked .set(addItem(10056, "HardBaked CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.CPUWafer14nmHardBaked .set(addItem(10057, "HardBaked CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT1HardBaked.set(addItem(10050, "HardBaked CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT2HardBaked .set(addItem(10051, "HardBaked CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT3HardBaked .set(addItem(10052, "HardBaked CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT4HardBaked  .set(addItem(10053, "HardBaked CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT5HardBaked.set(addItem(10054, "HardBaked CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT6HardBaked .set(addItem(10055, "HardBaked CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT7HardBaked .set(addItem(10056, "HardBaked CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.CPUWaferT8HardBaked .set(addItem(10057, "HardBaked CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
 
-        ItemList.CPUWafer200umDoped.set(addItem(10100, "Doped CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer72umDoped .set(addItem(10101, "Doped CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer28umDoped .set(addItem(10102, "Doped CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer8umDoped  .set(addItem(10103, "Doped CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer400nmDoped.set(addItem(10104, "Doped CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer80nmDoped .set(addItem(10105, "Doped CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer32nmDoped .set(addItem(10106, "Doped CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.CPUWafer14nmDoped .set(addItem(10107, "Doped CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT1Doped.set(addItem(10100, "Doped CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT2Doped .set(addItem(10101, "Doped CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT3Doped .set(addItem(10102, "Doped CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT4Doped  .set(addItem(10103, "Doped CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT5Doped.set(addItem(10104, "Doped CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT6Doped .set(addItem(10105, "Doped CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT7Doped .set(addItem(10106, "Doped CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.CPUWaferT8Doped .set(addItem(10107, "Doped CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
 
-        ItemList.CPUWafer200umChecked.set(addItem(10150, "Checked CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer72umChecked .set(addItem(10151, "Checked CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer28umChecked .set(addItem(10152, "Checked CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer8umChecked  .set(addItem(10153, "Checked CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer400nmChecked.set(addItem(10154, "Checked CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer80nmChecked .set(addItem(10155, "Checked CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer32nmChecked .set(addItem(10156, "Checked CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.CPUWafer14nmChecked .set(addItem(10157, "Checked CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT1Checked.set(addItem(10150, "Checked CPU Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT2Checked .set(addItem(10151, "Checked CPU Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT3Checked .set(addItem(10152, "Checked CPU Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT4Checked  .set(addItem(10153, "Checked CPU Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT5Checked.set(addItem(10154, "Checked CPU Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT6Checked .set(addItem(10155, "Checked CPU Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT7Checked .set(addItem(10156, "Checked CPU Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.CPUWaferT8Checked .set(addItem(10157, "Checked CPU Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
 
         ItemList.CPUDieTF3386.set(addItem(10200, "CPUDieTF3386", "Next Step:"+ LH.Chat._CYAN+"Compose"));
         ItemList.CPUDieTF3586.set(addItem(10201, "CPUDieTF3586", "Next Step:"+ LH.Chat._CYAN+"Compose"));
@@ -229,102 +229,102 @@ public class itemIT extends MultiItemRandom {
 
 //InterLayer
 
-        ItemList.InterLayerPhotomask32nm.set(addItem(20500, "InterLayer Photo Mask (14nm)", "A plate with complex images, used to craft InterLayers"));
-        ItemList.InterLayerPhotomask14nm.set(addItem(20501, "InterLayer Photo Mask (14nm)", "A plate with complex images, used to craft InterLayers"));
+        ItemList.InterLayerPhotomaskT1.set(addItem(20500, "InterLayer Photo Mask (14nm)", "A plate with complex images, used to craft InterLayers"));
+        ItemList.InterLayerPhotomaskT2.set(addItem(20501, "InterLayer Photo Mask (14nm)", "A plate with complex images, used to craft InterLayers"));
 
-        ItemList.InterLayerWafer32nm.set(addItem(20510, "InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.InterLayerWafer14nm.set(addItem(20511, "InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.InterLayerWaferT7.set(addItem(20510, "InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.InterLayerWaferT8.set(addItem(20511, "InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
 
-        ItemList.InterLayerWafer32nmDeveloped.set(addItem(20520, "Developed InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.InterLayerWafer14nmDeveloped.set(addItem(20521, "Developed InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.InterLayerWaferT7Developed.set(addItem(20520, "Developed InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.InterLayerWaferT8Developed.set(addItem(20521, "Developed InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
 
-        ItemList.InterLayerWafer32nmHardBaked.set(addItem(20530, "HardBaked InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.InterLayerWafer14nmHardBaked.set(addItem(20531, "HardBaked InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.InterLayerWaferT7HardBaked.set(addItem(20530, "HardBaked InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.InterLayerWaferT8HardBaked.set(addItem(20531, "HardBaked InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
 
-        ItemList.InterLayerWafer32nmDoped.set(addItem(20540, "Doped InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.InterLayerWafer14nmDoped.set(addItem(20541, "Doped InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.InterLayerWaferT7Doped.set(addItem(20540, "Doped InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.InterLayerWaferT8Doped.set(addItem(20541, "Doped InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
 
-        ItemList.InterLayerWafer32nmChecked.set(addItem(20550, "Checked InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.InterLayerWafer14nmChecked.set(addItem(20551, "Checked InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.InterLayerWaferT7Checked.set(addItem(20550, "Checked InterLayer Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.InterLayerWaferT8Checked.set(addItem(20551, "Checked InterLayer Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
 
         ItemList.InterLayerT1.set(addItem(20560, "InterLayerT1", "Next Step:"+ LH.Chat._CYAN+"Compose"));
         ItemList.InterLayerT2.set(addItem(20561, "InterLayerT2", "Next Step:"+ LH.Chat._CYAN+"Compose"));
 
 
 //Diode Part
-        ItemList.DiodePhotomask200um.set(addItem(20600, "Diode Photo Mask (200um)", "A plate with complex images, used to craft Diodes"));
-        ItemList.DiodePhotomask28um.set(addItem(20601, "Diode Photo Mask (28um)", "A plate with complex images, used to craft Diodes"));
+        ItemList.DiodePhotomaskT1.set(addItem(20600, "Diode Photo Mask (200um)", "A plate with complex images, used to craft Diodes"));
+        ItemList.DiodePhotomaskT2.set(addItem(20601, "Diode Photo Mask (28um)", "A plate with complex images, used to craft Diodes"));
 
-        ItemList.DiodeWafer200um.set(addItem(20610, "Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.DiodeWafer28um.set(addItem(20611, "Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.DiodeWaferT1.set(addItem(20610, "Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.DiodeWaferT2.set(addItem(20611, "Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
 
-        ItemList.DiodeWafer200umDeveloped.set(addItem(20620, "Developed Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.DiodeWafer28umDeveloped.set(addItem(20621, "Developed Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.DiodeWaferT1Developed.set(addItem(20620, "Developed Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.DiodeWaferT2Developed.set(addItem(20621, "Developed Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
 
-        ItemList.DiodeWafer200umHardBaked.set(addItem(20630, "HardBaked Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.DiodeWafer28umHardBaked.set(addItem(20631, "HardBaked Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.DiodeWaferT1HardBaked.set(addItem(20630, "HardBaked Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.DiodeWaferT2HardBaked.set(addItem(20631, "HardBaked Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
 
-        ItemList.DiodeWafer200umDoped.set(addItem(20640, "Doped Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.DiodeWafer28umDoped.set(addItem(20641, "Doped Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.DiodeWaferT1Doped.set(addItem(20640, "Doped Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.DiodeWaferT2Doped.set(addItem(20641, "Doped Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
 
-        ItemList.DiodeWafer200umChecked.set(addItem(20650, "Checked Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.DiodeWafer28umChecked.set(addItem(20651, "Checked Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.DiodeWaferT1Checked.set(addItem(20650, "Checked Diode Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.DiodeWaferT2Checked.set(addItem(20651, "Checked Diode Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
 
 //RAM
-        ItemList.RAMPhotomask200um.set(addItem(30000, "RAM Photo Mask (200um)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask72um .set(addItem(30001, "RAM Photo Mask (72um)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask28um .set(addItem(30002, "RAM Photo Mask (28um)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask8um  .set(addItem(30003, "RAM Photo Mask (8um)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask400nm.set(addItem(30004, "RAM Photo Mask (400nm)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask80nm .set(addItem(30005, "RAM Photo Mask (80nm)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask32nm .set(addItem(30006, "RAM Photo Mask (32nm)", "A plate with complex images, used to craft RAM"));
-        ItemList.RAMPhotomask14nm .set(addItem(30007, "RAM Photo Mask (14nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT1.set(addItem(30000, "RAM Photo Mask (200um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT2 .set(addItem(30001, "RAM Photo Mask (72um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT3 .set(addItem(30002, "RAM Photo Mask (28um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT4  .set(addItem(30003, "RAM Photo Mask (8um)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT5.set(addItem(30004, "RAM Photo Mask (400nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT6 .set(addItem(30005, "RAM Photo Mask (80nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT7 .set(addItem(30006, "RAM Photo Mask (32nm)", "A plate with complex images, used to craft RAM"));
+        ItemList.RAMPhotomaskT8 .set(addItem(30007, "RAM Photo Mask (14nm)", "A plate with complex images, used to craft RAM"));
 
 
-        ItemList.RAMWafer200um.set(addItem(30050, "RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer72um .set(addItem(30051, "RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer28um .set(addItem(30052, "RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer8um  .set(addItem(30053, "RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer400nm.set(addItem(30054, "RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer80nm .set(addItem(30055, "RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer32nm .set(addItem(30056, "RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
-        ItemList.RAMWafer14nm .set(addItem(30057, "RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT1.set(addItem(30050, "RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT2 .set(addItem(30051, "RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT3 .set(addItem(30052, "RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT4  .set(addItem(30053, "RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT5.set(addItem(30054, "RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT6 .set(addItem(30055, "RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT7 .set(addItem(30056, "RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
+        ItemList.RAMWaferT8 .set(addItem(30057, "RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Develop"));
 
-        ItemList.RAMWafer200umDeveloped.set(addItem(30100, "Developed RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer72umDeveloped .set(addItem(30101, "Developed RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer28umDeveloped .set(addItem(30102, "Developed RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer8umDeveloped  .set(addItem(30103, "Developed RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer400nmDeveloped.set(addItem(30104, "Developed RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer80nmDeveloped .set(addItem(30105, "Developed RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer32nmDeveloped .set(addItem(30106, "Developed RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
-        ItemList.RAMWafer14nmDeveloped .set(addItem(30107, "Developed RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT1Developed.set(addItem(30100, "Developed RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT2Developed .set(addItem(30101, "Developed RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT3Developed .set(addItem(30102, "Developed RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT4Developed  .set(addItem(30103, "Developed RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT5Developed.set(addItem(30104, "Developed RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT6Developed .set(addItem(30105, "Developed RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT7Developed .set(addItem(30106, "Developed RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
+        ItemList.RAMWaferT8Developed .set(addItem(30107, "Developed RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Hard Bake"));
 
-        ItemList.RAMWafer200umHardBaked.set(addItem(30150, "HardBaked RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer72umHardBaked .set(addItem(30151, "HardBaked RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer28umHardBaked .set(addItem(30152, "HardBaked RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer8umHardBaked  .set(addItem(30153, "HardBaked RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer400nmHardBaked.set(addItem(30154, "HardBaked RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer80nmHardBaked .set(addItem(30155, "HardBaked RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer32nmHardBaked .set(addItem(30156, "HardBaked RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
-        ItemList.RAMWafer14nmHardBaked .set(addItem(30157, "HardBaked RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT1HardBaked.set(addItem(30150, "HardBaked RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT2HardBaked .set(addItem(30151, "HardBaked RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT3HardBaked .set(addItem(30152, "HardBaked RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT4HardBaked  .set(addItem(30153, "HardBaked RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT5HardBaked.set(addItem(30154, "HardBaked RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT6HardBaked .set(addItem(30155, "HardBaked RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT7HardBaked .set(addItem(30156, "HardBaked RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
+        ItemList.RAMWaferT8HardBaked .set(addItem(30157, "HardBaked RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Dope"));
 
-        ItemList.RAMWafer200umDoped.set(addItem(30200, "Doped RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer72umDoped .set(addItem(30201, "Doped RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer28umDoped .set(addItem(30202, "Doped RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer8umDoped  .set(addItem(30203, "Doped RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer400nmDoped.set(addItem(30204, "Doped RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer80nmDoped .set(addItem(30205, "Doped RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer32nmDoped .set(addItem(30206, "Doped RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
-        ItemList.RAMWafer14nmDoped .set(addItem(30207, "Doped RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT1Doped.set(addItem(30200, "Doped RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT2Doped .set(addItem(30201, "Doped RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT3Doped .set(addItem(30202, "Doped RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT4Doped  .set(addItem(30203, "Doped RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT5Doped.set(addItem(30204, "Doped RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT6Doped .set(addItem(30205, "Doped RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT7Doped .set(addItem(30206, "Doped RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
+        ItemList.RAMWaferT8Doped .set(addItem(30207, "Doped RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Check"));
 
-        ItemList.RAMWafer200umChecked.set(addItem(30250, "Checked RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer72umChecked .set(addItem(30251, "Checked RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer28umChecked .set(addItem(30252, "Checked RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer8umChecked  .set(addItem(30253, "Checked RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer400nmChecked.set(addItem(30254, "Checked RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer80nmChecked .set(addItem(30255, "Checked RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer32nmChecked .set(addItem(30256, "Checked RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
-        ItemList.RAMWafer14nmChecked .set(addItem(30257, "Checked RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT1Checked.set(addItem(30250, "Checked RAM Wafer (200um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT2Checked .set(addItem(30251, "Checked RAM Wafer (72um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT3Checked .set(addItem(30252, "Checked RAM Wafer (28um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT4Checked  .set(addItem(30253, "Checked RAM Wafer (8um)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT5Checked.set(addItem(30254, "Checked RAM Wafer (400nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT6Checked .set(addItem(30255, "Checked RAM Wafer (80nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT7Checked .set(addItem(30256, "Checked RAM Wafer (32nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
+        ItemList.RAMWaferT8Checked .set(addItem(30257, "Checked RAM Wafer (14nm)", "Next Step:"+ LH.Chat._CYAN+"Laser Cut"));
 
         ItemList.RAMDie2K.set(addItem(30300, "RAMDie2K", "A RAM Die, can storage 2K data"));
         ItemList.RAMDie32K.set(addItem(30301, "RAMDie32K", "A RAM Die, can storage 32K data"));
