@@ -12,13 +12,19 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.item.items.research;
+package cn.kuzuanpa.ktfruaddon.api.research.task;
 
-import gregapi.item.multiitem.MultiItemRandom;
+import gregapi.data.FL;
+import gregapi.data.LH;
+import net.minecraftforge.fluids.Fluid;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class itemResearch extends MultiItemRandom {
-    public itemResearch(String aModID, String aUnlocalized) {
-        super(aModID, aUnlocalized);
+public class FluidConsumeTaskSimple extends FluidConsumeTaskBase{
+    public FluidConsumeTaskSimple(@NotNull Fluid needFluid, long requiredCount){
+        super(needFluid, requiredCount);
     }
-    public abstract byte getTreeId();
+    @Override
+    public String getDesc() {
+        return String.format(LH.get("ktfru.research.task.item.simple"), FL.name(fluid, true), requiredCount);
+    }
 }

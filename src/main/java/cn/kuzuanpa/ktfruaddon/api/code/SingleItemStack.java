@@ -59,6 +59,11 @@ public class SingleItemStack {
         return meta == that.meta && item.equals(that.item) && Objects.equals(nbt, that.nbt);
     }
 
+    public ItemStack getStack(){
+        ItemStack stack = new ItemStack(item, 1, meta);
+        stack.setTagCompound(nbt);
+        return stack;
+    }
     @Override
     public int hashCode() {
         int result = item.hashCode();

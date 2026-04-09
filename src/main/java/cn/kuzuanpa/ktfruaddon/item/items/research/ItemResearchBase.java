@@ -12,8 +12,13 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.api.research;
+package cn.kuzuanpa.ktfruaddon.item.items.research;
 
-public enum ResearchGameTypes {
-    FillPack, Identify,CurrentControl
+import gregapi.item.multiitem.MultiItemRandom;
+
+public abstract class ItemResearchBase extends MultiItemRandom {
+    public ItemResearchBase(String aModID, String aUnlocalized) {
+        super(aModID, aUnlocalized);
+    }
+    public abstract byte getTreeId();
 }
