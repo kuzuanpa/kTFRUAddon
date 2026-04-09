@@ -63,6 +63,7 @@ public class recipeMaps {
             , RocketAssembler         = new Recipe.RecipeMap(null, "ktfru.recipe.rocket.assembler"       , "Rocket Assembler"          , null, 0, 1, RES_PATH_GUI + "machines/Assembler",                9, 3, 1, 3, 0, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , RTG                     = new Recipe.RecipeMap(null, "ktfru.recipe.rtg"                    , "Radio Thermo Generator"    , null, 0, 1, RES_PATH_GUI + "machines/RTG",                      1, 2, 1, 0, 0, 0,  1,  1, "", 1, "", T, T, T, T, T, F, T, T)
             , OreProcessSystem        = new Recipe.RecipeMap(null, "ktfru.recipe.oreprocesssystem"       , "Ore Process System"        , null, 0, 1, RES_PATH_GUI + "machines/OreProcessSystem",         3, 9, 1, 3, 3, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
+            , NeutronAbsorption       = new Recipe.RecipeMap(null, "ktfru.recipe.neutronabsorption"      , "Neutron Absorption"        , null, 0, 1, RES_PATH_GUI + "machines/NeutronAbsorption",        1, 2, 0, 1, 2, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
 
     ;
     @Deprecated
