@@ -45,6 +45,8 @@ import gregapi.tileentity.machines.ITileEntityRunningPowerSaving;
 import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.*;
 import gregapi.util.UT;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -270,7 +272,7 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 			isTurbineAboutToBreak=true;
 		}
 		if(mTurbineDurability < 10) setStateOnOff(false);
-		mTurbineDurability =Math.max(1, mTurbineDurability + amount*100);
+		mTurbineDurability = Math.max(1, mTurbineDurability + amount);
 	}
 
 	@Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
@@ -316,7 +318,20 @@ public abstract class MultiTileEntityLargeTurbine extends TileEntityBase10MultiB
 	@Override
 	public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
 		current.add(IWailaTile.instanceInfoState);
-		current.add(IWailaTile.instanceInfoEnergyIORange);
 		return current;
+	}
+
+	@Override
+	public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+		IWailaTile.super.getWailaNBT(te,aNBT);
+		aNBT.setLong("turbine.dura", mTurbineDurability/(20*3600));
+		return aNBT;
+	}
+
+	@Override
+	public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		IWailaTile.super.getWailaBody(currentTip,accessor,config);
+		currentTip.add(LH.get(I18nHandler.TURBINE_DURABILITY)+ LH.Chat.WHITE + ": "+accessor.getNBTData().getLong("turbine.dura") +" RU*h");
+		return currentTip;
 	}
 }

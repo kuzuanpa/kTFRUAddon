@@ -202,7 +202,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(64))
                             .addTask(new MiniGameIdentifyTask(64))
                             .addTask(new ComputeTask(ComputePower.Normal, 163840))
-                            .addTask(new ItemConsumeTaskSimple(OP.plateGem.mat(MT.CertusQuartz,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plateGem.mat(MT.Fluix,64)))
                             .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,16)))
                             .addUnlockItem(new SingleItemStack(ItemList.IntelligentCore.get(1)));
 
