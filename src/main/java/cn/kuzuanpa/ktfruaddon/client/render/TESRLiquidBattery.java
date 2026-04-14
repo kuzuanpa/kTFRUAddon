@@ -17,7 +17,6 @@
 package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -69,10 +68,8 @@ public class TESRLiquidBattery extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
 
         GL11.glTranslated(x, y, z );
-        int bright = 15 << 20 | 15 << 4;
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         float finalMaxYCoord = tile.liquidYLevelRender *1F/100F;

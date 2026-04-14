@@ -18,7 +18,6 @@ package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidMiner;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -58,6 +57,8 @@ public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
 
         //Initial setup
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
         glDepthMask(true);
@@ -77,11 +78,6 @@ public class TESRAsteroidMiner extends TileEntitySpecialRenderer {
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);
         GL11.glRotatef(-90,0,1,0);
-
-        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord +utils.getXOffset(tile.mFacing,1,3), Math.min(255,tile.yCoord +2 +(int)rocketFlyHeight) , tile.zCoord + utils.getZOffset(tile.mFacing,1,3),0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
 
         bindTexture(texture);
         GL11.glCallList(bodyList);

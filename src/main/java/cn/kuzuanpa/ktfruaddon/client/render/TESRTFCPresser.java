@@ -19,7 +19,6 @@ import cn.kuzuanpa.ktfruaddon.tile.machine.TFCPresser;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.util.ST;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -30,6 +29,7 @@ import org.lwjgl.opengl.GL11;
 
 import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 
 public class TESRTFCPresser extends TileEntitySpecialRenderer {
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/tfc_presser.obj"));
@@ -53,15 +53,11 @@ public class TESRTFCPresser extends TileEntitySpecialRenderer {
         if (! (til instanceof TFCPresser)) return;
         TFCPresser tile = (TFCPresser)til;
         GL11.glPushMatrix();
-        //Initial setup
-        int bright = tile.getWorldObj()==null? 15728656 : tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord,0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the specialRend into position
+        //Rotate and move the model into position
         GL11.glTranslated(x + .5f, y+ .6f, z + .5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
         GL11.glRotatef((front.offsetX == 1 ? 180 : 0) + front.offsetZ*90f, 0, 1, 0);

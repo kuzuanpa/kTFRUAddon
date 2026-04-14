@@ -16,9 +16,8 @@
 
 package cn.kuzuanpa.ktfruaddon.client.render;
 
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import net.minecraft.client.renderer.OpenGlHelper;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -56,12 +55,8 @@ public class TESRCNCMachine3 extends TileEntitySpecialRenderer {
         if(!tile.mStructureOkay)return;
         GL11.glPushMatrix();
 
-        //Initial setup
-        int bright = tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 2, tile.zCoord,0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
         glDepthMask(true);
