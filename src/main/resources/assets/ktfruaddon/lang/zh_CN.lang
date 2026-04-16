@@ -12,6 +12,18 @@ ktfru.msg.join.6.outdated=§d§l   有新版本可用: §a§l
 ktfru.msg.join.6.outdated.suffix=§r 打开聊天框查看更新日志
 ktfru.msg.join.6.check_fail=§l   无法检测版本更新
 
+ktfru.msg.sneak.to.see.receivers=潜行右键显示接收器列表
+
+ktfru.text.kortex.state.0=未找到配方
+ktfru.text.kortex.state.1=物品数量不足
+ktfru.text.kortex.state.2=流体数量不足
+ktfru.text.kortex.state.3=能量不足
+ktfru.text.kortex.state.4=输出流体未清空
+ktfru.text.kortex.state.5=输出物品未清空
+ktfru.text.kortex.state.6=能量已满
+ktfru.text.kortex.state.7=运行中
+ktfru.text.kortex.state.8=受机器限制
+
 ktfru.research.task.compute=提供%s 点算力
 ktfru.research.task.energy=提供%2$d %1$s, 最低电压%3$d
 ktfru.research.task.minigame.fill=研究%s 点空间规划
@@ -89,6 +101,8 @@ ktfru.text.common.empty=空
 ktfru.text.common.null=无
 ktfru.text.common.normal=正常
 ktfru.text.common.error=错误
+ktfru.text.error.target_not_exist=目标不存在或未加载
+ktfru.text.error.data_invalid=数据有误
 ktfru.text.common.temperature=温度
 ktfru.text.common.temperature.core=核心温度
 ktfru.text.common.temperature.part=部件温度

@@ -196,7 +196,7 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
         UT.NBT.setNumber(aNBT, NBT_TARGET_Z, this.zCoord);
 
         if (equippedItem.hasTagCompound() && !clickDoubleCheck) {
-            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(I18nHandler.USB_ALREAY_HAVE_DATA)));
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(I18nHandler.USB_ALREADY_HAVE_DATA)));
             clickDoubleCheck=true;
             return true;
         }

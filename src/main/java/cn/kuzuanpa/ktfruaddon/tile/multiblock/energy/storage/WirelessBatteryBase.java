@@ -49,15 +49,11 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructur
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.TransformerPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import cn.kuzuanpa.ktfruaddon.item.items.itemFlywheel;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.TransformerPart;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.WirelessEnergyReceiver;
 import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.TagData;
-import gregapi.data.IL;
 import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.old.Textures;
@@ -66,7 +62,7 @@ import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.ST;
+import gregapi.util.OM;
 import gregapi.util.UT;
 import gregapi.util.WD;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -88,7 +84,7 @@ import java.util.Objects;
 
 import static gregapi.data.CS.*;
 
-public class TransformBattery extends MultiBatteryBase implements SpecialPartPredicate.IReceiveSpecialPart, IWailaTile {
+public class WirelessBatteryBase extends MultiBatteryBase implements IWailaTile {
     public List<ChunkCoordinates> partPosList = new ArrayList<>();
 
     public boolean sealed = false;
@@ -107,6 +103,14 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
         if(aNBT.hasKey(NBT_DESIGN+".coil")) mCoil = aNBT.getInteger(NBT_DESIGN+".coil");
         if(aNBT.hasKey(NBT_DESIGN+".batt")) mBatt = aNBT.getInteger(NBT_DESIGN+".batt");
         if(aNBT.hasKey(NBT_DESIGN+".cond")) mCond = aNBT.getInteger(NBT_DESIGN+".cond");
+        int[] listArray = aNBT.getIntArray("ktfru.partPosList");
+        List<ChunkCoordinates> list = new ArrayList<>();
+        for (int i = 0; i < listArray.length /3; i++) {
+            ChunkCoordinates coord = new ChunkCoordinates(listArray[i*3], listArray[i*3+1], listArray[i*3+2]);
+            list.add(coord);
+        }
+        partPosList = list;
+
         structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AABBBCC")
                 .fixedLayer('A',
                         "TTTT",
@@ -124,7 +128,7 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
                         "WBBW",
                         "WWWW"
                 )
-                .where('T', new TransformerPartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mWall, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+                .where('T', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mCond)))
                 .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mWall, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
                 .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mCond)))
                 .where('O', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mCoil)))
@@ -132,6 +136,31 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
                 .setOffset(0,0,0) ;
     }
 
+    public boolean readUSBData(EntityPlayer aPlayer){
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (!(OM.is(OD_USB_STICKS[0],equippedItem))) return false;
+        if(!equippedItem.hasTagCompound()){
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.ERROR) +": "+ LH.Chat.YELLOW+LH.get(I18nHandler.ERROR_DATA_INVALID)));
+            return false;
+        }
+        NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
+        if(!aNBT.hasKey(NBT_TARGET_X) || !aNBT.hasKey(NBT_TARGET_Y) || !aNBT.hasKey(NBT_TARGET_Z)){
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.ERROR) +": "+ LH.Chat.YELLOW+LH.get(I18nHandler.ERROR_DATA_INVALID)));
+            return false;
+        }
+        int x = aNBT.getInteger(NBT_TARGET_X);
+        int y = aNBT.getInteger(NBT_TARGET_Y);
+        int z = aNBT.getInteger(NBT_TARGET_Z);
+        TileEntity te = WD.te(worldObj, x,y,z, false);
+        if(!(te instanceof WirelessEnergyReceiver)){
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.ERROR) +": "+ LH.Chat.YELLOW+LH.get(I18nHandler.ERROR_TARGET_NOT_EXIST)));
+            return false;
+        }
+        ChunkCoordinates coord = new ChunkCoordinates(x,y,z);
+        if(!partPosList.contains(coord)) partPosList.add(coord);
+        aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_READ_FROM_USB)));
+        return true;
+    }
     //Structure
     ChunkCoordinates lastFailedPos=null;
     IStringBaseStructure structure;
@@ -139,7 +168,6 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        partPosList.clear();
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
     }
@@ -153,6 +181,7 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
             structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }
+        readUSBData(aPlayer);
 
         openGUI(aPlayer, aSide);
         return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
@@ -162,51 +191,40 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         UT.NBT.setBoolean(aNBT,"ktfru.sealed", sealed);
+        int[] posList = new int[partPosList.size()*3];
+        for (int i = 0; i < partPosList.size(); i++) {
+            ChunkCoordinates coord = partPosList.get(i);
+            posList[i*3  ] = coord.posX;
+            posList[i*3+1] = coord.posY;
+            posList[i*3+2] = coord.posZ;
+        }
+        aNBT.setIntArray("ktfru.partPosList",posList);
     }
 
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        long r = super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
         if(aTool.equals(TOOL_monkeywrench) && mEnergyType != TD.Energy.LU){
             refreshBatteryCapacity();
             sealed = !sealed;
+            return 1;
         }
         if(aTool.equals(TOOL_magnifyingglass)){
-            if(mCapacity > 0 )aChatReturn.add(String.format("%.4f", mEnergyStored*100F/mCapacity) + " %");
+            if(!aSneaking)aChatReturn.add(LH.get("ktfru.msg.sneak.to.see.receivers"));
+            else partPosList.forEach(receiver -> aChatReturn.add(receiver.posX+", "+receiver.posY+", "+receiver.posZ));
         }
-        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+        return r;
     }
 
     public void refreshBatteryCapacity(){
-        mCapacity = 0;
-        for (int i = 0; i < invSize; i++) {
-            //LU Battery, Sorry but I can't find a better way to do those.
-            if(mEnergyType == TD.Energy.LU) {
-                mCapacity = 367001600000L; //3276800000L (T5) * 4(Crystal block is larger than T5) * 28(total 28* Crystal block);
-                sealed = true;
-                break;
-            }
-            if (!slotHas(i))continue;
-            //EU Battery.
-            if(mEnergyType == TD.Energy.EU) {
-                if (slot(i).getItem().equals(IL.Battery_Lead_Acid_Cell_Filled.getItem())) mCapacity +=   512000L * slot(i).stackSize;
-                if (slot(i).getItem().equals(IL.Battery_Alkaline_Cell_Filled .getItem())) mCapacity +=  2048000L * slot(i).stackSize;
-                if (slot(i).getItem().equals(IL.Battery_NiCd_Cell_Filled     .getItem())) mCapacity +=  2048000L * slot(i).stackSize;
-                if (slot(i).getItem().equals(IL.Battery_LiCoO2_Cell_Filled   .getItem())) mCapacity +=  8192000L * slot(i).stackSize;
-                if (slot(i).getItem().equals(IL.Battery_LiMn_Cell_Filled     .getItem())) mCapacity += 32768000L * slot(i).stackSize;
-            }
-            //RU Battery
-            if(mEnergyType == TD.Energy.RU) {
-                if(!(slot(i).getItem() instanceof itemFlywheel))continue;
-                mCapacity+= (long) (Math.floor(itemFlywheel.getMaxStorage(ST.meta(slot(i)))))*slot(i).stackSize;
-            }
-            if(mEnergyStored > mCapacity)mEnergyStored=mCapacity;
-        }
+        mCapacity = 367001600000L;
+        sealed = true;
     }
 
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if (aIsServerSide && sealed && checkStructure(false)) {
-            partPosList.stream().map(pos-> (TransformerPart)WD.te(worldObj, pos,false)).filter(Objects::nonNull).filter(tile-> mEnergyStored > tile.mOutputVoltage * tile.mOutputAmpere).forEach(tile-> mEnergyStored -= tile.mOutputVoltage * tile.doInject(mEnergyTypeOut, SIDE_INSIDE, tile.mOutputVoltage, tile.mOutputAmpere,true));
+            partPosList.stream().map(pos-> (WirelessEnergyReceiver)WD.te(worldObj, pos,false)).filter(Objects::nonNull).filter(tile-> mEnergyStored > tile.mOutputVoltage * tile.mOutputAmpere).forEach(tile-> mEnergyStored -= tile.mOutputVoltage * tile.doInject(mEnergyTypeOut, SIDE_INSIDE, tile.mOutputVoltage, tile.mOutputAmpere,true));
         }
     }
 
@@ -230,7 +248,7 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
 
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.storage.transformer";
+        return "ktfru.multitileentity.multiblock.storage.wireless.base";
     }
     // Inventory Stuff
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[invSize];}
@@ -276,7 +294,6 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
     public IWailaInfoProvider[] getWailaInfos() {
         return instanceInfoEnergyIORange.asArray();
     }
-
     @Override
     public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
         IWailaTile.super.getWailaNBT(te, aNBT);
@@ -291,10 +308,5 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
         currentTip.add(LH.get(I18nHandler.STORED_ENERGY)+ LH.Chat.WHITE + ": "+accessor.getNBTData().getLong("stored")+"k / "+accessor.getNBTData().getLong("capa") +"k " + mEnergyType.getLocalisedChatNameShort());
 
         return currentTip;
-    }
-
-    @Override
-    public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
-        partPosList.add(partPos);
     }
 }

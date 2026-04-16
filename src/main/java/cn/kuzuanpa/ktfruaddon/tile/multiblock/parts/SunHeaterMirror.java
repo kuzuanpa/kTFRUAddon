@@ -24,6 +24,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator.SunHeater;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.cover.ICover;
 import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.network.INetworkHandler;
@@ -59,6 +60,20 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
         if (aNBT.hasKey(NBT_TARGET)) {
            targetSunBoilerPos=new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)),UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)),UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
         }
+    }
+
+    @Override
+    public boolean allowCover(byte aSide, ICover aCover) {
+        return false;
+    }
+
+    @Override
+    public boolean isSurfaceOpaque2(byte aSide) {
+        return aSide==SIDE_BOTTOM;
+    }
+    @Override
+    public int getLightOpacity(){
+        return 1;
     }
 
     @Override
@@ -116,8 +131,8 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
 
             if(f1>0.01)rotateVertical-=f1>10?1:(f1/10);
             if(f1<0.01)rotateVertical-=f1<-10?-1:(f1/10);
-            if(f2>0.01)rotateHorizontal-=f2>15?1.5:(f2/10);
-            if(f2<0.01)rotateHorizontal-=f2<-15?-1.5:(f2/10);
+            if(f2>0.01)rotateHorizontal-=f2>15?1.5F:(f2/10);
+            if(f2<0.01)rotateHorizontal-=f2<-15?-1.5F:(f2/10);
         }
     }
     @SideOnly(Side.CLIENT)
@@ -129,7 +144,7 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
             return;
         }
 
-        int X2A = targetSunBoilerPos.posX - xCoord, Y2A = targetSunBoilerPos.posY - yCoord, Z2A = targetSunBoilerPos.posZ - zCoord;
+        int X2A = targetSunBoilerPos.posX - xCoord, Y2A = targetSunBoilerPos.posY + 3 - yCoord, Z2A = targetSunBoilerPos.posZ - zCoord;
 
         double L = Math.sqrt(X2A * X2A + Y2A * Y2A + Z2A * Z2A);
         double X2 = X2A / L, Y2 = Y2A / L, Z2 = Z2A / L;
@@ -181,10 +196,6 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
         rotateHorizontalToMove = (float) (theta);
 }
 
-    @Override
-    public boolean isSurfaceOpaque2(byte aSide) {
-        return aSide==SIDE_BOTTOM;
-    }
 
     @Override
     public boolean onTickCheck(long aTimer) {
@@ -204,7 +215,7 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
             int dz = targetSunBoilerPos.posY - this.yCoord;
             int currentTime = (int) getWorldObj().getWorldTime() % getDayTotalTime() ;
             int halfDayTime = getDayTotalTime()/2;
-            generateRate = currentTime > halfDayTime ? 0 : (int) (16+ 48* (1-(Math.abs ( halfDayTime - currentTime ) / (float)halfDayTime)) - (Math.floor(Math.sqrt(dx * dx + dy * dy + dz * dz) * 0.2f)));
+            generateRate = currentTime > halfDayTime ? 0 : (int) (16+ 112* (1-(Math.abs ( halfDayTime - currentTime ) / (float)halfDayTime)) - (Math.floor(Math.sqrt(dx * dx + dy * dy + dz * dz) * 0.2f)));
         }
         return isValid;
     }

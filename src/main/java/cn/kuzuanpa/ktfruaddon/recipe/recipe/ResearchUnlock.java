@@ -14,7 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
-import cn.kuzuanpa.ktfruaddon.api.code.SingleItemStack;
+import cn.kuzuanpa.ktfruaddon.api.code.ItemType;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchItemManager;
 import gregapi.util.ST;
@@ -25,7 +25,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
 public class ResearchUnlock {
     public static void init() {
         ResearchItemManager.data.get((byte)0).forEach((id,unlockList)-> {
-            ItemStack[] array = unlockList.stream().map(SingleItemStack::getStack).distinct().toArray(ItemStack[]::new);
+            ItemStack[] array = unlockList.stream().map(ItemType::getStack).distinct().toArray(ItemStack[]::new);
             recipeMaps.ResearchUnlock.addRecipe1(false,4,4, ST.make(MOD_DATA,"ktfru.item.research.0",0,id), array);
         });
     }

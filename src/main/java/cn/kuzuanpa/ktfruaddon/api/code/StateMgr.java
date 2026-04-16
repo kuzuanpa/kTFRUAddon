@@ -48,4 +48,9 @@ public class StateMgr {
     public boolean equals(Object obj) {
         return obj instanceof StateMgr && state == ((StateMgr) obj).get();
     }
+
+    @Override
+    public String toString() {
+        return "State = " + state ;
+    }
 }

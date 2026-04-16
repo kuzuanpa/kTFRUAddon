@@ -337,7 +337,7 @@ public class TileOreScanner extends TileEntityBase09FacingSingle implements ITil
                 aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_WRITE_TO_USB)));
                 clickDoubleCheck=false;
             } else {
-                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(I18nHandler.USB_ALREAY_HAVE_DATA)));
+                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get(I18nHandler.USB_ALREADY_HAVE_DATA)));
                 clickDoubleCheck=true;
             }
             return true;

@@ -106,7 +106,6 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (!aIsServerSide) return;
-        if(mEnergyStored > mCapacity) mEnergyStored=mCapacity;
         mActive = (mEnergyStored > mOutput);
         mOutputVoltageLast = 0;
         mOutputAmpereLast=0;
@@ -145,9 +144,6 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
         if (aDoInject) {
             mEnergyStored += receiveAmount * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, receiveAmount));
-            if(mEnergyStored>mCapacity){
-                mEnergyStored=mCapacity;
-            }
         }
         return receiveAmount;
     }
