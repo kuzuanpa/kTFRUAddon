@@ -54,17 +54,14 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	@Override
 	public void readFromNBT2(NBTTagCompound aNBT) {
 		super.readFromNBT2(aNBT);
-		init(aNBT);
-		if(kortex!=null) kortex.readFromNBT(aNBT);
-	}
-	public void init(NBTTagCompound aNBT){
 		RecipeMap mRecipes = FM.Gas;
 		if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
 		kortex = new KortexWorker(this, 0, mRecipes, true).setTankSize(mRateMax*4,mRateMax*16);
 		tankInfoInput = new InfoTank(LH.get(I18nHandler.INPUT), "", kortex.fluidInputs);
 		tankInfoOutput = new InfoTank(LH.get(I18nHandler.OUTPUT), "", kortex.fluidOutputs);
+		kortex.readFromNBT(aNBT);
 	}
-	
+
 	@Override
 	public void writeToNBT2(NBTTagCompound aNBT) {
 		super.writeToNBT2(aNBT);

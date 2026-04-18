@@ -33,12 +33,14 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.util.UT;
+import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -87,25 +89,24 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
         }
     }
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()) {
-            if(isValid) {
-                ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
-                if (equippedItem.hasTagCompound() && equippedItem.getTagCompound().hasKey(NBT_USB_DATA)) {
-                    NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
-                    targetSunBoilerPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
-                    if (worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ) instanceof SunHeater) {
-                        target= (SunHeater) worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ);
-                        updateClientData();
-                        aPlayer.addChatMessage(new ChatComponentText(LH.get(I18nHandler.SUN_BOILER_MIRROR) + targetSunBoilerPos.posX + "," + targetSunBoilerPos.posY + "," + targetSunBoilerPos.posZ));
-                    } else targetSunBoilerPos = null;
-                    return true;
-                }
-                return false;
-            }else {
-                aPlayer.addChatMessage(new ChatComponentText(LH.get(I18nHandler.SUN_BOILER_MIRROR_ERR)));
-                return true;
-            }
-        }else return true;
+        if (!isServerSide()) return true;
+        if(!isValid) {
+            aPlayer.addChatMessage(new ChatComponentText(LH.get(I18nHandler.SUN_BOILER_MIRROR_ERR)));
+            return false;
+        }
+
+        ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
+        if (equippedItem.hasTagCompound() && equippedItem.getTagCompound().hasKey(NBT_USB_DATA)) {
+            NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
+            targetSunBoilerPos = new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
+            if (worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ) instanceof SunHeater) {
+                target= (SunHeater) worldObj.getTileEntity(targetSunBoilerPos.posX, targetSunBoilerPos.posY, targetSunBoilerPos.posZ);
+                updateClientData();
+                aPlayer.addChatMessage(new ChatComponentText(LH.get(I18nHandler.SUN_BOILER_MIRROR) + targetSunBoilerPos.posX + "," + targetSunBoilerPos.posY + "," + targetSunBoilerPos.posZ));
+            } else targetSunBoilerPos = null;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -118,22 +119,24 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
     public boolean[] getValidSides() {return SIDES_BACK;}
     @Override
     public void onTick2(long aTimer, boolean isServerside){
-        if (!isServerside&&getTimer()%10==0) {
-            if (targetSunBoilerPos!=null&&isValid) updateRotates();
-            else rotateVerticalToMove=0;
-        }
         if(isServerside&&target!=null) ITileEntityEnergy.Util.insertEnergyInto(TD.Energy.HU,SIDE_BOTTOM,generateRate,1,this,target);
 
-        if(!isServerside) {
+        if(isServerside) return;
 
-            float f1 =rotateVertical - rotateVerticalToMove;
-            float f2 =rotateHorizontal - rotateHorizontalToMove;
-
-            if(f1>0.01)rotateVertical-=f1>10?1:(f1/10);
-            if(f1<0.01)rotateVertical-=f1<-10?-1:(f1/10);
-            if(f2>0.01)rotateHorizontal-=f2>15?1.5F:(f2/10);
-            if(f2<0.01)rotateHorizontal-=f2<-15?-1.5F:(f2/10);
+        if(targetSunBoilerPos==null||!isValid){
+            rotateVerticalToMove=0;
+            return;
         }
+
+        if (aTimer%10==0) updateRotates();
+
+        float f1 =rotateVertical - rotateVerticalToMove;
+        float f2 =rotateHorizontal - rotateHorizontalToMove;
+
+        if(f1>0.01)rotateVertical-=f1>10?1:(f1/10);
+        if(f1<0.01)rotateVertical-=f1<-10?-1:(f1/10);
+        if(f2>0.01)rotateHorizontal-=f2>15?1.5F:(f2/10);
+        if(f2<0.01)rotateHorizontal-=f2<-15?-1.5F:(f2/10);
     }
     @SideOnly(Side.CLIENT)
     public void updateRotates(){
@@ -196,27 +199,26 @@ public class SunHeaterMirror extends TileEntityBase09FacingSingle implements IMu
         rotateHorizontalToMove = (float) (theta);
 }
 
-
     @Override
     public boolean onTickCheck(long aTimer) {
         super.onTickCheck(aTimer);
-        if(aTimer%20==0&&isServerSide()){
-            if(targetSunBoilerPos!=null&&worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ)instanceof SunHeater)target= (SunHeater) worldObj.getTileEntity(targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ);
-            else {
-                targetSunBoilerPos=null;
-                return false;
-            }
-            isValid = worldObj.canBlockSeeTheSky(xCoord, yCoord+1, zCoord);
-            if (target!=null&&!isValid){
-                generateRate=0;return true;
-            }
-            int dx = targetSunBoilerPos.posX - this.xCoord;
-            int dy = targetSunBoilerPos.posY - this.yCoord;
-            int dz = targetSunBoilerPos.posY - this.yCoord;
-            int currentTime = (int) getWorldObj().getWorldTime() % getDayTotalTime() ;
-            int halfDayTime = getDayTotalTime()/2;
-            generateRate = currentTime > halfDayTime ? 0 : (int) (16+ 112* (1-(Math.abs ( halfDayTime - currentTime ) / (float)halfDayTime)) - (Math.floor(Math.sqrt(dx * dx + dy * dy + dz * dz) * 0.2f)));
+        if(aTimer%20!=0 || !isServerSide() || targetSunBoilerPos==null)return false;
+
+        TileEntity te = WD.te(worldObj,targetSunBoilerPos.posX,targetSunBoilerPos.posY,targetSunBoilerPos.posZ, false);
+        if(te instanceof SunHeater) target= (SunHeater) te;
+        else {
+            targetSunBoilerPos=null;
+            return false;
         }
+        isValid = worldObj.canBlockSeeTheSky(xCoord, yCoord+1, zCoord);
+        if (target!=null && !isValid){
+            generateRate=0;
+            return false;
+        }
+
+        int currentTime = (int) getWorldObj().getWorldTime() % getDayTotalTime() ;
+        int halfDayTime = getDayTotalTime()/2;
+        generateRate = currentTime > halfDayTime ? 0 : (int) (16+ 112* (1-(Math.abs ( halfDayTime - currentTime ) / (float)halfDayTime)));
         return isValid;
     }
     public int getDayTotalTime(){
