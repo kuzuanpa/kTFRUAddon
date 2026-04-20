@@ -16,21 +16,18 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
-import gregapi.util.WD;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import zmaster587.libVulpes.block.BlockMeta;
 
-public class SkyPredicate implements IStructurePredicate {
-    public SkyPredicate() {
-    }
-
+public class OpaqueCubePredicate  implements IStructurePredicate {
     @Override
     public boolean check(StructureContext ctx, int x, int y, int z) {
-        return ctx.world.canBlockSeeTheSky(x,y, z);
+        Block block = ctx.world.getBlock(x,y, z);
+        return block!=null && block.isOpaqueCube();
     }
     @Override
     public boolean set(StructureContext ctx, int x, int y, int z) {
-        if(WD.easyRep(ctx.world, x, y, z))ctx.world.setBlock(x, y, z, Blocks.air);
         return true;
     }
 
@@ -41,8 +38,7 @@ public class SkyPredicate implements IStructurePredicate {
 
     @Override
     public boolean project(StructureContext ctx, int x, int y, int z) {
-        kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z,  new BlockMeta(Blocks.glass, 0, "ktfru.part.sky"));
+        kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z,  new BlockMeta(Blocks.stone, 0, "ktfru.part.opaque_cube"));
         return true;
     }
 }
-

@@ -182,7 +182,7 @@ public class OilProcessing {
         FM.Burn         .addRecipe0(T, - 128,  5, flList.BlendedFuel1.make(1), FL.Steam.make(120), FL.CarbonDioxide.make(5));
         FM.Engine       .addRecipe0(T, - 128,  7, flList.BlendedFuel1.make(1), FL.Steam.make(120), FL.CarbonDioxide.make(5));
 
-        RM.Mixer.addRecipe1(false,64,20,ST.tag(2),FL.array(flList.Methanol.make(60),FL.Petrol.make(30),flList.Naphtha.make(8)),FL.array(flList.BlendedFuel2.make(70)),ZL_IS);
+        RM.Mixer.addRecipe1(false,64,20,ST.tag(2),FL.array(flList.Methanol.make(20), flList.CarbonMonoxide.make(400),FL.Petrol.make(30),flList.Naphtha.make(8)),FL.array(flList.BlendedFuel2.make(70)),ZL_IS);
         FM.Burn         .addRecipe0(T, - 144,  5, flList.BlendedFuel2.make(1), FL.Steam.make(150), FL.CarbonDioxide.make(3));
         FM.Engine       .addRecipe0(T, - 144,  7, flList.BlendedFuel2.make(1), FL.Steam.make(150), FL.CarbonDioxide.make(3));
 

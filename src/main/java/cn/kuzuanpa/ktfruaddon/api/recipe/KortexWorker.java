@@ -7,9 +7,11 @@ import gregapi.fluid.FluidTankGT;
 import gregapi.recipes.Recipe;
 import gregapi.recipes.Recipe.RecipeMap;
 import gregapi.util.ST;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -64,6 +66,10 @@ public class KortexWorker {
     public KortexWorker setTankSize(long input, long output){
         mInputTankSize = input;
         mOutputTankSize = output;
+        return this;
+    }
+    public KortexWorker setEnergyCapacity(long capacity){
+        this.mEnergyCapacity = capacity;
         return this;
     }
     public KortexWorker dontResetProgressWhenPowerLost(){
@@ -256,6 +262,13 @@ public class KortexWorker {
 
     public String getLocalizedState(){
         return LH.get("ktfru.text.kortex.state."+mState.get());
+    }
+
+    public void onPlayerRightClick(EntityPlayer player){
+        ItemStack item = player.getCurrentEquippedItem();
+        if (ST.regName(item).contains("shark")||ST.regName(item).contains("fish")) {
+            player.addChatMessage(new ChatComponentText("Kortex"+LH.get(LH.STATE)+": "+ getLocalizedState()));
+        }
     }
 
     public void writeToNBT(NBTTagCompound aNBT) {

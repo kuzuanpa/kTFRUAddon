@@ -17,8 +17,8 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.async;
 
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.ICustomPartValidator;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.mapBased.ICustomPartValidator;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.mapBased.IMappedStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;

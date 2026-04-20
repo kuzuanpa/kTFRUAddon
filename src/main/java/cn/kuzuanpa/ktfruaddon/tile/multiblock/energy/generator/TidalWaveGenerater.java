@@ -17,13 +17,16 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.ICustomPartValidator;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.AirPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.LiquidPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.OpaqueCubePredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.IWailaTile;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -35,97 +38,105 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.machines.ITileEntityRunningActively;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
-import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
-import org.apache.logging.log4j.Level;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.Collection;
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, ITileEntityRunningActively, IMappedStructure, ICustomPartValidator, IWailaTile {
+public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implements ITileEntityEnergy, IMultiBlockEnergy, ITileEntityRunningActively, IWailaTile {
     private TagData mEnergyTypeEmitted=TD.Energy.RU;
-
 
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if (!aIsServerSide || !mStructureOkay) return;
         if (checkStructure(false) && getAdjacentTileEntity(SIDE_TOP) != null && getAdjacentTileEntity(SIDE_TOP).mTileEntity instanceof ITileEntityEnergy) {
-            int mRate = (int) (Math.sin(aTimer/31.4f)*96) + 32;
+            int mRate = (int) (Math.sin(aTimer/31.4f)*128) + 96;
             TileEntity tileToEmit = getAdjacentTileEntity(SIDE_TOP).mTileEntity;
             if (tileToEmit instanceof ITileEntityEnergy) ITileEntityEnergy.Util.insertEnergyInto(mEnergyTypeEmitted, SIDE_BOTTOM, mRate, 1, this, tileToEmit);
         }
-
     }
 
-    @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
-        return aEmitting && aEnergyType == mEnergyTypeEmitted;
-    }
+    @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {return aEmitting && aEnergyType == mEnergyTypeEmitted;}
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeEmitted.AS_LIST;}
 
     @Override public boolean getStateRunningPassively() {return checkStructure(false);}
     @Override public boolean getStateRunningActively() {return checkStructure(false);}
     @Override public boolean getStateRunningPossible() {return checkStructure(false);}
 
-
     //Structure
-    public ChunkCoordinates lastFailedPos;
+    ChunkCoordinates lastFailedPos=null;
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCD")
+            .fixedLayer('A',
+                    "  LLLLLL",
+                    "  LLLLLL",
+                    "  LLLLLL",
+                    "  LLLLLL",
+                    "  LLLLLL"
+            ).fixedLayer('B',
+                    "OOLLLLLL",
+                    "OWWBBBLL",
+                    "OWWBBBLL",
+                    "OWWBBBLL",
+                    "OOLLLLLL"
+            ).fixedLayer('C',
+                    "OOLLLLLL",
+                    "OWWWWBLL",
+                    "OWAAABLL",
+                    "OWWWWBLL",
+                    "OOLLLLLL"
+            ).fixedLayer('D',
+                    "OOLLLLLL",
+                    "OWWWWBLL",
+                    "O AAABLL",
+                    "OWWWWBLL",
+                    "OOLLLLLL"
+            )
+            .where('A', new AirPredicate())
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31045)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .where('O', new OpaqueCubePredicate())
+            .where('L', new LiquidPredicate())
+            .setOffset(-2,-3,-1);
+    @Override
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        int tX = xCoord, tY = yCoord, tZ = zCoord;
+        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos==null;
+    }
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide())return true;
+
+        if(!mStructureOkay){
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get("ktfru.structure.complex.tip")));
+        }
+
+        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+    }
+
     public static final short sizeX = 3, sizeY = 3, sizeZ = 5;
-
     public final short xMapOffset = -1, zMapOffset = 0;
-
-    public static int[][][] blockIDMap = {{
-            {18002, 18002, 18002},
-            {18002, 18002, 18002},
-            {31045, 31045, 31045},
-            {31045, 31045, 31045},
-            {31045, 31045, 31045},
-    },{
-            {18002, 18002, 18002},
-            {18002,   0  , 18002},
-            {18002,   0  , 18002},
-            {18002,   0  , 18002},
-            {31045, 31045, 31045},
-    },{
-            {18002,   0  , 18002},
-            {18002,   0  , 18002},
-            {18002,   0  , 18002},
-            {18002,   0  , 18002},
-            {31045, 31045, 31045},
-    }};
-    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
 
     @Override
     public boolean[] getValidSides() {
         return SIDES_HORIZONTAL;
-    }
-
-    @Override
-    public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
-        return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),MultiTileEntityMultiBlockPart.NOTHING)};
-    }
-
-    public int getBlockID(int mapX, int mapY, int mapZ) {
-        return blockIDMap[mapY][mapZ][mapX];
-    }
-
-    @Override
-    public boolean isIgnored(int mapX, int mapY, int mapZ) {
-        return getBlockID(mapX,mapY,mapZ)==0;
-    }
-
-    public MultiTileEntityRegistry getRegistryID(int mapX, int mapY, int mapZ) {
-        return getBlockID(mapX,mapY,mapZ) == 18002 ? g:k;
     }
 
     @Override
@@ -134,15 +145,6 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.ALLOW_PART_SHARE));
         super.addToolTips(aList, aStack, aF3_H);
     }
-
-    @Override
-    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos, sizeX, sizeY + 2, sizeZ + 2, xMapOffset ,-3,zMapOffset + 1, aClickedAt, aPlayer, aInventory);
-        return lastFailedPos == null;
-    }
-
 
     @Override
     public String getTileEntityName() {
@@ -155,19 +157,10 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
     }
 
     @Override
-    public boolean isPartValid(ChunkCoordinates realPos, ChunkCoordinates mapPos, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        if(mapPos.posZ == 0) return mapPos.posY == 0 || mapPos.posY == sizeY + 1 || worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ).isOpaqueCube();
-        else if(mapPos.posY == sizeY + 1) return mapPos.posZ <= 1 || worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ).equals(Blocks.air);
-        else if (mapPos.posY == 0 || mapPos.posZ == sizeZ + 1)return (worldObj.getBlock(realPos.posX, realPos.posY, realPos.posZ) instanceof BlockLiquid);
-        else return isIgnored(mapPos.posX , mapPos.posY - 1, mapPos.posZ - 1) || utils.checkAndSetTarget(this, realPos, aClickedAt, aPlayer, aInventory, getTileDescs(mapPos.posX , mapPos.posY - 1, mapPos.posZ - 1), true);
-    }
-    public void log(String msg){
-        FMLLog.log(Level.FATAL, "Checking block: " + msg);
-    }
-
-    @Override
-    public IWailaInfoProvider[] getWailaInfos() {
-        return instanceInfoState.asArray();
+    public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+        IWailaTile.super.getWailaInfos(current);
+        current.add(instanceInfoState);
+        return current;
     }
 
     // Icons
@@ -175,11 +168,10 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
             sTextureSides     = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/tidalWaveGenerator/base"),
             sOverlayStop      = new Textures.BlockIcons.CustomIcon("machines/multiblockmains/tidalWaveGenerator/front");
 
-
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (!aShouldSideBeRendered[aSide]) return null;
-        if(aSide==mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlayStop ));
+        if(aSide==SIDE_TOP) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa),BlockTextureDefault.get(sOverlayStop ));
         return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
 }

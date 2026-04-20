@@ -24,6 +24,12 @@ ktfru.text.kortex.state.6=能量已满
 ktfru.text.kortex.state.7=运行中
 ktfru.text.kortex.state.8=受机器限制
 
+ktfru.part.air=必须为空气
+ktfru.part.sky=上方必须无方块遮挡
+ktfru.part.liquid=任意流体
+ktfru.part.opaque_cube=任意不透明固体方块
+ktfru.structure.complex.tip=该机器结构较复杂, 请拆除错误方块后重新检查投影.
+
 ktfru.research.task.compute=提供%s 点算力
 ktfru.research.task.energy=提供%2$d %1$s, 最低电压%3$d
 ktfru.research.task.minigame.fill=研究%s 点空间规划

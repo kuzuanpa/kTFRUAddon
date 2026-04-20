@@ -20,7 +20,6 @@ import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.FM;
@@ -36,11 +35,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import org.apache.logging.log4j.Level;
 
 import java.util.List;
 
@@ -100,11 +97,7 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 		ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
 		if(equippedItem==null)return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
 
-		FMLLog.log(Level.FATAL, ST.regName(equippedItem));
-		if (ST.regName(equippedItem).contains("shark")||ST.regName(equippedItem).contains("fish")) {
-			aPlayer.addChatMessage(new ChatComponentText("Kortex"+LH.get(LH.STATE)+": "+kortex.getLocalizedState()));
-			return true;
-		}
+		kortex.onPlayerRightClick(aPlayer);
 
 		openGUI(aPlayer, aSide);
 		return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
@@ -112,8 +105,6 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 
 	@Override
 	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
-		if(aTool.equals(TOOL_magnifyingglass)){
-		}
 		long rReturn = super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
 		if (rReturn > 0) return rReturn;
 		
@@ -123,8 +114,6 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 			kortex.resetStatus();
 			return 1;
 		}
-
-		
 		return 0;
 	}
 	
