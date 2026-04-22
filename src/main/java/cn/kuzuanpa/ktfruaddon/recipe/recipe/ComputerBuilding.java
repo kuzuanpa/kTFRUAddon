@@ -201,19 +201,19 @@ public class ComputerBuilding {
         recipeMaps.MaskAligner.addRecipeX(T,   256, 4000, ST.array(ItemList.SiliconPlateCoatedT1   .get(1),ItemList.CPUPhotomaskT2 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT2 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,   768,12000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT3 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT3 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,  1024,12000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT4  .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT4  .get(1));
-        recipeMaps.MaskAligner.addRecipeX(T,  4096,16000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT5.get(1));
-        recipeMaps.MaskAligner.addRecipeX(T, 16384,16000, ST.array(ItemList.MoO2PlateSoftBakedT1.get(1),ItemList.CPUPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT6 .get(1));
-        recipeMaps.MaskAligner.addRecipeX(T, 65536,24000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT7 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT7 .get(1));
-        recipeMaps.MaskAligner.addRecipeX(T,262144,24000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT8 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT8 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T,  4096,32000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT5.get(1));
+        recipeMaps.MaskAligner.addRecipeX(T, 16384,32000, ST.array(ItemList.MoO2PlateSoftBakedT1.get(1),ItemList.CPUPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT6 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T, 32768,48000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT7 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT7 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T, 65536,64000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT8 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT8 .get(1));
 
         recipeMaps.MaskAligner.addRecipeX(T,    100,  3000, ST.array(ItemList.SiliconPlateCoatedT1   .get(1),ItemList.RAMPhotomaskT1.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT1.get(1));
         recipeMaps.MaskAligner.addRecipeX(T,    240,  3000, ST.array(ItemList.SiliconPlateCoatedT1   .get(1),ItemList.RAMPhotomaskT2 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT2 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,    642,  7000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT3 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT3 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,    968,  7000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT4  .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT4  .get(1));
-        recipeMaps.MaskAligner.addRecipeX(T,   3276, 10000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT5.get(1));
-        recipeMaps.MaskAligner.addRecipeX(T,  13107, 10000, ST.array(ItemList.MoO2PlateSoftBakedT1.get(1),ItemList.RAMPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT6 .get(1));
-        recipeMaps.MaskAligner.addRecipeX(T,  52428, 16000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT7 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT7 .get(1));
-        recipeMaps.MaskAligner.addRecipeX(T, 209715, 16000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT8 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT8 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T,   3276, 12000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT5.get(1));
+        recipeMaps.MaskAligner.addRecipeX(T,  13107, 12000, ST.array(ItemList.MoO2PlateSoftBakedT1.get(1),ItemList.RAMPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT6 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T,  26214, 24000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT7 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT7 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T,  52428, 32000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT8 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT8 .get(1));
 
         recipeMaps.MaskAligner.addRecipeX(T, 120, 3000, ST.array(ItemList.SiliconPlateCoatedT1.get(1),ItemList.CircuitPartPhotomaskT3.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT3.get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 180, 3000, ST.array(ItemList.SiliconPlateCoatedT1.get(1),ItemList.CircuitPartPhotomaskT4.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CircuitPartWaferT4.get(1));
