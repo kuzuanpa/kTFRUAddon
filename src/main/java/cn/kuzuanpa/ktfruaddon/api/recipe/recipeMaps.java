@@ -51,6 +51,7 @@ public class recipeMaps {
             , TinyDistillTower        = new Recipe.RecipeMap(null, "ktfru.recipe.tinydistilltower"       , "Tiny Distillation Tower"   , null, 0, 1, RES_PATH_GUI + "machines/TinyDistillationTower",    1, 3, 0, 1, 3, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , CVD                     = new Recipe.RecipeMap(null, "ktfru.recipe.cvd"                    , "Chemical Vapor Depositor"  , null, 0, 1, RES_PATH_GUI + "machines/ChemicalVaporDepositor",   6, 3, 0, 3, 6, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , Code                    = new Recipe.RecipeMap(null, "ktfru.recipe.code"                   , "Code(Internal)"            , null, 0, 1, RES_PATH_GUI + "machines/code",                     9, 3, 0, 1, 1, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
+            , ResearchUnlock          = new Recipe.RecipeMap(null, "ktfru.recipe.research.unlock"        , "Research Unlock"           , null, 0, 1, RES_PATH_GUI + "machines/ResearchUnlock",           1,12, 0, 0, 0, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , FuelBattery             = new Recipe.RecipeMap(null, "ktfru.recipe.fuelbattery"            , "Fuel Battery"              , null, 0, 1, RES_PATH_GUI + "machines/FuelBattery",              2, 0, 2, 3, 2, 2,  4,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , FluidHeating            = new Recipe.RecipeMap(null, "ktfru.recipe.fluidheating"           , "Fluid Heating"             , null, 0, 1, RES_PATH_GUI + "machines/FluidHeating",             0, 0, 0, 1, 1, 1,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , CNC                     = new Recipe.RecipeMap(null, "ktfru.recipe.cnc"                    , "CNC Processing"            , null, 0, 1, RES_PATH_GUI + "machines/CNC",                      3, 3, 1, 3, 0, 1,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
@@ -63,6 +64,7 @@ public class recipeMaps {
             , RocketAssembler         = new Recipe.RecipeMap(null, "ktfru.recipe.rocket.assembler"       , "Rocket Assembler"          , null, 0, 1, RES_PATH_GUI + "machines/Assembler",                9, 3, 1, 3, 0, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , RTG                     = new Recipe.RecipeMap(null, "ktfru.recipe.rtg"                    , "Radio Thermo Generator"    , null, 0, 1, RES_PATH_GUI + "machines/RTG",                      1, 2, 1, 0, 0, 0,  1,  1, "", 1, "", T, T, T, T, T, F, T, T)
             , OreProcessSystem        = new Recipe.RecipeMap(null, "ktfru.recipe.oreprocesssystem"       , "Ore Process System"        , null, 0, 1, RES_PATH_GUI + "machines/OreProcessSystem",         3, 9, 1, 3, 3, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
+            , NeutronAbsorption       = new Recipe.RecipeMap(null, "ktfru.recipe.neutronabsorption"      , "Neutron Absorption"        , null, 0, 1, RES_PATH_GUI + "machines/NeutronAbsorption",        1, 2, 0, 1, 2, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
 
     ;
     @Deprecated

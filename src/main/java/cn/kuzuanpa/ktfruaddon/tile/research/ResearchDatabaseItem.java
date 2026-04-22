@@ -1,9 +1,9 @@
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
-import cn.kuzuanpa.ktfruaddon.api.code.SingleItemStack;
+import cn.kuzuanpa.ktfruaddon.api.code.ItemType;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchItemManager;
 import cn.kuzuanpa.ktfruaddon.api.tile.IResearchDatabase;
-import cn.kuzuanpa.ktfruaddon.item.items.research.itemResearch;
+import cn.kuzuanpa.ktfruaddon.item.items.research.ItemResearchBase;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.gui.ContainerCommonDefault;
 import gregapi.old.Textures;
@@ -24,9 +24,9 @@ import java.util.List;
 import static gregapi.data.CS.T;
 
 public class ResearchDatabaseItem extends TileEntityBase09FacingSingle implements IResearchDatabase {
-    public List<SingleItemStack> cachedItems = new ArrayList<>();
+    public List<ItemType> cachedItems = new ArrayList<>();
     @Override
-    public boolean isItemUnlocked(SingleItemStack singleItem) {
+    public boolean isItemUnlocked(ItemType singleItem) {
         return cachedItems.contains(singleItem);
     }
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.database.item";}
@@ -54,8 +54,8 @@ public class ResearchDatabaseItem extends TileEntityBase09FacingSingle implement
         for (int i = 0; i < getSizeInventory(); i++) {
             if(!slotHas(i))continue;
             ItemStack stack = slot(i);
-            if (!(stack.getItem() instanceof itemResearch))continue;
-            List<SingleItemStack> list = ResearchItemManager.getItems(((itemResearch) stack.getItem()).getTreeId(), ((short) stack.getItemDamage()));
+            if (!(stack.getItem() instanceof ItemResearchBase))continue;
+            List<ItemType> list = ResearchItemManager.getItems(((ItemResearchBase) stack.getItem()).getTreeId(), ((short) stack.getItemDamage()));
             if (list != null)cachedItems.addAll(list);
         }
     }
@@ -84,6 +84,6 @@ public class ResearchDatabaseItem extends TileEntityBase09FacingSingle implement
 
     @Override
     public boolean isItemValidForSlot(int aSlot, ItemStack aStack) {
-        return aStack.getItem() instanceof itemResearch;
+        return aStack.getItem() instanceof ItemResearchBase;
     }
 }

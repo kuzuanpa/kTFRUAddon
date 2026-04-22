@@ -62,7 +62,6 @@ public class commonProxy extends Abstract_Proxy {
         tileEntityPreInit.init(aEvent);
         itemPreInit.init(aEvent);
         fluidPreInit.init(aEvent);
-        ResearchTrees.init();
 
         PacketUUIDAssignedData.typeMap.put((byte) 0, ResearchTree::receiveUUIDAssignedData);
     }
@@ -70,9 +69,9 @@ public class commonProxy extends Abstract_Proxy {
 
 
     public void init(FMLInitializationEvent aEvent) {
+        ResearchTrees.init();
         tileEntityInit0.init(aEvent);
         PROXY.registerRenderers();
-
     }
 
     public void postInit(FMLPostInitializationEvent aEvent) {
@@ -80,8 +79,6 @@ public class commonProxy extends Abstract_Proxy {
         recipeInit.init(aEvent);
         lootPostInit.init(aEvent);
         ItemPostInit.init(aEvent);
-
-
     }
 
     public void serverStarting(FMLServerStartingEvent aEvent) {

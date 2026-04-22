@@ -33,7 +33,7 @@ public class itemComputer extends MultiItemRandom {
         return ComputePower[id];
     }
     //Index:                                   0 ,1 ,2  ,3   ,4   ,5   ,6    ,7    ,8     ,9     ,10    ,11    ,12    ,13    ,14    ,15    ,16     ,17    ,18    ,19     ,20    ,21     ,22     ,23     ,24,25  ,26  ,27   ,28    ,29    ,30  ,31   ,32   ,33    ,34    ,35
-    private static final long[] ComputePower ={40,60,840,1020,6530,8160,34220,40370,102890,125540,181320,256330,305680,561300,453110,533120,1100230,806320,911310,1830770,939090,1566570,1025630,2285670,35,1020,2160,11820,42390,126230,2000,10000,30000,150000,500000,1500000};
+    private static final long[] ComputePower ={40,60,840,1020,6530,8160,34220,40370,102890,125540,161320,256330,305680,561300,453110,533120,1100230,806320,911310,1830770,939090,1566570,1025630,2285670,35,1020,2160,11820,42390,126230,2000,10000,30000,150000,500000,1500000};
     @Override
     public void addItems() {
         ItemList.ComputerTF3386          .set(addItem(0 ,"TF3386 Computer"   ,"Computing Power: 40 MFLOPS"))                .registerOre("ktfruBasicComputer");
@@ -46,7 +46,7 @@ public class itemComputer extends MultiItemRandom {
         ItemList.ComputerGT2090          .set(addItem(7 ,"GT2090 Computer"   ,"Computing Power: 40370 MFLOPS"))             .registerOre(        "ktfruModerateComputer");
         ItemList.ComputerGT3660          .set(addItem(8 ,"GT3660 Computer"   ,"Computing Power: 102890 MFLOPS"))            .registerOre(        "ktfruModerateComputer");
         ItemList.ComputerGT3680          .set(addItem(9 ,"GT3680 Computer"   ,"Computing Power: 125540 MFLOPS"))            .registerOre(        "ktfruModerateComputer");
-        ItemList.ComputerGT3699          .set(addItem(10,"GT3699 Computer"   ,"Computing Power: 181320 MFLOPS"))            .registerOre(            "ktfruAdvancedComputer");
+        ItemList.ComputerGT3699          .set(addItem(10,"GT3699 Computer"   ,"Computing Power: 161320 MFLOPS"))            .registerOre(            "ktfruAdvancedComputer");
         ItemList.ComputerGT3660v2        .set(addItem(11,"GT3660v2 Computer" ,"Computing Power: 256330 MFLOPS"))            .registerOre(            "ktfruAdvancedComputer");
         ItemList.ComputerGT3680v2        .set(addItem(12,"GT3680v2 Computer" ,"Computing Power: 305680 MFLOPS"))            .registerOre(            "ktfruAdvancedComputer");
         ItemList.ComputerGT3699v2        .set(addItem(13,"GT3699v2 Computer" ,"Computing Power: 561300 MFLOPS"))            .registerOre(                "ktfruEliteComputer");

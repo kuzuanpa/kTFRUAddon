@@ -80,7 +80,7 @@ public abstract class MultiTransformerBase extends MultiBatteryBase {
         if (aNBT.hasKey(NBT_OUTPUT_MIN)) mOutputMin = aNBT.getLong(NBT_OUTPUT_MIN);
         if (aNBT.hasKey(NBT_OUTPUT_MAX)) mOutputMax = aNBT.getLong(NBT_OUTPUT_MAX);
 
-        if (aNBT.hasKey(NBT_EFFICIENCY)) mEfficiency = aNBT.getLong(NBT_EFFICIENCY);
+        if (aNBT.hasKey(NBT_EFFICIENCY) && mInputMax!=0) mEfficiency = aNBT.getLong(NBT_EFFICIENCY);
         else mEfficiency = mOutputMax*10000/mInputMax;
         mCapacity = mInputMax * mMaxAmpere * 2;
     }

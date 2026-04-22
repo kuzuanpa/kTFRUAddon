@@ -18,7 +18,6 @@ package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.ElectromagnetCrucible;
 import gregapi.oredict.OreDictMaterial;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -48,10 +47,8 @@ public class TESRElectromagnetCrucible extends TileEntitySpecialRenderer {
 
         GL11.glPushMatrix();
 
-        int bright = 15 << 20 | 15 << 4;
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GL11.glTranslated(x + .5f, y, z + 0.5f);

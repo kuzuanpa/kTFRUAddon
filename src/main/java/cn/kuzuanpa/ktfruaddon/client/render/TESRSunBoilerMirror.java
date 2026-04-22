@@ -16,7 +16,6 @@
 package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -55,16 +54,13 @@ public class TESRSunBoilerMirror extends TileEntitySpecialRenderer {
         SunHeaterMirror tile = (SunHeaterMirror)til;
         GL11.glPushMatrix();
         //Initial setup
-        int bright = tile.getWorldObj()==null? 15728656 : tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord + 1, tile.zCoord,0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
         glDepthMask(true);
 
-        //Rotate and move the specialRend into position
+        //Rotate and move the model into position
         GL11.glTranslated(x, y, z );
         GL11.glTranslatef(0.5f, 0, 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];

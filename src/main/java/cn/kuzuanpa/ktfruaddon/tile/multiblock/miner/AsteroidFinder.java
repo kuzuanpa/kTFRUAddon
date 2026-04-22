@@ -85,6 +85,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
         if(aNBT.hasKey(kTileNBT.INTERVAL)) interval = aNBT.getInteger(kTileNBT.INTERVAL);
         if(aNBT.hasKey("findedAsteroid")) findedAsteroid = Configuration.asteroidTypes.get(aNBT.getString("findedAsteroid"));
         if(aNBT.hasKey("progress")) progress = aNBT.getInteger("progress");
+        if(aNBT.hasKey("overwrite")) mOverwrite = aNBT.getBoolean("overwrite");
     }
 
     @Override
@@ -92,6 +93,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
         super.writeToNBT2(aNBT);
         UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
         UT.NBT.setNumber(aNBT, "progress", progress);
+        aNBT.setBoolean("overwrite", mOverwrite);
         if(findedAsteroid!=null)aNBT.setString("findedAsteroid", findedAsteroid.ID);
     }
 
@@ -118,6 +120,11 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
             IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,null,0,0,aChatReturn);
+            return 1;
+        }
+        if(aTool.equals(TOOL_screwdriver) && isServerSide() && aChatReturn!=null ){
+            mOverwrite = !mOverwrite;
+            aChatReturn.add("Overwrite: "+mOverwrite);
             return 1;
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
@@ -170,6 +177,8 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
                 tag.setString("findedAsteroid", findedAsteroid.ID);
                 tag.setString("findedAsteroidUUID", UUID.randomUUID().toString());
                 slot(0).setTagCompound(tag);
+                setInventorySlotContents(1,slot(0));
+                slotKill(0);
                 findedAsteroid = null;
             }
             return;
@@ -294,11 +303,11 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     }
 
     //inventory
-    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
-    private static final int[] ACCESSIBLE_SLOTS = new int[] {0};
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
+    private static final int[] ACCESSIBLE_SLOTS = new int[] {0, 1};
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
-    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
-    @Override public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 1;}
+    @Override public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 0;}
 
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientDefault(aPlayer.inventory, this, aGUIID);}

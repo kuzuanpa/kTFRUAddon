@@ -172,7 +172,6 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
         }
         if(aTool.equals(TOOL_magnifyingglass)){
             if(mCapacity > 0 )aChatReturn.add(String.format("%.4f", mEnergyStored*100F/mCapacity) + " %");
-            aChatReturn.add(mEnergyStored + " / " +mCapacity + mEnergyType.getLocalisedChatNameShort());
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
@@ -281,13 +280,15 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
     @Override
     public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
         IWailaTile.super.getWailaNBT(te, aNBT);
-
+        aNBT.setLong("capa", mCapacity/1000);
+        aNBT.setLong("stored", mEnergyStored/1000);
         return aNBT;
     }
 
     @Override
     public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         IWailaTile.super.getWailaBody(currentTip, accessor, config);
+        currentTip.add(LH.get(I18nHandler.STORED_ENERGY)+ LH.Chat.WHITE + ": "+accessor.getNBTData().getLong("stored")+"k / "+accessor.getNBTData().getLong("capa") +"k " + mEnergyType.getLocalisedChatNameShort());
 
         return currentTip;
     }

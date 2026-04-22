@@ -24,19 +24,20 @@ import gregapi.oredict.OreDictPrefix;
 
 import static gregapi.data.CS.U;
 import static gregapi.data.TD.Atomic.ANTIMATTER;
+import static gregapi.data.TD.Prefix.*;
 
 public class prefixList {
     static final ICondition<?> conditionLargeTurbine = new ICondition.And<>(TD.Properties.HAS_TOOL_STATS, TD.ItemGenerator.MOLTEN, new ICondition.Or<>(TD.Atomic.METAL, TD.Compounds.ALLOY), MT.AnnealedCopper.NOT, MT.WroughtIron.NOT /*Could not register Recipe*/, MT.Alumite.NOT);//it's too weak and have negative efficiency
 
 
-    public static final OreDictPrefix flywheel = create("flywheel", "Flywheels", "", " Flywheel").setMaterialStats(8*U).setCondition(new ICondition.And<>(TD.Properties.HAS_TOOL_STATS, TD.Processing.SMITHABLE)).addListener(new recipePrefixItems.Parts_Flywheel(ANTIMATTER.NOT));
-    public static final OreDictPrefix largeTurbineBlade = create("bladeLargeTurbine", "Large Gas Turbines", "Large ", " Turbine Blade").setMaterialStats(2 * U).setCondition(conditionLargeTurbine);
-    public static final OreDictPrefix turbineLargeGas = create("turbineLargeGas", "Large Gas Turbines", "Large ", " Gas Turbine").setMaterialStats(72 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine");
-    public static final OreDictPrefix turbineLargeGasChecked = create("turbineLargeGasChecked", "Checked Large Gas Turbines", "Checked Large ", " Gas Turbine").setMaterialStats(72 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine");
-    public static final OreDictPrefix turbineLargeGasDamaged = create("turbineLargeGasDamaged", "Used Large Gas Turbines", "Used Large ", " Gas Turbine").setMaterialStats(72 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine");
-    public static final OreDictPrefix turbineLargeSteam = create("turbineLargeSteam", "Large Steam Turbines", "Large ", " Steam Turbine").setMaterialStats(48 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine");
-    public static final OreDictPrefix turbineLargeSteamChecked = create("turbineLargeSteamChecked", "Checked Large Steam Turbines", "Checked Large ", " Steam Turbine").setMaterialStats(48 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine");
-    public static final OreDictPrefix turbineLargeSteamDamaged = create("turbineLargeSteamDamaged", "Used Large Steam Turbines", "Used Large ", " Steam Turbine").setMaterialStats(48 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").addListener(new recipePrefixItems.Parts_Turbine(ANTIMATTER.NOT));
+    public static final OreDictPrefix flywheel = create("flywheel", "Flywheels", "", " Flywheel").setMaterialStats(8*U).setCondition(new ICondition.And<>(TD.Properties.HAS_TOOL_STATS, TD.Processing.SMITHABLE)).add(RECYCLABLE, SIMPLIFIABLE, BURNABLE).addListener(new recipePrefixItems.Parts_Flywheel(ANTIMATTER.NOT));
+    public static final OreDictPrefix largeTurbineBlade = create("bladeLargeTurbine", "Large Gas Turbines", "Large ", " Turbine Blade").setMaterialStats(2 * U).setCondition(conditionLargeTurbine).add(RECYCLABLE, SIMPLIFIABLE, BURNABLE);
+    public static final OreDictPrefix turbineLargeGas = create("turbineLargeGas", "Large Gas Turbines", "Large ", " Gas Turbine").setMaterialStats(72 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").add(RECYCLABLE, SIMPLIFIABLE, BURNABLE);
+    public static final OreDictPrefix turbineLargeGasChecked = create("turbineLargeGasChecked", "Checked Large Gas Turbines", "Checked Large ", " Gas Turbine").setMaterialStats(72 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").add(RECYCLABLE, SIMPLIFIABLE, BURNABLE);
+    public static final OreDictPrefix turbineLargeGasDamaged = create("turbineLargeGasDamaged", "Used Large Gas Turbines", "Used Large ", " Gas Turbine").setMaterialStats(72 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").add(RECYCLABLE, SIMPLIFIABLE, BURNABLE);
+    public static final OreDictPrefix turbineLargeSteam = create("turbineLargeSteam", "Large Steam Turbines", "Large ", " Steam Turbine").setMaterialStats(48 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").add(RECYCLABLE, SIMPLIFIABLE, BURNABLE);
+    public static final OreDictPrefix turbineLargeSteamChecked = create("turbineLargeSteamChecked", "Checked Large Steam Turbines", "Checked Large ", " Steam Turbine").setMaterialStats(48 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").add(RECYCLABLE, SIMPLIFIABLE, BURNABLE);
+    public static final OreDictPrefix turbineLargeSteamDamaged = create("turbineLargeSteamDamaged", "Used Large Steam Turbines", "Used Large ", " Steam Turbine").setMaterialStats(48 * U).setCondition(conditionLargeTurbine).setTextureSetName("largeTurbine").add(RECYCLABLE, SIMPLIFIABLE, BURNABLE).addListener(new recipePrefixItems.Parts_Turbine(ANTIMATTER.NOT));
 
     public static final OreDictPrefix CommercialPureDust = create("commercialPureDust", "Commercial Pure Dust", "Commercial Pure ", " Dust").setMaterialStats(U).setCondition(new ICondition.Nor<>(TD.Properties.WOOD, TD.Properties.COAL, TD.Properties.STONE, TD.Properties.FOOD, TD.Properties.MEAT));
     public static final OreDictPrefix AnalyticalPureDust = create("analyticalPureDust", "Analytical Pure Dust", "Analytical Pure ", " Dust").setMaterialStats(U).setCondition(new ICondition.Nor<>(TD.Properties.WOOD, TD.Properties.COAL, TD.Properties.STONE, TD.Properties.FOOD, TD.Properties.MEAT));

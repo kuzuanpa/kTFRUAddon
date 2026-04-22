@@ -244,12 +244,16 @@ public class MultiTileEntityValve extends TileEntityBase09FacingSingle implement
     @Override public ItemStack getRotten(ItemStack aStack, World aWorld, int aX, int aY, int aZ) {return mMaterial.contains(TD.Properties.BETWEENLANDS) ? aStack : IItemRottable.RottingUtil.rotting(aStack, (IFluidContainerItem)aStack.getItem());}
     @Override
     public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+        IWailaTile.super.getWailaNBT(te,aNBT);
+
         mTank.writeToNBT(aNBT, NBT_TANK);
         return aNBT;
     }
 
     @Override
     public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        IWailaTile.super.getWailaBody(currentTip, accessor, config);
+
         NBTTagCompound aNBT = accessor.getNBTData();
 
         mTank.readFromNBT(aNBT, NBT_TANK);

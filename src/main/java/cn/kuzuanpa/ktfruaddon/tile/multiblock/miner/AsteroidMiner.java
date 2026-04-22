@@ -25,7 +25,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import cn.kuzuanpa.ktfruaddon.item.items.random.itemDevice;
+import cn.kuzuanpa.ktfruaddon.item.items.random.ItemDevice;
 import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.ArrayListNoNulls;
 import gregapi.code.TagData;
@@ -77,7 +77,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
     public static final byte STATE_WAIT =0, STATE_WAIT_ROCKET =1, STATE_MINING=2, STATE_OUTPUTTING=3, EVENT_ROCKET_LAUNCH=1, EVENT_ROCKET_ARRIVE=2, EVENT_INV_EMPTY=3;
     public StateMgr mState = new StateMgr();
     public byte recentEvent = 0;
-    public boolean mStopped = false, isEnergyEnough=true, clientIsSlotHas=false;
+    public boolean mStopped = false, isEnergyEnough=true, isSlotRocket =false;
     public long mEnergy = 0, mInput = 256, mInputMax = 1024;
     public int interval = 400, progress = 0, /**<0: miner is going to asteroid, >0: miner is backing**/distanceMiner=0, miningTime = 20, clientRocketSendTimer = 0;
     public List<IMeterDetectable.MeterData> receivedEnergy = new ArrayList<>(), receivedEnergyLast = new ArrayList<>();
@@ -150,6 +150,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
             mState.markChanged();
             return;
         }
+        if(mInventoryChanged) mState.markChanged();
         if(!isEnergyEnough) mState.markChanged();
         isEnergyEnough=true;
         mEnergy -= mInput;
@@ -157,9 +158,15 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
         if(findedAsteroid != null && mState.is(STATE_WAIT))mState.set(STATE_WAIT_ROCKET);
 
         if(mState.is(STATE_WAIT) || mState.is(STATE_WAIT_ROCKET)){
-            if (OM.is(OD_USB_STICKS[0],slot(0)))tryReadAsteroidFromUSB(slot(0), null);
+            if (OM.is(OD_USB_STICKS[0],slot(0))) {
+                tryReadAsteroidFromUSB(slot(0), null);
+                if(findedAsteroid != null){
+                    setInventorySlotContents(1,slot(0));
+                    slotKill(0);
+                }
+            }
 
-            if(findedAsteroid == null || !itemDevice.isDeviceAsteroidMinerRocket(slot(0)) || findedAsteroid.getMinLevel() > itemDevice.getAsteroidMinerRocketLevel(slot(0))) return;
+            if(findedAsteroid == null || !ItemDevice.isDeviceAsteroidMinerRocket(slot(0)) || findedAsteroid.getMinLevel() > ItemDevice.getAsteroidMinerRocketLevel(slot(0))) return;
 
             minedAsteroids.add(findedAsteroidUUID);
             if(minedAsteroids.size() > 256)minedAsteroids.remove(0);
@@ -171,10 +178,10 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
         }
 
         if(mState.is(STATE_OUTPUTTING)){
-            if(slotHas(0))return;
+            if(slotHas(1))return;
 
             if(sendedRocket != null){
-                setInventorySlotContents(0, itemDevice.getDeprecatedAsteroidMinerRocket(sendedRocket));
+                setInventorySlotContents(1, ItemDevice.getDeprecatedAsteroidMinerRocket(sendedRocket));
                 sendedRocket = null;
                 return;
             }
@@ -184,11 +191,11 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
             }
             ItemStack stack = harvest.get(harvest.size() - 1);
             if(stack.stackSize > 64){
-                setInventorySlotContents(0, new ItemStack(stack.getItem(), 64, stack.getItemDamage()));
+                setInventorySlotContents(1, new ItemStack(stack.getItem(), 64, stack.getItemDamage()));
                 stack.stackSize-=64;
             }
             else {
-                setInventorySlotContents(0, new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage()));
+                setInventorySlotContents(1, new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage()));
                 harvest.remove(harvest.size() - 1);
             }
             if(harvest.isEmpty())recentEvent = EVENT_INV_EMPTY;
@@ -197,7 +204,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
 
         progress++;
         if(progress < interval)return;
-        distanceMiner += itemDevice.getAsteroidMinerRocketSpeed(sendedRocket);
+        distanceMiner += ItemDevice.getAsteroidMinerRocketSpeed(sendedRocket);
 
         if(distanceMiner > 0 && harvest.isEmpty()) harvest = findedAsteroid.getHarvest(worldObj.getSeed()+aTimer, 0.5f).stream().map(entry-> entry.stack).collect(Collectors.toList());
 
@@ -230,21 +237,19 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
         NBTTagCompound aNBT = stack.getTagCompound();
         if(aNBT == null || !aNBT.hasKey("findedAsteroid"))return;
         findedAsteroid = Configuration.asteroidTypes.get(aNBT.getString("findedAsteroid"));
-        findedAsteroidUUID = UUID.fromString(aNBT.getString("findedAsteroidUUID"));
+        findedAsteroidUUID = UUID.randomUUID();
         if(findedAsteroid == null){
             if(aPlayer!=null) aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.ERROR)));
             return;
         }
         if(minedAsteroids.contains(findedAsteroidUUID)) {
-            if(aPlayer!=null) aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED + LH.get(I18nHandler.ERROR) + " Asteroid Already Mined!"));
+            if(aPlayer!=null) aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED + LH.get(I18nHandler.ERROR) + ": Asteroid Already Mined!"));
             findedAsteroid = null;
             findedAsteroidUUID = null;
             return;
         }
-        aNBT.removeTag("findedAsteroid");
-        aNBT.removeTag("findedAsteroidUUID");
         distanceMiner = -findedAsteroid.distance - miningTime;
-        if(aPlayer!=null) aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_READ_FROM_USB)));
+        if(aPlayer!=null) aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.DATA_READ_FROM_USB) +": "+findedAsteroid.ID));
     }
 
     @Override
@@ -317,9 +322,14 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        ChunkCoordinates startPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, 0, 1, 1);
-        ChunkCoordinates endPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, 1, 50, 5);
+        ChunkCoordinates startPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, -1, -5, -1);
+        ChunkCoordinates endPos = utils.getRealCoord(mFacing, xCoord, yCoord, zCoord, 1, 255, 5);
         return AxisAlignedBB.getBoundingBox(startPos.posX, startPos.posY,startPos.posZ, endPos.posX,endPos.posY,endPos.posZ);
+    }
+
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return 65536;
     }
 
     @Override
@@ -333,11 +343,11 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
     }
 
     //inventory
-    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[1];}
-    private static final int[] ACCESSIBLE_SLOTS = new int[] {0};
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[2];}
+    private static final int[] ACCESSIBLE_SLOTS = new int[] {0,1};
     @Override public int[] getAccessibleSlotsFromSide2(byte aSide) {return ACCESSIBLE_SLOTS;}
-    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
-    @Override public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return true;}
+    @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 1;}
+    @Override public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) {return aSlot == 0;}
 
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {return new ContainerClientDefault(aPlayer.inventory, this, aGUIID);}
@@ -362,7 +372,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
 
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        byte isSlotRocket = (byte) (slotHas(0)?1:0);
+        byte isSlotRocket = (byte) (ItemDevice.isDeviceAsteroidMinerRocket(slot(0))?1:0);
         IPacket result = aSendAll ? getClientDataPacketByteArray(aSendAll, getDirectionData(), getClientState(), recentEvent, isSlotRocket, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa)) : getClientDataPacketByteArray(aSendAll, getDirectionData(), getClientState(), recentEvent, isSlotRocket);
         recentEvent =0;
         return result;
@@ -378,7 +388,7 @@ public class AsteroidMiner extends TileEntityBase10MultiBlockBase implements ITi
             case EVENT_ROCKET_ARRIVE: clientRocketSendTimer = -1; break;
             case EVENT_INV_EMPTY: clientRocketSendTimer = 0; break;
         }
-        clientIsSlotHas=aData[3]==1;
+        isSlotRocket =aData[3]==1;
         return T;
     }
 

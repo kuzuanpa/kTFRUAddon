@@ -40,19 +40,19 @@ public enum ItemList implements IItemContainer{
     SiliconPlateOxidizedT1,SiliconPlateOxidizedT2, MoO2PlateOxidizedT1,MoO2PlateOxidizedT2,
     SiliconPlateCoatedT1,SiliconPlateCoatedT2, MoO2PlateCoatedT1,MoO2PlateCoatedT2,
     SiliconPlateSoftBakedT1,SiliconPlateSoftBakedT2, MoO2PlateSoftBakedT1,MoO2PlateSoftBakedT2,
-    CPUPhotomask200um, CPUPhotomask72um, CPUPhotomask28um, CPUPhotomask8um, CPUPhotomask400nm, CPUPhotomask80nm, CPUPhotomask32nm, CPUPhotomask14nm,
-    CPUWafer200um, CPUWafer72um, CPUWafer28um, CPUWafer8um, CPUWafer400nm, CPUWafer80nm, CPUWafer32nm, CPUWafer14nm,
-    CPUWafer200umDeveloped, CPUWafer72umDeveloped, CPUWafer28umDeveloped, CPUWafer8umDeveloped, CPUWafer400nmDeveloped, CPUWafer80nmDeveloped, CPUWafer32nmDeveloped, CPUWafer14nmDeveloped,
-    CPUWafer200umHardBaked, CPUWafer72umHardBaked, CPUWafer28umHardBaked, CPUWafer8umHardBaked, CPUWafer400nmHardBaked, CPUWafer80nmHardBaked, CPUWafer32nmHardBaked, CPUWafer14nmHardBaked,
-    CPUWafer200umDoped, CPUWafer72umDoped, CPUWafer28umDoped, CPUWafer8umDoped, CPUWafer400nmDoped, CPUWafer80nmDoped, CPUWafer32nmDoped, CPUWafer14nmDoped,
-    CPUWafer200umChecked, CPUWafer72umChecked, CPUWafer28umChecked, CPUWafer8umChecked, CPUWafer400nmChecked, CPUWafer80nmChecked, CPUWafer32nmChecked, CPUWafer14nmChecked,
+    CPUPhotomaskT1, CPUPhotomaskT2, CPUPhotomaskT3, CPUPhotomaskT4, CPUPhotomaskT5, CPUPhotomaskT6, CPUPhotomaskT7, CPUPhotomaskT8,
+    CPUWaferT1, CPUWaferT2, CPUWaferT3, CPUWaferT4, CPUWaferT5, CPUWaferT6, CPUWaferT7, CPUWaferT8,
+    CPUWaferT1Developed, CPUWaferT2Developed, CPUWaferT3Developed, CPUWaferT4Developed, CPUWaferT5Developed, CPUWaferT6Developed, CPUWaferT7Developed, CPUWaferT8Developed,
+    CPUWaferT1HardBaked, CPUWaferT2HardBaked, CPUWaferT3HardBaked, CPUWaferT4HardBaked, CPUWaferT5HardBaked, CPUWaferT6HardBaked, CPUWaferT7HardBaked, CPUWaferT8HardBaked,
+    CPUWaferT1Doped, CPUWaferT2Doped, CPUWaferT3Doped, CPUWaferT4Doped, CPUWaferT5Doped, CPUWaferT6Doped, CPUWaferT7Doped, CPUWaferT8Doped,
+    CPUWaferT1Checked, CPUWaferT2Checked, CPUWaferT3Checked, CPUWaferT4Checked, CPUWaferT5Checked, CPUWaferT6Checked, CPUWaferT7Checked, CPUWaferT8Checked,
     CPUBoardT1,CPUBoardT2,CPUBoardT3,
-    RAMPhotomask200um, RAMPhotomask72um, RAMPhotomask28um, RAMPhotomask8um, RAMPhotomask400nm, RAMPhotomask80nm, RAMPhotomask32nm, RAMPhotomask14nm,
-    RAMWafer200um, RAMWafer72um, RAMWafer28um, RAMWafer8um, RAMWafer400nm, RAMWafer80nm, RAMWafer32nm, RAMWafer14nm,
-    RAMWafer200umDeveloped, RAMWafer72umDeveloped, RAMWafer28umDeveloped, RAMWafer8umDeveloped, RAMWafer400nmDeveloped, RAMWafer80nmDeveloped, RAMWafer32nmDeveloped, RAMWafer14nmDeveloped,
-    RAMWafer200umHardBaked, RAMWafer72umHardBaked, RAMWafer28umHardBaked, RAMWafer8umHardBaked, RAMWafer400nmHardBaked, RAMWafer80nmHardBaked, RAMWafer32nmHardBaked, RAMWafer14nmHardBaked,
-    RAMWafer200umDoped, RAMWafer72umDoped, RAMWafer28umDoped, RAMWafer8umDoped, RAMWafer400nmDoped, RAMWafer80nmDoped, RAMWafer32nmDoped, RAMWafer14nmDoped,
-    RAMWafer200umChecked, RAMWafer72umChecked, RAMWafer28umChecked, RAMWafer8umChecked, RAMWafer400nmChecked, RAMWafer80nmChecked, RAMWafer32nmChecked, RAMWafer14nmChecked,
+    RAMPhotomaskT1, RAMPhotomaskT2, RAMPhotomaskT3, RAMPhotomaskT4, RAMPhotomaskT5, RAMPhotomaskT6, RAMPhotomaskT7, RAMPhotomaskT8,
+    RAMWaferT1, RAMWaferT2, RAMWaferT3, RAMWaferT4, RAMWaferT5, RAMWaferT6, RAMWaferT7, RAMWaferT8,
+    RAMWaferT1Developed, RAMWaferT2Developed, RAMWaferT3Developed, RAMWaferT4Developed, RAMWaferT5Developed, RAMWaferT6Developed, RAMWaferT7Developed, RAMWaferT8Developed,
+    RAMWaferT1HardBaked, RAMWaferT2HardBaked, RAMWaferT3HardBaked, RAMWaferT4HardBaked, RAMWaferT5HardBaked, RAMWaferT6HardBaked, RAMWaferT7HardBaked, RAMWaferT8HardBaked,
+    RAMWaferT1Doped, RAMWaferT2Doped, RAMWaferT3Doped, RAMWaferT4Doped, RAMWaferT5Doped, RAMWaferT6Doped, RAMWaferT7Doped, RAMWaferT8Doped,
+    RAMWaferT1Checked, RAMWaferT2Checked, RAMWaferT3Checked, RAMWaferT4Checked, RAMWaferT5Checked, RAMWaferT6Checked, RAMWaferT7Checked, RAMWaferT8Checked,
     RAMBoardT1,RAMBoardT2,RAMBoardT3,
     RAMDie2K, RAMDie32K,   RAMDie256K,   RAMDie2M,   RAMDie16M,   RAMDie128M,   RAMDie768M,   RAMDie2G,
 
@@ -61,11 +61,11 @@ public enum ItemList implements IItemContainer{
     RAMBar256K16, RAMBar2M16, RAMBar16M16, RAMBar128M16, RAMBar768M16, RAMBar2G16,
     RAMBar16M32, RAMBar128M32, RAMBar768M32, RAMBar2G32,
 
-    InterLayerPhotomask32nm, InterLayerPhotomask14nm, InterLayerWafer32nm, InterLayerWafer14nm,
-    InterLayerWafer32nmDeveloped, InterLayerWafer14nmDeveloped,
-    InterLayerWafer32nmHardBaked, InterLayerWafer14nmHardBaked,
-    InterLayerWafer32nmDoped, InterLayerWafer14nmDoped,
-    InterLayerWafer32nmChecked, InterLayerWafer14nmChecked,
+    InterLayerPhotomaskT1, InterLayerPhotomaskT2, InterLayerWaferT7, InterLayerWaferT8,
+    InterLayerWaferT7Developed, InterLayerWaferT8Developed,
+    InterLayerWaferT7HardBaked, InterLayerWaferT8HardBaked,
+    InterLayerWaferT7Doped, InterLayerWaferT8Doped,
+    InterLayerWaferT7Checked, InterLayerWaferT8Checked,
     InterLayerT1, InterLayerT2,
 
     CPUDieTF3386, CPUDieTF3586, CPUDieGT1000, CPUDieGT2000, CPUDieGT3660, CPUDieGT3660v2, CPUDieGT3660v3, CPUDieGT3660v4,
@@ -73,7 +73,7 @@ public enum ItemList implements IItemContainer{
 
     CPUTF3386 , CPUTF3586 , CPUGT1000, CPUGT2000, CPUGT3660, CPUGT3660v2, CPUGT3660v3, CPUGT3660v4,
     CPUTF3386S, CPUTF3586S, CPUGT1090, CPUGT2090, CPUGT3680, CPUGT3680v2, CPUGT3680v3, CPUGT3680v4, CPUGT3680v3E, CPUGT3680v4E,
-    CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4, CPUGT3699v3E, CPUGT3699v4E,
+                                                  CPUGT3699, CPUGT3699v2, CPUGT3699v3, CPUGT3699v4, CPUGT3699v3E, CPUGT3699v4E,
 
     CircuitPartPhotomaskT3, CircuitPartPhotomaskT4, CircuitPartPhotomaskT5, CircuitPartPhotomaskT6,
     CircuitPartWaferT3, CircuitPartWaferT4, CircuitPartWaferT5, CircuitPartWaferT6,
@@ -82,12 +82,12 @@ public enum ItemList implements IItemContainer{
     CircuitPartWaferT3Doped, CircuitPartWaferT4Doped, CircuitPartWaferT5Doped, CircuitPartWaferT6Doped,
     CircuitPartWaferT3Checked, CircuitPartWaferT4Checked, CircuitPartWaferT5Checked, CircuitPartWaferT6Checked,
 
-    DiodePhotomask200um, DiodePhotomask28um,
-    DiodeWafer200um, DiodeWafer28um,
-    DiodeWafer200umDeveloped, DiodeWafer28umDeveloped,
-    DiodeWafer200umHardBaked, DiodeWafer28umHardBaked,
-    DiodeWafer200umDoped, DiodeWafer28umDoped,
-    DiodeWafer200umChecked, DiodeWafer28umChecked,
+    DiodePhotomaskT1, DiodePhotomaskT2,
+    DiodeWaferT1, DiodeWaferT2,
+    DiodeWaferT1Developed, DiodeWaferT2Developed,
+    DiodeWaferT1HardBaked, DiodeWaferT2HardBaked,
+    DiodeWaferT1Doped, DiodeWaferT2Doped,
+    DiodeWaferT1Checked, DiodeWaferT2Checked,
 
     //Circuits
     //These Tier NOT corresponding the Tier of GT Circuits
@@ -132,13 +132,12 @@ public enum ItemList implements IItemContainer{
     UnderClockedNoviceComputer,UnderClockedModerateComputer,UnderClockedAdvancedComputer,UnderClockedEliteComputer,UnderClockedMasterComputer,UnderClockedUltimateComputer,
     //itemParticle
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
-    ResearchItem, FusionTokamakData0,FusionTokamakData1,FusionTokamakData2,FusionTokamakData3,FusionTokamakData4,
-
+    ResearchItem, TechResearchData0, TechResearchData1, TechResearchData2, TechResearchData3, TechResearchData4, TechResearchData5, TechResearchData6, TechResearchData7, TechResearchData8, TechResearchData9, TechResearchData10, TechResearchData11, TechResearchData12, TechResearchData13, TechResearchData14, TechResearchData15, TechResearchData16, TechResearchData17, TechResearchData18, TechResearchData19, TechResearchData20, TechResearchData21, TechResearchData22, TechResearchData23, TechResearchData24, TechResearchData25, TechResearchData26, TechResearchData27, TechResearchData28, TechResearchData29, TechResearchData30, TechResearchData31, TechResearchData32, TechResearchData33, TechResearchData34, TechResearchData35, TechResearchData36, TechResearchData37, TechResearchData38, TechResearchData39, TechResearchData40, TechResearchData41, TechResearchData42, TechResearchData43, TechResearchData44, TechResearchData45, TechResearchData46, TechResearchData47, TechResearchData48, TechResearchData49, TechResearchData50, TechResearchData51, TechResearchData52, TechResearchData53, TechResearchData54, TechResearchData55, TechResearchData56, TechResearchData57, TechResearchData58, TechResearchData59, TechResearchData60, TechResearchData61, TechResearchData62, TechResearchData63, TechResearchData64, TechResearchData65, TechResearchData66, TechResearchData67, TechResearchData68, TechResearchData69, TechResearchData70,
     //itemTechnological
     PropertiesFilter,
     //itemBatteryPole
     BatteryPoleNickel, BatteryPoleCaTiO3, BatteryPolePlatinum,BatteryPoleCarbon,
-    //itemDevice
+    //ItemDevice
     AsteroidMinerRocketT1, AsteroidMinerRocketT1Fast, AsteroidMinerRocketT2, AsteroidMinerRocketT2Fast, AsteroidMinerRocketT3, AsteroidMinerRocketT3Fast, AsteroidMinerRocketT4, AsteroidMinerRocketT4Fast, AsteroidMinerRocketT5, AsteroidMinerRocketT5Fast,
     DeprecatedAsteroidMinerRocketT1, DeprecatedAsteroidMinerRocketT1Fast, DeprecatedAsteroidMinerRocketT2, DeprecatedAsteroidMinerRocketT2Fast, DeprecatedAsteroidMinerRocketT3, DeprecatedAsteroidMinerRocketT3Fast, DeprecatedAsteroidMinerRocketT4, DeprecatedAsteroidMinerRocketT4Fast, DeprecatedAsteroidMinerRocketT5, DeprecatedAsteroidMinerRocketT5Fast,
     ;

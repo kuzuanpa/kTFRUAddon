@@ -41,7 +41,7 @@ public class SkyPredicate implements IStructurePredicate {
 
     @Override
     public boolean project(StructureContext ctx, int x, int y, int z) {
-        kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z,  new BlockMeta(Blocks.glass, 0, "Must See Sky"));
+        kTFRUAddonARProjectorCompact.projectBlock(ctx.world, x,y,z,  new BlockMeta(Blocks.glass, 0, "ktfru.part.sky"));
         return true;
     }
 }

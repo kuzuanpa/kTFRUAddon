@@ -78,11 +78,11 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glColor4f(1,1,1,1);
 		pointingItem = null;
+		drawBackground();
 		//draw buttons(they will update some variable)
 		super.drawScreen2(p_73863_1_, p_73863_2_, p_73863_3_);
 
 		tickMouseOffset();
-		drawBackground();
 		//Just pointed on some item
 		if(hoveringPanel.researchProject == null && pointingItem != null)hoveringPanel.join(p_73863_1_,p_73863_2_);
 		//Just not point on any item
@@ -95,7 +95,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 
 	public void drawBackground(){
 		mc.getTextureManager().bindTexture(background);
-		GL11.glColor4f(1,1,1,0.1f);
+		GL11.glColor4f(0.2F,0.2F,0.2F,0.6f);
 		this.drawTexturedModalRect(0,0, 0, 14, width, height);
 	}
 
@@ -107,8 +107,9 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 			float scaleRate = mc.displayHeight*1F/mc.currentScreen.height;
 			int dX = Mouse.getX()-mouseLastX;
 			int dY = Mouse.getY()-mouseLastY;
-			xOffset+=dX*1f/scaleRate;
-			yOffset-=dY*1f/scaleRate;
+			float speed = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)?3F:1.2F;
+			xOffset+=dX*speed/scaleRate;
+			yOffset-=dY*speed/scaleRate;
 		}
 		mouseLastX=Mouse.getX();
 		mouseLastY=Mouse.getY();
@@ -128,7 +129,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		AtomicInteger i = new AtomicInteger();
 		theTree.allResearch.forEach((s, researchItem) -> {
 			researchIDToIntIDMap.put(s,i.get());
-			int rate = 400;
+			int rate = 300;
 			int layer = researchItem.layer;
 			buttons.add(i.get(),new researchButton(i.get(),researchItem).setJoinLeaveTime(layer*rate,Integer.MAX_VALUE).addAnime(new animeTransparency(layer*rate,layer*rate+1000,0,255)).addAnime(new animeMoveLinear(-1,0,30,-2)).addAnime(new animeMoveSlowIn(layer*rate, layer*rate+500, -30,2,3)));
 			i.getAndIncrement();

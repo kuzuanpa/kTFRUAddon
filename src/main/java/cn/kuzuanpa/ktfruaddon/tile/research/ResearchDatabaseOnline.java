@@ -1,6 +1,6 @@
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
-import cn.kuzuanpa.ktfruaddon.api.code.SingleItemStack;
+import cn.kuzuanpa.ktfruaddon.api.code.ItemType;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.tile.IResearchDatabase;
 import gregapi.old.Textures;
@@ -12,7 +12,7 @@ import net.minecraft.block.Block;
 
 public class ResearchDatabaseOnline extends ResearchTableBase implements IResearchDatabase {
 
-    public boolean isItemUnlocked(SingleItemStack singleItem) {
+    public boolean isItemUnlocked(ItemType singleItem) {
         if (getMonitor() == null)return false;
         for (ResearchProject project : getMonitor().theTree.allResearch.values()){
             if (!project.isUnlocked || !project.unlockItems.contains(singleItem))continue;

@@ -18,7 +18,6 @@ package cn.kuzuanpa.ktfruaddon.client.render;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.DummyCrucibleScreen;
 import gregapi.render.IIconContainer;
 import gregapi.render.TextureSet;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -40,10 +39,8 @@ public class TESRDummyCrucibleScreen extends TileEntitySpecialRenderer {
         DummyCrucibleScreen tile = (DummyCrucibleScreen)til;
         GL11.glPushMatrix();
         //Initial setup
-        int bright = tile.getWorldObj()==null? 15728656 : tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord,0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GL11.glTranslated(x + .5f, y, z + 0.5f);

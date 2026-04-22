@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 
 public class GuiTerminal extends kGuiContainerBase {
-    private float scrollPosition = 0.0F;
+    private int scrollPosition = 0;
     InventoryPlayer aInventoryPlayer;
     private ContainerTerminal container;
 
@@ -38,52 +38,48 @@ public class GuiTerminal extends kGuiContainerBase {
         this.container= (ContainerTerminal) inventorySlots;
     }
 
-    public void onDeltaSyncReceived(ContainerTerminal container, Map<ITransferable, Long> changes) {
-        for (Map.Entry<ITransferable, Long> change : changes.entrySet()) {
+    public void onDeltaSyncReceived(List<TransferableStack> changes) {
+        for (TransferableStack changedStack : changes) {
             boolean found = false;
 
-            // 1. 在本地缓存中寻找对应的物品
             Iterator<TransferableStack> iterator = container.clientNetworkItems.iterator();
             while (iterator.hasNext()){
                 TransferableStack tStack = iterator.next();
-                ItemStack currentItemStack = tStack.type.describe().getItemStack();
-                if (currentItemStack.equals(change.getKey().describe().getItemStack())) {
+                ITransferable currentItemStack = tStack.type;
+                if (currentItemStack.equals(changedStack.type)) {
                     found = true;
-                    if (change.getValue() <= 0) iterator.remove();
-                    else tStack.amount = change.getValue();
+                    if (changedStack.amount <= 0) iterator.remove();
+                    else tStack.amount = changedStack.amount;
 
                     break;
                 }
             }
 
-            if (!found && change.getValue() > 0) {
-                container.clientNetworkItems.add(new TransferableStack(change));
+            if (!found && changedStack.amount > 0) {
+                container.clientNetworkItems.add(changedStack);
             }
         }
 
         container.clientNetworkItems.sort(Comparator.comparing(is->is.type.describe().getItemStack().getDisplayName()));
 
-        // 4. 通知 Container 刷新当前的 54 个虚拟槽位
-        // 假设 GuiTerminal 里有一个静态或实例变量记录了当前的 scrollPosition
-        container.updateScroll(this.scrollPosition);
+        container.updateScroll(scrollPosition);
     }
 
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
         int wheel = Mouse.getEventDWheel();
-        if (wheel != 0) {
-            int totalRows = (int) Math.ceil((double) container.clientNetworkItems.size() / 9.0);
-            float scrollStep = 1.0F / Math.max(1, totalRows - 6);
+        if (wheel == 0) return;
 
-            if (wheel > 0) scrollPosition -= scrollStep;
-            if (wheel < 0) scrollPosition += scrollStep;
+        if (wheel > 0) scrollPosition -= 1;
+        if (wheel < 0) scrollPosition += 1;
 
-            scrollPosition = MathHelper.clamp_float(scrollPosition, 0.0F, 1.0F);
+        int totalRows = (int) Math.ceil((double) container.clientNetworkItems.size() / 9.0);
+        int maxOffset = Math.max(0, totalRows - container.row);
 
-            // 每次滚动，通知 Container 更新虚拟槽位的内容（NEI会自动读取这些新槽位）
-            this.container.updateScroll(scrollPosition);
-        }
+        scrollPosition = MathHelper.clamp_int(scrollPosition, 0, maxOffset);
+
+        this.container.updateScroll(scrollPosition);
     }
 
     @Override
@@ -91,10 +87,39 @@ public class GuiTerminal extends kGuiContainerBase {
         int ContainerX = (width - xSize) / 2;
         int ContainerY = (height - ySize) / 2;
         GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glColor4d(0.5,0.5,0.5,0.5);
         util.drawTexturedModalRect(ContainerX,30,0,0,0,xSize, (container.row + 5)*18 + 16);
+
+
+        GL11.glColor4d(0.5,0.5,0.5,0.9);
+        float totalRows = (float) Math.ceil( container.clientNetworkItems.size() *1F / 9.0F);
+
+        float percent = container.row / totalRows;
+        int totalLength = ((container.row)*18 + 16);
+        if(percent < 1.0F) util.drawTexturedModalRect(ContainerX + xSize - 2, (int) (30 + (scrollPosition / totalRows)* totalLength ),0,0,0,2, (int) Math.max(1,(percent * totalLength)));
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        drawStackAmount();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+    }
+
+    protected void drawStackAmount(){
+        int index = scrollPosition * 9;
+        int containerX = (width - xSize) / 2;
+        int containerY = (height - ySize) / 2;
+        for (int i = 0; i < container.row; ++i) for (int j = 0; j < 9; ++j) {
+            if (index >= container.clientNetworkItems.size()) return;
+            String str = String.valueOf(container.clientNetworkItems.get(index).amount);
+            fontRendererObj.drawString(str, 24 + j * 18 - fontRendererObj.getStringWidth(str), 46 - containerY + i * 18, 0xffffff);
+            index++;
+        }
     }
 
     @Override
@@ -110,10 +135,8 @@ public class GuiTerminal extends kGuiContainerBase {
     public static class ContainerTerminal extends Container {
         int row;
         int containerY;
-        // 虚拟物品栏，专供这 54 个槽位显示使用
         private final InventoryBasic virtualInv ;
         InventoryPlayer aInventoryPlayer;
-        // 客户端缓存的所有网络物品列表（按名称或数量排序好）
         public List<TransferableStack> clientNetworkItems = new ArrayList<>();
 
         public ContainerTerminal(InventoryPlayer aInventoryPlayer) {
@@ -131,26 +154,20 @@ public class GuiTerminal extends kGuiContainerBase {
         public void addSlots(){
             bindPlayerInventory(aInventoryPlayer, row*18 + 54 - containerY);
 
-            for (int i = 0; i < row; ++i) {
-                for (int j = 0; j < 9; ++j) {
-                    this.addSlotToContainer(new SlotVirtual(virtualInv, j + i * 9, 8 + j * 18,  36 - containerY + i * 18));
-                }
+            for (int i = 0; i < row; ++i) for (int j = 0; j < 9; ++j) {
+                this.addSlotToContainer(new SlotVirtual(virtualInv, j + i * 9, 8 + j * 18,  36 - containerY + i * 18));
             }
-
         }
-        // 核心：客户端根据滚动条位置，动态刷新 54 个槽位的内容
-        public void updateScroll(float scrollPosition) {
-            int totalRows = (int) Math.ceil((double) clientNetworkItems.size() / 9.0);
-            int maxOffset = totalRows - row;
-            if (maxOffset < 0) maxOffset = 0;
 
-            int rowOffset = (int) (maxOffset * scrollPosition);
-
-            clientNetworkItems.add(new StringTestTransferable("Test").make(12));
+        public void updateScroll(int scrollPosition) {
+            clientNetworkItems.add(new StringTestTransferable("Test").make((long) (new Random().nextFloat()*64)));
             for (int i = 0; i < row*9; i++) {
-                int itemIndex = (rowOffset * 9) + i;
+
+                int itemIndex = (scrollPosition * 9) + i;
                 if (itemIndex < clientNetworkItems.size()) {
-                    virtualInv.setInventorySlotContents(i, clientNetworkItems.get(itemIndex).type.describe().getItemStack());
+                    ItemStack stack = clientNetworkItems.get(itemIndex).type.describe().getItemStack();
+                    stack.stackSize = 1;
+                    virtualInv.setInventorySlotContents(i, stack);
                 } else {
                     virtualInv.setInventorySlotContents(i, null);
                 }
@@ -159,17 +176,15 @@ public class GuiTerminal extends kGuiContainerBase {
 
         @Override
         public ItemStack slotClick(int slotId, int dragType, int clickTypeIn, EntityPlayer player) {
-            // 拦截虚拟槽位的原版点击，改为发送自定义封包
-            if (slotId >= 36) {
-                if (player.worldObj.isRemote) { // 仅限客户端
-                    ItemStack clicked = virtualInv.getStackInSlot(slotId);
-                    if (clicked != null) {
-                        // TODO: 发送 PacketExtractItem 到服务端
-                    }
+            if (slotId < 36) return super.slotClick(slotId, dragType, clickTypeIn, player);
+
+            if (player.worldObj.isRemote) {
+                ItemStack clicked = virtualInv.getStackInSlot(slotId);
+                if (clicked != null) {
+                    // TODO: 发送 PacketExtractItem 到服务端
                 }
-                return null; // 阻止原版逻辑
             }
-            return super.slotClick(slotId, dragType, clickTypeIn, player);
+            return null;
         }
 
         @Override
@@ -179,12 +194,9 @@ public class GuiTerminal extends kGuiContainerBase {
 
         protected void bindPlayerInventory(InventoryPlayer aInventoryPlayer, int aOffset) {
             int i;
-            for(i = 0; i < 3; ++i) {
-                for(int j = 0; j < 9; ++j) {
-                    this.addSlotToContainer(new Slot(aInventoryPlayer, j + i * 9 + 9, 8 + j * 18, aOffset + i * 18));
-                }
+            for(i = 0; i < 3; ++i) for(int j = 0; j < 9; ++j) {
+                this.addSlotToContainer(new Slot(aInventoryPlayer, j + i * 9 + 9, 8 + j * 18, aOffset + i * 18));
             }
-
             for(i = 0; i < 9; ++i) {
                 this.addSlotToContainer(new Slot(aInventoryPlayer, i, 8 + i * 18, aOffset + 58));
             }

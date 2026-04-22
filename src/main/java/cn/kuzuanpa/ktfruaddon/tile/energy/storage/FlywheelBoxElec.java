@@ -43,8 +43,9 @@ public class FlywheelBoxElec extends FlywheelBox implements IMultiTileEntity.IMT
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass) && isServerSide() && aChatReturn!=null) {
-            aChatReturn.add(LH.get(I18nHandler.STORED_ENERGY)+": "+mEnergyStored);
-            aChatReturn.add(LH.get(I18nHandler.CAPACITY)+": "+mCapacity);
+            long amount = (long) Math.floor(mMaxAmpere*mEnergyStored*1F/mCapacity)+(mEnergyStored == mCapacity?0:1);
+            long outputAmpere = (mMode == 0 ? amount : Math.min(mMode, amount));
+            aChatReturn.add(LH.get(I18nHandler.OUTPUTTING)+": "+mCurrentOutput + LH.Chat.GREEN+"RU/A "+ LH.Chat.CYAN +"* "+outputAmpere+"A/t");
         }
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }

@@ -91,7 +91,7 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_unimeter) && isServerSide() && aChatReturn!=null) {
-            aChatReturn.add(LH.Chat.CYAN + LH.get(LH.ENERGY_CONTAINED)+ ": "  + LH.Chat.WHITE + mEnergyStored + " / " + mCapacity + " EU");
+            aChatReturn.add(LH.Chat.CYAN + LH.get(LH.ENERGY_CONTAINED)+ ": "  + LH.Chat.WHITE + mEnergyStored + " / " + mCapacity + " "+mEnergyType.getLocalisedChatNameShort());
             IMeterDetectable.sendReceiveEmitMessage(receivedEnergyLast,mEnergyTypeOut,mOutputVoltageLast,mOutputAmpereLast,aChatReturn);
             return 1;
         }
@@ -106,7 +106,6 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (!aIsServerSide) return;
-        if(mEnergyStored > mCapacity) mEnergyStored=mCapacity;
         mActive = (mEnergyStored > mOutput);
         mOutputVoltageLast = 0;
         mOutputAmpereLast=0;
@@ -145,9 +144,6 @@ public abstract class MultiBatteryBase extends TileEntityBase10MultiBlockBase im
         if (aDoInject) {
             mEnergyStored += receiveAmount * aSize;
             this.receivedEnergy.add(new MeterData(aEnergyType, aSize, receiveAmount));
-            if(mEnergyStored>mCapacity){
-                mEnergyStored=mCapacity;
-            }
         }
         return receiveAmount;
     }

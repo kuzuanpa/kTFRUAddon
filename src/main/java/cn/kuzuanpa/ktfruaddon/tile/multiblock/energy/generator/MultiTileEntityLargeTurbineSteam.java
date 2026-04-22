@@ -15,6 +15,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -38,7 +39,9 @@ import static gregapi.data.CS.*;
 
 public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbine {
 	public FluidTankGT[] mTanks = new FluidTankGT[] {new FluidTankGT(), new FluidTankGT()};
-	public long mSteamCounter = 0, mEnergyProducedNextTick = 0; 
+	public long mSteamCounter = 0, mEnergyProducedNextTick = 0;
+	public IWailaInfoProvider tankInfoInput = new InfoTank(LH.get(I18nHandler.INPUT), "", mTanks[0]);
+	public IWailaInfoProvider tankInfoOutput = new InfoTank(LH.get(I18nHandler.OUTPUT), "", mTanks[1]);
 	public static final int STEAM_PER_WATER = 170;
 	
 	@Override
@@ -124,10 +127,20 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 	@Override protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {return mTanks[1];}
 	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
 
+
+	@Override public boolean getStateRunningPossible() {return super.getStateRunningPossible() && !mTanks[0].isEmpty();}
+
 	@Override
 	public boolean isItemValidForSlot(int aSlot, ItemStack aStack) {
 		return super.isItemValidForSlot(aSlot, aStack) && (prefixList.turbineLargeSteam.contains(aStack) || prefixList.turbineLargeSteamChecked.contains(aStack));
 	}
 
+	@Override
+	public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+		super.getWailaInfos(current);
+		current.add(tankInfoInput);
+		current.add(tankInfoOutput);
+		return current;
+	}
 	@Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.turbine.steam";}
 }

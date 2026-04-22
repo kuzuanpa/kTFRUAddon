@@ -22,30 +22,29 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class SingleItemStack {
+public class ItemType {
     public @NotNull final Item item;
     public final short meta;
     public @Nullable final NBTTagCompound nbt;
-    public SingleItemStack(@NotNull Item item, short meta, @Nullable NBTTagCompound nbt){
+    public ItemType(@NotNull Item item, short meta, @Nullable NBTTagCompound nbt){
         this.item = item;
         this.meta = meta;
         this.nbt = nbt;
     }
 
-    public SingleItemStack(@NotNull Item item, short meta){
+    public ItemType(@NotNull Item item, short meta){
         this.item = item;
         this.meta = meta;
         this.nbt = null;
     }
 
-    public SingleItemStack(@NotNull Item item){
+    public ItemType(@NotNull Item item){
         this.item = item;
         this.meta = 0;
         this.nbt = null;
     }
 
-
-    public SingleItemStack(@NotNull ItemStack stack){
+    public ItemType(@NotNull ItemStack stack){
         this.item = stack.getItem();
         this.meta = (short) stack.getItemDamage();
         this.nbt = stack.getTagCompound();
@@ -53,12 +52,17 @@ public class SingleItemStack {
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SingleItemStack)) return false;
+        if (!(o instanceof ItemType)) return false;
 
-        SingleItemStack that = (SingleItemStack) o;
+        ItemType that = (ItemType) o;
         return meta == that.meta && item.equals(that.item) && Objects.equals(nbt, that.nbt);
     }
 
+    public ItemStack getStack(){
+        ItemStack stack = new ItemStack(item, 1, meta);
+        stack.setTagCompound(nbt);
+        return stack;
+    }
     @Override
     public int hashCode() {
         int result = item.hashCode();

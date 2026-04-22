@@ -26,6 +26,7 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import gregapi.tileentity.energy.ITileEntityEnergy;
+import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.UT;
 import net.minecraft.block.Block;
@@ -39,12 +40,13 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class TransformerPart extends TileEntityBase09FacingSingle implements IMultiBlockPart, ITileEntityEnergy {
+public class TransformerPart extends TileEntityBase09FacingSingle implements IMultiBlockPart, ITileEntityEnergy, ITileEntitySwitchableOnOff {
     public long mEnergy = 0, mOutputVoltage = 1, mOutputAmpere = 1;
 
     public TagData mEnergyType = TD.Energy.EU;
     public IIconContainer sTextureCommon, sOverlayFront;
 
+    public boolean stopped = false;
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -78,7 +80,7 @@ public class TransformerPart extends TileEntityBase09FacingSingle implements IMu
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if (aIsServerSide) {
+        if (aIsServerSide && !stopped) {
             long ampere = Math.min(mOutputAmpere, mEnergy / mOutputVoltage);
             if(ampere != 0)mEnergy -= ITileEntityEnergy.Util.emitEnergyToNetwork(mEnergyType, mOutputVoltage, ampere, this) * mOutputVoltage;
         }
@@ -103,7 +105,7 @@ public class TransformerPart extends TileEntityBase09FacingSingle implements IMu
 
     @Override
     public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
-        if(aSide != SIDE_INSIDE || !aEnergyType.equals(mEnergyType))return 0;
+        if(stopped || aSide != SIDE_INSIDE || !aEnergyType.equals(mEnergyType))return 0;
         long ampereConsumed = (long) Math.min(aAmount, Math.ceil((mOutputAmpere * mOutputVoltage - mEnergy) * 1F / aSize));
         mEnergy += ampereConsumed * aSize;
         return ampereConsumed;
@@ -132,6 +134,23 @@ public class TransformerPart extends TileEntityBase09FacingSingle implements IMu
         notifyTarget();
         return super.breakBlock();
     }
+
+    @Override
+    public boolean allowCovers(byte aSide) {
+        return true;
+    }
+
+    @Override
+    public boolean getStateOnOff() {
+        return stopped;
+    }
+
+    @Override
+    public boolean setStateOnOff(boolean b) {
+        this.stopped=b;
+        return stopped;
+    }
+
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         super.addToolTips(aList, aStack, aF3_H);

@@ -93,7 +93,7 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 		if (aNBT.hasKey("ktfru.use.kRegistry")) kRegistry = true;
 		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(mRateMax*16);
 		mInputTank.readFromNBT(aNBT, NBT_TANK).setCapacity(mRateMax*4);
-		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("BA")
+		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AB")
 				.fixedLayer('A',
 						"AAA",
 						"AAA"
@@ -175,8 +175,8 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 
 	public void doConversion(long aTimer) {
 		for (FluidTankGT tank : mTanksOutput) if (tank.has()) {
-			ChunkCoordinates pos = getOffset(OPOS[mFacing], 4);
-			pos.posY-=1;
+			ChunkCoordinates pos = getOffset(OPOS[mFacing], 3);
+			pos.posY+=1;
 			FL.move(tank, WD.te(worldObj,pos,mFacing,false));
 			if (FL.gas(tank) && !WD.hasCollide(worldObj, pos)) tank.setEmpty();
 		}

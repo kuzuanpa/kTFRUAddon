@@ -15,5 +15,5 @@
 package cn.kuzuanpa.ktfruaddon.api.research;
 
 public enum ResearchGameTypes {
-    FillPack,ColorIdentify
+    FillPack, Identify,CurrentControl
 }

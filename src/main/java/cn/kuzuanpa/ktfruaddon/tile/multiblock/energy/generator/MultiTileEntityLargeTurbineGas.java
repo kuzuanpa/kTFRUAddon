@@ -15,8 +15,11 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
-import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
+import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.FM;
@@ -24,12 +27,11 @@ import gregapi.data.LH;
 import gregapi.data.LH.Chat;
 import gregapi.fluid.FluidTankGT;
 import gregapi.oredict.OreDictMaterial;
-import gregapi.recipes.Recipe;
 import gregapi.recipes.Recipe.RecipeMap;
 import gregapi.util.ST;
-import gregapi.util.UT;
 import gregapi.util.WD;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,25 +43,26 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine {
-	public FluidTankGT mInputTank = new FluidTankGT(), mTanksOutput[] = new FluidTankGT[] {new FluidTankGT(), new FluidTankGT(), new FluidTankGT()};
-	public FluidTankGT[] mTanks = new FluidTankGT[] {mInputTank, mTanksOutput[0], mTanksOutput[1], mTanksOutput[2]};
-	public RecipeMap mRecipes = FM.Gas;
-	public Recipe mLastRecipe = null;
+public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine implements IKortexHandler {
+	protected KortexWorker kortex;
+	public IWailaInfoProvider tankInfoInput = new InfoTank(LH.get(I18nHandler.INPUT), "", ZL_FT);
+	public IWailaInfoProvider tankInfoOutput = new InfoTank(LH.get(I18nHandler.OUTPUT), "", ZL_FT);
 
 	@Override
 	public void readFromNBT2(NBTTagCompound aNBT) {
 		super.readFromNBT2(aNBT);
+		RecipeMap mRecipes = FM.Gas;
 		if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
-		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(mRateMax*16);
-		mInputTank.readFromNBT(aNBT, NBT_TANK).setCapacity(mRateMax*4);
+		kortex = new KortexWorker(this, 0, mRecipes, true).setTankSize(mRateMax*4,mRateMax*16);
+		tankInfoInput = new InfoTank(LH.get(I18nHandler.INPUT), "", kortex.fluidInputs);
+		tankInfoOutput = new InfoTank(LH.get(I18nHandler.OUTPUT), "", kortex.fluidOutputs);
+		kortex.readFromNBT(aNBT);
 	}
-	
+
 	@Override
 	public void writeToNBT2(NBTTagCompound aNBT) {
 		super.writeToNBT2(aNBT);
-		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].writeToNBT(aNBT, NBT_TANK+"."+i);
-		mInputTank.writeToNBT(aNBT, NBT_TANK);
+		if(kortex!=null) kortex.writeToNBT(aNBT);
 	}
 
 	@Override
@@ -88,7 +91,18 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 		super.addToolTips(aList, aStack, aF3_H);
 	}
 
-	
+	public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+		if (!isServerSide())return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+
+		ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+		if(equippedItem==null)return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+
+		kortex.onPlayerRightClick(aPlayer);
+
+		openGUI(aPlayer, aSide);
+		return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+	}
+
 	@Override
 	public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
 		long rReturn = super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
@@ -97,58 +111,28 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 		if (isClientSide()) return 0;
 		
 		if (aTool.equals(TOOL_plunger)) {
-			if (mTanksOutput[0].has()) return GarbageGT.trash(mTanksOutput[0]);
-			if (mTanksOutput[1].has()) return GarbageGT.trash(mTanksOutput[1]);
-			if (mTanksOutput[2].has()) return GarbageGT.trash(mTanksOutput[2]);
-			return GarbageGT.trash(mInputTank);
+			kortex.resetStatus();
+			return 1;
 		}
-		
 		return 0;
 	}
 	
 	@Override
 	public void doConversion(long aTimer) {
-		for (FluidTankGT tank : mTanksOutput) if (tank.has()) {
-			ChunkCoordinates pos = getOffset(OPOS[mFacing], 4);
-			pos.posY-=1;
-			FL.move(tank, WD.te(worldObj,pos,mFacing,false));
-			if (FL.gas(tank) && !WD.hasCollide(worldObj, pos)) tank.setEmpty();
+		if (!mForcedStopped){
+			kortex.mEnergyCapacity = (long) (mOverclock? mRate*mTurbineEfficiency : mRate*Math.min(mTurbineEfficiency,2)) * 2;
+			kortex.run();
 		}
-		if (!mForcedStopped && mInputTank.has() && slotHas(0) && mTanksOutput[0].underHalf() && mTanksOutput[1].underHalf() && mTanksOutput[2].underHalf()) {
-			Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, F, Integer.MAX_VALUE, NI, mInputTank.AS_ARRAY, ZL_IS);
-			if (tRecipe != null) {
-				if(isTurbineAboutToBreak&&getRandomNumber(10)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
-				mLastRecipe = tRecipe;
-				if (tRecipe.mEUt < 0 && tRecipe.mDuration > 0) {
-					int tMax = UT.Code.bindInt(UT.Code.divup((long) ((mOverclock? mRate*mTurbineEfficiency : mRate*Math.min(mTurbineEfficiency,2)) - mEnergyStored), -tRecipe.mEUt * tRecipe.mDuration));
-					int tParallel = tRecipe.isRecipeInputEqual(tMax, mInputTank.AS_ARRAY, ZL_IS);
-					if (tParallel < tMax) mInputTank.setEmpty();
-					if (tParallel > 0) {
-						mEnergyStored -= tParallel * tRecipe.mEUt * tRecipe.mDuration;
-						damageTurbine(tParallel * tRecipe.mEUt * tRecipe.mDuration,TURBINE_GAS);
-						for (int i = 0; i < tRecipe.mFluidOutputs.length && i < mTanksOutput.length; i++) {
-							if (!mTanksOutput[i].fillAll(tRecipe.mFluidOutputs[i], tParallel)) {
-								mEnergyStored = 0;
-							}
-						}
-						return;
-					}
-				}
-			}
-		}
-
-		if (mEnergyStored < 0) mEnergyStored = 0;
 	}
 	
-	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && mRecipes.containsInput(aFluidToFill, this, NI) ? mInputTank : null;}
-	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
-	
+	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && kortex.recipeMap.containsInput(aFluidToFill, this, NI) ? kortex.fluidInputs[0] : null;}
+
 	@Override
 	protected IFluidTank getFluidTankDrainable2(byte aSide, FluidStack aFluidToDrain) {
 		if (aFluidToDrain == null) {
-			for (int i=0,j; i < mTanksOutput.length; i++) if (mTanksOutput[j = ((int)(SERVER_TIME/20)+i) % mTanksOutput.length].has()) return mTanksOutput[j];
+			for (int i=0,j; i < kortex.fluidOutputs.length; i++) if (kortex.fluidOutputs[j = ((int)(SERVER_TIME/20)+i) % kortex.fluidOutputs.length].has()) return kortex.fluidOutputs[j];
 		} else {
-			for (int i = 0; i < mTanksOutput.length; i++) if (mTanksOutput[i].contains(aFluidToDrain)) return mTanksOutput[i];
+			for (int i = 0; i < kortex.fluidOutputs.length; i++) if (kortex.fluidOutputs[i].contains(aFluidToDrain)) return kortex.fluidOutputs[i];
 		}
 		return null;
 	}
@@ -157,7 +141,35 @@ public class MultiTileEntityLargeTurbineGas extends MultiTileEntityLargeTurbine 
 	public boolean isItemValidForSlot(int aSlot, ItemStack aStack) {
 		return super.isItemValidForSlot(aSlot, aStack) && (prefixList.turbineLargeGas.contains(aStack) || prefixList.turbineLargeGasChecked.contains(aStack));
 	}
+	@Override public boolean getStateRunningPossible() {return super.getStateRunningPossible() && !kortex.fluidInputs[0].isEmpty();}
 
 	@Override public String getTileEntityName() {return "ktfru.multitileentity.multiblock.turbine.gas";}
 
+	@Override
+	public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+		super.getWailaInfos(current);
+		current.add(tankInfoInput);
+		current.add(tankInfoOutput);
+		return current;
+	}
+
+	@Override
+	public void onRecipeFinish(int kortexID, long eut,long duration, long parallel) {
+		damageTurbine(parallel * eut * duration,TURBINE_GAS);
+	}
+
+	@Override
+	public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {
+		for (FluidTankGT tank : fluidTanks) if (tank.has()) {
+			ChunkCoordinates pos = getOffset(OPOS[mFacing], 4);
+			pos.posY-=1;
+			FL.move(tank, WD.te(worldObj,pos,mFacing,false));
+			if (FL.gas(tank) && !WD.hasCollide(worldObj, pos)) tank.setEmpty();
+		}
+		long capacity = (long) (mOverclock? mRate*mTurbineEfficiency : mRate*Math.min(mTurbineEfficiency,2));
+		long energyExtracted = Math.min(capacity * 2 - mEnergyStored,kortex.mEnergyStored);
+		if(energyExtracted <= 0)return;
+		mEnergyStored += energyExtracted;
+		kortex.mEnergyStored -= energyExtracted;
+	}
 }

@@ -16,7 +16,6 @@
 package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +29,7 @@ import static net.minecraftforge.common.util.ForgeDirection.VALID_DIRECTIONS;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TESRWaterMill extends TileEntitySpecialRenderer {
-    /**specialRend come from Create under MIT license**/
+    /**this model is copied from Create under MIT license**/
     IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation("ktfruaddon:models/water_wheel.obj"));
     ResourceLocation texture = new ResourceLocation("ktfruaddon:textures/specialRend/TFCBrichPlank.png");
 
@@ -49,15 +48,12 @@ public class TESRWaterMill extends TileEntitySpecialRenderer {
         if (! (til instanceof WaterMill)) return;
         WaterMill tile = (WaterMill)til;
         GL11.glPushMatrix();
-        //Initial setup
-        int bright = tile.getWorldObj()==null? 15728656 : tile.getWorldObj().getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord,0);
-        int brightX = bright % 65536;
-        int brightY = bright / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, brightX, brightY);
-
+        glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Rotate and move the specialRend into position
+
+        //Rotate and move the model into position
         GL11.glTranslated(x, y, z );
         GL11.glTranslatef(0.5f, 0.5f, 0.5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
