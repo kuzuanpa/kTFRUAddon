@@ -3,7 +3,9 @@ package cn.kuzuanpa.ktfruaddon.DreamPlanner.transmittable;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface ITransferable {
-    TransferableStack make(long amount);
+    default TransferableStack make(long amount) {
+        return new TransferableStack(this, amount);
+    }
     static NBTTagCompound save(ITransferable transferable){
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("typeID", transferable.typeID());
