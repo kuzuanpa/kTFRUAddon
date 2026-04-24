@@ -63,12 +63,7 @@ public class LayerStructure implements IStringBaseStructure {
         layers.put(symbol, layer);
         return this;
     }
-    /**
-     * 绑定符号与方块条件
-     * @param symbol 结构模式中的字符
-     * @param predicate 匹配条件
-     * @return 当前对象
-     */
+
     public LayerStructure where(char symbol, IStructurePredicate predicate) {
         predicates.put(symbol, predicate);
         return this;

@@ -51,7 +51,7 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class MaskAlignerUVPlus extends TileEntityBaseControlledMachine implements SpecialPartPredicate.IReceiveSpecialPart {
-
+    public float clientX,clientY;
     ChunkCoordinates lastFailedPos=null;
     static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
             .fixedLayer('A',

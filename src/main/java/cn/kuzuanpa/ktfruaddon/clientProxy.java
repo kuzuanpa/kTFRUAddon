@@ -27,6 +27,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.ElectromagnetCrucible;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.MaskAlignerUVPlus;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidMiner;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.DummyCrucibleScreen;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
@@ -70,6 +71,7 @@ public class clientProxy extends commonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(WaterMill.class, new TESRWaterMill());
         ClientRegistry.bindTileEntitySpecialRenderer(TFCPresser.class, new TESRTFCPresser());
         ClientRegistry.bindTileEntitySpecialRenderer(CNCMachine3.class, new TESRCNCMachine3());
+        ClientRegistry.bindTileEntitySpecialRenderer(MaskAlignerUVPlus.class, new TESRMaskAlignerUVP());
         ClientRegistry.bindTileEntitySpecialRenderer(LiquidBattery.class, new TESRLiquidBattery());
         ClientRegistry.bindTileEntitySpecialRenderer(ElectromagnetCrucible.class, new TESRElectromagnetCrucible());
         ClientRegistry.bindTileEntitySpecialRenderer(AsteroidMiner.class, new TESRAsteroidMiner());
