@@ -100,4 +100,18 @@ public class LayerStructure implements IStringBaseStructure {
         char firstLayer = layerSequence.charAt(0);
         return new ChunkCoordinates(layers.get(firstLayer).getSize().posX, y, layers.get(firstLayer).getSize().posZ);
     }
+
+    @Override
+    public Map<Character, String> getExtraDataDesc() {
+        Map<Character, String> map = new HashMap<>();
+        layers.forEach((id,layer)-> {
+            if(layer.getExtraDataDesc() != null)map.put(id,layer.getExtraDataDesc());
+        });
+        return map;
+    }
+
+    @Override
+    public void setExtraData(char id, String data) {
+        layers.get(id).setExtraData(data);
+    }
 }

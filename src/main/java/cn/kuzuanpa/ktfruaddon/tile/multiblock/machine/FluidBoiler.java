@@ -22,6 +22,8 @@ import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.FixedLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
@@ -59,6 +61,7 @@ import static gregapi.data.CS.*;
 
 public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, IFluidHandler, IKortexHandler, IWailaTile, ITileEntitySwitchableOnOff {
     public final short machineX = 5, machineY = 3, machineZ = 3;
+    public int structureTargetLayer = 8;
     public long mRate = 16;
     public boolean mForcedStopped = false;
     public KortexWorker kortex;
@@ -120,37 +123,28 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
 
     //Structure
     ChunkCoordinates lastFailedPos=null;
-    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Z).layerRule("AXC")
             .fixedLayer('A',
-                    "AAAAA",
-                    "AAAAA",
-                    "AAAAA",
-                    "BBBBB",
-                    "BBBBB",
-                    "NBBBB"
+                    "ACCCA",
+                    "ACCCA",
+                    "ACCCA",
+                    "BCCCB"
             )
-            .fixedLayer('B',
-                    "CCCCC",
-                    "CCCCC",
-                    "CCCCC",
-                    "BBDDD",
-                    "BBDDD",
-                    "BBDDD"
-            ).fixedLayer('C',
-                    "     ",
-                    "     ",
-                    "     ",
-                    "EEDDD",
-                    "EEDDD",
-                    "EEDDD"
+            .layer('X', new ExpandableLayer(8).variation(new FixedLayer().blockRule(
+                    "ACCCA",
+                    "BCCCB",
+                    "ACCCA",
+                    "BCCCB"
+            ))).fixedLayer('C',
+                    "ACCCA",
+                    "BCCCB",
+                    "BCCCB",
+                    "BCCCB"
             )
-            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006, MultiTileEntityMultiBlockPart.ONLY_IN)))
-            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18003, MultiTileEntityMultiBlockPart.ONLY_IN)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18106, MultiTileEntityMultiBlockPart.NOTHING)))
-            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18100)))
-            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18108)))
-            .where('N', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18003, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
-            .setOffset(0,0,0) ;
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31052, MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31053, MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31054, MultiTileEntityMultiBlockPart.NOTHING)))
+            .setOffset(-2,0,0) ;
 
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -158,6 +152,19 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         return lastFailedPos==null;
+    }
+
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if(aTool.equals(TOOL_screwdriver) && aPlayer != null){
+
+            if(aPlayer.isSneaking())structureTargetLayer --;
+            else structureTargetLayer ++;
+            structure.getExtraDataDesc().forEach((k,v)->aChatReturn.add(LH.get(v)+ ": "+structureTargetLayer));
+
+            structure.setExtraData('X', String.valueOf(structureTargetLayer));
+        }
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
 
     static {
@@ -201,6 +208,7 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
 
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
         if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW+LH.get("ktfru.api.structure.has_extra_data")));
             structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }

@@ -22,4 +22,6 @@ public interface IStructureLayer {
     public int validate(StructureContext ctx, StructureContext.Axis axis, int baseX, int baseY, int baseZ);
     public void setStructure(IStringBaseStructure structure);
     public ChunkCoordinates getSize();
+    default void setExtraData(String data){}
+    default String getExtraDataDesc(){return null;};
 }
