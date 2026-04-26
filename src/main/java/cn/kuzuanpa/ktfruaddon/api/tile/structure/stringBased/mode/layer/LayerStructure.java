@@ -32,8 +32,8 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 public class LayerStructure implements IStringBaseStructure {
     private final StructureContext.Axis expandAxis;
     private String layerSequence;
-    private final Map<Character, IStructureLayer> layers = new HashMap<>();
-    private final Map<Character, IStructurePredicate> predicates = new HashMap<>();
+    public final Map<Character, IStructureLayer> layers = new HashMap<>();
+    public final Map<Character, IStructurePredicate> predicates = new HashMap<>();
     public ChunkCoordinates controllerOffsetPos = null;
 
     public LayerStructure(StructureContext.Axis expandAxis) {
@@ -79,8 +79,8 @@ public class LayerStructure implements IStringBaseStructure {
             if(layer == null) throw new IllegalArgumentException("Null Layer!");
 
             int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
-            if(step == 0){
-                kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(ctx.failedPos, 0xff0000, 4000,1.0f), new NetworkRegistry.TargetPoint(ctx.world.provider.dimensionId, ctx.failedPos.posX, ctx.failedPos.posY, ctx.failedPos.posZ, 80));
+            if(step == 0) {
+                kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(ctx.failedPos, 0xff0000, 4000, 1.0f), new NetworkRegistry.TargetPoint(ctx.world.provider.dimensionId, ctx.failedPos.posX, ctx.failedPos.posY, ctx.failedPos.posZ, 80));
                 return ctx.failedPos;
             }
         }

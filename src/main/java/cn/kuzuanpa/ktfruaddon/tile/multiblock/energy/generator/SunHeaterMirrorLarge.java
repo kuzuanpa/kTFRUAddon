@@ -31,6 +31,10 @@ import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
@@ -89,8 +93,6 @@ public class SunHeaterMirrorLarge extends TileEntityBase10MultiBlockBase impleme
         }
     }
 
-    @Override
-    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {return null;}
     public boolean[] getValidSides() {return SIDES_BACK;}
     @Override
     public void onTick2(long aTimer, boolean isServerside){
@@ -250,6 +252,12 @@ public class SunHeaterMirrorLarge extends TileEntityBase10MultiBlockBase impleme
         return true;
     }
 
+    public static IIconContainer sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/multiblockmains/transformer/common"),
+            sOverlayFront= new Textures.BlockIcons.CustomIcon("machines/multiblockmains/transformer/front");
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureCommon,mRGBa), aSide==mFacing? BlockTextureDefault.get(sOverlayFront) : null);
+    }
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
