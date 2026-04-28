@@ -103,6 +103,7 @@ public class tileEntityInit0 {
         aMat = MT.StainlessSteel;      kRegistry0.add("Test User"                                        , "ktfruaddon: Energy",  1103, 1304, TestUser.class                 , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Network Wire"                                     , "ktfruaddon: Energy",  1104, 1304, NetworkCable.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Tile Dream Brain"                                 , "ktfruaddon: Energy",  1105, 1304, TileDreamBrain.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        aMat = MT.StainlessSteel;      kRegistry0.add("Tile Research Game Identify"                      , "ktfruaddon: Energy",  1106, 1304, ResearchTableIdentify.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
 
 
 

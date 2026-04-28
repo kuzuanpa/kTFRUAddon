@@ -1,56 +1,98 @@
 /*
- * This class was created by <kuzuanpa>. It is distributed as
- * part of the kTFRUAddon Mod. Get the Source Code in github:
- * https://github.com/kuzuanpa/kTFRUAddon
- *
- * kTFRUAddon is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * kTFRUAddon is Open Source and distributed under the
- * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
+ * This class was created by <CodeGeeX>. It is distributed as
+ * part of the kTFRUAddon Mod.
  */
 
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
-import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientFillThePack;
-import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonFillThePack;
+import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientIdentify;
+import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonIdentify;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
+import gregapi.data.CS;
+import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.io.*;
 import java.util.List;
-import java.util.Queue;
-import java.util.*;
+import java.util.Random;
 
 public class ResearchTableIdentify extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
-    public ColorGame theGame;
-    public ColorGame theGameClient;
-    public ResearchTableIdentify(){
-        theGame = new ColorGame((byte) 6, (byte) 4);
-        theGame.initializeGame();
+
+    // 游戏状态
+    public byte size = 5; // 默认 5x5
+    public int targetIndex = -1; // 目标方块索引
+    public int targetColor = 0xFFFFFF; // 目标颜色 (RGB)
+    public int decoyColor = 0xFFFFFF; // 干扰颜色 (RGB)
+    public int level = 1; // 当前关卡
+    public float scores = 0; // 玩家得分
+    public boolean gameActive = false, needSync = false; // 游戏是否进行中
+
+    private final Random random = new Random();
+
+    @Override
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide()) {
+            if (CS.TOOL_magnifyingglass.equals(aTool)) {
+                aChatReturn.add(LH.get("RESEARCH_TABLE_IDENTIFY_SCORES") + ": " + scores);
+                return 1;
+            }
+            if (CS.TOOL_screwdriver.equals(aTool)) {
+                // 调试：重置游戏
+                resetGame();
+                return 1;
+            }
+        }
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.identify";}
-    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerClientFillThePack(aPlayer.inventory, this, aGUIID);
+
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
+        super.writeToNBT2(aNBT);
+        aNBT.setFloat("scores", scores);
     }
-    @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
-        return new ContainerCommonFillThePack(aPlayer.inventory, this,aGUIID);
+
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        if (aNBT.hasKey("scores")) scores = aNBT.getFloat("scores");
     }
+
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.research.table.identify";
+    }
+
+    @Override
+    public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
+        return new ContainerClientIdentify(aPlayer.inventory, this, aGUIID);
+    }
+
+    @Override
+    public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
+        return new ContainerCommonIdentify(aPlayer.inventory, this, aGUIID);
+    }
+
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArrayLong(aSendAll, theGame.saveToByteArray());
+        return getClientDataPacketByteArrayLong(aSendAll, saveToByteArray());
     }
+
     @Override
     public INetworkHandler getNetworkHandler() {
         return ktfruaddon.kNetworkHandler;
@@ -63,298 +105,154 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
 
     @Override
     public void receiveDataByteArrayLong(IBlockAccess aWorld, int aX, int aY, int aZ, byte[] aData, INetworkHandler aNetworkHandler) {
-        theGameClient = ColorGame.loadFromByteArray(aData);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(aData);
+             DataInputStream dis = new DataInputStream(bis)) {
+
+            // 读取 Tile 方向
+            setDirectionData(dis.readByte());
+
+            // 读取游戏数据
+            size = dis.readByte();
+            targetIndex = dis.readInt();
+            targetColor = dis.readInt();
+            decoyColor = dis.readInt();
+            level = dis.readInt();
+            scores = dis.readFloat();
+            gameActive = dis.readBoolean();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public byte[] saveToByteArray() {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             DataOutputStream dos = new DataOutputStream(bos)) {
+
+            // 写入 Tile 方向
+            dos.writeByte(getDirectionData());
+
+            // 写入游戏数据
+            dos.writeByte(size);
+            dos.writeInt(targetIndex);
+            dos.writeInt(targetColor);
+            dos.writeInt(decoyColor);
+            dos.writeInt(level);
+            dos.writeFloat(scores);
+            dos.writeBoolean(gameActive);
+
+            dos.flush();
+            return bos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
     }
 
     @Override
     public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer) || rng(10)==0;
-    }
-
-    @Override
-    public ITexture getTexture2(Block block, int i, byte b, boolean[] booleans) {
-        return null;
+        boolean result = super.onTickCheck(aTimer) || needSync;
+        needSync = false;
+        return result;
     }
 
     @Override
     public void onContainerButtonClick(int buttonID, byte @Nullable [] data) {
-        if(data == null || data.length == 0)return;
-        if(data[0] == -1)theGame.removeTile(theGame.tiles.get((byte)buttonID));
-        if(data[0] == 1)theGame.placeTile(theGame.tiles.get((byte)buttonID), data[1], data[2]);
+        if (buttonID == -100) {
+            // 重置游戏
+            resetGame();
+            return;
+        }
+
+        if (buttonID == 0) {
+            // 开始游戏/下一关
+            startLevel();
+            return;
+        }
+
+        if (data != null && data.length > 0) {
+            // 处理玩家点击
+            int clickedIndex = data[0] & 0xFF; // 将 byte 转换为无符号 int (0-255)
+
+            if (gameActive && clickedIndex == targetIndex) {
+                // 玩家找到了目标
+                handleSuccess();
+            } else if (gameActive) {
+                // 玩家点错了
+                handleFailure();
+            }
+        }
     }
 
-    public static class ColorGame {
+    private void resetGame() {
+        level = 1;
+        size = 5;
+        gameActive = false;
+        startLevel();
+    }
 
-        private static final int MIN_TILE_SIZE = 2;
-        private static final int MAX_ATTEMPTS = 5;
-        public byte size;
-        public byte tileCount;
-        public HashMap<Byte, PuzzleShape> tiles;
-        public Set<Point> placedPoints;
+    private void startLevel() {
+        size = (byte) Math.min(10, 5 + (level - 1) / 3);
+        int maxDiff = Math.max(1, 36 - level * 2);
 
-        public ColorGame(byte size, byte tileCount) {
-            if (tileCount > size * size) throw new IllegalArgumentException("X 不能超过场地格子总数");
-            this.size = size;
-            this.tileCount = tileCount;
-            this.tiles = new HashMap<>();
-            this.placedPoints = new HashSet<>();
+        targetColor = random.nextInt(0xFFFFFF + 1);
+
+        int r = (targetColor >> 16) & 0xFF;
+        int g = (targetColor >> 8) & 0xFF;
+        int b = targetColor & 0xFF;
+
+        int dr = (random.nextBoolean()? maxDiff : - maxDiff);
+        int dg = (random.nextBoolean()? maxDiff : - maxDiff);
+        int db = (random.nextBoolean()? maxDiff : - maxDiff);
+
+        if(r+dr < 0 || r+dr > 255) r -= dr; else r += dr;
+        if(g+dg < 0 || g+dg > 255) g -= dg; else g += dg;
+        if(b+db < 0 || b+db > 255) b -= db; else b += db;
+
+        decoyColor = (r << 16) | (g << 8) | b;
+
+        // 随机选择目标位置
+        targetIndex = random.nextInt(size * size);
+
+        gameActive = true;
+        needSync = true;
+    }
+
+    private void handleSuccess() {
+        // 计算得分：基础分 + 难度加成
+        float points = (float) (1 + 0.15F*Math.pow(level, 2F));
+        scores += points;
+
+        // 进入下一关
+        level++;
+        startLevel();
+    }
+
+    private void handleFailure() {
+        // 游戏失败，重置
+        resetGame();
+    }
+
+    @Override
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        super.onTick2(aTimer, aIsServerSide);
+        // 如果有分数，可以在这里尝试推进研究进度
+        // 类似于 ResearchTableFillInPack 中的逻辑
+        if (aIsServerSide && scores > 0) {
+            // scores -= tryPromoteCurrentProjectProgress(MiniGameIdentifyTask.class, scores, false);
+            // 注意：你需要创建对应的 MiniGameIdentifyTask 类
         }
-        public byte[] saveToByteArray() {
-            try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(bos)) {
+    }
 
-                // 写入基础信息
-                dos.writeByte(size);        // 场地尺寸
-                dos.writeByte(tileCount);   // 图块总数
+    // Icons
+    public final static IIconContainer
+            sTextureSides = new Textures.BlockIcons.CustomIcon("machines/research/table/identify/base"),
+            sOverlayStop = new Textures.BlockIcons.CustomIcon("machines/research/table/identify/front");
 
-                // 写入每个图块数据
-                for (Map.Entry<Byte, PuzzleShape> entry : tiles.entrySet() ) {
-                    PuzzleShape tile = entry.getValue();
-                    // 写入当前图块点数
-                    dos.writeByte(entry.getKey());
-                    dos.writeByte(tile.content.size());
-                    // 写入每个点的坐标
-                    for (Point p : tile.content) {
-                        dos.writeByte(p.x);
-                        dos.writeByte(p.y);
-                    }
-                }
-
-                dos.flush();
-                return bos.toByteArray();
-            }catch (IOException e){
-                e.printStackTrace();
-                return new byte[0];
-            }
-        }
-        public static ColorGame loadFromByteArray(byte[] data) {
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-                 DataInputStream dis = new DataInputStream(bis)) {
-
-                // 读取基础信息
-                byte size = dis.readByte();
-                byte tileCount = dis.readByte();
-                ColorGame game = new ColorGame(size, tileCount);
-                // 读取图块数据
-                game.tiles = new HashMap<>();
-                for (int i = 0; i < tileCount; i++) {
-                    byte puzzleID = dis.readByte();
-                    byte pointCount = dis.readByte();
-                    Set<Point> tile = new HashSet<>();
-                    for (int j = 0; j < pointCount; j++) {
-                        int x = dis.readByte();
-                        int y = dis.readByte();
-                        tile.add(new Point(x, y));
-                    }
-                    game.tiles.put(puzzleID, new PuzzleShape(tile));
-                }
-                return game;
-            }catch (IOException e){
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        private void initializeGame() {
-            Set<Point> allPoints = new HashSet<>();
-            for (int x = 0; x < size; x++) {
-                for (int y = 0; y < size; y++) {
-                    allPoints.add(new Point(x, y));
-                }
-            }
-
-            List<Set<Point>> regions = new ArrayList<>();
-            regions.add(allPoints);
-            Random random = new Random();
-
-            while (regions.size() < tileCount) {
-                // 优先选择最大的区域进行分裂
-                Set<Point> largest = findLargestRegion(regions);
-                if (largest == null || largest.size() < MIN_TILE_SIZE * 2) break;
-
-                List<Set<Point>> splitResult = splitRegion(largest, random);
-                if (splitResult != null) {
-                    regions.remove(largest);
-                    regions.addAll(splitResult);
-                } else {
-                    // 尝试强制分裂较小的区域
-                    Optional<Set<Point>> splittable = regions.stream()
-                            .filter(r -> r.size() >= MIN_TILE_SIZE * 2)
-                            .findFirst();
-                    if (!splittable.isPresent()) break;
-                    regions.remove(splittable.get());
-                    regions.addAll(forceSplit(splittable.get(), random));
-                }
-            }
-            byte i = 0;
-            tiles = new HashMap<>();
-            for (Set<Point> region : regions) tiles.put(i++, new PuzzleShape(region));
-
-        }
-
-        private Set<Point> findLargestRegion(List<Set<Point>> regions) {
-            return regions.stream()
-                    .max(Comparator.comparingInt(Set::size))
-                    .orElse(null);
-        }
-
-        private List<Set<Point>> splitRegion(Set<Point> region, Random random) {
-            List<Point> points = new ArrayList<>(region);
-
-            for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-                Point seed = points.get(random.nextInt(points.size()));
-
-                // 动态计算分裂比例（40%-60%）
-                int minSplit = (int)(region.size() * 0.4);
-                int maxSplit = (int)(region.size() * 0.6);
-                minSplit = Math.max(MIN_TILE_SIZE, minSplit);
-                maxSplit = Math.min(region.size() - MIN_TILE_SIZE, maxSplit);
-                if (minSplit > maxSplit) return null;
-
-                int targetSize = minSplit + random.nextInt(maxSplit - minSplit + 1);
-
-                Set<Point> partA = growRegion(region, seed, targetSize, random);
-                Set<Point> partB = new HashSet<>(region);
-                partB.removeAll(partA);
-
-                if (isValidSplit(partA, partB)) {
-                    return Arrays.asList(partA, partB);
-                }
-            }
-            return null;
-        }
-
-        private Set<Point> growRegion(Set<Point> region, Point seed, int targetSize, Random random) {
-            Set<Point> result = new HashSet<>();
-            Queue<Point> queue = new LinkedList<>();
-            result.add(seed);
-            queue.add(seed);
-
-            while (result.size() < targetSize && !queue.isEmpty()) {
-                Point current = queue.poll();
-
-                List<Point> neighbors = getShuffledNeighbors(current, random);
-                for (Point neighbor : neighbors) {
-                    if (region.contains(neighbor) && !result.contains(neighbor)) {
-                        result.add(neighbor);
-                        queue.add(neighbor);
-                        if (result.size() == targetSize) break;
-                    }
-                }
-            }
-            return result;
-        }
-
-        private List<Point> getShuffledNeighbors(Point p, Random random) {
-            List<Point> neighbors = Arrays.asList(
-                    new Point(p.x+1, p.y), new Point(p.x-1, p.y),
-                    new Point(p.x, p.y+1), new Point(p.x, p.y-1)
-            );
-            Collections.shuffle(neighbors, random);
-            return neighbors;
-        }
-
-        private boolean isValidSplit(Set<Point> a, Set<Point> b) {
-            return a.size() >= MIN_TILE_SIZE && b.size() >= MIN_TILE_SIZE &&
-                    isConnected(a) && isConnected(b);
-        }
-
-        private List<Set<Point>> forceSplit(Set<Point> region, Random random) {
-            // 确保总能分裂的保底方法
-            Point seed = new ArrayList<>(region).get(random.nextInt(region.size()));
-            Set<Point> partA = growRegion(region, seed, MIN_TILE_SIZE, random);
-            Set<Point> partB = new HashSet<>(region);
-            partB.removeAll(partA);
-            return Arrays.asList(partA, partB);
-        }
-
-        private boolean isConnected(Set<Point> region) {
-            if (region.isEmpty()) return false;
-            Set<Point> visited = new HashSet<>();
-            Queue<Point> queue = new LinkedList<>();
-            Point start = region.iterator().next();
-            queue.add(start);
-            visited.add(start);
-
-            while (!queue.isEmpty()) {
-                Point current = queue.poll();
-                for (Point neighbor : Arrays.asList(
-                        new Point(current.x + 1, current.y),
-                        new Point(current.x - 1, current.y),
-                        new Point(current.x, current.y + 1),
-                        new Point(current.x, current.y - 1))
-                ) {
-                    if (region.contains(neighbor) && !visited.contains(neighbor)) {
-                        visited.add(neighbor);
-                        queue.add(neighbor);
-                    }
-                }
-            }
-            return visited.size() == region.size();
-        }
-
-        public boolean placeTile(PuzzleShape tile, int offsetX, int offsetY) {
-            Set<Point> displaced = new HashSet<>();
-
-            // 检查边界和冲突
-            for (Point p : tile.content) {
-                int newX = p.x + offsetX;
-                int newY = p.y + offsetY;
-                if (newX < 0 || newX >= size || newY < 0 || newY >= size) {
-                    return false;
-                }
-                Point displacedPoint = new Point(newX, newY);
-                if (placedPoints.contains(displacedPoint)) {
-                    return false;
-                }
-                displaced.add(displacedPoint);
-            }
-            tile.placedOnX = offsetX;
-            tile.placedOnY = offsetY;
-            placedPoints.addAll(displaced);
-            return true;
-        }
-
-        public void removeTile(PuzzleShape tile) {
-            if(tile.placedOnX == -1)return;
-            for (Point p : tile.content) {
-                int newX = p.x + tile.placedOnX;
-                int newY = p.y + tile.placedOnY;
-                Point displacedPoint = new Point(newX, newY);
-                placedPoints.remove(displacedPoint);
-            }
-        }
-
-        public boolean checkWin() {
-            return placedPoints.size() == size * size;
-        }
-
-        public static class PuzzleShape {
-            public Set<Point> content;
-            public int width;
-            public int height;
-            public int placedOnX;
-            public int placedOnY;
-            public PuzzleShape(Set<Point> content){
-                int minX = Integer.MAX_VALUE;
-                int minY = Integer.MAX_VALUE;
-                int maxX = Integer.MIN_VALUE;
-                int maxY = Integer.MIN_VALUE;
-                for (Point p : content) {
-                    minX = Math.min(minX, p.x);
-                    minY = Math.min(minY, p.y);
-                    maxX = Math.max(maxX, p.x);
-                    maxY = Math.max(maxY, p.y);
-                }
-
-                Set<Point> normalized = new HashSet<>();
-                for (Point p : content) {
-                    normalized.add(new Point(p.x - minX, p.y - minY));
-                }
-                this.content=normalized;
-                width = maxX - minX + 1;
-                height = maxY - minY + 1;
-            }
-        }
+    @Override
+    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
+        if (!aShouldSideBeRendered[aSide]) return null;
+        if (aSide == mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayStop));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
 }
