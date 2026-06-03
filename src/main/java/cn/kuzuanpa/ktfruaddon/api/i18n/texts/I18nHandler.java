@@ -87,6 +87,7 @@ public class I18nHandler {
             , FLYWHEEL_STORAGE="ktfru.text.item.flywheel.storage"
             , MINER_0 ="ktfru.text.machine.miner.0"
             , MINER_1 ="ktfru.text.machine.miner.1"
+            , VOID_HOPPER_0 ="ktfru.text.machine.voidhopper.0"
             , FILTERING_PROPERTIES ="ktfru.text.filter.properties"
             , FILTER_PROPERTIES_ALL="ktfru.text.filter.properties.all"
             , ORE_SCANNER_REQUIRE_PIPES ="ktfru.text.orescanner.require_pipe"
