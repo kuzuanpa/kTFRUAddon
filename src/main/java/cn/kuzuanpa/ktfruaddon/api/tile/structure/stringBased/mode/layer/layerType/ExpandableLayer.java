@@ -16,14 +16,16 @@ package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerTy
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExpandableLayer implements IStructureLayer {
     private final int maxRepeats;
-    public int repeatCount = 0;
+    public int repeatCount = 0, extraData=0;
     private final List<FixedLayer> variations = new ArrayList<>();
     public ExpandableLayer(int maxRepeats) {
         this.maxRepeats = maxRepeats;
@@ -40,12 +42,10 @@ public class ExpandableLayer implements IStructureLayer {
         return this;
     }
     IStringBaseStructure structure;
-    private StructureContext.Axis layerAxis;
 
     @Override
     public int validate(StructureContext ctx, StructureContext.Axis mainAxis, int baseX, int baseY, int baseZ) {
-
-        for (repeatCount = 0; repeatCount < maxRepeats;) {
+        for (repeatCount = 0; repeatCount < (extraData!=0?extraData:maxRepeats);) {
             for (int i = 0; i < variations.size(); i++) {
                 FixedLayer current = variations.get(i % variations.size());
                 if (current.validate(ctx, mainAxis, baseX, baseY, baseZ) == 0) {
@@ -55,6 +55,21 @@ public class ExpandableLayer implements IStructureLayer {
             repeatCount++;
         }
         return repeatCount;
+    }
+
+    @Override
+    public void setExtraData(String data) {
+        try {
+            extraData = Integer.parseInt(data);
+            if(extraData > maxRepeats)extraData = 0;
+        } catch (NumberFormatException e) {
+            FMLLog.log(Level.ERROR, e, "Error when setup expandable layer: extra data is not a Int? "+data);
+        }
+    }
+
+    @Override
+    public String getExtraDataDesc() {
+        return  "ktfru.api.structure.layer.expandable.extra_data_desc";
     }
 
     @Override

@@ -93,10 +93,12 @@ public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
         aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_1));
         aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_2));
         aList.add(LH.Chat.WHITE+LH.get(I18nHandler.OIL_MINER_3));
-
     }
 
     static {
+        LH.add(I18nHandler.OIL_MINER_0,"Walls used in recipes placed on left and right side of main Block, energy input from them");
+        LH.add(I18nHandler.OIL_MINER_1,"2*3 Oil Miner Drill in back of main Block, springs should under these drills");
+        LH.add(I18nHandler.OIL_MINER_2,"a layer of 3*3 Walls used in recipes placed on top");
         LH.add(I18nHandler.OIL_MINER_3,"fluid input at any top layer wall , fluid auto output at top of the wall below the main block");
     }
     @Override
@@ -122,10 +124,10 @@ public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     private Fluid getOutputFluid(FluidStack inputFluid,FluidStack springFluid) {
         if(inputFluid.getFluid().equals(FL.Water.fluid())) {
             if (springFluid.getFluid().equals(FL.Oil_ExtraHeavy.fluid())) return flList.AqueousOilExtraHeavy.fluid;
-            if (springFluid.getFluid().equals(FL.Oil_Heavy.fluid())) return flList.AqueousOilHeavy.fluid;
+            if (springFluid.getFluid().equals(FL.Oil_Heavy.fluid()))  return flList.AqueousOilHeavy.fluid;
             if (springFluid.getFluid().equals(FL.Oil_Medium.fluid())) return flList.AqueousOilMedium.fluid;
             if (springFluid.getFluid().equals(FL.Oil_Normal.fluid())) return flList.AqueousOilNormal.fluid;
-            if (springFluid.getFluid().equals(FL.Oil_Light.fluid())) return flList.AqueousOilLight.fluid;
+            if (springFluid.getFluid().equals(FL.Oil_Light.fluid()))  return flList.AqueousOilLight.fluid;
             if (FL.Lava.is(springFluid)) return null;
             if (!springFluid.getFluid().isGaseous())return springFluid.getFluid();
             return null;

@@ -91,6 +91,9 @@ ktfru.multitileentity.multiblock.crucible.electromagnet=电磁坩埚
 ktfru.multitileentity.multiblock.asteroid.miner=小行星采掘火箭发射塔
 ktfru.multitileentity.multiblock.asteroid.finder=小行星探测塔
 
+ktfru.api.structure.layer.expandable.extra_data_desc=设置结构检测, 投影和自动搭建的目标层数
+ktfru.api.structure.has_extra_data=可使用工具设定结构参数
+
 ktfru.text.common.side.front=正面
 ktfru.text.common.side.back=背面
 ktfru.text.common.side.left=左侧
@@ -204,7 +207,7 @@ ktfru.tooltip.multiblock.maskaligner.1.6=从任意壁板输入流体和物品, �
 ktfru.text.multiblock.oilminer.0=主方块左右两侧放置配方中使用的壁板，从它们输入能源
 ktfru.text.multiblock.oilminer.1=2*3钻井头放在背后，泉应在这些钻井头下面
 ktfru.text.multiblock.oilminer.2=一层3*3的配方中使用的壁板放在上面
-ktfru.text.multiblock.oilminer.3=流体从任意壁板侧面输入，从主方块上方的壁板的上方主动输出
+ktfru.text.multiblock.oilminer.3=流体从主方块两侧的壁板输入，从主方块上方的壁板的上面主动输出
 ktfru.tooltip.multiblock.sunheater.1=5x2x5不锈钢壁板
 ktfru.tooltip.multiblock.sunheater.2=主方块在壁板顶层侧面中心, 朝外
 ktfru.tooltip.multiblock.sunheater.3=层吸收层:

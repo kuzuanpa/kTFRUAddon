@@ -23,6 +23,8 @@ public interface IStringBaseStructure {
     ChunkCoordinates checkStructure(StructureContext context);
     Map<Character, IStructurePredicate> getPredicates();
     ChunkCoordinates getSize();
+    Map<Character, String> getExtraDataDesc();
+    void setExtraData(char id, String data);
 }
 
 

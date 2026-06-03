@@ -32,8 +32,8 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 public class LayerStructure implements IStringBaseStructure {
     private final StructureContext.Axis expandAxis;
     private String layerSequence;
-    private final Map<Character, IStructureLayer> layers = new HashMap<>();
-    private final Map<Character, IStructurePredicate> predicates = new HashMap<>();
+    public final Map<Character, IStructureLayer> layers = new HashMap<>();
+    public final Map<Character, IStructurePredicate> predicates = new HashMap<>();
     public ChunkCoordinates controllerOffsetPos = null;
 
     public LayerStructure(StructureContext.Axis expandAxis) {
@@ -63,12 +63,7 @@ public class LayerStructure implements IStringBaseStructure {
         layers.put(symbol, layer);
         return this;
     }
-    /**
-     * 绑定符号与方块条件
-     * @param symbol 结构模式中的字符
-     * @param predicate 匹配条件
-     * @return 当前对象
-     */
+
     public LayerStructure where(char symbol, IStructurePredicate predicate) {
         predicates.put(symbol, predicate);
         return this;
@@ -84,8 +79,8 @@ public class LayerStructure implements IStringBaseStructure {
             if(layer == null) throw new IllegalArgumentException("Null Layer!");
 
             int step = layer.validate(ctx, expandAxis, ctx.getMapCoord()[0], ctx.getMapCoord()[1], ctx.getMapCoord()[2]);
-            if(step == 0){
-                kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(ctx.failedPos, 0xff0000, 4000,1.0f), new NetworkRegistry.TargetPoint(ctx.world.provider.dimensionId, ctx.failedPos.posX, ctx.failedPos.posY, ctx.failedPos.posZ, 80));
+            if(step == 0) {
+                kNetworkHandler.sendToAllAround(new PacketFxBlockOutline(ctx.failedPos, 0xff0000, 4000, 1.0f), new NetworkRegistry.TargetPoint(ctx.world.provider.dimensionId, ctx.failedPos.posX, ctx.failedPos.posY, ctx.failedPos.posZ, 80));
                 return ctx.failedPos;
             }
         }
@@ -104,5 +99,19 @@ public class LayerStructure implements IStringBaseStructure {
         for(char c : layerSequence.toCharArray()) y += layers.get(c).getSize().posY;
         char firstLayer = layerSequence.charAt(0);
         return new ChunkCoordinates(layers.get(firstLayer).getSize().posX, y, layers.get(firstLayer).getSize().posZ);
+    }
+
+    @Override
+    public Map<Character, String> getExtraDataDesc() {
+        Map<Character, String> map = new HashMap<>();
+        layers.forEach((id,layer)-> {
+            if(layer.getExtraDataDesc() != null)map.put(id,layer.getExtraDataDesc());
+        });
+        return map;
+    }
+
+    @Override
+    public void setExtraData(char id, String data) {
+        layers.get(id).setExtraData(data);
     }
 }
