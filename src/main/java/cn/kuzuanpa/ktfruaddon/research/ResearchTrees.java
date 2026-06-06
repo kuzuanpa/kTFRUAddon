@@ -217,208 +217,556 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Rubber,8)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(10113)));
 
+                    //Fill:光路/掩膜空间规划; Glass透镜原型+Si基底+Sn掩膜材料
                     ResearchProject maskAlignTheory = new ResearchProject(tree, "光刻理论", "普通的方法已经达到极限, 你需要研究光刻及相关的设备以制造更精密的芯片", Items.paper, 0, 18)
                             .setPos(1080, 70)
-                            .addPrerequisite(highVoltageBasics);
+                            .addPrerequisite(highVoltageBasics)
+                            .addTask(new EnergyTask(TD.Energy.EU, 16384, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 2048))
+                            .addTask(new MiniGameFillTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Sn,8)));
 
+                    //CurrentControl:I/O流程控制; Cu导线+Si芯片+纸设计图纸
                     ResearchProject computerSystemTheory = new ResearchProject(tree, "计算机系统", "设计一套合理的输入输出标准, 以组装出完整的计算机", Items.paper, 0, 19)
                             .setPos(1180, 70)
-                            .addPrerequisite(maskAlignTheory);
+                            .addPrerequisite(maskAlignTheory)
+                            .addTask(new ComputeTask(ComputePower.Normal, 4096))
+                            .addTask(new MiniGameCurrentControlTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,4)))
+                            .addTask(new ItemConsumeTaskSimple(ST.make(Items.paper,16,0)));
 
+                    //CurrentControl:电机精确控制; Steel结构+齿轮+Cu导电
                     ResearchProject CNCLathe = new ResearchProject(tree, "数控车床", "通过计算机自动化精确控制电机制作数控车床", Items.paper, 0, 20)
                             .setPos(1300, 0)
-                            .addPrerequisite(computerSystemTheory);
+                            .addPrerequisite(computerSystemTheory)
+                            .addTask(new EnergyTask(TD.Energy.RU, 4096, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 1024))
+                            .addTask(new MiniGameCurrentControlTask(16))
+                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Steel,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.gear.mat(MT.Steel,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Cu,4)));
 
+                    //Fill:轨道/任务规划; Steel结构+Al轻质+Steel支撑
                     ResearchProject SpaceBasicTheory = new ResearchProject(tree, "太空基础理论", "火箭与太空探索所需的基本理论", Items.paper, 0, 21)
                             .setPos(1300, 140)
-                            .addPrerequisite(computerSystemTheory);
+                            .addPrerequisite(computerSystemTheory)
+                            .addTask(new ComputeTask(ComputePower.Normal, 4096))
+                            .addTask(new MiniGameFillTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Steel,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Steel,8)));
 
+                    //CurrentControl:推力控制; 引擎零件+不锈钢壳体
                     ResearchProject rocketBasics = new ResearchProject(tree, "火箭基础", "研究火箭的气动外形，引擎推力的改进等基本内容", Items.paper, 0, 22)
                             .setPos(1400, 220)
-                            .addPrerequisite(SpaceBasicTheory);
+                            .addPrerequisite(SpaceBasicTheory)
+                            .addTask(new ComputeTask(ComputePower.Normal, 4096))
+                            .addTask(new MiniGameCurrentControlTask(32))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.EngineCrankShaftManual1.get(1)))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.EngineCylinderManual1.get(1)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,8)));
 
+                    //Fill:空间站布局规划; 不锈钢结构+Al隔热+Glass密封管
                     ResearchProject spaceTheory = new ResearchProject(tree, "空间概论", "研究太空中如何进行航行和维持生命等", Items.paper, 0, 23)
                             .setPos(1480, 140)
-                            .addPrerequisite(SpaceBasicTheory);
+                            .addPrerequisite(SpaceBasicTheory)
+                            .addTask(new ComputeTask(ComputePower.Normal, 8192))
+                            .addTask(new MiniGameFillTask(64))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.tube.mat(MT.Glass,8)));
 
+                    //CurrentControl:气体流量控制; Glass容器+Ar保护气+Steel容器
                     ResearchProject protectionUsage = new ResearchProject(tree, "保护气应用", "研究如何利用保护气制作纯度更高，性能更好的物品", Items.paper, 0, 24)
                             .setPos(1280, 70)
-                            .addPrerequisite(computerSystemTheory);
+                            .addPrerequisite(computerSystemTheory)
+                            .addTask(new MiniGameCurrentControlTask(16))
+                            .addTask(new ItemConsumeTaskSimple(OP.tube.mat(MT.Glass,8)))
+                            .addTask(new FluidConsumeTaskSimple(FL.Argon.fluid(), 8000))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Steel,4)));
 
+                    //CurrentControl+Fill:电路设计+布局; Si晶片+Au导线+PCB基板
                     ResearchProject computerT2 = new ResearchProject(tree, "入门计算机", "利用初代计算机的算力进一步优化电路设计，以提高算力制作下一代计算机", Items.paper, 0, 25)
                             .setPos(1380, 70)
-                            .addPrerequisite(protectionUsage);
+                            .addPrerequisite(protectionUsage)
+                            .addTask(new EnergyTask(TD.Energy.EU, 16384, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 8192))
+                            .addTask(new MiniGameCurrentControlTask(64))
+                            .addTask(new MiniGameFillTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,4)));
 
+                    //Fill:叶片形状规划; Ti耐热叶片+转子
                     ResearchProject aerodynamics = new ResearchProject(tree, "叶片气动力学", "研究各种形状的叶片流过流体时对气流和叶片的影响", Items.paper, 0, 26)
                             .setPos(1480, 0)
-                            .addPrerequisite(computerT2);
+                            .addPrerequisite(computerT2)
+                            .addTask(new EnergyTask(TD.Energy.RU, 8192, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 8192))
+                            .addTask(new MiniGameFillTask(64))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Titanium,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.rotor.mat(MT.Titanium,2)));
 
+                    //Identify:辨别原子信号; U放射性源+Pb屏蔽+Au探测器
                     ResearchProject nuclearStructure = new ResearchProject(tree, "原子结构", "利用物质之间的反应初步确定分子，原子的结构，对不同原子的性质进行研究", Items.paper, 0, 27)
                             .setPos(1480, 70)
-                            .addPrerequisite(computerT2);
+                            .addPrerequisite(computerT2)
+                            .addTask(new EnergyTask(TD.Energy.EU, 16384, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 8192))
+                            .addTask(new MiniGameIdentifyTask(16))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_238,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Pb,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Au,4)));
 
+                    //Identify:辨别核反应; U235/U238/Th核燃料同位素
                     ResearchProject nuclearTheory = new ResearchProject(tree, "原子核理论", "通过研究原子核在各种情况下的状态，提出可能修改原子核的理论", Items.paper, 0, 28)
                             .setPos(1580, 70)
-                            .addPrerequisite(nuclearStructure);
+                            .addPrerequisite(nuclearStructure)
+                            .addTask(new EnergyTask(TD.Energy.EU, 32768, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 16384))
+                            .addTask(new MiniGameIdentifyTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_235,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_238,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Th,4)));
 
+                    //CurrentControl+Fill:电路设计+布局; Si+Au+PCB
                     ResearchProject computerT3 = new ResearchProject(tree, "计算机T3", "解锁10系列计算机", Items.paper, 0, 29)
                             .setPos(1680, 70)
-                            .addPrerequisite(nuclearTheory);
+                            .addPrerequisite(nuclearTheory)
+                            .addTask(new EnergyTask(TD.Energy.EU, 32768, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 32768))
+                            .addTask(new MiniGameCurrentControlTask(64))
+                            .addTask(new MiniGameFillTask(64))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,8)));
 
+                    //CurrentControl:链式反应控制; Cd控制棒+Pb屏蔽+U235燃料
                     ResearchProject fissionControl = new ResearchProject(tree, "裂变控制理论", "研究如何在宏观层面来监视和控制裂变反应", Items.paper, 0, 30)
                             .setPos(1780, 70)
-                            .addPrerequisite(computerT3);
+                            .addPrerequisite(computerT3)
+                            .addTask(new EnergyTask(TD.Energy.EU, 65536, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 32768))
+                            .addTask(new MiniGameCurrentControlTask(96))
+                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Cd,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Pb,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_235,8)));
 
+                    //Identify:辨别成像结果; Pb屏蔽+Co放射源+Glass透镜
                     ResearchProject rayPhoto = new ResearchProject(tree, "放射成像", "研究如何利用强穿透性的放射线对物体内部进行成像", Items.paper, 0, 31)
                             .setPos(1880, 70)
-                            .addPrerequisite(fissionControl);
+                            .addPrerequisite(fissionControl)
+                            .addTask(new EnergyTask(TD.Energy.EU, 65536, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 32768))
+                            .addTask(new MiniGameIdentifyTask(96))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Pb,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Co,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,8)));
 
+                    //Identify+CurrentControl:辨别微观结构+控制电子束; W灯丝+Glass透镜+Si样品
                     ResearchProject electronMicroscope = new ResearchProject(tree, "电子显微技术", "利用电子束对微观结构进行观察", Items.paper, 0, 32)
                             .setPos(1980, 70)
-                            .addPrerequisite(rayPhoto);
+                            .addPrerequisite(rayPhoto)
+                            .addTask(new EnergyTask(TD.Energy.EU, 131072, 16))
+                            .addTask(new ComputeTask(ComputePower.Normal, 65536))
+                            .addTask(new MiniGameIdentifyTask(128))
+                            .addTask(new MiniGameCurrentControlTask(64))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.W,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,8)));
 
+                    //CurrentControl+Fill+Identify:电路设计+布局+缺陷检测; Si+Au+PTFE绝缘
                     ResearchProject computerT4 = new ResearchProject(tree, "计算机T4", "解锁20, 36系列计算机", Items.paper, 0, 33)
                             .setPos(2080, 70)
-                            .addPrerequisite(electronMicroscope);
+                            .addPrerequisite(electronMicroscope)
+                            .addTask(new EnergyTask(TD.Energy.EU, 131072, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameCurrentControlTask(128))
+                            .addTask(new MiniGameFillTask(128))
+                            .addTask(new MiniGameIdentifyTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,8)));
 
+                    //Identify:辨别催化效果; Pt/Pd贵金属催化剂+Ni过渡金属催化剂
                     ResearchProject catalyzerTheory = new ResearchProject(tree, "催化剂原理", "研究催化剂起作用的具体原理", Items.paper, 0, 34)
                             .setPos(2180, 70)
-                            .addPrerequisite(computerT4);
+                            .addPrerequisite(computerT4)
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameIdentifyTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Pt,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Pd,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Ni,8)));
 
+                    //Fill:聚合物结构规划; PC工程塑料+PTFE含氟塑料+环氧纤维增强
                     ResearchProject advancedPlastic = new ResearchProject(tree, "高级塑料", "", Items.paper, 0, 35)
                             .setPos(2280, 70)
-                            .addPrerequisite(catalyzerTheory);
+                            .addPrerequisite(catalyzerTheory)
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameFillTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.PTFE,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(matList.EpoxyResin.mat, 4)));
 
+                    //CurrentControl+Fill+Identify:FinFET工艺; Si+Au+PTFE
                     ResearchProject computerT5 = new ResearchProject(tree, "计算机T5", "利用finfet工艺解锁36v2系列计算机", Items.paper, 0, 36)
                             .setPos(2380, 70)
-                            .addPrerequisite(advancedPlastic);
+                            .addPrerequisite(advancedPlastic)
+                            .addTask(new EnergyTask(TD.Energy.EU, 262144, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 262144))
+                            .addTask(new MiniGameCurrentControlTask(256))
+                            .addTask(new MiniGameFillTask(192))
+                            .addTask(new MiniGameIdentifyTask(64))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,16)));
 
+                    //Fill+CurrentControl:空间站布局+系统控制; Ti结构+不锈钢壳体+Ti齿轮
                     ResearchProject spaceStationTheory = new ResearchProject(tree, "空间站理论", "研究如何构建稳定运行的空间站", Items.paper, 0, 37)
                             .setPos(1580, 140)
                             .addPrerequisite(spaceTheory)
-                            .addPrerequisite(computerT2);
+                            .addPrerequisite(computerT2)
+                            .addTask(new ComputeTask(ComputePower.Normal, 32768))
+                            .addTask(new MiniGameFillTask(64))
+                            .addTask(new MiniGameCurrentControlTask(32))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Titanium,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.gear.mat(MT.Titanium,8)));
 
+                    //Fill:微重力实验规划; Ti容器+Al轻质
                     ResearchProject lowGravityUsage = new ResearchProject(tree, "微重力应用", "研究微重力环境可能的用途", Items.paper, 0, 38)
                             .setPos(1780, 140)
-                            .addPrerequisite(spaceStationTheory);
+                            .addPrerequisite(spaceStationTheory)
+                            .addTask(new ComputeTask(ComputePower.Normal, 65536))
+                            .addTask(new MiniGameFillTask(96))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Titanium,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,32)));
 
+                    //Identify:辨别辐射信号; Pb屏蔽+钨钢结构+U放射源
                     ResearchProject universeRadio = new ResearchProject(tree, "宇宙辐射研究", "研究宇宙辐射和其对物体可能的用途", Items.paper, 0, 39)
                             .setPos(1980, 140)
-                            .addPrerequisite(lowGravityUsage);
+                            .addPrerequisite(lowGravityUsage)
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameIdentifyTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Lead,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_238,8)));
 
+                    //CurrentControl+Fill+Identify:微重力芯片工艺; Si+Au+PTFE
                     ResearchProject computerT6 = new ResearchProject(tree, "计算机T6", "微重力环境解锁36v3系列计算机", Items.paper, 0, 40)
                             .setPos(2480, 70)
                             .addPrerequisite(computerT5)
-                            .addPrerequisite(universeRadio);
+                            .addPrerequisite(universeRadio)
+                            .addTask(new EnergyTask(TD.Energy.EU, 524288, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 524288))
+                            .addTask(new MiniGameCurrentControlTask(384))
+                            .addTask(new MiniGameFillTask(320))
+                            .addTask(new MiniGameIdentifyTask(192))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,32)));
 
+                    //Identify+CurrentControl:辨别硅岩特性+控制实验; Naquadah样品
                     ResearchProject naquadahTheory = new ResearchProject(tree, "硅岩性质研究", "", Items.paper, 0, 41)
                             .setPos(2580, 70)
-                            .addPrerequisite(computerT6);
+                            .addPrerequisite(computerT6)
+                            .addTask(new EnergyTask(TD.Energy.EU, 1048576, 64))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 1024))
+                            .addTask(new MiniGameIdentifyTask(256))
+                            .addTask(new MiniGameCurrentControlTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,4)));
 
+                    //CurrentControl+Fill:镜金加工控制+规划; Naquadah替代(镜金TODO)
                     ResearchProject mirroiteUsage = new ResearchProject(tree, "镜金应用", "", Items.paper, 0, 42)
                             .setPos(2680, 70)
-                            .addPrerequisite(naquadahTheory);
+                            .addPrerequisite(naquadahTheory)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 2048))
+                            .addTask(new MiniGameCurrentControlTask(256))
+                            .addTask(new MiniGameFillTask(192))
+                            //TODO: 镜金材料未注册，待补充镜金相关物品消耗
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Nq,16)));
 
+                    //CurrentControl+Fill+Identify:终极逻辑工艺; Si+Au+NaquadahAlloy
                     ResearchProject computerT7 = new ResearchProject(tree, "计算机T7", "逻辑计算的绝唱, 解锁36v4系列计算机", Items.paper, 0, 43)
                             .setPos(2780, 70)
-                            .addPrerequisite(mirroiteUsage);
+                            .addPrerequisite(mirroiteUsage)
+                            .addTask(new EnergyTask(TD.Energy.EU, 2097152, 64))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 4096))
+                            .addTask(new MiniGameCurrentControlTask(512))
+                            .addTask(new MiniGameFillTask(384))
+                            .addTask(new MiniGameIdentifyTask(256))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,192)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,192)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,8)));
 
+                    //Identify:辨别聚变条件; D+T燃料+钨钢容器
                     ResearchProject fusionTheory = new ResearchProject(tree, "聚变基础理论", "", Items.paper, 0, 44)
                             .setPos(1780, 0)
-                            .addPrerequisite(nuclearTheory);
+                            .addPrerequisite(nuclearTheory)
+                            .addTask(new EnergyTask(TD.Energy.EU, 262144, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 65536))
+                            .addTask(new MiniGameIdentifyTask(64))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.D,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.T,4)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)));
 
-                    ResearchProject bb = new ResearchProject(tree, "磁约束理论", "", Items.paper, 0, 45)
+                    //CurrentControl:磁场控制; Cu导线(超导TODO)+不锈钢+Nd磁体
+                    ResearchProject magneticConfinement = new ResearchProject(tree, "磁约束理论", "", Items.paper, 0, 45)
                             .setPos(1880, 0)
-                            .addPrerequisite(fusionTheory);
+                            .addPrerequisite(fusionTheory)
+                            .addTask(new EnergyTask(TD.Energy.EU, 524288, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameCurrentControlTask(128))
+                            //TODO: 超导材料NiobiumTitanium/Neodymium待确认，暂用替代
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Neodymium,8)));
 
-                    ResearchProject bc = new ResearchProject(tree, "数据汇总-磁", "", Items.paper, 0, 46)
+                    //Identify:辨别有效数据; 不锈钢+Cu导线
+                    ResearchProject magneticDataSummary = new ResearchProject(tree, "数据汇总-磁", "", Items.paper, 0, 46)
                             .setPos(1980, 0)
-                            .addPrerequisite(bb);
+                            .addPrerequisite(magneticConfinement)
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameIdentifyTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,32)));
 
-                    ResearchProject bd = new ResearchProject(tree, "商用磁约束", "", Items.paper, 0, 47)
+                    //CurrentControl+Fill:磁场控制+反应规划; Cu(超导TODO)+钨钢+Nd磁体
+                    ResearchProject commercialMagneticConfinement = new ResearchProject(tree, "商用磁约束", "", Items.paper, 0, 47)
                             .setPos(2080, 0)
-                            .addPrerequisite(bb);
+                            .addPrerequisite(magneticConfinement)
+                            .addTask(new EnergyTask(TD.Energy.EU, 1048576, 64))
+                            .addTask(new ComputeTask(ComputePower.Normal, 262144))
+                            .addTask(new MiniGameCurrentControlTask(192))
+                            .addTask(new MiniGameFillTask(96))
+                            //TODO: 超导材料NiobiumTitanium待确认，暂用替代
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Neodymium,16)));
 
-                    ResearchProject be = new ResearchProject(tree, "惯性约束理论", "", Items.paper, 0, 48)
+                    //Fill:精确时空规划; Glass透镜+钨钢容器+D燃料
+                    ResearchProject inertialConfinement = new ResearchProject(tree, "惯性约束理论", "", Items.paper, 0, 48)
                             .setPos(1880, -70)
-                            .addPrerequisite(fusionTheory);
+                            .addPrerequisite(fusionTheory)
+                            .addTask(new EnergyTask(TD.Energy.LU, 131072, 32))
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameFillTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.D,8)));
 
-                    ResearchProject bf = new ResearchProject(tree, "数据汇总-惯性", "", Items.paper, 0, 49)
+                    //Identify:辨别有效数据; 钨钢+Glass透镜
+                    ResearchProject inertialDataSummary = new ResearchProject(tree, "数据汇总-惯性", "", Items.paper, 0, 49)
                             .setPos(1980, -70)
-                            .addPrerequisite(be);
+                            .addPrerequisite(inertialConfinement)
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new MiniGameIdentifyTask(128))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,8)));
 
-                    ResearchProject bg = new ResearchProject(tree, "商用惯性约束", "", Items.paper, 0, 50)
+                    //Fill+CurrentControl:时空规划+激光控制; Glass透镜+钨钢+D燃料
+                    ResearchProject commercialInertialConfinement = new ResearchProject(tree, "商用惯性约束", "", Items.paper, 0, 50)
                             .setPos(2080, -70)
-                            .addPrerequisite(bf);
+                            .addPrerequisite(inertialDataSummary)
+                            .addTask(new EnergyTask(TD.Energy.LU, 262144, 64))
+                            .addTask(new ComputeTask(ComputePower.Normal, 262144))
+                            .addTask(new MiniGameFillTask(192))
+                            .addTask(new MiniGameCurrentControlTask(96))
+                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.D,32)));
 
+                    //CurrentControl+Identify:量子态控制+辨别; Naquadah+智金(镜金TODO)
                     ResearchProject quantumizeMirroite = new ResearchProject(tree, "量子化镜金", "", Items.paper, 0, 51)
                             .setPos(2880, 70)
-                            .addPrerequisite(bg)
-                            .addPrerequisite(computerT7);
+                            .addPrerequisite(commercialInertialConfinement)
+                            .addPrerequisite(computerT7)
+                            .addTask(new EnergyTask(TD.Energy.EU, 2097152, 64))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 8192))
+                            .addTask(new MiniGameCurrentControlTask(640))
+                            .addTask(new MiniGameIdentifyTask(512))
+                            //TODO: 镜金材料未注册，待补充镜金相关物品消耗
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,8)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,32)));
 
+                    //Fill+Identify:量金结构规划+性质辨别; Naquadah+智金(镜金TODO)
                     ResearchProject quantumiteUsage = new ResearchProject(tree, "量金性质应用", "", Items.paper, 0, 52)
                             .setPos(2980, 70)
-                            .addPrerequisite(quantumizeMirroite);
+                            .addPrerequisite(quantumizeMirroite)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 16384))
+                            .addTask(new MiniGameFillTask(640))
+                            .addTask(new MiniGameIdentifyTask(384))
+                            //TODO: 镜金材料未注册，待补充镜金相关物品消耗
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Nq,16)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,48)));
 
+                    //Identify:量子态辨别; Naquadah+NaquadahAlloy
                     ResearchProject quantumObserve = new ResearchProject(tree, "量子观测", "", Items.paper, 0, 53)
                             .setPos(3080, 70)
-                            .addPrerequisite(quantumiteUsage);
+                            .addPrerequisite(quantumiteUsage)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 16384))
+                            .addTask(new MiniGameIdentifyTask(768))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,4)));
 
+                    //CurrentControl:量子门控制; Naquadah导线+智金
                     ResearchProject quantumProcess = new ResearchProject(tree, "量子处理", "", Items.paper, 0, 54)
                             .setPos(3180, 70)
-                            .addPrerequisite(quantumObserve);
+                            .addPrerequisite(quantumObserve)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 32768))
+                            .addTask(new MiniGameCurrentControlTask(896))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Nq,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,64)));
 
+                    //CurrentControl+Fill+Identify:量子计算全流程; Naquadah+智金
                     ResearchProject quantumComputer = new ResearchProject(tree, "量子计算", "", Items.paper, 0, 55)
                             .setPos(3280, 70)
-                            .addPrerequisite(quantumProcess);
+                            .addPrerequisite(quantumProcess)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 65536))
+                            .addTask(new MiniGameCurrentControlTask(1024))
+                            .addTask(new MiniGameFillTask(768))
+                            .addTask(new MiniGameIdentifyTask(512))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Nq,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,128)));
 
-                    ResearchProject ar = new ResearchProject(tree, "跃迁理论", "", Items.paper, 0, 56)
+                    //Fill+Identify:跃迁路径规划+辨别; Naquadah+NaquadahAlloy
+                    ResearchProject warpTheory = new ResearchProject(tree, "跃迁理论", "", Items.paper, 0, 56)
                             .setPos(3380, 140)
-                            .addPrerequisite(quantumComputer);
+                            .addPrerequisite(quantumComputer)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 131072))
+                            .addTask(new MiniGameFillTask(1024))
+                            .addTask(new MiniGameIdentifyTask(768))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,16)));
 
+                    //CurrentControl+Identify:有机量子控制+辨别; 智金+Naquadah+C有机基底
                     ResearchProject biologicalQuantumProcess = new ResearchProject(tree, "有机量子处理", "", Items.paper, 0, 57)
                             .setPos(3380, 0)
-                            .addPrerequisite(quantumComputer);
+                            .addPrerequisite(quantumComputer)
+                            .addTask(new ComputeTask(ComputePower.Biology, 65536))
+                            .addTask(new MiniGameCurrentControlTask(768))
+                            .addTask(new MiniGameIdentifyTask(512))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.C,32)));
 
+                    //Identify+CurrentControl:辨别量子结构+控制实验; Naquadah+NaquadahAlloy
                     ResearchProject quantumStructure = new ResearchProject(tree, "量子结构理论", "研究夸克", Items.paper, 0, 58)
                             .setPos(3380, 70)
-                            .addPrerequisite(quantumComputer);
+                            .addPrerequisite(quantumComputer)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 131072))
+                            .addTask(new MiniGameIdentifyTask(1024))
+                            .addTask(new MiniGameCurrentControlTask(768))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,16)));
 
-                    ResearchProject au = new ResearchProject(tree, "刻金性质应用", "", Items.paper, 0, 59)
+                    //Fill+CurrentControl:刻金结构规划+控制; NaquadahAlloy(刻金TODO)
+                    ResearchProject engravedGoldUsage = new ResearchProject(tree, "刻金性质应用", "", Items.paper, 0, 59)
                             .setPos(3480, 70)
-                            .addPrerequisite(quantumStructure);
+                            .addPrerequisite(quantumStructure)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 262144))
+                            .addTask(new MiniGameFillTask(1280))
+                            .addTask(new MiniGameCurrentControlTask(640))
+                            //TODO: 镜金材料未注册，待补充刻金相关物品消耗
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,96)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,24)));
 
+                    //Fill+CurrentControl:微型化布局+控制; Naquadah+智金
                     ResearchProject microQuantumComputer = new ResearchProject(tree, "量子计算微型化", "", Items.paper, 0, 60)
                             .setPos(3580, 70)
-                            .addPrerequisite(au);
+                            .addPrerequisite(engravedGoldUsage)
+                            .addTask(new ComputeTask(ComputePower.Quantum, 524288))
+                            .addTask(new MiniGameFillTask(1536))
+                            .addTask(new MiniGameCurrentControlTask(1024))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,96)))
+                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Nq,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,192)));
 
-                    ResearchProject av = new ResearchProject(tree, "强力物质", "", Items.paper, 0, 61)
+                    //CurrentControl+Identify:强力控制+辨别; Naquadah+NaquadahAlloy+智金
+                    ResearchProject strongForceMatter = new ResearchProject(tree, "强力物质", "", Items.paper, 0, 61)
                             .setPos(3680, 70)
-                            .addPrerequisite(microQuantumComputer);
+                            .addPrerequisite(microQuantumComputer)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 1024))
+                            .addTask(new MiniGameCurrentControlTask(1536))
+                            .addTask(new MiniGameIdentifyTask(1280))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,32)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,256)));
 
-                    ResearchProject aw = new ResearchProject(tree, "虚空理论", "", Items.paper, 0, 62)
+                    //Identify+Fill:虚空信号辨别+规划; Naquadah+NaquadahAlloy
+                    ResearchProject voidTheory = new ResearchProject(tree, "虚空理论", "", Items.paper, 0, 62)
                             .setPos(3780, 70)
-                            .addPrerequisite(av);
+                            .addPrerequisite(strongForceMatter)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 2048))
+                            .addTask(new MiniGameIdentifyTask(1536))
+                            .addTask(new MiniGameFillTask(1280))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,192)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,48)));
 
-                    ResearchProject ax = new ResearchProject(tree, "零点场论", "", Items.paper, 0, 63)
+                    //Identify+CurrentControl:零点场辨别+控制; Naquadah+NaquadahAlloy+智金
+                    ResearchProject zeroPointField = new ResearchProject(tree, "零点场论", "", Items.paper, 0, 63)
                             .setPos(3880, 70)
-                            .addPrerequisite(aw);
+                            .addPrerequisite(voidTheory)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 4096))
+                            .addTask(new MiniGameIdentifyTask(1792))
+                            .addTask(new MiniGameCurrentControlTask(1536))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,256)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,64)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,320)));
 
-                    ResearchProject ay = new ResearchProject(tree, "零点能量生成", "", Items.paper, 0, 64)
+                    //CurrentControl+Fill:零点能量控制+规划; Naquadah+NaquadahAlloy
+                    ResearchProject zeroPointEnergy = new ResearchProject(tree, "零点能量生成", "", Items.paper, 0, 64)
                             .setPos(3980, 70)
-                            .addPrerequisite(ax);
+                            .addPrerequisite(zeroPointField)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 8192))
+                            .addTask(new MiniGameCurrentControlTask(1792))
+                            .addTask(new MiniGameFillTask(1536))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,320)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,96)));
 
-                    ResearchProject az = new ResearchProject(tree, "零点物质生成", "", Items.paper, 0, 65)
+                    //Fill+CurrentControl:零点物质规划+控制; Naquadah+NaquadahAlloy+智金
+                    ResearchProject zeroPointMatter = new ResearchProject(tree, "零点物质生成", "", Items.paper, 0, 65)
                             .setPos(4080, 70)
-                            .addPrerequisite(ay);
+                            .addPrerequisite(zeroPointEnergy)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 16384))
+                            .addTask(new MiniGameFillTask(1792))
+                            .addTask(new MiniGameCurrentControlTask(1536))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,384)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,128)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,384)));
 
-                    ResearchProject ca = new ResearchProject(tree, "科魔统一理论", "", Items.paper, 0, 66)
+                    //CurrentControl+Identify+Fill:科魔统一全流程; Naquadah+NaquadahAlloy+智金
+                    ResearchProject scienceMagicUnification = new ResearchProject(tree, "科魔统一理论", "", Items.paper, 0, 66)
                             .setPos(4180, 70)
-                            .addPrerequisite(az);
+                            .addPrerequisite(zeroPointMatter)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 32768))
+                            .addTask(new MiniGameCurrentControlTask(2048))
+                            .addTask(new MiniGameIdentifyTask(2048))
+                            .addTask(new MiniGameFillTask(2048))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,448)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,192)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,448)));
 
-                    ResearchProject cb = new ResearchProject(tree, "无尽", "", Items.paper, 0, 67)
+                    //CurrentControl+Identify+Fill:终极全流程; Naquadah+NaquadahAlloy+智金
+                    ResearchProject endless = new ResearchProject(tree, "无尽", "", Items.paper, 0, 67)
                             .setPos(4280, 70)
-                            .addPrerequisite(ca);
+                            .addPrerequisite(scienceMagicUnification)
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 65536))
+                            .addTask(new MiniGameCurrentControlTask(2048))
+                            .addTask(new MiniGameIdentifyTask(2048))
+                            .addTask(new MiniGameFillTask(2048))
+                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,512)))
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,256)))
+                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,512)));
 
                     return tree;
         }
