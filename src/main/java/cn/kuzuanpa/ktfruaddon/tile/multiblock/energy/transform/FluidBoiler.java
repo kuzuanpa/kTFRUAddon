@@ -13,7 +13,7 @@
  *
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
@@ -97,18 +97,19 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
         super.onTick2(aTimer, aIsServerSide);
         kortex.run();
         // Convert Water to Steam
-        long tConversions = Math.min(mTanks[1].capacity() / 2560, Math.min(kortex.mEnergyStored / 80, mTanks[0].amount()));
+        long energyConsume = Math.min(mRate, kortex.mEnergyStored);
+        long tConversions = Math.min(mTanks[1].capacity() / 2560, Math.min(energyConsume / 80, mTanks[0].amount()));
         if (tConversions > 0) {
             mTanks[0].remove(tConversions);
             mTanks[1].setFluid(FL.Steam.make(mTanks[1].amount() + UT.Code.units(tConversions, 10000, 10000 * 160, F)));
             kortex.mEnergyStored -= tConversions * 80;
         }
 
-        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,3,1), this.yCoord + 1, utils.getRealZ(mFacing,zCoord,3,1), mFacing, false);
-        if (te != null && te.mTileEntity != null) FL.move(mTanks[1], new DelegatorTileEntity<>(te.mTileEntity, OPOS[FACING_TO_SIDE[mFacing][SIDE_RIGHT]]));
+        DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,2,-1), this.yCoord, utils.getRealZ(mFacing,zCoord,2,-1), mFacing, false);
+        if (te != null && te.mTileEntity != null) FL.move(mTanks[1], new DelegatorTileEntity<>(te.mTileEntity, mFacing));
 
-        te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,3,1+ structureLength), this.yCoord + 2, utils.getRealZ(mFacing,zCoord,3,1+ structureLength), mFacing, false);
-        if (te != null && te.mTileEntity != null) FL.move(mTanks[2], new DelegatorTileEntity<>(te.mTileEntity, OPOS[FACING_TO_SIDE[mFacing][SIDE_RIGHT]]));
+        te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,2,-1), this.yCoord + 2, utils.getRealZ(mFacing,zCoord,2,-1), mFacing, false);
+        if (te != null && te.mTileEntity != null) FL.move(mTanks[2], new DelegatorTileEntity<>(te.mTileEntity, mFacing));
     }
 
     @Override
@@ -136,15 +137,15 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
     ChunkCoordinates lastFailedPos=null;
     static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Z).layerRule("ABXD")
             .fixedLayer('A',
-                    "ACCCA",
-                    "ACCCA",
-                    "ACCCA",
-                    "ECCCB"
+                    "DFFFE",
+                    "FFFFF",
+                    "DFFFE",
+                    "FFFFF"
             )
             .fixedLayer('B',
                     "ACCCA",
-                    "BCCCF",
-                    "ACCCA",
+                    "BCCCB",
+                    "BCCCB",
                     "BCCCB"
             )
             .layer('X', new ExpandableLayer(8).variation(new FixedLayer().blockRule(
@@ -153,17 +154,17 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
                     "ACCCA",
                     "BCCCB"
             ))).fixedLayer('D',
-                    "DCCCA",
-                    "BCCCB",
-                    "BCCCB",
+                    "ACCCA",
+                    "ACCCA",
+                    "ACCCA",
                     "BCCCB"
             )
             .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31052, MultiTileEntityMultiBlockPart.NOTHING)))
             .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31053, MultiTileEntityMultiBlockPart.NOTHING)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31054, MultiTileEntityMultiBlockPart.NOTHING)))
-            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31052, MultiTileEntityMultiBlockPart.ONLY_IN, 7)))
-            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31053, MultiTileEntityMultiBlockPart.ONLY_IN, 7)))
-            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31053, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_IN, 7)))
+            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_OUT, 7)))
+            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.NOTHING)))
             .setOffset(-2,0,0) ;
 
     @Override
@@ -171,7 +172,6 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
-        if(lastFailedPos == null)structureLength = ((ExpandableLayer) ((LayerStructure) structure).layers.get('X')).repeatCount;
         return lastFailedPos==null;
     }
 

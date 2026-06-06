@@ -35,6 +35,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.LargeCompressedGasTank;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator.*;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.TransformBattery;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform.FluidBoiler;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform.MultiDynamo;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform.MultiSeparateExciteDynamo;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMappedStructureMachine;
