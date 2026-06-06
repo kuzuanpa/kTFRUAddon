@@ -105,7 +105,7 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 			long tSteam = (long) Math.min(mRate*2*(mOverclock?mTurbineEfficiency:Math.min(mTurbineEfficiency,2)), mTanks[0].amount());
 			mSteamCounter += tSteam;
 			mEnergyStored += tSteam / 2;
-			damageTurbine((long) (tSteam / (mOverclock?0.25F:2)),TURBINE_STEAM);
+			damageTurbine((long) -(tSteam / (mOverclock?0.25F:2)),TURBINE_STEAM);
 			if(isTurbineAboutToBreak&&getRandomNumber(20)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
 			mEnergyProducedNextTick += tSteam / 2;
 			mTanks[0].remove(tSteam);
