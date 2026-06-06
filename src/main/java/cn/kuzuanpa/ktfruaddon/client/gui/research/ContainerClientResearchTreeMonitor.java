@@ -168,7 +168,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 
 	@Override
 	public void onKeyTyped(char key, int keyCode) {
-		if(keyCode == Keyboard.KEY_ESCAPE)close();
+		if(keyCode == Keyboard.KEY_ESCAPE || keyCode == Keyboard.KEY_E)close();
 	}
 
 	@Override
