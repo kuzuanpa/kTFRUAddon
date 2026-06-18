@@ -27,3 +27,5 @@ eclipse
 bin/
 .classpath
 .skidfuscator
+
+/src/main/java/cn/kuzuanpa/ktfruaddon/code/upgradeQuest/*

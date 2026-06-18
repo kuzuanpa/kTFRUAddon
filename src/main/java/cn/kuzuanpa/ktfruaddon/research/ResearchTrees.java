@@ -276,15 +276,13 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 8192))
                             .addTask(new MiniGameFillTask(64))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.tube.mat(MT.Glass,8)));
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,16)));
 
                     //CurrentControl:气体流量控制; Glass容器+Ar保护气+Steel容器
                     ResearchProject protectionUsage = new ResearchProject(tree, "保护气应用", "研究如何利用保护气制作纯度更高，性能更好的物品", Items.paper, 0, 24)
                             .setPos(1280, 70)
                             .addPrerequisite(computerSystemTheory)
                             .addTask(new MiniGameCurrentControlTask(16))
-                            .addTask(new ItemConsumeTaskSimple(OP.tube.mat(MT.Glass,8)))
                             .addTask(new FluidConsumeTaskSimple(FL.Argon.fluid(), 8000))
                             .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Steel,4)));
 
@@ -511,8 +509,8 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.EU, 262144, 32))
                             .addTask(new ComputeTask(ComputePower.Normal, 65536))
                             .addTask(new MiniGameIdentifyTask(64))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.D,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.T,4)))
+                            .addTask(new FluidConsumeTaskSimple(MT.D.mGas.getFluid(), 4000))
+                            .addTask(new FluidConsumeTaskSimple(MT.T.mGas.getFluid(), 4000))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)));
 
                     //CurrentControl:磁场控制; Cu导线(超导TODO)+不锈钢+Nd磁体
@@ -558,7 +556,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameFillTask(128))
                             .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,16)))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.D,8)));
+                            .addTask(new FluidConsumeTaskSimple(MT.D.mGas.getFluid(), 4000));
 
                     //Identify:辨别有效数据; 钨钢+Glass透镜
                     ResearchProject inertialDataSummary = new ResearchProject(tree, "数据汇总-惯性", "", Items.paper, 0, 49)
@@ -579,7 +577,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(96))
                             .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,32)))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.D,32)));
+                            .addTask(new FluidConsumeTaskSimple(MT.D.mGas.getFluid(), 4000));
 
                     //CurrentControl+Identify:量子态控制+辨别; Naquadah+智金(镜金TODO)
                     ResearchProject quantumizeMirroite = new ResearchProject(tree, "量子化镜金", "", Items.paper, 0, 51)
