@@ -95,11 +95,8 @@ public class ItemResearchTech extends ItemResearchBase {
         ItemList.TechResearchData65.set(addItem(65, "研究数据-零点物质生成",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData66.set(addItem(66, "研究数据-科魔统一理论",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData67.set(addItem(67, "研究数据-无尽",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
-        ItemList.TechResearchData68.set(addItem(68, "研究数据-",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
-        ItemList.TechResearchData69.set(addItem(69, "研究数据-",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
-        ItemList.TechResearchData70.set(addItem(70, "研究数据-",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
 
-        ItemList.ResearchItem      .set(addItem(32766, "Common Research Data",  "A common data, You shouldn't get this."));
+        ItemList.TechResearchData  .set(addItem(32766, "Common Research Data",  "A common data, You shouldn't get this."));
     }
 
     @Override

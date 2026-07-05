@@ -42,6 +42,7 @@ public class ResearchCommonElements {
     static Minecraft mc = Minecraft.getMinecraft();
     final static ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
     final static ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
+    final static ResourceLocation flex001 = new ResourceLocation(MOD_ID,"textures/gui/research/flex001.png");
     public static void drawTexturedModelRectFromIcon(int x, int y, IIcon icon, int width, int height)
     {
         Tessellator tessellator = Tessellator.instance;
@@ -77,13 +78,14 @@ public class ResearchCommonElements {
 
     public static void drawResearchProgressBar(ResearchProject researchProject, Tessellator tessellator, int x, int y, float z, int width){
         mc.getTextureManager().bindTexture(background);
-        GL11.glColor4f(1, 1, 1, 1f);
+        GL11.glColor4f(0.0f,0.85f,0.2f,0.75f);
         float progress = 0.0f;
         if(researchProject.isCompleted)progress = 1;
-        else for (IResearchTask condition : researchProject.tasks) {
-            progress += condition.getProgress()*1f/condition.getRequiredProgress();
+        else {
+            for (IResearchTask condition : researchProject.tasks) progress += condition.getProgress()*1f/condition.getRequiredProgress();
+            progress /= researchProject.tasks.size();
         }
-        drawTextureRect(tessellator, x, y, z, 14, researchProject.tasks.isEmpty()? 0 : (int) ((width-4) * (progress/ researchProject.tasks.size())), 8, 0);
+        drawTextureRect(tessellator, x, y, z, 14, researchProject.tasks.isEmpty()? 0 : (int) ((width-4) * progress), 7, 0);
     }
 
     public static void drawResearchConditionIcon(ResearchProject researchProject, int x, int y){
@@ -172,7 +174,7 @@ public class ResearchCommonElements {
                 if(itemStack == null)itemStack = new ItemStack(Items.book,1);
                 drawItemStack(itemStack, xPosition + 2, yPosition -11 + i.get() * 10, 0.5F);
 
-                mc.getTextureManager().bindTexture(main);
+                mc.getTextureManager().bindTexture(background);
                 GL11.glColor4f(1,1,1,1);
                 drawTextureRect(tessellator, xPosition + 12 ,yPosition -9 + i.get() * 10, this.zLevel, 8, width -16, 6, 0);
 
@@ -181,6 +183,7 @@ public class ResearchCommonElements {
                 drawTextureRect(tessellator, xPosition + 12 ,yPosition -9 + i.get() * 10, this.zLevel, 8, (int) ((width -16)*progress), 6, 60);
 
             }
+            mc.getTextureManager().bindTexture(main);
             i.getAndIncrement();
             drawBackground(tessellator,i.get(),colorTimer, true);
             String str = LH.get(!renderedResearchProject.isUnlocked? kUII18n.RESEARCH_VIEWER_CLICK_LOCKED: selectedProject == renderedResearchProject && !selectedProject.isCompleted? kUII18n.RESEARCH_VIEWER_CLICK_RESEARCH : kUII18n.RESEARCH_VIEWER_CLICK_VIEW);
@@ -225,9 +228,11 @@ public class ResearchCommonElements {
             if (!visible) return;
             float colorTimer = ((float) Math.sin(System.currentTimeMillis() % 3141 / 1000f)) / 2f + 0.5f;
             Tessellator tessellator = Tessellator.instance;
-            drawBackground(tessellator, colorTimer);
+            drawBackground(tessellator, 6,0,0, colorTimer);
+            drawFillerBackground(tessellator, width-12, 6, colorTimer);
+            drawBackground(tessellator, 6, width-6, 110, colorTimer);
             String str = LH.get(selectedProject == null? kUII18n.RESEARCH_VIEWER_SELECTED_EMPTY: kUII18n.RESEARCH_VIEWER_SELECTED);
-            mc.fontRenderer.drawStringWithShadow(str, xPosition + 58 - mc.fontRenderer.getStringWidth(str)/2,yPosition +1,0xffffffff);
+            mc.fontRenderer.drawStringWithShadow(str, xPosition + width/2 - mc.fontRenderer.getStringWidth(str)/2,yPosition +1,0xffffffff);
             if(selectedProject == null)return;
             drawResearchMainIcon(selectedProject, xPosition + 3, yPosition + 12);
             drawResearchNameDesc(selectedProject, xPosition + 22, yPosition + 16);
@@ -246,22 +251,29 @@ public class ResearchCommonElements {
             else GL11.glColor4f(colorTimer / 3f + .1f, .8f, .0f, .9f);
         }
 
-        public void drawBackground(Tessellator tessellator, float colorTimer) {
+        public void drawBackground(Tessellator tessellator, int width, int xOffset, int uOffset, float colorTimer) {
             fillColor(colorTimer);
             mc.getTextureManager().bindTexture(main);
-            drawTextureRect(tessellator, xPosition, yPosition, this.zLevel, 65, width, height, 140);
+            drawTextureRect(tessellator, xPosition+xOffset, yPosition, this.zLevel, 65, width, height, 140+uOffset);
             GL11.glColor4f(1, 1, 1, 1);
         }
 
+        public void drawFillerBackground(Tessellator tessellator, int width, int xOffset, float colorTimer) {
+            fillColor(colorTimer);
+            mc.getTextureManager().bindTexture(flex001);
+            drawTextureRect(tessellator, xPosition+xOffset, yPosition, this.zLevel, 65, width, height, 0);
+            GL11.glColor4f(1, 1, 1, 1);
+        }
         public void drawProgressBar(Tessellator tessellator) {
             mc.getTextureManager().bindTexture(background);
             GL11.glColor4f(1, 1, 1, 1f);
             float progress = 0.0f;
             if(selectedProject.isCompleted) progress = 1;
-            else for (IResearchTask condition : selectedProject.tasks) {
-                progress += condition.getProgress() * 1f / condition.getRequiredProgress();
+            else{
+                for (IResearchTask condition : selectedProject.tasks) progress += condition.getProgress()*1f/condition.getRequiredProgress();
+                progress /= selectedProject.tasks.size();
             }
-            drawTextureRect(tessellator, xPosition + 2, yPosition + height - 11, this.zLevel, 14, (int) ((width - 4) * (progress / selectedProject.tasks.size())), 8, 0);
+            drawTextureRect(tessellator, xPosition + 2, yPosition + height - 11, this.zLevel, 14, (int) ((width - 4) * progress), 8, 0);
         }
 
         public void drawConditionIcon() {
@@ -279,7 +291,7 @@ public class ResearchCommonElements {
 
                 mc.fontRenderer.drawStringWithShadow(task.getDesc(),xPosition + 13, yPosition + height - 12 - i.get() * 18,0xffffffff);
 
-                mc.getTextureManager().bindTexture(main);
+                mc.getTextureManager().bindTexture(background);
                 GL11.glColor4f(1, 1, 1, 1);
                 drawTextureRect(tessellator, xPosition + 2, yPosition + height - 3 - i.get() * 18, this.zLevel, 8, width - 6, 6, 0);
 

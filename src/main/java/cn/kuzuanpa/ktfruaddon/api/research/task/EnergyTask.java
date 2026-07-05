@@ -66,7 +66,7 @@ public class EnergyTask implements IResearchTask{
 
     @Override
     public String getDesc() {
-        return String.format(LH.get("ktfru.research.task.energy"),type.getLocalisedChatNameShort(),minVoltage, requiredAmount);
+        return String.format(LH.get("ktfru.research.task.energy"), type.getLocalisedChatNameShort(), requiredAmount, minVoltage);
     }
 
     public static class EnergyCompound {

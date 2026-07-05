@@ -125,7 +125,9 @@ public class ResearchProject {
         long consumeAmount = 0;
         for (IResearchTask task : tasks) if (taskType.isInstance(task) && !task.isCompleted()) {
             consumeAmount = task.tryPromoteProgress(consume, dryRun);
-            if(consumeAmount >0)tree.onResearchProjectUpdated(this);
+            if(consumeAmount <= 0)continue;
+
+            tree.onResearchProjectUpdated(this);
             break;
         }
         if(consumeAmount > 0 && tasks.stream().allMatch(IResearchTask::isCompleted))onCompleted();

@@ -43,7 +43,7 @@ public class ResearchTrees {
     public static void init() {
         ResearchTree.ResearchTreeTemplate.put((byte) 0, tree -> {
 
-                    tree.rootItem = new ResearchProject(tree, "科学", "万物的基础", -1).setPos(-5,70);
+                    tree.rootItem = new ResearchProject(tree, "科学", "万物的基础", 0).setPos(-5,70);
 
                     ResearchProject circuitBasic = new ResearchProject(tree, "芯片基础", "在经过了一系列磨难后，你终于在群峦星获得了安身之地。现在，你需要根据你的记忆和想象力，将巨大的电子管电路修改为硅基的集成电路.", AdvancedRocketryItems.itemIC, 0, 1)
                             .setPos(80, 70)

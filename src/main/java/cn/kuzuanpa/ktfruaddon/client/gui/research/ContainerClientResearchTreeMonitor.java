@@ -129,9 +129,9 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		AtomicInteger i = new AtomicInteger();
 		theTree.allResearch.forEach((s, researchItem) -> {
 			researchIDToIntIDMap.put(s,i.get());
-			int rate = 300;
+			int rate = 150;
 			int layer = researchItem.layer;
-			buttons.add(i.get(),new researchButton(i.get(),researchItem).setJoinLeaveTime(layer*rate,Integer.MAX_VALUE).addAnime(new animeTransparency(layer*rate,layer*rate+1000,0,255)).addAnime(new animeMoveLinear(-1,0,30,-2)).addAnime(new animeMoveSlowIn(layer*rate, layer*rate+500, -30,2,3)));
+			buttons.add(i.get(),new researchButton(i.get(),researchItem).setJoinLeaveTime(layer*rate,Integer.MAX_VALUE).addAnime(new animeTransparency(layer*rate,layer*rate+500,0,255)).addAnime(new animeMoveLinear(-1,0,30,-2)).addAnime(new animeMoveSlowIn(layer*rate, layer*rate+500, -30,2,3)));
 			i.getAndIncrement();
 		});
 
@@ -139,8 +139,8 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		buttons.add(hoveringPanel);
 		currentPanel = (ResearchCommonElements.CurrentPanel) new ResearchCommonElements.CurrentPanel(this,i.getAndIncrement(), 96).setJoinLeaveTime(200,Integer.MAX_VALUE).addAnime(new animeTransparency(200,800,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(200,800, -120,0,3f));
 		buttons.add(currentPanel);
-		sidePanelA = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),116, 48).setJoinLeaveTime(400,Integer.MAX_VALUE).addAnime(new animeTransparency(400,1000,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(400,1000, -120,0,3f));
-		sidePanelB = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),116, 48).setJoinLeaveTime(-1,0);
+		sidePanelA = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(), (int)(width*0.35F), 48).setJoinLeaveTime(400,Integer.MAX_VALUE).addAnime(new animeTransparency(400,1000,0,255)).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(400,1000, -120,0,3f));
+		sidePanelB = (ResearchCommonElements.SidePanel) new ResearchCommonElements.SidePanel(this,i.getAndIncrement(),(int)(width*0.35F), 48).setJoinLeaveTime(-1,0);
 		buttons.add(sidePanelA);
 		buttons.add(sidePanelB);
 	}
@@ -191,8 +191,8 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 			xPosition = (int) (researchProject.posX + xOld);
 			yPosition = (int) (researchProject.posY + yOld);
 
-			if(xPosition < -64-width || xPosition > mc.currentScreen.width+64)return;
-			if(yPosition < -64-height || yPosition > mc.currentScreen.height+64)return;
+			if(xPosition < -128-width || xPosition > mc.currentScreen.width+512)return;
+			if(yPosition < -128-height || yPosition > mc.currentScreen.height+128)return;
 
 			Tessellator tessellator = Tessellator.instance;
 			float colorTimer = ((float) Math.sin(System.currentTimeMillis()%3141/1000f))/2f+0.5f;

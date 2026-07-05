@@ -39,7 +39,7 @@ import java.util.List;
 
 import static gregapi.data.CS.T;
 
-public class ResearchTableCopyer extends ResearchTableBase implements IMultiTileEntity.IMTE_SyncDataByteArray, IWailaTile {
+public class ResearchTablePrinterTech extends ResearchTableBase implements IMultiTileEntity.IMTE_SyncDataByteArray, IWailaTile {
     public int interval=100, progress;
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
@@ -62,7 +62,7 @@ public class ResearchTableCopyer extends ResearchTableBase implements IMultiTile
         if(aNBT.hasKey("progress"))progress = aNBT.getInteger("progress");
     }
 
-    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.copyer";}
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.printer";}
 
     @Override
     public boolean allowInteraction(Entity aEntity) {
@@ -84,10 +84,10 @@ public class ResearchTableCopyer extends ResearchTableBase implements IMultiTile
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        if(aIsServerSide && slotHas(0) && ItemList.ResearchItem.equal(slot(0))) {
+        if(aIsServerSide && !slotHas(0) && getCurrentProject()!= null && getCurrentProject().isCompleted) {
             progress ++;
             if(progress < interval)return;
-            slot(0).stackSize ++ ;
+            setInventorySlotContents(0,  new ItemStack(ItemList.TechResearchData.getItem(), 1, getCurrentProject().printItemMeta));
             progress = 0;
             return;
         }
