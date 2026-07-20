@@ -40,6 +40,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.Fluid;
@@ -67,20 +68,23 @@ public class MaskAlignerUVPlus extends TileEntityBaseControlledMachine implement
                     "LLL",
                     "LLL"
             )
-            .where('A', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31501,MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
-            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31005,MultiTileEntityMultiBlockPart.ONLY_IN)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
-            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31021,MultiTileEntityMultiBlockPart.ONLY_IN)))
-            .where('L', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31011, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
-            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002,MultiTileEntityMultiBlockPart.ONLY_IN)))
+            .where('A', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31501,MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN, 1)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31005,MultiTileEntityMultiBlockPart.ONLY_IN,1)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31006, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID,1)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31021,MultiTileEntityMultiBlockPart.ONLY_IN,1)))
+            .where('L', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31011, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN,1)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31055,MultiTileEntityMultiBlockPart.ONLY_IN,1)))
             .setOffset(-1,0,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
         lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        if(lastFailedPos != null) structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.RESET, worldObj, xCoord, yCoord, zCoord, mFacing, null,null));
+
         return lastFailedPos==null;
     }
+
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (!isServerSide())return true;
 
@@ -157,22 +161,22 @@ public class MaskAlignerUVPlus extends TileEntityBaseControlledMachine implement
         CS.GarbageGT.trash(mTanksOutput);
         CS.GarbageGT.trash(mOutputItems);
         CS.GarbageGT.trash(mOutputFluids);
+        structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.RESET, worldObj, xCoord, yCoord, zCoord, mFacing, null,null));
         return super.breakBlock();
     }
 
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return AxisAlignedBB.getBoundingBox(xCoord-2,yCoord-1,zCoord-2,xCoord+2,yCoord+4,zCoord+2);
+    }
     public static IIconContainer
             sTextureSides      = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/common"),
-            sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/overlay/front"),
-            sOverlayFrontRunning = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/overlay/front_running"),
-            sOverlayFrontActive = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/overlay/front_active");
+            sOverlayFront       = new Textures.BlockIcons.CustomIcon("machines/maskaligner/1/overlay/front");
 
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        if(aSide == mFacing) {
-            if (mActive) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayFrontActive));
-            else if (mRunning) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayFrontRunning));
-            else return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayFront));
-        }
-        else return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa));
+        if(checkStructure(false))return null;
+        if(aSide == mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayFront));
+        return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa));
     }
     @Override
     public String getTileEntityName() {

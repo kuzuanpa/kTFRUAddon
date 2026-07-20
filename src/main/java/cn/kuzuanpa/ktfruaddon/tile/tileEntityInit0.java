@@ -546,6 +546,7 @@ public class tileEntityInit0 {
         aMat = MT.Invar;           kRegistry0.add("Heat Pipe"                                      , "kTFRUAddon: Multiblock", 31052, 17200, aClass , aMat.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  10.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "wall" , NBT_DESIGNS, 7));
         aMat = MT.StainlessSteel;  kRegistry0.add("Pressure Pipe"                                  , "kTFRUAddon: Multiblock", 31053, 17200, aClass , aMat.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  10.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "wall" , NBT_DESIGNS, 7));
         aMat = MT.Invar;           kRegistry0.add("High Pressure Heat Exchange Unit"               , "kTFRUAddon: Multiblock", 31054, 17200, aClass , aMat.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  10.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "wall" , NBT_DESIGNS, 7));
+        aMat = MT.StainlessSteel;  kRegistry0.add("Mask Aligner Shell"                             , "kTFRUAddon: Multiblock", 31055, 17200, aClass , aMat.mToolQuality, 64, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  10.0F, NBT_RESISTANCE,   12.0F, NBT_TEXTURE, "wall" , NBT_DESIGNS, 7));
 
 
         //special part

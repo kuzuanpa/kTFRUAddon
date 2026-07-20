@@ -16,6 +16,7 @@
 package cn.kuzuanpa.ktfruaddon.client.render;
 
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.MaskAlignerUVPlus;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -60,11 +61,13 @@ public class TESRMaskAlignerUVP extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity til, double x, double y, double z, float f) {
         if (! (til instanceof MaskAlignerUVPlus)) return;
         MaskAlignerUVPlus tile = (MaskAlignerUVPlus)til;
+        if(!tile.checkStructure(false))return;
         GL11.glPushMatrix();
         glEnable(GL_BLEND);
         glEnable(GL_LIGHTING);
         GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         //Rotate and move the model into position
         GL11.glTranslated(x + .5f, y, z + .5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
@@ -75,27 +78,34 @@ public class TESRMaskAlignerUVP extends TileEntitySpecialRenderer {
         GL11.glCallList(bodyLists);
 
         int timer = (int)tile.getTimer() % 512 /8;
-        float xToGo= (float) -(0.05F + Math.floor(timer / 8F)/8F);
-        float zToGo= -(0.05F + (timer % 8)/8F);
+        float xToGo = tile.mActive? (float) -(0.05F + Math.floor(timer / 8F)/8F) : 0;
+        float zToGo = tile.mActive? -(0.05F + (timer % 8)/8F): 0;
 
         GL11.glPushMatrix();
-        tile.clientY = tile.clientY +( (zToGo - tile.clientY) /8.0F);
+        tile.clientY = tile.clientY +( (zToGo - tile.clientY) /5.0F);
         GL11.glTranslatef(tile.clientY,0,0);
         GL11.glCallList(bodyLists+5);
         GL11.glPopMatrix();
 
         GL11.glPushMatrix();
-        tile.clientX = tile.clientX +( (xToGo - tile.clientX) /8.0F);
+        tile.clientX = tile.clientX +( (xToGo - tile.clientX) /5.0F);
         GL11.glTranslatef(0,0,tile.clientX);
         GL11.glCallList(bodyLists+4);
         GL11.glPopMatrix();
-        GL11.glPushMatrix();
-        GL11.glTranslatef(tile.clientY,0,tile.clientX);
-        GL11.glCallList(bodyLists+3);
-        GL11.glPopMatrix();
 
-        GL11.glCallList(bodyLists+1);
-        GL11.glCallList(bodyLists+2);
+        if(tile.mActive) {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(tile.clientY,0,tile.clientX);
+            GL11.glCallList(bodyLists+3);
+            GL11.glPopMatrix();
+
+            GL11.glCallList(bodyLists+2);
+        }
+        if((!tile.mActive && tile.mRunning) || (tile.mActive && tile.getTimer() % 512 /8F - timer > 0.2)){
+            GL11.glColor4f(1f, 1f, 1f, 1f);
+
+            GL11.glCallList(bodyLists+1);
+        }
 
         GL11.glColor4f(1f, 1f, 1f, 1f);
 

@@ -98,11 +98,10 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 						"AAA",
 						"AAA"
 				).fixedLayer('B',
-						"AAB",
+						"AAA",
 						"AAA"
 				)
-				.where('A', new PartPredicate(new TileDesc(kRegistry?GTTileEntityRegistry.ktfruaddon:GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID)))
-				.where('B', new PartPredicate(new TileDesc(kRegistry?GTTileEntityRegistry.ktfruaddon:GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, 7)))
+				.where('A', new PartPredicate(new TileDesc(kRegistry?GTTileEntityRegistry.ktfruaddon:GTTileEntityRegistry.gregtech, mTurbineWalls, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_ENERGY)))
 				.setOffset(0,0,0) ;
 	}
 	@Override
