@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,8 @@ public class ComputerCluster {
     public static final int MAX_USER_EVENTS = 16;
 
     public static final Map<UUID, ComputerCluster> allClusterUUIDsServer = new HashMap<>();
-    public static final Map<UUID, ComputerClusterClientData.ClusterSnapshot> allClusterUUIDsClient = new HashMap<>();
+    public static final Map<UUID, Map<UUID, ComputerClusterClientData.ClusterSnapshot>> allClusterUUIDsClient = new HashMap<>();
+    private static final UUID NO_CONTROLLER_UUID = new UUID(0L, 0L);
 
     public Map<UUID, ControllerData> controllerList = new HashMap<>();
     @NotNull public Map<UUID, Integer> controllerReachableUpdateCache = new HashMap<>();
@@ -148,7 +150,8 @@ public class ComputerCluster {
             eventExtra.poll();
         }
         events.add((byte) event);
-        eventExtra.add(extra == null ? "" : extra);
+        String timestamp = new SimpleDateFormat("[HH:mm:ss]").format(new Date());
+        eventExtra.add(extra == null ? "" : timestamp + " " +extra);
     }
 
     protected void pushClusterEvent(short event, String extra) {
@@ -429,8 +432,14 @@ public class ComputerCluster {
         }
     }
 
-    public static @Nullable ComputerClusterClientData.ClusterSnapshot getClientSnapshot(UUID clusterUUID) {
-        return allClusterUUIDsClient.get(clusterUUID);
+    private static UUID controllerKey(@Nullable UUID controllerUUID) {
+        return controllerUUID == null ? NO_CONTROLLER_UUID : controllerUUID;
+    }
+
+    public static @Nullable ComputerClusterClientData.ClusterSnapshot getClientSnapshot(UUID clusterUUID, @Nullable UUID controllerUUID) {
+        Map<UUID, ComputerClusterClientData.ClusterSnapshot> controllerSnapshots = allClusterUUIDsClient.get(clusterUUID);
+        if (controllerSnapshots == null) return null;
+        return controllerSnapshots.get(controllerKey(controllerUUID));
     }
 
     public static void receiveUUIDAssignedData(UUID uuid, byte @Nullable [] data) {
@@ -439,9 +448,10 @@ public class ComputerCluster {
              DataInputStream dis = new DataInputStream(bis)) {
             byte packetType = dis.readByte();
             if (packetType == PACKET_SYNC_DATA) {
-                byte[] snapshotData = new byte[data.length - 1];
-                System.arraycopy(data, 1, snapshotData, 0, snapshotData.length);
-                allClusterUUIDsClient.put(uuid, ComputerClusterClientData.ClusterSnapshot.deserialize(snapshotData));
+                UUID controllerUUID = dis.readBoolean() ? new UUID(dis.readLong(), dis.readLong()) : null;
+                byte[] snapshotData = new byte[bis.available()];
+                dis.readFully(snapshotData);
+                allClusterUUIDsClient.computeIfAbsent(uuid, k -> new HashMap<>()).put(controllerKey(controllerUUID), ComputerClusterClientData.ClusterSnapshot.deserialize(snapshotData));
                 return;
             }
             if (packetType == PACKET_NOT_FOUND) {
@@ -484,10 +494,17 @@ public class ComputerCluster {
             if (controllerUUID == null && !cluster.controllerList.isEmpty()) controllerUUID = cluster.controllerList.keySet().iterator().next();
 
             byte[] snapshotBytes = ComputerClusterClientData.ClusterSnapshot.serialize(cluster.fetchClientSnapshot(controllerUUID));
-            byte[] packetBytes = new byte[snapshotBytes.length + 1];
-            packetBytes[0] = PACKET_SYNC_DATA;
-            System.arraycopy(snapshotBytes, 0, packetBytes, 1, snapshotBytes.length);
-            kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData(PACKET_TYPE, cluster.clusterUUID, packetBytes), playerMP);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos);
+            dos.writeByte(PACKET_SYNC_DATA);
+            dos.writeBoolean(controllerUUID != null);
+            if (controllerUUID != null) {
+                dos.writeLong(controllerUUID.getMostSignificantBits());
+                dos.writeLong(controllerUUID.getLeastSignificantBits());
+            }
+            dos.write(snapshotBytes);
+            dos.flush();
+            kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData(PACKET_TYPE, cluster.clusterUUID, bos.toByteArray()), playerMP);
         } catch (IOException e) {
             FMLLog.log(Level.ERROR, "ComputerCluster client snapshot encode failed", e);
         }

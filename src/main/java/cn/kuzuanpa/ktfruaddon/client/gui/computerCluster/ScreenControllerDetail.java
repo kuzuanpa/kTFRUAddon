@@ -24,8 +24,8 @@ import cn.kuzuanpa.kGuiLib.client.objects.gui.ButtonList;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.CommonTexturedButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerClusterClientData;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerClusterClientData;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +37,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
 
     protected CommonTexturedButton stateButton =null;
-    protected Text stateTextButton  = null, stateInfo0Button= null, stateInfo1Button= null, stateInfo2Button= null, stateInfo3Button = null, controllerProvidingButton= null, clusterTotalButton     = null;
+    protected Text stateTextButton  = null, fullLineEvent= null, controllerProvidingButton= null, clusterTotalButton     = null;
     protected ButtonList controllerEventListButton = null;
 
     protected ComputePower computing = ComputePower.Normal;
@@ -60,10 +60,12 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
         syncStateButton();
         controllerEventListButton.clearSubButton();
         for (int i = 0; i < events.length; i++) {
-            String str = Constants.getControllerEventDesc(events[i], i < eventExtra.length ? eventExtra[i] : "");
-            controllerEventListButton.addSubButton(new Text(20+i, str,ContainerX+196-fontRendererObj.getStringWidth(str)/2,14+ ContainerY).setFBOOffset(0,i*10).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200)));
+            String fullText = Constants.getControllerEventDesc(events[i], i < eventExtra.length ? eventExtra[i] : "");
+            String shortText = Constants.getControllerEventShortDesc(events[i]);
+            kGuiButtonBase button = new ControllerEventButton(20+i, ContainerX+140, 14 + ContainerY + i*10, 104, shortText, fullText).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
+            controllerEventListButton.addSubButton(button);
         }
-        controllerEventListButton.setMaxScrolled(events.length*10 -120);
+        controllerEventListButton.setMaxScrolled(Math.max(20, events.length*10 - 120));
         return this;
     }
 
@@ -126,11 +128,14 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
         controllerEventListButton = new ButtonList(7,ContainerX+140,ContainerY+14,154,130);
 
         buttons.add(controllerEventListButton.addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeFadeIn(animeTimeSection2)));
+
+        fullLineEvent = new Text(14,"",ContainerX+6,ContainerY+90,0x00000000);
+        buttons.add(fullLineEvent);
     }
 
     @Override
     public void onKeyTyped(char c, int i) {
-        if(i == Keyboard.KEY_ESCAPE)close();
+        if(i == Keyboard.KEY_E|| i == Keyboard.KEY_ESCAPE)close();
     }
 
     public class ControllerOverviewChartButton extends kGuiButtonBase {
@@ -168,6 +173,32 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
             this.drawTexturedModalRect(xPosition,yPosition+1, 0, 236, aWidthProviding, heightPerBar-2);
 
             GL11.glPopMatrix();
+            GL11.glColor4f(1,1,1,1);
+        }
+    }
+
+    public class ControllerEventButton extends kGuiButtonBase {
+        public final String shortText;
+        public final String fullText;
+
+        public ControllerEventButton(int id, int xPos, int yPos, int width, String shortText, String fullText) {
+            super(id, xPos, yPos, width, 10, shortText);
+            this.shortText = shortText;
+            this.fullText = fullText;
+            setAnimatedInFBO(true);
+        }
+
+        @Override
+        public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
+            int drawColor = isMouseInButton(mouseX, mouseY) ? 0x404040 : 0x202020;
+            String drawText = shortText;
+            while (fontRendererObj.getStringWidth(drawText) > width && drawText.length() > 3) {
+                drawText = drawText.substring(0, drawText.length() - 4) + "..";
+            }
+            fontRendererObj.drawString(drawText, xPosition, yPosition, drawColor);
+            if(isMouseInButton(mouseX,(int) (mouseY - controllerEventListButton.YOffset))){
+                fullLineEvent.text = fullText;
+            }
             GL11.glColor4f(1,1,1,1);
         }
     }

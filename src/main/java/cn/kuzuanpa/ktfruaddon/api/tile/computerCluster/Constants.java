@@ -50,6 +50,21 @@ public class Constants {
     public static final byte STATE_ERROR=3;
     public static final byte STATE_BELONG_ERR/*The controller owned by other cluster*/=4;
 
+    public static String getControllerEventShortDesc(byte event){
+        switch (event) {
+            case EVENT_WRONG_UUID: return "UUID conflict";
+            case EVENT_KICKING_FROM_CLUSTER: return "Removed";
+            case EVENT_A_CONTROLLER_LEFT: return "Peer left";
+            case EVENT_CONTROLLER_JOINED: return "Joined";
+            case EVENT_STATE_CHANGED: return "State changed";
+            case EVENT_REACHABILITY_OK: return "Reachability ok";
+            case EVENT_REACHABILITY_WARNING: return "Reachability warn";
+            case EVENT_REACHABILITY_FAILED: return "Reachability fail";
+            case EVENT_CLUSTER_DESTROY: return "Destroyed";
+            default: return "Event " + event;
+        }
+    }
+
     public static String getControllerEventDesc(byte event, String extra){
         switch (event) {
             case EVENT_WRONG_UUID: return "UUID conflict" + appendExtra(extra);
@@ -62,6 +77,22 @@ public class Constants {
             case EVENT_REACHABILITY_FAILED: return "Reachability failed" + appendExtra(extra);
             case EVENT_CLUSTER_DESTROY: return "Cluster destroyed" + appendExtra(extra);
             default: return "Controller event " + event + appendExtra(extra);
+        }
+    }
+
+    public static String getClusterEventShortDesc(byte event){
+        switch (event) {
+            case EVENT_CLUSTER_CREATED: return "Created";
+            case EVENT_CLUSTER_DESTROY: return "Destroyed";
+            case EVENT_CONTROLLER_JOINED: return "+ Controller";
+            case EVENT_A_CONTROLLER_LEFT: return "- Controller";
+            case EVENT_USER_JOINED: return "+ User";
+            case EVENT_USER_LEFT: return "- User";
+            case EVENT_POWER_ALLOCATED: return "- Power";
+            case EVENT_POWER_RELEASED: return "+ Power";
+            case EVENT_POWER_ALLOCATE_FAILED: return "x Power";
+            case EVENT_STATE_CHANGED: return "*State";
+            default: return "Event " + event;
         }
     }
 

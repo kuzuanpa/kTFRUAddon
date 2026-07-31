@@ -34,7 +34,10 @@ import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.*;
 import cn.kuzuanpa.ktfruaddon.client.gui.computerCluster.ContainerClientClusterController;
 import cn.kuzuanpa.ktfruaddon.client.gui.computerCluster.ContainerCommonClusterController;
 import codechicken.lib.vec.BlockCoord;
+import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.data.LH;
+import gregapi.network.INetworkHandler;
+import gregapi.network.IPacket;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase07Paintable;
 import gregapi.util.OM;
@@ -53,6 +56,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -61,7 +69,7 @@ import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_NO
 import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_OFFLINE;
 import static gregapi.data.CS.*;
 
-public class ControllerBase extends TileEntityBase07Paintable implements IComputerClusterController {
+public class ControllerBase extends TileEntityBase07Paintable implements IComputerClusterController, IMultiTileEntity.IMTE_SyncDataByteArray {
     @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.computecluster.controller.base";
@@ -111,6 +119,54 @@ public class ControllerBase extends TileEntityBase07Paintable implements IComput
         if(aTimer%10 == 0)return true;
         return false;
     }
+
+    @Override
+    public IPacket getClientDataPacket(boolean aSendAll) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos);
+            if (aSendAll) {
+                dos.writeByte((byte) UT.Code.getR(this.mRGBa));
+                dos.writeByte((byte) UT.Code.getG(this.mRGBa));
+                dos.writeByte((byte) UT.Code.getB(this.mRGBa));
+            }
+            dos.writeByte(this.getVisualData());
+            writeUUIDSyncData(dos, myUUID, clusterUUID);
+            dos.flush();
+            return getClientDataPacketByteArray(aSendAll, bos.toByteArray());
+        } catch (IOException e) {
+            return super.getClientDataPacket(aSendAll);
+        }
+    }
+
+    @Override
+    public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
+        super.receiveDataByteArray(aData, aNetworkHandler);
+        readUUIDSyncData(aData);
+        return true;
+    }
+
+    private static void writeUUIDSyncData(DataOutputStream dos, UUID myUUID, UUID clusterUUID) throws IOException {
+        dos.writeBoolean(myUUID != null);
+        dos.writeLong(myUUID == null ? 0L : myUUID.getMostSignificantBits());
+        dos.writeLong(myUUID == null ? 0L : myUUID.getLeastSignificantBits());
+        dos.writeBoolean(clusterUUID != null);
+        dos.writeLong(clusterUUID == null ? 0L : clusterUUID.getMostSignificantBits());
+        dos.writeLong(clusterUUID == null ? 0L : clusterUUID.getLeastSignificantBits());
+    }
+
+    private void readUUIDSyncData(byte[] aData) {
+        if (aData == null || aData.length < 35) return;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(aData, aData.length - 34, 34);
+             DataInputStream dis = new DataInputStream(bis)) {
+            if (dis.readBoolean()) setUUID(new UUID(dis.readLong(), dis.readLong()));
+            else setUUID(null);
+            if (dis.readBoolean()) setSavedClusterUUID(new UUID(dis.readLong(), dis.readLong()));
+            else setSavedClusterUUID(null);
+        } catch (IOException ignored) {
+        }
+    }
+
     public boolean clickDoubleCheck=false;
 
     public void writePosToUSB(EntityPlayer aPlayer){

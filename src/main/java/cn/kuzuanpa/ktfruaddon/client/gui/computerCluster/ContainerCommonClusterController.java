@@ -55,6 +55,7 @@ public class ContainerCommonClusterController extends ContainerCommon {
 	public ComputerClusterClientData.UserList         dataUserList;
 	public ComputerClusterClientData.ClusterDetail    dataClusterDetail ;
 	public ComputerClusterClientData.ControllerDetail dataControllerDetail ;
+	private ComputerClusterClientData.ClusterSnapshot lastSnapshot;
 
 	public boolean updated = false;
 
@@ -68,16 +69,20 @@ public class ContainerCommonClusterController extends ContainerCommon {
 		return ((IComputerClusterController) mTileEntity).getUUID();
 	}
 
-	public void updateFromClientCache() {
+	public boolean updateFromClientCache() {
+		updated = false;
 		UUID clusterUUID = getClusterUUID();
-		if (clusterUUID == null) return;
-		ComputerClusterClientData.ClusterSnapshot snapshot = ComputerCluster.getClientSnapshot(clusterUUID);
-		if (snapshot == null) return;
+		UUID controllerUUID = getControllerUUID();
+		if (clusterUUID == null) return false;
+		ComputerClusterClientData.ClusterSnapshot snapshot = ComputerCluster.getClientSnapshot(clusterUUID, controllerUUID);
+		if (snapshot == null || snapshot == lastSnapshot) return false;
+		lastSnapshot = snapshot;
 		dataControllerList = snapshot.controllerList;
 		dataUserList = snapshot.userList;
 		dataClusterDetail = snapshot.clusterDetail;
 		dataControllerDetail = snapshot.controllerDetail;
 		updated = true;
+		return true;
 	}
 
 	@Override public int getStartIndex() {return 0;}

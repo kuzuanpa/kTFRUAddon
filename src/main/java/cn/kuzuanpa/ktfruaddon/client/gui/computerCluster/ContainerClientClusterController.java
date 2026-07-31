@@ -46,10 +46,6 @@ public class ContainerClientClusterController extends kGuiContainerBase implemen
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-		ensureSubscribed();
-		requestMissingSnapshot();
-		mContainer.updateFromClientCache();
-		syncValuesToChildGui();
 		GL11.glEnable(GL11.GL_BLEND);
 		mc.getTextureManager().bindTexture(commonBackground);
 		GL11.glColor4f(1,1,1,1);
@@ -57,6 +53,14 @@ public class ContainerClientClusterController extends kGuiContainerBase implemen
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
 		this.drawTexturedModalRect(x,y+14, 0, 14, xSize, ySize-14);
+	}
+
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		ensureSubscribed();
+		requestMissingSnapshot();
+		if (mContainer.updateFromClientCache()) syncValuesToChildGui();
 	}
 
 	public ContainerClientClusterController(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID, String aGUITexture) {
