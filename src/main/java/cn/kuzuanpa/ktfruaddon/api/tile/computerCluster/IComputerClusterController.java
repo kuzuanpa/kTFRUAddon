@@ -89,8 +89,8 @@ public interface IComputerClusterController {
     static void readFromNBT(NBTTagCompound nbt, IComputerClusterController controller){
         if(nbt.hasKey("myUUIDHigh") && nbt.hasKey("myUUIDLow")) controller.setUUID(new UUID(nbt.getLong("myUUIDHigh"), nbt.getLong("myUUIDLow")));
         else controller.setUUID(UUID.randomUUID());
-        if(nbt.hasKey("clusterUUIDHigh")&& nbt.hasKey("clusterUUIDLow")){
-            controller.setSavedClusterUUID(new UUID(nbt.getLong("clusterUUIDHigh"), nbt.getLong("clusterUUIDHigh")));
+        if(nbt.hasKey("clusterUUIDHigh") && nbt.hasKey("clusterUUIDLow")){
+            controller.setSavedClusterUUID(new UUID(nbt.getLong("clusterUUIDHigh"), nbt.getLong("clusterUUIDLow")));
             List<ControllerData> datas = new ArrayList<>();
             NBTTagList list = nbt.getTagList("clusterControllers", 11);
             for (int i = 0; i < list.tagCount(); i++) {

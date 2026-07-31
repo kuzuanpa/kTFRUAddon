@@ -256,8 +256,13 @@ public class ControllerBase extends TileEntityBase07Paintable implements IComput
     @Override
     public void notifyControllerEvent(short event) {
         switch (event){
-            case Constants.EVENT_WRONG_UUID: myUUID =UUID.randomUUID();
-            case Constants.EVENT_CLUSTER_DESTROY: cluster=null;
+            case Constants.EVENT_WRONG_UUID:
+                myUUID = UUID.randomUUID();
+                break;
+            case Constants.EVENT_CLUSTER_DESTROY:
+                cluster = null;
+                mState = STATE_OFFLINE;
+                break;
         }
     }
 

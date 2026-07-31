@@ -97,7 +97,21 @@ public class ComputerCluster {
             updateControllerData(uuid,data,totalComputePowerMap);
             if(!oldData.equals(data)) data.needToSendToClient=true;
         });
+        state = computeClusterState();
         totalComputePower = totalComputePowerMap;
+    }
+
+    protected byte computeClusterState() {
+        boolean hasOnline = false;
+        boolean hasWarning = false;
+        for (ControllerData data : controllerList.values()) {
+            if (data.state == Constants.STATE_ERROR || data.state == Constants.STATE_BELONG_ERR) return Constants.STATE_ERROR;
+            if (data.state == Constants.STATE_WARNING) hasWarning = true;
+            if (data.state == Constants.STATE_NORMAL) hasOnline = true;
+        }
+        if (hasWarning) return Constants.STATE_WARNING;
+        if (hasOnline) return Constants.STATE_NORMAL;
+        return Constants.STATE_OFFLINE;
     }
 
     public void updateControllerData(UUID uuid, ControllerData data, Map<ComputePower, Long> totalComputePowerMap){
@@ -172,6 +186,7 @@ public class ComputerCluster {
         if(getUserData(user.getUUID()) == null)joinUser(user);
         UserData data = getUserData(user.getUUID());
         if(data == null)return false;
+        if(!data.consumingPower.isEmpty()) return true;
 
         if(Math.abs((MinecraftServer.getServer().getTickCounter() % 16384) - data.lastUpdated) > 5)updateUserData(user);
         if(data.state == Constants.STATE_NORMAL || data.state == Constants.STATE_WARNING){
@@ -189,6 +204,7 @@ public class ComputerCluster {
         if(data == null)return false;
         if(!data.consumingPower.isEmpty()){
             data.consumingPower.forEach((k,v) -> usedComputePower.merge(k, v,(a, b) -> a-b));
+            data.consumingPower.clear();
             user.onComputerPowerReleased();
         }
         return true;

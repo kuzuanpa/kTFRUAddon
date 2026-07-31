@@ -100,7 +100,11 @@ public class ContainerCommonClusterController extends ContainerCommon {
                 crafter.sendProgressBarUpdate(this, sendType<<24|i, datum);
             }
 			crafter.sendProgressBarUpdate(this, 5<<24, sendType<<24|data.length);
-		}
+			}
+	}
+
+	private int[] orderedValues(Map<Integer, Integer> map) {
+		return new TreeMap<>(map).values().stream().mapToInt(v -> v).toArray();
 	}
 	public ComputerClusterClientData.ControllerList   dataControllerList ;
 	public ComputerClusterClientData.UserList         dataUserList;
@@ -147,22 +151,22 @@ public class ContainerCommonClusterController extends ContainerCommon {
 		switch (type) {
 			case 0:
 				if(!checkEOF(receivedDataClientList,dataMaxIndex[type])) return;
-				dataUserList = ComputerClusterClientData.UserList.deserialize(codeUtil.decompressFromIntegerArray(receivedDataClientList.values().stream().mapToInt(v->v).toArray()));
+				dataUserList = ComputerClusterClientData.UserList.deserialize(codeUtil.decompressFromIntegerArray(orderedValues(receivedDataClientList)));
 				receivedDataClientList.clear();
 				break;
 			case 1:
 				if(!checkEOF(receivedDataControllerList,dataMaxIndex[type])) return;
-				dataControllerList = ComputerClusterClientData.ControllerList.deserialize(codeUtil.decompressFromIntegerArray(receivedDataControllerList.values().stream().mapToInt(v->v).toArray()));
+				dataControllerList = ComputerClusterClientData.ControllerList.deserialize(codeUtil.decompressFromIntegerArray(orderedValues(receivedDataControllerList)));
 				receivedDataControllerList.clear();
 				break;
 			case 2:
 				if(!checkEOF(receivedDataClusterDetail,dataMaxIndex[type])) return;
-				dataClusterDetail = ComputerClusterClientData.ClusterDetail.deserialize(codeUtil.decompressFromIntegerArray(receivedDataClusterDetail.values().stream().mapToInt(v->v).toArray()));
+				dataClusterDetail = ComputerClusterClientData.ClusterDetail.deserialize(codeUtil.decompressFromIntegerArray(orderedValues(receivedDataClusterDetail)));
 				receivedDataClusterDetail.clear();
 				break;
 			case 3:
 				if(!checkEOF(receivedDataControllerDetail,dataMaxIndex[type])) return;
-				dataControllerDetail = ComputerClusterClientData.ControllerDetail.deserialize(codeUtil.decompressFromIntegerArray(receivedDataControllerDetail.values().stream().mapToInt(v->v).toArray()));
+				dataControllerDetail = ComputerClusterClientData.ControllerDetail.deserialize(codeUtil.decompressFromIntegerArray(orderedValues(receivedDataControllerDetail)));
 				receivedDataControllerDetail.clear();
 				break;
 		}

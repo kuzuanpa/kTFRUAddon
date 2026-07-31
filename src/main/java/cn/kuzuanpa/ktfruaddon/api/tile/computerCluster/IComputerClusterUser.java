@@ -88,7 +88,7 @@ public interface IComputerClusterUser {
             TileEntity tile = WD.te(DimensionManager.getWorld(controllerData[0]),controllerData[1],controllerData[2],controllerData[3],false);
             if(tile instanceof IComputerClusterController)user.setController(((IComputerClusterController) tile));
         }
-        if(nbt.hasKey("otherControllers")){
+        if(nbt.hasKey("bkupControllers")){
             int[] data = nbt.getIntArray("bkupControllers");
             List<IComputerClusterController> bkupControllers = new ArrayList<>();
             for (int i = 0; i < data.length/4; i++) {
