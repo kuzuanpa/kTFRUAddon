@@ -22,6 +22,7 @@ import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
 import cn.kuzuanpa.kGuiLib.client.objects.IAnimatableButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.tileentity.ITileEntityInventoryGUI;
@@ -33,15 +34,22 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.util.UUID;
+
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
 @SideOnly(Side.CLIENT)
 public class ContainerClientClusterController extends kGuiContainerBase implements IHiddenNei {
 	private ContainerCommonClusterController mContainer;
+	private boolean subscribed = false;
+	private int requestCooldown = 0;
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-		if(mContainer.updated)syncValuesToChildGui();
+		ensureSubscribed();
+		requestMissingSnapshot();
+		mContainer.updateFromClientCache();
+		syncValuesToChildGui();
 		GL11.glEnable(GL11.GL_BLEND);
 		mc.getTextureManager().bindTexture(commonBackground);
 		GL11.glColor4f(1,1,1,1);
@@ -67,7 +75,7 @@ public class ContainerClientClusterController extends kGuiContainerBase implemen
 		buttons.add(new switchButton(0,ContainerX+ 2,ContainerY, 2,"Overview",        commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeFadeIn(200)));
 		buttons.add(new switchButton(1,ContainerX+22,ContainerY,22,"Cluster Overview",commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 800,-50,0,2)).addAnime(new animeFadeIn(400)));
 		buttons.add(new switchButton(2,ContainerX+42,ContainerY,42,"Controller List", commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1000,-50,0,2)).addAnime(new animeFadeIn(600)));
-		buttons.add(new switchButton(3,ContainerX+62,ContainerY,62,"Client List",     commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1200,-50,0,2)).addAnime(new animeFadeIn(800)));
+		buttons.add(new switchButton(3,ContainerX+62,ContainerY,62,"User List",       commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1200,-50,0,2)).addAnime(new animeFadeIn(800)));
 	}
 
 	@Override
@@ -78,7 +86,7 @@ public class ContainerClientClusterController extends kGuiContainerBase implemen
 			case 0: childGui = new ScreenControllerDetail().setup(this.width,this.height,ContainerX,ContainerY).setParentGui(this).setMC(mc).setFontRenderer(fontRendererObj); break;
 			case 1: childGui = new ScreenClusterDetail()   .setup(this.width,this.height,ContainerX,ContainerY).setParentGui(this).setMC(mc).setFontRenderer(fontRendererObj); break;
 			case 2: childGui = new ScreenControllerList()  .setup(this.width,this.height,ContainerX,ContainerY).setParentGui(this).setMC(mc).setFontRenderer(fontRendererObj); break;
-			case 3: childGui = new ScreenClientList()      .setup(this.width,this.height,ContainerX,ContainerY).setParentGui(this).setMC(mc).setFontRenderer(fontRendererObj); break;
+			case 3: childGui = new ScreenUserList()        .setup(this.width,this.height,ContainerX,ContainerY).setParentGui(this).setMC(mc).setFontRenderer(fontRendererObj); break;
 		}
 		if(childGui!=null){
 			childGui.initGui2();
@@ -92,13 +100,42 @@ public class ContainerClientClusterController extends kGuiContainerBase implemen
 		if(childGui instanceof ScreenControllerDetail)((ScreenControllerDetail) childGui).updateFromData(mContainer.dataControllerDetail);
 		if(childGui instanceof ScreenClusterDetail   )((ScreenClusterDetail   ) childGui).updateFromData(mContainer.dataClusterDetail);
 		if(childGui instanceof ScreenControllerList  )((ScreenControllerList  ) childGui).updateFromData(mContainer.dataControllerList);
-		if(childGui instanceof ScreenClientList      )((ScreenClientList      ) childGui).updateFromData(mContainer.dataUserList);
-		mContainer.updated=false;
+		if(childGui instanceof ScreenUserList        )((ScreenUserList        ) childGui).updateFromData(mContainer.dataUserList);
+	}
+
+	private void ensureSubscribed() {
+		if (subscribed) return;
+		UUID clusterUUID = mContainer.getClusterUUID();
+		if (clusterUUID == null || Minecraft.getMinecraft().thePlayer == null) return;
+		ComputerCluster.sendGetClusterDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), clusterUUID, mContainer.getControllerUUID(), ComputerCluster.PACKET_SUBSCRIBE);
+		subscribed = true;
+		requestCooldown = 20;
+	}
+
+	private void requestMissingSnapshot() {
+		if (!subscribed || mContainer.dataClusterDetail != null || Minecraft.getMinecraft().thePlayer == null) return;
+		if (requestCooldown > 0) {
+			requestCooldown--;
+			return;
+		}
+		UUID clusterUUID = mContainer.getClusterUUID();
+		if (clusterUUID == null) return;
+		ComputerCluster.sendGetClusterDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), clusterUUID, mContainer.getControllerUUID(), ComputerCluster.PACKET_REQUEST_SYNC);
+		requestCooldown = 20;
 	}
 
 	@Override
 	public void onKeyTyped(char key, int keyCode) {
 		if(keyCode == Keyboard.KEY_ESCAPE)close();
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		UUID clusterUUID = mContainer.getClusterUUID();
+		if(clusterUUID != null && Minecraft.getMinecraft().thePlayer != null) {
+			ComputerCluster.sendGetClusterDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), clusterUUID, mContainer.getControllerUUID(), ComputerCluster.PACKET_UNSUBSCRIBE);
+		}
 	}
 
 	@Override

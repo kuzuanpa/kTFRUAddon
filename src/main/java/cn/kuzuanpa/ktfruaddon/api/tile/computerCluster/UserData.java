@@ -43,14 +43,19 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
 import java.io.*;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Queue;
 
 public class UserData {
     public IComputerClusterUser user;
     public byte state;
     public short lastUpdated = 0;
     public Map<ComputePower, Long> consumingPower = new HashMap<>();
+    public Queue<Byte> events = new ArrayDeque<>();
+    public Queue<String> eventExtra = new ArrayDeque<>();
     public boolean needToSendToClient = false;
     public UserData(IComputerClusterUser user){this.user = user;}
 
@@ -58,6 +63,8 @@ public class UserData {
         UserData data = new UserData(user);
         data.state=this.state;
         data.consumingPower =this.consumingPower;
+        data.events = new ArrayDeque<>(this.events);
+        data.eventExtra = new ArrayDeque<>(this.eventExtra);
         return data;
     }
 
@@ -72,6 +79,13 @@ public class UserData {
                 Long amount = entry.getValue();
                 dos.writeByte(key.ordinal());
                 dos.writeLong(amount);
+            }
+            dos.writeInt(data.events.size());
+            Iterator<Byte> eventIterator = data.events.iterator();
+            Iterator<String> extraIterator = data.eventExtra.iterator();
+            while (eventIterator.hasNext()) {
+                dos.writeByte(eventIterator.next());
+                dos.writeUTF(extraIterator.hasNext() ? extraIterator.next() : "");
             }
             dos.flush();
             bytes = baos.toByteArray();
@@ -90,12 +104,17 @@ public class UserData {
         for (int i = 0; i < length; i++) {
             consumingPower.put(ComputePower.getType(dis.readByte()), dis.readLong());
         }
+        int eventCount = dis.readInt();
 
-        dis.close();
-        bais.close();
         UserData data = new UserData(null);
         data.state=state;
         data.consumingPower = consumingPower;
+        for (int i = 0; i < eventCount; i++) {
+            data.events.add(dis.readByte());
+            data.eventExtra.add(dis.readUTF());
+        }
+        dis.close();
+        bais.close();
         return data;
     }
 }

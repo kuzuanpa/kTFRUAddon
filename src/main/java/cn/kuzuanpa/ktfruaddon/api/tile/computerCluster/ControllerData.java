@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 
@@ -46,6 +47,7 @@ public class ControllerData{
     @NotNull public Map.Entry<ComputePower, Long> power = new SingleEntry<>(ComputePower.Normal, 0L);
     public boolean needToSendToClient = false;
     public Queue<Byte> events = new ArrayDeque<>();
+    public Queue<String> eventExtra = new ArrayDeque<>();
     public ControllerData(World world, BlockCoord pos){this.world=world;this.pos=pos;}
 
     @Override
@@ -68,6 +70,8 @@ public class ControllerData{
         ControllerData data = new ControllerData(this.world,this.pos);
         data.state=this.state;
         data.power=this.power;
+        data.events = new ArrayDeque<>(this.events);
+        data.eventExtra = new ArrayDeque<>(this.eventExtra);
         return data;
     }
 
@@ -83,6 +87,13 @@ public class ControllerData{
             dos.writeByte(data.state);
             dos.writeByte(data.power.getKey().ordinal());
             dos.writeLong(data.power.getValue());
+            dos.writeInt(data.events.size());
+            Iterator<Byte> eventIterator = data.events.iterator();
+            Iterator<String> extraIterator = data.eventExtra.iterator();
+            while (eventIterator.hasNext()) {
+                dos.writeByte(eventIterator.next());
+                dos.writeUTF(extraIterator.hasNext() ? extraIterator.next() : "");
+            }
             dos.flush();
             bytes = baos.toByteArray();
         }
@@ -102,12 +113,16 @@ public class ControllerData{
         byte state = dis.readByte();
         byte powerType = dis.readByte();
         long powerAmount = dis.readLong();
-
-        dis.close();
-        bais.close();
+        int eventCount = dis.readInt();
         ControllerData data = new ControllerData(DimensionManager.getWorld(worldID),new BlockCoord(posX,posY,posZ));
         data.state=state;
         data.power = new SingleEntry<>(ComputePower.getType(powerType),powerAmount);
+        for (int i = 0; i < eventCount; i++) {
+            data.events.add(dis.readByte());
+            data.eventExtra.add(dis.readUTF());
+        }
+        dis.close();
+        bais.close();
         return data;
     }
 }

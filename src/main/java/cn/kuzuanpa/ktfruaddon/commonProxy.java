@@ -20,6 +20,7 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.i18nPostInit;
 import cn.kuzuanpa.ktfruaddon.api.material.materialPreInit;
 import cn.kuzuanpa.ktfruaddon.api.network.*;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
 import cn.kuzuanpa.ktfruaddon.item.ItemPostInit;
 import cn.kuzuanpa.ktfruaddon.item.itemPreInit;
 import cn.kuzuanpa.ktfruaddon.loot.lootPostInit;
@@ -64,6 +65,7 @@ public class commonProxy extends Abstract_Proxy {
         fluidPreInit.init(aEvent);
 
         PacketUUIDAssignedData.typeMap.put((byte) 0, ResearchTree::receiveUUIDAssignedData);
+        PacketUUIDAssignedData.typeMap.put((byte) 1, ComputerCluster::receiveUUIDAssignedData);
     }
 
 
@@ -99,4 +101,3 @@ public class commonProxy extends Abstract_Proxy {
     public void sendMessage(PlayerEvent.PlayerLoggedInEvent e){
     }
 }
-

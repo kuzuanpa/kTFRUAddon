@@ -44,30 +44,30 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
 
     protected CommonTexturedButton stateButton =null;
-    protected Text stateTextButton  = null, controllerCountButton= null, clientCountButton     = null;
+    protected Text stateTextButton  = null, controllerCountButton= null, userCountButton     = null;
     protected ButtonList clusterEventListButton = null;
 
     protected byte clusterState  = 0;
-    protected int  controllerCount  = 0,clientCount=0;
+    protected int  controllerCount  = 0,userCount=0;
 
     Map<ComputePower,Long> clusterAvailPowers = new HashMap<>();
     Map<ComputePower,Long> clusterUsedPowers = new HashMap<>();
 
     public ScreenClusterDetail updateFromData(ComputerClusterClientData.ClusterDetail data){
         if(data == null)return this;
-        updateCluster(data.clusterState,data.controllerCount,data.clientCount,data.availPowers,data.usedPowers,data.events);
+        updateCluster(data.clusterState,data.controllerCount,data.userCount,data.availPowers,data.usedPowers,data.events, data.eventExtra);
         return this;
     }
-    public ScreenClusterDetail updateCluster(byte clusterState, int controllerCount, int clientCount, Map<ComputePower,Long> availPowers, Map<ComputePower,Long> usedPowers, byte[] events){
+    public ScreenClusterDetail updateCluster(byte clusterState, int controllerCount, int userCount, Map<ComputePower,Long> availPowers, Map<ComputePower,Long> usedPowers, byte[] events, String[] eventExtra){
         this.clusterState=clusterState;
         this.controllerCount=controllerCount;
-        this.clientCount=clientCount;
+        this.userCount=userCount;
         this.clusterAvailPowers=availPowers;
         this.clusterUsedPowers=usedPowers;
         syncValueToButton();
         clusterEventListButton.clearSubButton();
         for (int i = 0; i < events.length; i++) {
-            String str = Constants.getClusterEventDesc(events[i]);
+            String str = Constants.getClusterEventDesc(events[i], i < eventExtra.length ? eventExtra[i] : "");
             clusterEventListButton.addSubButton(new Text(20+i, str,ContainerX+196-fontRendererObj.getStringWidth(str)/2,14+ ContainerY).setFBOOffset(0,i*10).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200)));
         }
         clusterEventListButton.setMaxScrolled(events.length*10 - 120);
@@ -76,7 +76,7 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
 
     protected void syncValueToButton(){
         controllerCountButton .text = String.valueOf(controllerCount);
-        clientCountButton .text = String.valueOf(clientCount);
+        userCountButton .text = String.valueOf(userCount);
         switch (clusterState){
             case 0:
                 stateButton.u =0;
@@ -120,11 +120,11 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
         controllerCountButton=new Text(12,String.valueOf(controllerCount),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+76);
         buttons.add(controllerCountButton                                                                                        .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        str = "Client Count: ";
+        str = "User Count: ";
         buttons.add(new Text(4,str,ContainerX+6,ContainerY+88).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        clientCountButton=new Text(13,String.valueOf(clientCount),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+88);
-        buttons.add(clientCountButton                                                                                            .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        userCountButton=new Text(13,String.valueOf(userCount),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+88);
+        buttons.add(userCountButton                                                                                              .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         int animeTimeSection3 = 1600;
         buttons.add(new Text(6,"Cluster Compute Powers",ContainerX+6,ContainerY+102)                          .addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection3,-120,0,2)).addAnime(new animeRGBA(0,animeTimeSection3,255,255,255,55,-150,-150,-150,200)));

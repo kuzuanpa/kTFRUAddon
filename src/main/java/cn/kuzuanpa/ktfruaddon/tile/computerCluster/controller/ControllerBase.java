@@ -259,9 +259,17 @@ public class ControllerBase extends TileEntityBase07Paintable implements IComput
             case Constants.EVENT_WRONG_UUID:
                 myUUID = UUID.randomUUID();
                 break;
+            case Constants.EVENT_KICKING_FROM_CLUSTER:
+                cluster = null;
+                clusterUUID = null;
+                clusterControllers = new ArrayList<>();
+                mState = STATE_NORMAL;
+                break;
             case Constants.EVENT_CLUSTER_DESTROY:
                 cluster = null;
-                mState = STATE_OFFLINE;
+                clusterUUID = null;
+                clusterControllers = new ArrayList<>();
+                mState = STATE_NORMAL;
                 break;
         }
     }
@@ -270,6 +278,7 @@ public class ControllerBase extends TileEntityBase07Paintable implements IComput
     public boolean setCluster(ComputerCluster cluster) {
         if(getState() == STATE_OFFLINE|| this.cluster!=null)return false;
         this.cluster=cluster;
+        this.clusterUUID = cluster == null ? null : cluster.clusterUUID;
         return true;
     }
     

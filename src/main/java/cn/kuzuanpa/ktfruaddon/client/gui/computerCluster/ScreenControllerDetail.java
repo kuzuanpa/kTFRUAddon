@@ -37,7 +37,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
 
     protected CommonTexturedButton stateButton =null;
-    protected Text stateTextButton  = null, stateInfo0Button= null, stateInfo1Button= null, stateInfo2Button= null, stateInfo3Button = null, controllerCountButton= null, clientCountButton     = null;
+    protected Text stateTextButton  = null, stateInfo0Button= null, stateInfo1Button= null, stateInfo2Button= null, stateInfo3Button = null, controllerProvidingButton= null, clusterTotalButton     = null;
     protected ButtonList controllerEventListButton = null;
 
     protected ComputePower computing = ComputePower.Normal;
@@ -48,11 +48,11 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
 
     public ScreenControllerDetail updateFromData(ComputerClusterClientData.ControllerDetail data){
         if(data == null)return this;
-        updateController(data.controllerState,data.computing,data.controllerProviding,data.clusterTotal,data.events);
+        updateController(data.controllerState,data.computing,data.controllerProviding,data.clusterTotal,data.events, data.eventExtra);
         return this;
     }
 
-    public ScreenControllerDetail updateController(byte controllerState, byte computing, long controllerProviding, long clusterTotal, byte[] events){
+    public ScreenControllerDetail updateController(byte controllerState, byte computing, long controllerProviding, long clusterTotal, byte[] events, String[] eventExtra){
         this.controllerState =controllerState;
         this.computing= ComputePower.getType(computing);
         this.controllerProviding=controllerProviding;
@@ -60,7 +60,7 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
         syncStateButton();
         controllerEventListButton.clearSubButton();
         for (int i = 0; i < events.length; i++) {
-            String str = Constants.getControllerEventDesc(events[i]);
+            String str = Constants.getControllerEventDesc(events[i], i < eventExtra.length ? eventExtra[i] : "");
             controllerEventListButton.addSubButton(new Text(20+i, str,ContainerX+196-fontRendererObj.getStringWidth(str)/2,14+ ContainerY).setFBOOffset(0,i*10).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200)));
         }
         controllerEventListButton.setMaxScrolled(events.length*10 -120);
@@ -85,8 +85,8 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
                 stateButton.u =48;
                 stateTextButton.text = "Error";
         }
-        controllerCountButton.text = String.valueOf(controllerProviding);
-        clientCountButton.text = String.valueOf(clusterTotal);
+        controllerProvidingButton.text = String.valueOf(controllerProviding);
+        clusterTotalButton.text = String.valueOf(clusterTotal);
     }
     @Override
     public void addButtons() {
@@ -109,14 +109,14 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
         str = "This Controller Providing: ";
         buttons.add(new Text(3,str,ContainerX+6,ContainerY+64).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        controllerCountButton=new Text(12,String.valueOf(controllerProviding),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+64);
-        buttons.add(controllerCountButton                                                                                        .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        controllerProvidingButton=new Text(12,String.valueOf(controllerProviding),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+64);
+        buttons.add(controllerProvidingButton                                                                                     .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         str = "Cluster Total: ";
         buttons.add(new Text(4,str,ContainerX+6,ContainerY+76).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        clientCountButton=new Text(13,String.valueOf(clusterTotal),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+76);
-        buttons.add(clientCountButton                                                                                            .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        clusterTotalButton=new Text(13,String.valueOf(clusterTotal),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+76);
+        buttons.add(clusterTotalButton                                                                                           .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         buttons.add(new ControllerOverviewChartButton(5,ContainerX+4,ContainerY+88,154,8)        .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeFadeIn(animeTimeSection2)));
 
