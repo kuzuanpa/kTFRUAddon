@@ -28,4 +28,6 @@ bin/
 .classpath
 .skidfuscator
 
-/src/main/java/cn/kuzuanpa/ktfruaddon/code/upgradeQuest/*
+src/main/java/cn/kuzuanpa/ktfruaddon/code/upgradeQuest/
+mappings/
+eclipse/
