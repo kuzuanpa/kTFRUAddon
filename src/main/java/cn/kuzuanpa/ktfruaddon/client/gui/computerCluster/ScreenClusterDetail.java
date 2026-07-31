@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
-
+ *
  * kTFRUAddon is Open Source and distributed under the
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  *
@@ -25,6 +25,7 @@ import cn.kuzuanpa.kGuiLib.client.objects.gui.ButtonList;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.CommonTexturedButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.kUII18n;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerClusterClientData;
@@ -77,64 +78,64 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
     }
 
     protected void syncValueToButton(){
-        controllerCountButton .text = String.valueOf(controllerCount);
-        userCountButton .text = String.valueOf(userCount);
+        controllerCountButton.text = String.valueOf(controllerCount);
+        userCountButton.text = String.valueOf(userCount);
         switch (clusterState){
             case 0:
                 stateButton.u =0;
-                stateTextButton.text = "Offline";
+                stateTextButton.text = LH.get(I18nHandler.OFFLINE);
                 break;
             case 1:
                 stateButton.u =32;
-                stateTextButton.text = "Normal";
+                stateTextButton.text = LH.get(I18nHandler.NORMAL);
                 break;
             case 2:
                 stateButton.u =64;
-                stateTextButton.text = "Warning";
+                stateTextButton.text = LH.get(I18nHandler.WARNING);
                 break;
             default:
                 stateButton.u =96;
-                stateTextButton.text = "Error";
+                stateTextButton.text = LH.get(I18nHandler.ERROR);
         }
     }
     @Override
     public void addButtons() {
         buttons.add(new CommonTexturedButton(-1,ContainerX,ContainerY,0,0,226,146, MOD_ID, "textures/gui/computerCluster/clusterOverview.png").setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 300,-50,0,2)).addAnime(new animeFadeIn(300)));
 
-        buttons.add(new Text(1,"Cluster Overview",ContainerX+4,ContainerY+3)                                  .addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(new Text(1, LH.get(I18nHandler.COMPUTE_CLUSTER_UI_CLUSTER_OVERVIEW), ContainerX+4,ContainerY+3).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
         int animeTimeSection1 = 900;
 
         String str;
         stateButton = new CommonTexturedButton(10,ContainerX+24,ContainerY+18,0,146,32,32, MOD_ID, "textures/gui/computerCluster/clusterOverview.png");
-        buttons.add(stateButton                                                                                                  .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeFadeIn(animeTimeSection1)));
+        buttons.add(stateButton.setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeFadeIn(animeTimeSection1)));
 
-        str="State: ";
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_STATE) + ": ";
         buttons.add(new Text(2,str,ContainerX+40-fontRendererObj.getStringWidth(str),ContainerY+56).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeRGBA(0,animeTimeSection1,255,255,255,55,-150,-150,-150,200)));
 
-        stateTextButton =new Text(11,"Offline",ContainerX+42,ContainerY+56);
-        buttons.add(stateTextButton                                                                                              .addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeRGBA(0,animeTimeSection1,255,255,255,55,-150,-150,-150,200)));
+        stateTextButton =new Text(11,LH.get(I18nHandler.OFFLINE),ContainerX+42,ContainerY+56);
+        buttons.add(stateTextButton.addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeRGBA(0,animeTimeSection1,255,255,255,55,-150,-150,-150,200)));
 
         int animeTimeSection2 = 1300;
-        str = "Controller Count: ";
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_CONTROLLER_COUNT) + ": ";
         buttons.add(new Text(3,str,ContainerX+6,ContainerY+70).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         controllerCountButton=new Text(12,String.valueOf(controllerCount),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+70);
-        buttons.add(controllerCountButton                                                                                        .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(controllerCountButton.addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        str = "User Count: ";
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_USER_COUNT) + ": ";
         buttons.add(new Text(4,str,ContainerX+6,ContainerY+80).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         userCountButton=new Text(13,String.valueOf(userCount),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+80);
-        buttons.add(userCountButton                                                                                              .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(userCountButton.addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         int animeTimeSection3 = 1600;
-        buttons.add(new Text(5,"Cluster Compute Powers",ContainerX+6,ContainerY+102)                          .addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection3,-120,0,2)).addAnime(new animeRGBA(0,animeTimeSection3,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(new Text(5,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_CLUSTER_COMPUTE_POWERS),ContainerX+6,ContainerY+102).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection3,-120,0,2)).addAnime(new animeRGBA(0,animeTimeSection3,255,255,255,55,-150,-150,-150,200)));
 
-        buttons.add(new ClusterOverviewChartButton(7,ContainerX+6,ContainerY+112,154,7)               .addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection3,-120,0,2)).addAnime(new animeFadeIn(animeTimeSection3)));
+        buttons.add(new ClusterOverviewChartButton(7,ContainerX+6,ContainerY+112,154,7).addAnime(new animeMoveLinear(-1,0,120,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection3,-120,0,2)).addAnime(new animeFadeIn(animeTimeSection3)));
 
-        str = "Event Log";
-        buttons.add(new Text(6, str,ContainerX+196 - fontRendererObj.getStringWidth(str)/2,ContainerY+4)                                  .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, 400,-80,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_EVENT_LOG);
+        buttons.add(new Text(6, str,ContainerX+196 - fontRendererObj.getStringWidth(str)/2,ContainerY+4).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, 400,-80,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
         clusterEventListButton = new ButtonList(8,ContainerX+140,ContainerY+14,154,130);
 
@@ -147,13 +148,13 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
     @Override
     public void handleMouseInput2(int mouseX,int mouseY) {
         super.handleMouseInput2(mouseX,mouseY);
-        addOrUpdateTooltip(0, new String[]{"Data plotted on a logarithmic scale"}, vector2-> (2<vector2.x&&vector2.x<166&& 99 < vector2.y && vector2.y <= 107));
+        addOrUpdateTooltip(0, new String[]{LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_DATA_LOG_SCALE)}, vector2-> (2<vector2.x&&vector2.x<166&& 99 < vector2.y && vector2.y <= 107));
 
         for (ComputePower computePower : ComputePower.values()){
             if(clusterAvailPowers.get(computePower)==null || clusterAvailPowers.get(computePower)==0)continue;
             addOrUpdateTooltip(computePower.ordinal()+1,
                     new String[]{LH.get(kUII18n.TYPE)+": "+LH.get(kUII18n.COMPUTE_POWER+"."+ computePower.ordinal()),
-                            "Avail: "+clusterAvailPowers.get(computePower)+", Used: "+ clusterUsedPowers.getOrDefault(computePower,0L)},
+                            LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_AVAIL)+": "+clusterAvailPowers.get(computePower)+", "+LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_USED)+": "+ clusterUsedPowers.getOrDefault(computePower,0L)},
                     vector2-> (2<vector2.x&&vector2.x<166&& 109+ 8*(computePower.ordinal()) < vector2.y && vector2.y <= 121 + 8*(computePower.ordinal())));
         }
     }
@@ -222,7 +223,7 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
             int drawColor = isMouseInButton(mouseX, mouseY) ? 0x999999 : 0x202020;
             String drawText = shortText;
             while (fontRendererObj.getStringWidth(drawText) > width && drawText.length() > 3) {
-                drawText = drawText.substring(0, drawText.length() - 4) + "...";
+                drawText = drawText.substring(0, drawText.length() - 4) + "..";
             }
             fontRendererObj.drawString(drawText, xPosition, yPosition, drawColor);
             if(isMouseInButton(mouseX,(int) (mouseY - clusterEventListButton.YOffset))){

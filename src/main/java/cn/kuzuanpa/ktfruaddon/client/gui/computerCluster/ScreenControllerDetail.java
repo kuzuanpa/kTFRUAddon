@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
-
+ *
  * kTFRUAddon is Open Source and distributed under the
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  *
@@ -24,13 +24,18 @@ import cn.kuzuanpa.kGuiLib.client.objects.gui.ButtonList;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.CommonTexturedButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerClusterClientData;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants;
+import gregapi.data.LH;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
@@ -73,57 +78,59 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
         switch (controllerState){
             case 0:
                 stateButton.u =0;
-                stateTextButton.text = "Offline";
+                stateTextButton.text = LH.get(I18nHandler.OFFLINE);
                 break;
             case 1:
                 stateButton.u =16;
-                stateTextButton.text = "Normal";
+                stateTextButton.text = LH.get(I18nHandler.NORMAL);
                 break;
             case 2:
                 stateButton.u =32;
-                stateTextButton.text = "Warning";
+                stateTextButton.text = LH.get(I18nHandler.WARNING);
                 break;
             default:
                 stateButton.u =48;
-                stateTextButton.text = "Error";
+                stateTextButton.text = LH.get(I18nHandler.ERROR);
         }
         controllerProvidingButton.text = String.valueOf(controllerProviding);
         clusterTotalButton.text = String.valueOf(clusterTotal);
     }
+
     @Override
     public void addButtons() {
         buttons.add(new CommonTexturedButton(-1,ContainerX,ContainerY,0,0,226,146, MOD_ID, "textures/gui/computerCluster/controllerOverview.png").setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 300,-50,0,2)).addAnime(new animeFadeIn(300)));
 
-        buttons.add(new Text(1,"Controller Overview",ContainerX+4,ContainerY+3)                               .addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(new Text(1,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_CONTROLLER_OVERVIEW),ContainerX+4,ContainerY+3).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
         int animeTimeSection1 = 900;
 
         String str;
         stateButton = new CommonTexturedButton(10,ContainerX+28,ContainerY+20,0,146,16,16, MOD_ID, "textures/gui/computerCluster/controllerOverview.png");
-        buttons.add(stateButton                                                                                                  .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeFadeIn(animeTimeSection1)));
+        buttons.add(stateButton.setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeFadeIn(animeTimeSection1)));
 
-        str="State: ";
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_STATE) + ": ";
         buttons.add(new Text(2,str,ContainerX+36-fontRendererObj.getStringWidth(str),ContainerY+44).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeRGBA(0,animeTimeSection1,255,255,255,55,-150,-150,-150,200)));
 
-        stateTextButton =new Text(11,"Offline",ContainerX+38,ContainerY+44);
-        buttons.add(stateTextButton                                                                                              .addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeRGBA(0,animeTimeSection1,255,255,255,55,-150,-150,-150,200)));
+        stateTextButton =new Text(11,LH.get(I18nHandler.OFFLINE),ContainerX+38,ContainerY+44);
+        buttons.add(stateTextButton.addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection1,-50,0,2)).addAnime(new animeRGBA(0,animeTimeSection1,255,255,255,55,-150,-150,-150,200)));
+
         int animeTimeSection2 = 1300;
-        str = "This Controller Providing: ";
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_CONTROLLER_PROVIDING) + ": ";
         buttons.add(new Text(3,str,ContainerX+6,ContainerY+64).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         controllerProvidingButton=new Text(12,String.valueOf(controllerProviding),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+64);
-        buttons.add(controllerProvidingButton                                                                                     .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(controllerProvidingButton.addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        str = "Cluster Total: ";
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_CLUSTER_TOTAL) + ": ";
         buttons.add(new Text(4,str,ContainerX+6,ContainerY+76).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         clusterTotalButton=new Text(13,String.valueOf(clusterTotal),ContainerX+6+fontRendererObj.getStringWidth(str),ContainerY+76);
-        buttons.add(clusterTotalButton                                                                                           .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(clusterTotalButton.addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
-        buttons.add(new ControllerOverviewChartButton(5,ContainerX+4,ContainerY+88,154,8)        .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeFadeIn(animeTimeSection2)));
+        buttons.add(new ControllerOverviewChartButton(5,ContainerX+4,ContainerY+88,154,8).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeFadeIn(animeTimeSection2)));
 
-        str = "Event Log";
-        buttons.add(new Text(6, str,ContainerX+196 - fontRendererObj.getStringWidth(str)/2,ContainerY+4)                                  .addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
+        str = LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_EVENT_LOG);
+        buttons.add(new Text(6, str,ContainerX+196 - fontRendererObj.getStringWidth(str)/2,ContainerY+4).addAnime(new animeMoveLinear(-1,0, 80,0)).addAnime(new animeMoveSlowIn(0, animeTimeSection2,-80,0,2)).addAnime(new animeRGBA(0,animeTimeSection2,255,255,255,55,-150,-150,-150,200)));
 
         controllerEventListButton = new ButtonList(7,ContainerX+140,ContainerY+14,154,130);
 

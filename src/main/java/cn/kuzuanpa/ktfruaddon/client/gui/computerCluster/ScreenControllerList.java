@@ -24,8 +24,10 @@ import cn.kuzuanpa.kGuiLib.client.objects.gui.ButtonList;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.CommonTexturedButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.Text;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerClusterClientData;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ControllerData;
+import gregapi.data.LH;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -56,11 +58,11 @@ public class ScreenControllerList extends kGuiScreenContainerLayerBase {
     public void addButtons() {
         buttons.add(new CommonTexturedButton(-1,ContainerX,ContainerY,0,0,226,146, MOD_ID, "textures/gui/computerCluster/controllerBar.png").setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 300,-50,0,2)).addAnime(new animeFadeIn(300)));
 
-        buttons.add(new Text(1,"State",ContainerX+4,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(new Text(1,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_STATE_COLUMN),ContainerX+4,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
-        buttons.add(new Text(2,"Position",ContainerX+55,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(new Text(2,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_POSITION),ContainerX+55,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
-        buttons.add(new Text(3,"Providing",ContainerX+162,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
+        buttons.add(new Text(3,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_PROVIDING),ContainerX+162,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
         dataListButton = new ButtonList(4, ContainerX,ContainerY+14,width,129);
 

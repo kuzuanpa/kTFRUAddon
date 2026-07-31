@@ -11,22 +11,10 @@
  * kTFRUAddon is Open Source and distributed under the
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
-
-/*
- * This class was created by <kuzuanpa>. It is distributed as
- * part of the kTFRUAddon Mod. Get the Source Code in github:
- * https://github.com/kuzuanpa/kTFRUAddon
- *
- * kTFRUAddon is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
-
- * kTFRUAddon is Open Source and distributed under the
- * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
- *
- */
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
+
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import gregapi.data.LH;
 
 public class Constants {
     public static final short EVENT_CLUSTER_DESTROY=0;
@@ -48,78 +36,78 @@ public class Constants {
     public static final byte STATE_NORMAL=1;
     public static final byte STATE_WARNING=2;
     public static final byte STATE_ERROR=3;
-    public static final byte STATE_BELONG_ERR/*The controller owned by other cluster*/=4;
+    public static final byte STATE_BELONG_ERR=4;
 
     public static String getControllerEventShortDesc(byte event){
         switch (event) {
-            case EVENT_WRONG_UUID: return "UUID conflict";
-            case EVENT_KICKING_FROM_CLUSTER: return "Removed";
-            case EVENT_A_CONTROLLER_LEFT: return "Peer left";
-            case EVENT_CONTROLLER_JOINED: return "Joined";
-            case EVENT_STATE_CHANGED: return "State changed";
-            case EVENT_REACHABILITY_OK: return "Reachability ok";
-            case EVENT_REACHABILITY_WARNING: return "Reachability warn";
-            case EVENT_REACHABILITY_FAILED: return "Reachability fail";
-            case EVENT_CLUSTER_DESTROY: return "Destroyed";
-            default: return "Event " + event;
+            case EVENT_WRONG_UUID: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_WRONG_UUID);
+            case EVENT_KICKING_FROM_CLUSTER: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_KICKED);
+            case EVENT_A_CONTROLLER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_PEER_LEFT);
+            case EVENT_CONTROLLER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_JOINED);
+            case EVENT_STATE_CHANGED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_STATE_CHANGED);
+            case EVENT_REACHABILITY_OK: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_REACHABILITY_OK);
+            case EVENT_REACHABILITY_WARNING: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_REACHABILITY_WARNING);
+            case EVENT_REACHABILITY_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_REACHABILITY_FAILED);
+            case EVENT_CLUSTER_DESTROY: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_DESTROYED);
+            default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event;
         }
     }
 
     public static String getControllerEventDesc(byte event, String extra){
         switch (event) {
-            case EVENT_WRONG_UUID: return "UUID conflict" + appendExtra(extra);
-            case EVENT_KICKING_FROM_CLUSTER: return "Removed from cluster" + appendExtra(extra);
-            case EVENT_A_CONTROLLER_LEFT: return "Peer controller left" + appendExtra(extra);
-            case EVENT_CONTROLLER_JOINED: return "Joined cluster" + appendExtra(extra);
-            case EVENT_STATE_CHANGED: return "State changed" + appendExtra(extra);
-            case EVENT_REACHABILITY_OK: return "Reachability normal" + appendExtra(extra);
-            case EVENT_REACHABILITY_WARNING: return "Reachability warning" + appendExtra(extra);
-            case EVENT_REACHABILITY_FAILED: return "Reachability failed" + appendExtra(extra);
-            case EVENT_CLUSTER_DESTROY: return "Cluster destroyed" + appendExtra(extra);
-            default: return "Controller event " + event + appendExtra(extra);
+            case EVENT_WRONG_UUID: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_WRONG_UUID) + appendExtra(extra);
+            case EVENT_KICKING_FROM_CLUSTER: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_KICKED) + appendExtra(extra);
+            case EVENT_A_CONTROLLER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_PEER_LEFT) + appendExtra(extra);
+            case EVENT_CONTROLLER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_JOINED) + appendExtra(extra);
+            case EVENT_STATE_CHANGED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_STATE_CHANGED) + appendExtra(extra);
+            case EVENT_REACHABILITY_OK: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_REACHABILITY_OK) + appendExtra(extra);
+            case EVENT_REACHABILITY_WARNING: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_REACHABILITY_WARNING) + appendExtra(extra);
+            case EVENT_REACHABILITY_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_REACHABILITY_FAILED) + appendExtra(extra);
+            case EVENT_CLUSTER_DESTROY: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_DESTROYED) + appendExtra(extra);
+            default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event + appendExtra(extra);
         }
     }
 
     public static String getClusterEventShortDesc(byte event){
         switch (event) {
-            case EVENT_CLUSTER_CREATED: return "Created";
-            case EVENT_CLUSTER_DESTROY: return "Destroyed";
-            case EVENT_CONTROLLER_JOINED: return "+ Controller";
-            case EVENT_A_CONTROLLER_LEFT: return "- Controller";
-            case EVENT_USER_JOINED: return "+ User";
-            case EVENT_USER_LEFT: return "- User";
-            case EVENT_POWER_ALLOCATED: return "- Power";
-            case EVENT_POWER_RELEASED: return "+ Power";
-            case EVENT_POWER_ALLOCATE_FAILED: return "x Power";
-            case EVENT_STATE_CHANGED: return "*State";
-            default: return "Event " + event;
+            case EVENT_CLUSTER_CREATED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_CREATED);
+            case EVENT_CLUSTER_DESTROY: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_DESTROYED);
+            case EVENT_CONTROLLER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_CONTROLLER_JOINED);
+            case EVENT_A_CONTROLLER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_CONTROLLER_LEFT);
+            case EVENT_USER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_USER_JOINED);
+            case EVENT_USER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_USER_LEFT);
+            case EVENT_POWER_ALLOCATED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_POWER_ALLOCATED);
+            case EVENT_POWER_RELEASED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_POWER_RELEASED);
+            case EVENT_POWER_ALLOCATE_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_POWER_ALLOCATE_FAILED);
+            case EVENT_STATE_CHANGED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_SHORT_STATE_CHANGED);
+            default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event;
         }
     }
 
     public static String getClusterEventDesc(byte event, String extra){
         switch (event) {
-            case EVENT_CLUSTER_CREATED: return "Cluster created" + appendExtra(extra);
-            case EVENT_CLUSTER_DESTROY: return "Cluster destroyed" + appendExtra(extra);
-            case EVENT_CONTROLLER_JOINED: return "Controller joined" + appendExtra(extra);
-            case EVENT_A_CONTROLLER_LEFT: return "Controller left" + appendExtra(extra);
-            case EVENT_USER_JOINED: return "User joined" + appendExtra(extra);
-            case EVENT_USER_LEFT: return "User left" + appendExtra(extra);
-            case EVENT_POWER_ALLOCATED: return "Power allocated" + appendExtra(extra);
-            case EVENT_POWER_RELEASED: return "Power released" + appendExtra(extra);
-            case EVENT_POWER_ALLOCATE_FAILED: return "Power allocation failed" + appendExtra(extra);
-            case EVENT_STATE_CHANGED: return "Cluster state changed" + appendExtra(extra);
-            default: return "Cluster event " + event + appendExtra(extra);
+            case EVENT_CLUSTER_CREATED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_CREATED) + appendExtra(extra);
+            case EVENT_CLUSTER_DESTROY: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_DESTROYED) + appendExtra(extra);
+            case EVENT_CONTROLLER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_CONTROLLER_JOINED) + appendExtra(extra);
+            case EVENT_A_CONTROLLER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_CONTROLLER_LEFT) + appendExtra(extra);
+            case EVENT_USER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_USER_JOINED) + appendExtra(extra);
+            case EVENT_USER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_USER_LEFT) + appendExtra(extra);
+            case EVENT_POWER_ALLOCATED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_POWER_ALLOCATED) + appendExtra(extra);
+            case EVENT_POWER_RELEASED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_POWER_RELEASED) + appendExtra(extra);
+            case EVENT_POWER_ALLOCATE_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_POWER_ALLOCATE_FAILED) + appendExtra(extra);
+            case EVENT_STATE_CHANGED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CLUSTER_STATE_CHANGED) + appendExtra(extra);
+            default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event + appendExtra(extra);
         }
     }
 
     public static String getUserEventDesc(byte event, String extra){
         switch (event) {
-            case EVENT_USER_JOINED: return "Bound to cluster" + appendExtra(extra);
-            case EVENT_USER_LEFT: return "Left cluster" + appendExtra(extra);
-            case EVENT_POWER_ALLOCATED: return "Power allocated" + appendExtra(extra);
-            case EVENT_POWER_RELEASED: return "Power released" + appendExtra(extra);
-            case EVENT_POWER_ALLOCATE_FAILED: return "Power allocation failed" + appendExtra(extra);
-            default: return "User event " + event + appendExtra(extra);
+            case EVENT_USER_JOINED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_USER_BOUND) + appendExtra(extra);
+            case EVENT_USER_LEFT: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_USER_LEFT) + appendExtra(extra);
+            case EVENT_POWER_ALLOCATED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_USER_POWER_ALLOCATED) + appendExtra(extra);
+            case EVENT_POWER_RELEASED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_USER_POWER_RELEASED) + appendExtra(extra);
+            case EVENT_POWER_ALLOCATE_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_USER_POWER_ALLOCATE_FAILED) + appendExtra(extra);
+            default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event + appendExtra(extra);
         }
     }
 

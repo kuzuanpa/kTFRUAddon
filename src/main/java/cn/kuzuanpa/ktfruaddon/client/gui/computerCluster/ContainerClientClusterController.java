@@ -21,10 +21,12 @@ import cn.kuzuanpa.kGuiLib.client.anime.shortcut.animeFadeIn;
 import cn.kuzuanpa.kGuiLib.client.kGuiContainerBase;
 import cn.kuzuanpa.kGuiLib.client.objects.IAnimatableButton;
 import cn.kuzuanpa.kGuiLib.client.objects.gui.kGuiButtonBase;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.nei.IHiddenNei;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregapi.data.LH;
 import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -76,10 +78,10 @@ public class ContainerClientClusterController extends kGuiContainerBase implemen
 	public void addButtons() {
 		int ContainerX = (width - xSize) / 2;
 		int ContainerY = (height - ySize) / 2;
-		buttons.add(new switchButton(0,ContainerX+ 2,ContainerY, 2,"Overview",        commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeFadeIn(200)));
-		buttons.add(new switchButton(1,ContainerX+22,ContainerY,22,"Cluster Overview",commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 800,-50,0,2)).addAnime(new animeFadeIn(400)));
-		buttons.add(new switchButton(2,ContainerX+42,ContainerY,42,"Controller List", commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1000,-50,0,2)).addAnime(new animeFadeIn(600)));
-		buttons.add(new switchButton(3,ContainerX+62,ContainerY,62,"User List",       commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1200,-50,0,2)).addAnime(new animeFadeIn(800)));
+		buttons.add(new switchButton(0,ContainerX+ 2,ContainerY, 2,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_TAB_OVERVIEW),        commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeFadeIn(200)));
+		buttons.add(new switchButton(1,ContainerX+22,ContainerY,22,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_TAB_CLUSTER_OVERVIEW),commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0, 800,-50,0,2)).addAnime(new animeFadeIn(400)));
+		buttons.add(new switchButton(2,ContainerX+42,ContainerY,42,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_TAB_CONTROLLER_LIST), commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1000,-50,0,2)).addAnime(new animeFadeIn(600)));
+		buttons.add(new switchButton(3,ContainerX+62,ContainerY,62,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_TAB_USER_LIST),       commonBackground).addAnime(new animeMoveLinear(-1,0,50,0)).addAnime(new animeMoveSlowIn(0,1200,-50,0,2)).addAnime(new animeFadeIn(800)));
 	}
 
 	@Override
