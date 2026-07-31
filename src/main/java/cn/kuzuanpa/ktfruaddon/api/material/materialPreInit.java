@@ -392,6 +392,15 @@ public class materialPreInit {
         //一甲胺
         matList.Methylamine.registerC(22127,"Methylamine","Methylamine",-72,12,255,255,255,130,"C"+NUM_SUB[2]+"H"+NUM_SUB[7]+"N")
                 .put(TD.ItemGenerator.DUSTS);
+        //三氧化二铑
+        matList.Rhodiumoxide.registerC(22128,"Rhodiumoxide","Rhodiumoxide",1100,1150,223,149,71,255,"Rh"+NUM_SUB[2]+"O"+NUM_SUB[3])
+                .put(TD.ItemGenerator.DUSTS);
+        //二氧化铱
+        matList.Iridiumoxide.registerC(22129,"Iridiumoxide","Iridiumoxide",1200,1700,91,80,74,255,"IrO"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //氧化钯
+        matList.Palladiumoxide.registerC(22130,"Palladiumoxide","Palladiumoxide",870,1600,59,55,52,255,"PdO"+NUM_SUB[4])
+                .put(TD.ItemGenerator.DUSTS);
         //22400-22499 reserved for Purification
     }
 }

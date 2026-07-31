@@ -67,7 +67,6 @@ public class TESRMaskAlignerUVP extends TileEntitySpecialRenderer {
         glEnable(GL_LIGHTING);
         GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
         //Rotate and move the model into position
         GL11.glTranslated(x + .5f, y, z + .5f);
         ForgeDirection front = VALID_DIRECTIONS[tile.mFacing];
@@ -104,6 +103,7 @@ public class TESRMaskAlignerUVP extends TileEntitySpecialRenderer {
         if((!tile.mActive && tile.mRunning) || (tile.mActive && tile.getTimer() % 512 /8F - timer > 0.2)){
             GL11.glColor4f(1f, 1f, 1f, 1f);
 
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
             GL11.glCallList(bodyLists+1);
         }
 

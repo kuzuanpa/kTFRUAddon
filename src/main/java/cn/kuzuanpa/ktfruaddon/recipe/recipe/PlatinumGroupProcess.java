@@ -51,16 +51,28 @@ public class PlatinumGroupProcess {
         RM.    Distillery.addRecipe1(F,180,128 , ST.tag(0), FL.array(flList.ExtractedPlatinumGroupSolutionDown.make(1500)),FL.array(flList.DistilledPlatinumGroupSolutionDown.make(500)), OP.dust.mat(matList.OsmiumTetraoxide.mat, 2));
         RM.    Mixer     .addRecipe0(F,16,220 , FL.array(flList.DistilledPlatinumGroupSolutionDown.make(1000), flList.Trimethylamine.make(500), MT.HNO3.liquid(3 * U, true)),FL.array(flList.NitricPlatinumGroupSolutionUp.make(2000), flList.NitricPlatinumGroupSolutionDown.make(2000)), ZL_IS);
         RM.    Electrolyzer.addRecipe1(F,180,16, ItemList.AlkalineIonExchangeMembrane.get(1), FL.array(flList.NitricPlatinumGroupSolutionDown.make(1000)),FL.array(flList.ElectrolyzedNitricPlatinumGroupSolution.make(1000)), ItemList.IrAlkalineIonExchangeMembrane.get(1));
-        recipeMaps.HeatMixer.addRecipe2(F,180,16 , OP.dust.mat(matList.AmmoniumChloride.mat, 1), OP.dust.mat(MT.NaCl, 1), FL.array(flList.ElectrolyzedNitricPlatinumGroupSolution.make(1000)),FL.array(), OP.dust.mat(MT.NaNO3, 2), OP.dust.mat(matList.AmmoniumHexachlororhodate.mat, 5));
+        recipeMaps.HeatMixer.addRecipe2(F,480,16 , OP.dust.mat(matList.AmmoniumChloride.mat, 1), OP.dust.mat(MT.NaCl, 1), FL.array(flList.ElectrolyzedNitricPlatinumGroupSolution.make(1000)),FL.array(), OP.dust.mat(MT.NaNO3, 2), OP.dust.mat(matList.AmmoniumHexachlororhodate.mat, 6));
         RM.    Mixer.addRecipe1(F,16,220 , ItemList.IrAlkalineIonExchangeMembrane.get(1), FL.array(MT.SO2.gas(2*U, true), MT.H2SO4.liquid(U2, true)),FL.array(flList.IridiumPlatinumGroupSolution.make(500)), ItemList.AlkalineIonExchangeMembrane.get(1));
         recipeMaps.HeatMixer.addRecipe1(F,180,16 , OP.dust.mat(matList.AmmoniumChloride.mat, 1), FL.array(flList.IridiumPlatinumGroupSolution.make(1000), MT.Cl.gas(2 * U, true)),FL.array(MT.H2SO4.liquid(U, true)), OP.dust.mat(matList.AmmoniumHexachloroiridate.mat, 7));
-        recipeMaps.HeatMixer.addRecipe1(F,180,16 , OP.dust.mat(MT.NaOH, 3), FL.array(flList.NitricPlatinumGroupSolutionUp.make(1000)),FL.array(flList.DeprecatedNitricPlatinumGroupSolutionUp.make(1000)), OP.dust.mat(MT.Rh, 3));//todo: Rh -> RhOH
+        recipeMaps.HeatMixer.addRecipe1(F,180,16 , OP.dust.mat(MT.NaOH, 3), FL.array(flList.NitricPlatinumGroupSolutionUp.make(1000)),FL.array(flList.DeprecatedNitricPlatinumGroupSolutionUp.make(1000)), OP.dust.mat(MT.Rh, 3));
         recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.DeprecatedNitricPlatinumGroupSolutionUp.make(2000), MT.HCl.gas(U, true)),FL.array(flList.Trimethylamine.make(500)), OP.dust.mat(MT.NaCl, 1));
 
         //Up
-        recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.ExtractedPlatinumGroupSolutionUp.make(1500), MT.HCl.gas(U, true)),FL.array(flList.Dimethylglycine.make(1000), flList.AcidPlatinumGroupSolutionUp.make(500)), ZL_IS);
-        recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.DinhexylSulfide.make(1000), flList.AcidPlatinumGroupSolutionUp.make(500)),FL.array(flList.DinhexylSulfidePlatinumGroupSolution.make(1000)), OP.dust.mat(MT.Pt, 2));//todo: Pt -> PtCl4
-        recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.DinhexylSulfidePlatinumGroupSolution.make(1000), MT.NH3.gas(U, true), MT.HCl.gas(U, true)),FL.array(flList.DinhexylSulfide.make(1000)), OP.dust.mat(matList.AmmoniumHexachloropalladate.mat, 4));
+        recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.ExtractedPlatinumGroupSolutionUp.make(1500), MT.HCl.gas(12*U, true)),FL.array(flList.Dimethylglycine.make(1000), flList.AcidPlatinumGroupSolutionUp.make(500)), ZL_IS);
+        recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.DinhexylSulfide.make(1000), flList.AcidPlatinumGroupSolutionUp.make(500)),FL.array(flList.DinhexylSulfidePlatinumGroupSolution.make(1000), MT.ChloroplatinicAcid.liquid(U*9, false)), OP.dust.mat(MT.Pt, 1));
+        recipeMaps.HeatMixer.addRecipe0(F,180,16 , FL.array(flList.DinhexylSulfidePlatinumGroupSolution.make(1000), MT.NH3.gas(4*U, true)),FL.array(flList.DinhexylSulfide.make(1000)), OP.dust.mat(matList.AmmoniumHexachloropalladate.mat, 4));
+    //post
+        recipeMaps.HeatMixer.addRecipe1(F,780,2000 ,OP.dust.mat(MT.Rh,2), FL.array(FL.Oxygen.make(3000)),FL.array(), matList.Rhodiumoxide.getDust(9));
+        recipeMaps.HeatMixer.addRecipe1(F,200,1200 ,OP.dust.mat(MT.Pd,1), FL.array(FL.Oxygen.make(1000)),FL.array(), matList.Palladiumoxide.getDust(3));
+        recipeMaps.HeatMixer.addRecipe1(F,420, 800 ,OP.dust.mat(MT.Ir,1), FL.array(FL.Oxygen.make(2000)),FL.array(), matList.Iridiumoxide.getDust(5));
+        recipeMaps.HeatMixer.addRecipe1(F,820,200 ,matList.Rhodiumoxide.getDust(3), FL.array(FL.Hydrogen.make(4000)),FL.array(), OP.dust.mat(MT.Rh,1));
+        recipeMaps.HeatMixer.addRecipe1(F,700,200 ,matList.Palladiumoxide.getDust(3), FL.array(FL.Hydrogen.make(4000)),FL.array(), OP.dust.mat(MT.Pd,2));
+        recipeMaps.HeatMixer.addRecipe1(F,730,200 ,matList.Iridiumoxide.getDust(5), FL.array(FL.Hydrogen.make(8000)),FL.array(), OP.dust.mat(MT.Ir,2));
+        recipeMaps.HeatMixer.addRecipe1(F,730,200 ,matList.OsmiumTetraoxide.getDust(1), FL.array(FL.Hydrogen.make(3000)),FL.array(), OP.dustSmall.mat(MT.Os,6));
+
+        recipeMaps.HeatMixer.addRecipe1(F,630,600 ,matList.AmmoniumHexachlororhodate.getDust(2), FL.array(FL.Oxygen.make(4000)),FL.array(), matList.Rhodiumoxide.getDust(1), matList.AmmoniumChloride.getDust(1));
+        recipeMaps.HeatMixer.addRecipe1(F,430,600 ,matList.AmmoniumHexachloroiridate.getDust(7), FL.array(FL.Oxygen.make(12000)),FL.array(), matList.Palladiumoxide.getDust(3), matList.AmmoniumChloride.getDust(4));
+        recipeMaps.HeatMixer.addRecipe1(F,510,600 ,matList.AmmoniumHexachloropalladate.getDust(4), FL.array(FL.Oxygen.make(12000)),FL.array(),matList.Iridiumoxide.getDust(5), matList.AmmoniumChloride.getDust(5));
     }
 }
  

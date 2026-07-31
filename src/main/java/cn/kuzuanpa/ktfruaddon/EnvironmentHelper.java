@@ -26,6 +26,7 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
@@ -76,10 +77,10 @@ public class EnvironmentHelper {
 
     public static class updateChecker implements Runnable{
         private static final String USER_AGENT = "Mozilla/5.0";
-        private static final String MODDRINTH_URL = "https://api.modrinth.com/v2/project/o0CuW5i0/version";
+        private static final String MODDRINTH_URL = "https://api.modrinth.com/v2/project/o0CuW5i0/version?featured=true";
         @Override
         public void run() {
-            FMLLog.log(Level.FATAL, Paths.get(".").toString());
+            //FMLLog.log(Level.FATAL, Paths.get(".").toString());
             try {
                 URL obj = new URL(MODDRINTH_URL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -88,9 +89,7 @@ public class EnvironmentHelper {
                 con.setRequestProperty("User-Agent", USER_AGENT);
 
                 int responseCode = con.getResponseCode();
-                System.out.println("GET Response Code :: " + responseCode);
-
-                if (responseCode != HttpURLConnection.HTTP_OK) return;
+                if (responseCode != HttpURLConnection.HTTP_OK) throw new ConnectException("GET Error:"+responseCode);
 
                 //Success:
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -103,7 +102,14 @@ public class EnvironmentHelper {
                 in.close();
 
                 processResponse(response.toString());
-            }catch (Exception e) {}
+            }catch (Exception e) {
+                try {
+                    Files.write(Paths.get("resources/mainmenu/textures/version.txt"), "Error".getBytes());
+                } catch (IOException ex) {FMLLog.log(Level.ERROR, "Error checking TFRU version: ",ex);}
+                changelog.clear();
+                changelog.add("获取changeLog失败: 网络连接异常.");
+
+            }
         }
         public static void processResponse(String jsonResponse) {
             try {
@@ -112,6 +118,7 @@ public class EnvironmentHelper {
                 JsonObject firstObject = jsonArray.get(0).getAsJsonObject();
                 JsonElement versionNumberElement = firstObject.get("version_number");
                 if (versionNumberElement != null && !versionNumberElement.isJsonNull()) checkedTFRUVer = versionNumberElement.getAsString();
+                Files.write(Paths.get("resources/mainmenu/textures/version.txt"), checkedTFRUVer.getBytes());
                 if(!TFRUVer.equalsIgnoreCase(checkedTFRUVer)){
                     boolean foundCurrentVersion = false;
                     for (JsonElement jsonElement : jsonArray) {
@@ -133,6 +140,7 @@ public class EnvironmentHelper {
             }catch (Exception e){
                 changelog.clear();
                 changelog.add("获取changeLog失败: java抛出错误:\n"+e.getMessage());
+                FMLLog.log(Level.ERROR, "Error checking TFRU version: ",e);
             }
             changelog.forEach(System.out::println);
         }

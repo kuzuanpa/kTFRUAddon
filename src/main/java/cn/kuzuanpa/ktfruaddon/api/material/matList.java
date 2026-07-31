@@ -46,7 +46,7 @@ public enum matList {
     ,/**水合硝酸铀**/UraniumNitrateHexahydrate,/**磷酸三丁酯**/TributylPhosphate,/**丁醇**/Butanol,/**碳酸铀酰络合离子溶液**/UranylCarbonateSolution,/**甲基叔胺**/MethylTertiaryAmine,/**油酸乙酯**/EthylOleate,/**油酸**/OleicAcid,/**晶质铀浸渣**/UraniniteCinder,/**沥青铀浸渣**/PitchblendeCinder,/**硅烷**/Silane,/**硅化镁**/MagnesiumSilicide,/**氯化铵**/AmmoniumChloride,/**四氟化硅**/SiliconTetrafluoride,/**四氢铝钠**/SodiumAluminiumHydride
     ,/**钠钾合金**/PotassiumSodium,/**氢氧化镁**/MagnesiumDihydroxide, /**钛酸钡**/BariumTitanate, /**二氧化钼**/ MolybdenumOxide, /**纳米钛酸钡**/NanoBariumTitanate, /**氯化铝**/AluminumChloride, /**醋酸钡**/BariumAcetate, /**醋酸钠**/SodiumAcetate, /**乙烯酮**/Ketene, /**五氧化二磷**/PhosphorusPentoxide, /**硫酸钛**/TitanicSulfate, /**酰化钛**/TitaniumAcylate
     ,/**一甲胺**/Methylamine,/**二甲胺**/Dimethylamine,/**三甲胺**/Trimethylamine,/**二甲基-4-乙烯基苯甲胺**/DimethylaminomethylStyrene,/**对氯甲基苯乙烯**/VinylbenzylChloride,/**一氯乙酸乙酯**/EthylChloroacetate,/**二甲基乙酰胺**/Dimethylglycine,/**二正己基硫醚**/DinhexylSulfide,/**正己烷**/Hexane
-    ,/**焙烧铂族泥**/BakedPlatinumGroupSludge,/**氯化银**/SilverChloride,/**四氧化锇**/OsmiumTetraoxide,/**六氯铑酸铵**/AmmoniumHexachlororhodate,/**六氯铱酸铵**/AmmoniumHexachloroiridate,/**六氯钯酸铵**/AmmoniumHexachloropalladate
+    ,/**焙烧铂族泥**/BakedPlatinumGroupSludge,/**氯化银**/SilverChloride,/**四氧化锇**/OsmiumTetraoxide,/**六氯铑酸铵**/AmmoniumHexachlororhodate,/**六氯铱酸铵**/AmmoniumHexachloroiridate,/**六氯钯酸铵**/AmmoniumHexachloropalladate, /**三氧化二铑**/Rhodiumoxide,/**二氧化铱**/Iridiumoxide,/**氧化钯**/Palladiumoxide
 
 
     ,/**CaiXuKunMeme**/ HensSoPretty
