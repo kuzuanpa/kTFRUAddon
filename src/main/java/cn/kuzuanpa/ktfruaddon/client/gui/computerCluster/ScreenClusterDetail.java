@@ -70,12 +70,15 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
         for (int i = 0; i < events.length; i++) {
             String fullText = Constants.getClusterEventDesc(events[i], i < eventExtra.length ? eventExtra[i] :"");
             String shortText = Constants.getClusterEventShortDesc(events[i]);
-            kGuiButtonBase button = new ClusterEventButton(20+i, ContainerX+144, 14 + ContainerY + i*10, 104, shortText, fullText).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
+            kGuiButtonBase button = new ClusterEventButton(20+i, ContainerX+144, 14 + ContainerY + i*EVENT_LINE_HEIGHT, 104, shortText, fullText).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
             clusterEventListButton.addSubButton(button);
         }
-        clusterEventListButton.setMaxScrolled(Math.max(20, events.length*10 - 120));
+        clusterEventListButton.setMaxScrolled(Math.max(0, events.length*EVENT_LINE_HEIGHT - EVENT_LIST_HEIGHT));
         return this;
     }
+
+    /**Height of one event line and of the visible event list, they define how far the list may scroll.**/
+    protected static final int EVENT_LINE_HEIGHT = 10, EVENT_LIST_HEIGHT = 130;
 
     protected void syncValueToButton(){
         controllerCountButton.text = String.valueOf(controllerCount);
@@ -153,7 +156,7 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
         for (ComputePower computePower : ComputePower.values()){
             if(clusterAvailPowers.get(computePower)==null || clusterAvailPowers.get(computePower)==0)continue;
             addOrUpdateTooltip(computePower.ordinal()+1,
-                    new String[]{LH.get(kUII18n.TYPE)+": "+LH.get(kUII18n.COMPUTE_POWER+"."+ computePower.ordinal()),
+                    new String[]{LH.get(kUII18n.TYPE)+": "+LH.get(I18nHandler.COMPUTE_POWER+"."+ computePower.ordinal()),
                             LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_AVAIL)+": "+clusterAvailPowers.get(computePower)+", "+LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_USED)+": "+ clusterUsedPowers.getOrDefault(computePower,0L)},
                     vector2-> (2<vector2.x&&vector2.x<166&& 109+ 8*(computePower.ordinal()) < vector2.y && vector2.y <= 121 + 8*(computePower.ordinal())));
         }
@@ -162,6 +165,13 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
     @Override
     public void onKeyTyped(char c, int i) {
         if(i == Keyboard.KEY_E|| i == Keyboard.KEY_ESCAPE) close();
+    }
+
+    /**The hovered event line is resolved while drawing, so the label has to be cleared before every frame.**/
+    @Override
+    public void drawScreen2(int mouseX, int mouseY, float partialTicks) {
+        if (fullLineEvent != null) fullLineEvent.text = "";
+        super.drawScreen2(mouseX, mouseY, partialTicks);
     }
 
     public class ClusterOverviewChartButton extends kGuiButtonBase {
@@ -220,15 +230,17 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
 
         @Override
         public void drawButton2(Minecraft mc, int mouseX, int mouseY) {
-            int drawColor = isMouseInButton(mouseX, mouseY) ? 0x999999 : 0x202020;
+            //The list draws its children translated by its scroll offset, so the mouse has to be shifted back.
+            boolean hovered = clusterEventListButton != null
+                    && clusterEventListButton.isMouseInButton(mouseX, mouseY)
+                    && isMouseInButton(mouseX, (int) (mouseY - clusterEventListButton.YOffset));
+            int drawColor = hovered ? 0x999999 : 0x202020;
             String drawText = shortText;
             while (fontRendererObj.getStringWidth(drawText) > width && drawText.length() > 3) {
                 drawText = drawText.substring(0, drawText.length() - 4) + "..";
             }
             fontRendererObj.drawString(drawText, xPosition, yPosition, drawColor);
-            if(isMouseInButton(mouseX,(int) (mouseY - clusterEventListButton.YOffset))){
-                fullLineEvent.text = fullText;
-            }
+            if (hovered && fullLineEvent != null) fullLineEvent.text = fullText;
             GL11.glColor4f(1,1,1,1);
         }
     }

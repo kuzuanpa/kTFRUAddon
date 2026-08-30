@@ -7,20 +7,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- *
- * kTFRUAddon is Open Source and distributed under the
- * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
- */
-
-/*
- * This class was created by <kuzuanpa>. It is distributed as
- * part of the kTFRUAddon Mod. Get the Source Code in github:
- * https://github.com/kuzuanpa/kTFRUAddon
- *
- * kTFRUAddon is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
 
  * kTFRUAddon is Open Source and distributed under the
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
@@ -29,21 +15,24 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
 import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
+import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketUUIDAssignedData;
-import codechicken.lib.vec.BlockCoord;
 import cpw.mods.fml.common.FMLLog;
-import net.minecraft.entity.player.EntityPlayerMP;
 import gregapi.util.WD;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
@@ -59,19 +48,30 @@ public class ComputerCluster {
     public static final int MAX_CONTROLLER_EVENTS = 24;
     public static final int MAX_USER_EVENTS = 16;
 
+    /**Ticks between two forced pushes to the viewing clients, used as a keep alive when nothing changed.**/
+    public static final int CLIENT_SYNC_HEARTBEAT_TICKS = 100;
+    /**Minimum ticks between two pushes to the same viewing client.**/
+    public static final int CLIENT_SYNC_MIN_INTERVAL_TICKS = 20;
+    /**Requests waiting for the server thread, anything above this is dropped so a spamming client cannot fill the heap.**/
+    public static final int MAX_PENDING_REQUESTS = 256;
+
     public static final Map<UUID, ComputerCluster> allClusterUUIDsServer = new HashMap<>();
-    public static final Map<UUID, Map<UUID, ComputerClusterClientData.ClusterSnapshot>> allClusterUUIDsClient = new HashMap<>();
+    /**Written from the network thread, read from the client thread, so both levels have to be concurrent.**/
+    public static final Map<UUID, Map<UUID, ComputerClusterClientData.ClusterSnapshot>> allClusterUUIDsClient = new ConcurrentHashMap<>();
     private static final UUID NO_CONTROLLER_UUID = new UUID(0L, 0L);
+    private static final Queue<PendingRequest> pendingRequests = new ConcurrentLinkedQueue<>();
 
     public Map<UUID, ControllerData> controllerList = new HashMap<>();
-    @NotNull public Map<UUID, Integer> controllerReachableUpdateCache = new HashMap<>();
+
     public Map<UUID, UserData> userList = new HashMap<>();
     @NotNull public Map<ComputePower, Long> totalComputePower = new HashMap<>();
     public Map<ComputePower, Long> usedComputePower = new HashMap<>();
     public Queue<Byte> events = new ArrayDeque<>();
     public Queue<String> eventExtra = new ArrayDeque<>();
-    public Map<EntityPlayerMP, UUID> portableViewerPlayers = new HashMap<>();
-    public byte reachableCheckState = 0;
+    /**Player name to the controller UUID that player is looking at. Names are used because player instances get replaced on respawn or dimension change.**/
+    public Map<String, UUID> viewerPlayers = new HashMap<>();
+    /**Set whenever anything a client can see changed, cleared once the viewers got the new snapshot.**/
+    public boolean clientDataDirty = true;
 
     public long lastUpdateTime = -1;
     public long lastClientSyncTick = -1;
@@ -83,52 +83,39 @@ public class ComputerCluster {
         else this.clusterUUID = UUID.randomUUID();
         allClusterUUIDsServer.put(this.clusterUUID, this);
         pushClusterEvent(Constants.EVENT_CLUSTER_CREATED, "cluster=" + shortUUID(this.clusterUUID));
-        //Avoid NPE
-        totalComputePower.put(ComputePower.Normal, 0L);
-        totalComputePower.put(ComputePower.Biology, 0L);
-        totalComputePower.put(ComputePower.Quantum, 0L);
-        totalComputePower.put(ComputePower.Spacetime, 0L);
+        for (ComputePower type : ComputePower.values()) totalComputePower.put(type, 0L);//Avoid NPE
     }
-    public static ComputerCluster create(World initialControllerWorld, BlockCoord initialControllerPos) {
+    public static ComputerCluster create(World initialControllerWorld, WorldPos initialControllerPos) {
         ComputerCluster cluster = new ComputerCluster(null);
-        if (cluster.join(initialControllerWorld,initialControllerPos) != null)return null;
+        if (cluster.join(initialControllerWorld,initialControllerPos) != null) {
+            //init controller broken
+            cluster.destroy();
+            return null;
+        }
         cluster.update();
         return cluster;
     }
 
     public void update(){
-        if(MinecraftServer.getServer().getTickCounter() <= lastUpdateTime)return;
+        long tick = getServerTick();
+        if(tick < 0 || tick <= lastUpdateTime)return;
         byte oldClusterState = state;
-        if(reachableCheckState == 2){
-        }
-        if(reachableCheckState == 1){
-            controllerList.forEach(((uuid, data) ->  {
-                IComputerClusterController controller = getControllerFromData(data);
-                if(controller!=null)controller.updateReachable();
-            }));
-            controllerList.forEach((uuid,data)-> {
-                IComputerClusterController controller = getControllerFromData(data);
-                if(controller!=null)controller.checkUpdatedReachable();
-            });
-            controllerReachableUpdateCache.clear();
-            reachableCheckState = 0;
-        }
-        lastUpdateTime= MinecraftServer.getServer().getTickCounter();
+        lastUpdateTime = tick;
         Map<ComputePower, Long> totalComputePowerMap = new HashMap<>();
-        //Avoid NPE
-        totalComputePowerMap.put(ComputePower.Normal, 0L);
-        totalComputePowerMap.put(ComputePower.Biology, 0L);
-        totalComputePowerMap.put(ComputePower.Quantum, 0L);
-        totalComputePowerMap.put(ComputePower.Spacetime, 0L);
-        controllerList.forEach((uuid,data) -> {
-            ControllerData oldData = data.copy();
-            updateControllerData(uuid,data,totalComputePowerMap);
-            if(!oldData.equals(data)) data.needToSendToClient=true;
-        });
+        for (ComputePower type : ComputePower.values()) totalComputePowerMap.put(type, 0L);//Avoid NPE
+        controllerList.forEach((uuid,data) -> updateControllerData(uuid,data,totalComputePowerMap));
         state = computeClusterState();
         if (oldClusterState != state) pushClusterEvent(Constants.EVENT_STATE_CHANGED, oldClusterState + " -> " + state);
+        if (!totalComputePowerMap.equals(totalComputePower)) clientDataDirty = true;
         totalComputePower = totalComputePowerMap;
+        updateUsers();
         syncViewerPlayers();
+    }
+
+    /**@return the current server tick, or -1 when there is no server running (client only session).**/
+    protected static long getServerTick(){
+        MinecraftServer server = MinecraftServer.getServer();
+        return server == null ? -1 : server.getTickCounter();
     }
 
     protected byte computeClusterState() {
@@ -144,29 +131,32 @@ public class ComputerCluster {
         return Constants.STATE_OFFLINE;
     }
 
-    protected static void pushEvent(Queue<Byte> events, Queue<String> eventExtra, short event, String extra, int maxSize) {
+    protected static void pushEvent(Queue<Byte> events, Queue<String> eventExtra, byte event, String extra, int maxSize) {
         if (events.size() >= maxSize) {
             events.poll();
             eventExtra.poll();
         }
-        events.add((byte) event);
+        events.add(event);
         String timestamp = new SimpleDateFormat("[HH:mm:ss]").format(new Date());
         eventExtra.add(extra == null ? "" : timestamp + " " +extra);
     }
 
-    protected void pushClusterEvent(short event, String extra) {
+    protected void pushClusterEvent(byte event, String extra) {
         pushEvent(events, eventExtra, event, extra, MAX_CLUSTER_EVENTS);
+        clientDataDirty = true;
     }
 
-    protected void pushControllerEvent(UUID controllerUUID, short event, String extra) {
+    public void pushControllerEvent(UUID controllerUUID, byte event, String extra) {
         ControllerData controllerData = controllerList.get(controllerUUID);
         if (controllerData == null) return;
         pushEvent(controllerData.events, controllerData.eventExtra, event, extra, MAX_CONTROLLER_EVENTS);
+        clientDataDirty = true;
     }
 
-    protected void pushUserEvent(UserData userData, short event, String extra) {
+    protected void pushUserEvent(UserData userData, byte event, String extra) {
         if (userData == null) return;
         pushEvent(userData.events, userData.eventExtra, event, extra, MAX_USER_EVENTS);
+        clientDataDirty = true;
     }
 
     protected static String shortUUID(UUID uuid) {
@@ -178,35 +168,33 @@ public class ComputerCluster {
     public void updateControllerData(UUID uuid, ControllerData data, Map<ComputePower, Long> totalComputePowerMap){
         IComputerClusterController controller = getControllerFromData(data);
         byte oldState = data.state;
-        if(controller == null){
-            data.state = Constants.STATE_OFFLINE;
-            data.power = new SingleEntry<>(ComputePower.Normal, 0L);
-            return;
+        Map.Entry<ComputePower, Long> oldPower = data.power;
+        data.state = updateControllerState(uuid, controller);
+        Map.Entry<ComputePower, Long> provided = data.state == Constants.STATE_NORMAL && controller != null ? controller.getComputePower() : null;
+        if(provided != null && provided.getKey() != null && provided.getValue() != null) {
+            data.power = provided;
+            totalComputePowerMap.merge(data.power.getKey(), data.power.getValue(), Long::sum);
         }
+        else data.power = new SingleEntry<>(ComputePower.Normal, 0L);
+
+        if (oldState != data.state) pushControllerEvent(uuid, Constants.EVENT_STATE_CHANGED, oldState + " -> " + data.state);
+        if (oldState != data.state || !Objects.equals(oldPower.getKey(), data.power.getKey()) || !Objects.equals(oldPower.getValue(), data.power.getValue())) clientDataDirty = true;
+    }
+    protected byte updateControllerState(UUID uuid, @Nullable IComputerClusterController controller){
+        if(controller == null) return Constants.STATE_OFFLINE;
 
         if(controller.getCluster() == null){
             if(Objects.equals(uuid, controller.getUUID())){
                 controller.setCluster(this);
-                controller.updateReachable();
             }
         }
-        else if(controller.getCluster() != this) {
-            data.state = Constants.STATE_BELONG_ERR;
-            return;
-        }
+        else if(controller.getCluster() != this) return Constants.STATE_BELONG_ERR;
 
         if(!Objects.equals(controller.getUUID(), uuid)){
-            data.state = Constants.STATE_ERROR;
             controller.notifyControllerEvent(Constants.EVENT_WRONG_UUID);
-            return;
+            return Constants.STATE_ERROR;
         }
-        data.state = controller.getState();
-        if (oldState != data.state) pushControllerEvent(uuid, Constants.EVENT_STATE_CHANGED, oldState + " -> " + data.state);
-        if(data.state == Constants.STATE_NORMAL) {
-            data.power = controller.getComputePower();
-            totalComputePowerMap.merge(data.power.getKey(), data.power.getValue(), Long::sum);
-        }
-        else data.power = new SingleEntry<>(ComputePower.Normal, 0L);
+        return controller.getState();
     }
     public void joinUser(IComputerClusterUser user){
         if(user == null || userList.get(user.getUUID()) != null)return;
@@ -217,25 +205,73 @@ public class ComputerCluster {
         updateUserData(user);
     }
 
+    /**
+     * Refreshes every known user and drops the ones whose tile is gone, unloaded or bound elsewhere,
+     * giving back whatever they were holding. Without this the cluster would keep users forever and
+     * leak both the tile reference and the allocated Compute Power.
+     */
+    protected void updateUsers(){
+        Iterator<Map.Entry<UUID, UserData>> iterator = userList.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, UserData> entry = iterator.next();
+            UserData data = entry.getValue();
+            IComputerClusterUser user = data.user;
+            boolean gone = user == null || !Objects.equals(user.getUUID(), entry.getKey())
+                    || (user instanceof TileEntity && ((TileEntity) user).isInvalid())
+                    || user.getController() == null || user.getController().getCluster() != this;
+            if (gone) {
+                releaseHeldPower(data);
+                iterator.remove();
+                pushClusterEvent(Constants.EVENT_USER_LEFT, "user=" + shortUUID(entry.getKey()));
+                continue;
+            }
+            updateUserData(user);
+        }
+    }
+
     public UserData getUserData(UUID uuid){
         return userList.get(uuid);
     }
-
     public void updateUserData(IComputerClusterUser user){
         if(user == null)return;
         UserData data = userList.get(user.getUUID());
         if(data == null)return;
 
+        byte oldState = data.state;
+        updateUserPos(user, data);
         if(user.getController() == null || user.getController().getCluster() != this){
             data.state = Constants.STATE_BELONG_ERR;
-            pushUserEvent(data, Constants.EVENT_USER_LEFT, "controller lost");
+            if (oldState != data.state) pushUserEvent(data, Constants.EVENT_USER_LEFT, "controller lost");
+            freeUserComputePower(user);
+            markUserDirty(data, oldState);
             return;
         }
-        data.lastUpdated = (short) (MinecraftServer.getServer().getTickCounter() % 16384);
+        data.lastUpdatedTick = getServerTick();
         data.state = user.getState();
-        if(data.state != Constants.STATE_NORMAL && data.state != Constants.STATE_WARNING){
-            freeUserComputePower(user);
-        }
+        if(data.state != Constants.STATE_NORMAL && data.state != Constants.STATE_WARNING) freeUserComputePower(user);
+        markUserDirty(data, oldState);
+    }
+
+    private void markUserDirty(UserData data, byte oldState) {
+        if (oldState == data.state) return;
+        clientDataDirty = true;
+    }
+
+    /**Keeps the position shown in the user list in sync, the client cannot resolve it from the tile.**/
+    private void updateUserPos(IComputerClusterUser user, UserData data) {
+        WorldPos pos = user.getUserPos();
+        if (Objects.equals(pos, data.pos)) return;
+        data.pos = pos;
+        clientDataDirty = true;
+    }
+
+
+    /**Gives the amounts held by this user back to the cluster without touching the user itself.**/
+    protected void releaseHeldPower(UserData data){
+        if (data.consumingPower.isEmpty()) return;
+        data.consumingPower.forEach((type, amount) -> usedComputePower.merge(type, amount, (used, released) -> Math.max(0L, used - released)));
+        data.consumingPower.clear();
+        clientDataDirty = true;
     }
 
     public boolean isComputePowerSufficient(Map<ComputePower, Long> additions){
@@ -243,8 +279,10 @@ public class ComputerCluster {
     }
 
     public boolean isComputePowerSufficient(Map.Entry<ComputePower, Long> power){
-        long used = usedComputePower.get(power.getKey()) == null ? 0: usedComputePower.get(power.getKey());
-        return totalComputePower.get(power.getKey()) >= (used + power.getValue());
+        if (power.getValue() == null || power.getValue() <= 0) return true;
+        long used = usedComputePower.getOrDefault(power.getKey(), 0L);
+        long total = totalComputePower.getOrDefault(power.getKey(), 0L);
+        return total >= used + power.getValue();
     }
 
     public boolean allocateUserComputePower(IComputerClusterUser user){
@@ -254,17 +292,20 @@ public class ComputerCluster {
         if(data == null)return false;
         if(!data.consumingPower.isEmpty()) return true;
 
-        if(Math.abs((MinecraftServer.getServer().getTickCounter() % 16384) - data.lastUpdated) > 5)updateUserData(user);
+        if(data.lastUpdatedTick < 0 || getServerTick() - data.lastUpdatedTick > 5)updateUserData(user);
         if(data.state == Constants.STATE_NORMAL || data.state == Constants.STATE_WARNING){
-            if (!isComputePowerSufficient(user.getComputePowerNeeded())) {
-                pushClusterEvent(Constants.EVENT_POWER_ALLOCATE_FAILED, "user=" + shortUUID(user.getUUID()) + " insufficient " + ComputePower.getDescOneLine(user.getComputePowerNeeded()));
-                pushUserEvent(data, Constants.EVENT_POWER_ALLOCATE_FAILED, "insufficient " + ComputePower.getDescOneLine(user.getComputePowerNeeded()));
+            Map<ComputePower, Long> needed = new HashMap<>(user.getComputePowerNeeded());
+            needed.values().removeIf(amount -> amount == null || amount <= 0);
+            if (!isComputePowerSufficient(needed)) {
+                pushClusterEvent(Constants.EVENT_POWER_ALLOCATE_FAILED, "user=" + shortUUID(user.getUUID()) + " insufficient " + ComputePower.getDescOneLine(needed));
+                pushUserEvent(data, Constants.EVENT_POWER_ALLOCATE_FAILED, "insufficient " + ComputePower.getDescOneLine(needed));
                 return false;
             }
-            user.getComputePowerNeeded().forEach((k,v)->usedComputePower.merge(k, v, Long::sum));
-            data.consumingPower = user.getComputePowerNeeded();
-            pushClusterEvent(Constants.EVENT_POWER_ALLOCATED, "user=" + shortUUID(user.getUUID()) + " " + ComputePower.getDescOneLine(user.getComputePowerNeeded()));
-            pushUserEvent(data, Constants.EVENT_POWER_ALLOCATED, ComputePower.getDescOneLine(user.getComputePowerNeeded()));
+            needed.forEach((k,v)->usedComputePower.merge(k, v, Long::sum));
+            data.consumingPower = needed;
+            clientDataDirty = true;
+            pushClusterEvent(Constants.EVENT_POWER_ALLOCATED, "user=" + shortUUID(user.getUUID()) + " " + ComputePower.getDescOneLine(needed));
+            pushUserEvent(data, Constants.EVENT_POWER_ALLOCATED, ComputePower.getDescOneLine(needed));
             return true;
         }
         pushClusterEvent(Constants.EVENT_POWER_ALLOCATE_FAILED, "user=" + shortUUID(user.getUUID()) + " state=" + data.state);
@@ -278,8 +319,7 @@ public class ComputerCluster {
         if(data == null)return false;
         if(!data.consumingPower.isEmpty()){
             String released = ComputePower.getDescOneLine(data.consumingPower);
-            data.consumingPower.forEach((k,v) -> usedComputePower.merge(k, v,(a, b) -> a-b));
-            data.consumingPower.clear();
+            releaseHeldPower(data);
             user.onComputerPowerReleased();
             pushClusterEvent(Constants.EVENT_POWER_RELEASED, "user=" + shortUUID(user.getUUID()) + " " + released);
             pushUserEvent(data, Constants.EVENT_POWER_RELEASED, released);
@@ -291,52 +331,80 @@ public class ComputerCluster {
         return controllerList.values().stream().filter(data-> data.state == Constants.STATE_NORMAL || data.state == Constants.STATE_WARNING).collect(Collectors.toList());
     }
 
+    /**
+     * Rebuilds the cluster {@code clusterUUID} from the controller positions saved in NBT. Reuses the
+     * live instance when another controller already recovered it, and only creates a new one when
+     * nothing of that cluster exists yet.
+     */
     public static void recoverOrJoin(List<ControllerData> controllerList, UUID clusterUUID){
-        ComputerCluster cluster = null;
+        if (clusterUUID == null || controllerList == null) return;
+        ComputerCluster cluster = allClusterUUIDsServer.get(clusterUUID);
         for (ControllerData data : controllerList) {
+            if(data == null || data.world == null)continue;
             IComputerClusterController controller = getControllerFromData(data);
-            if(controller==null)continue;
+            if(controller == null)continue;
+            //A controller that was saved with a different cluster must not be dragged into this one.
+            if(!Objects.equals(controller.getSavedClusterUUID(), clusterUUID))continue;
 
-            if(cluster != null && cluster.join(data.world,data.pos,controller) == null)continue;//Try join existing Cluster
-
-            cluster = controller.getCluster();
-            if(cluster == null && Objects.equals(controller.getSavedClusterUUID(), clusterUUID)) {//Create new Cluster
-                cluster = new ComputerCluster(clusterUUID);
-                cluster.join(data.world,data.pos,controller);
+            if(controller.getCluster() != null){
+                if(cluster == null)cluster = controller.getCluster();
+                continue;
             }
+            if(cluster == null)cluster = new ComputerCluster(clusterUUID);
+            cluster.join(data.world, data.pos, controller);
         }
+        //A cluster nobody could join would linger in the registry forever.
+        if(cluster != null && cluster.controllerList.isEmpty())allClusterUUIDsServer.remove(cluster.clusterUUID);
     }
 
-    public String join(World world, BlockCoord pos){
+    /**Drops every server side cluster, called when the server shuts down so a new world starts clean.**/
+    public static void clearServerData(){
+        allClusterUUIDsServer.clear();
+        pendingRequests.clear();
+    }
+
+    /**Drops the client side snapshots, called when the client leaves a server or world.**/
+    public static void clearClientData(){
+        allClusterUUIDsClient.clear();
+    }
+
+    public String join(World world, WorldPos pos){
+        if(world == null || pos == null)return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_NOT_CONTROLLER;
         TileEntity tile = world.getTileEntity(pos.x,pos.y,pos.z);
-        if(!(tile instanceof IComputerClusterController))return "ktfru.compute_cluster.msg.join.not_controller";
+        if(!(tile instanceof IComputerClusterController))return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_NOT_CONTROLLER;
         return join(world,pos, (IComputerClusterController) tile);
     }
 
     /**@return ERROR message, null if successful**/
-    public String join(World world, BlockCoord pos, IComputerClusterController controller){
-        if(controller.getUUID()!=null && controllerList.containsKey(controller.getUUID())){
-            UUID duplicatedUUID = controller.getUUID();
-            if(world.equals(controllerList.get(duplicatedUUID).world) && pos.equals(controllerList.get(duplicatedUUID).pos)) return "ktfru.compute_cluster.msg.join.already_exist";
-            controller.notifyControllerEvent(Constants.EVENT_WRONG_UUID);
-            return "ktfru.compute_cluster.msg.join.duplicate_uuid";
+    public String join(World world, WorldPos pos, IComputerClusterController controller){
+        if(world == null || pos == null || controller == null)return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_NOT_CONTROLLER;
+        if(controller.getUUID() == null){
+            controller.notifyControllerEvent(Constants.EVENT_WRONG_UUID);//makes the controller assign itself a fresh UUID
+            if(controller.getUUID() == null)return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_DUPLICATE_UUID;
         }
-        if((controller.getCluster() != null && controller.getCluster() != this)|| (controller.getSavedClusterUUID() != null && !Objects.equals(controller.getSavedClusterUUID(), this.clusterUUID)))return "ktfru.compute_cluster.msg.join.belong_other";
-        else if(controller.getCluster() == null && !controller.setCluster(this)) return "ktfru.compute_cluster.msg.join.belong_other";
+        if(controllerList.containsKey(controller.getUUID())){
+            UUID duplicatedUUID = controller.getUUID();
+            if(pos.equals(controllerList.get(duplicatedUUID).pos)) return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_ALREADY_EXIST;
+            controller.notifyControllerEvent(Constants.EVENT_WRONG_UUID);
+            return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_DUPLICATE_UUID;
+        }
+        if((controller.getCluster() != null && controller.getCluster() != this)|| (controller.getSavedClusterUUID() != null && !Objects.equals(controller.getSavedClusterUUID(), this.clusterUUID)))return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_BELONG_OTHER;
+        else if(controller.getCluster() == null && !controller.setCluster(this)) return I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_BELONG_OTHER;
         controllerList.put(controller.getUUID(),new ControllerData(world,pos));
         allClusterUUIDsServer.put(clusterUUID, this);
-        String extra = "controller=" + shortUUID(controller.getUUID()) + " dim=" + world.provider.dimensionId + " pos=" + pos.x + "," + pos.y + "," + pos.z;
+        String extra = "controller=" + shortUUID(controller.getUUID()) + " " + pos;
         pushClusterEvent(Constants.EVENT_CONTROLLER_JOINED, extra);
         pushControllerEvent(controller.getUUID(), Constants.EVENT_CONTROLLER_JOINED, "cluster=" + shortUUID(clusterUUID));
         return null;
     }
 
-    public String kick(World world, BlockCoord pos){
+    public String kick(World world, WorldPos pos){
+        if(world == null || pos == null)return I18nHandler.COMPUTE_CLUSTER_MSG_KICK_NOT_FOUND;
         UUID uuid = null;
         for (Map.Entry<UUID, ControllerData> entry : controllerList.entrySet()) {
             UUID id = entry.getKey();
             ControllerData data = entry.getValue();
-            if (data.world.equals(world) && data.pos.equals(pos)) {
+            if (data.pos.equals(pos)) {
                 uuid = id;
                 break;
             }
@@ -345,11 +413,11 @@ public class ComputerCluster {
     }
 
     public String kick(UUID uuid) {
-        if (uuid == null || controllerList.get(uuid) == null) return "ktfru.compute_cluster.msg.kick.not_found";
+        if (uuid == null || controllerList.get(uuid) == null) return I18nHandler.COMPUTE_CLUSTER_MSG_KICK_NOT_FOUND;
         ControllerData data = controllerList.get(uuid);
         IComputerClusterController controller = getControllerFromData(data);
-        if(controller == null) return "ktfru.compute_cluster.msg.kick.not_loaded";
-        if(controller.getCluster() != this)return "ktfru.compute_cluster.msg.kick.not_belong_me";
+        if(controller == null) return I18nHandler.COMPUTE_CLUSTER_MSG_KICK_NOT_LOADED;
+        if(controller.getCluster() != this)return I18nHandler.COMPUTE_CLUSTER_MSG_KICK_NOT_BELONG_ME;
         pushClusterEvent(Constants.EVENT_A_CONTROLLER_LEFT, "controller=" + shortUUID(uuid));
         remove0(uuid);
         controller.notifyControllerEvent(Constants.EVENT_KICKING_FROM_CLUSTER);
@@ -357,6 +425,7 @@ public class ComputerCluster {
     }
 
     public String quit(UUID uuid, IComputerClusterController controller){
+        if (uuid == null || !controllerList.containsKey(uuid)) return I18nHandler.COMPUTE_CLUSTER_MSG_KICK_NOT_FOUND;
         pushClusterEvent(Constants.EVENT_A_CONTROLLER_LEFT, "controller=" + shortUUID(uuid));
         remove0(uuid);
         if (controller != null) controller.notifyControllerEvent(Constants.EVENT_KICKING_FROM_CLUSTER);
@@ -365,24 +434,24 @@ public class ComputerCluster {
 
     protected void remove0(UUID uuid){
         controllerList.remove(uuid);
+        clientDataDirty = true;
         if (controllerList.isEmpty()) {
-            portableViewerPlayers.clear();
-            allClusterUUIDsServer.remove(clusterUUID);
+            destroy();
+            return;
         }
         postEventToAllControllers(Constants.EVENT_A_CONTROLLER_LEFT);
     }
 
-    public void postEventToAllControllers(short event){
+    public void postEventToAllControllers(byte event){
         controllerList.forEach(((uuid, data) ->  {
             IComputerClusterController controller = getControllerFromData(data);
             if(controller!=null)controller.notifyControllerEvent(event);
             pushControllerEvent(uuid, event, "");
         }));
     }
-    public void updateAllControllerState(){
-        reachableCheckState = 1;
-    }
+
     public static IComputerClusterController getControllerFromData(ControllerData data){
+        if(data == null || data.world == null)return null;
         TileEntity te = WD.te(data.world,data.pos.x, data.pos.y, data.pos.z,false);
         if(te instanceof IComputerClusterController)return (IComputerClusterController) te;
         return null;
@@ -390,7 +459,13 @@ public class ComputerCluster {
     public void destroy(){
         postEventToAllControllers(Constants.EVENT_CLUSTER_DESTROY);
         pushClusterEvent(Constants.EVENT_CLUSTER_DESTROY, "cluster=" + shortUUID(clusterUUID));
-        portableViewerPlayers.clear();
+        userList.values().forEach(data -> {
+            releaseHeldPower(data);
+            if (data.user != null) data.user.onComputerPowerReleased();
+        });
+        userList.clear();
+        notifyViewersClusterGone();
+        viewerPlayers.clear();
         allClusterUUIDsServer.remove(clusterUUID);
     }
 
@@ -409,7 +484,7 @@ public class ComputerCluster {
     public ComputerClusterClientData.ControllerDetail fetchClientDataControllerDetail(UUID controllerID) {
         ControllerData controllerData = controllerList.get(controllerID);
         if (controllerData == null) return new ComputerClusterClientData.ControllerDetail(Constants.STATE_OFFLINE, (byte) 0, 0, 0, new byte[0], new String[0]);
-        return new ComputerClusterClientData.ControllerDetail(controllerData.state, (byte) controllerData.power.getKey().ordinal(), controllerData.power.getValue(), totalComputePower.get(controllerData.power.getKey()), controllerData.events.toArray(), controllerData.eventExtra.toArray(new String[0]));
+        return new ComputerClusterClientData.ControllerDetail(controllerData.state, (byte) controllerData.power.getKey().ordinal(), controllerData.power.getValue(), totalComputePower.getOrDefault(controllerData.power.getKey(), 0L), controllerData.events.toArray(), controllerData.eventExtra.toArray(new String[0]));
     }
 
     public ComputerClusterClientData.ClusterSnapshot fetchClientSnapshot(UUID controllerID) {
@@ -421,15 +496,45 @@ public class ComputerCluster {
         );
     }
 
+    /**
+     * Pushes a snapshot to the subscribed players, but only when something changed or the heartbeat
+     * interval elapsed. Viewers whose player left the server are dropped here.
+     */
     protected void syncViewerPlayers() {
-        long tick = MinecraftServer.getServer().getTickCounter();
-        if (portableViewerPlayers.isEmpty() || tick - lastClientSyncTick < 20) return;
-        portableViewerPlayers.entrySet().removeIf(entry -> entry.getKey() == null || entry.getKey().isDead);
-        if (portableViewerPlayers.isEmpty()) return;
+        long tick = getServerTick();
+        if (tick < 0 || viewerPlayers.isEmpty()) return;
+        long sinceLastSync = tick - lastClientSyncTick;
+        if (sinceLastSync < CLIENT_SYNC_MIN_INTERVAL_TICKS) return;
+        if (!clientDataDirty && sinceLastSync < CLIENT_SYNC_HEARTBEAT_TICKS) return;
+
         lastClientSyncTick = tick;
-        for (Map.Entry<EntityPlayerMP, UUID> portableViewerPlayer : portableViewerPlayers.entrySet()) {
-            sendClusterData(portableViewerPlayer.getKey(), this, portableViewerPlayer.getValue());
+        clientDataDirty = false;
+        Iterator<Map.Entry<String, UUID>> iterator = viewerPlayers.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, UUID> viewer = iterator.next();
+            EntityPlayerMP playerMP = findPlayer(viewer.getKey());
+            if (playerMP == null) {
+                iterator.remove();
+                continue;
+            }
+            sendClusterData(playerMP, this, viewer.getValue());
         }
+    }
+
+    /**Tells every subscriber that this cluster no longer exists, so their GUI stops showing stale data.**/
+    protected void notifyViewersClusterGone() {
+        for (String playerID : viewerPlayers.keySet()) {
+            EntityPlayerMP playerMP = findPlayer(playerID);
+            if (playerMP != null) kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData(PACKET_TYPE, clusterUUID, PACKET_NOT_FOUND), playerMP);
+        }
+    }
+
+    protected static @Nullable EntityPlayerMP findPlayer(String playerID) {
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null || playerID == null) return null;
+        return (EntityPlayerMP) server.getConfigurationManager().playerEntityList.stream()
+                .filter(p -> p instanceof EntityPlayerMP && playerID.equals(((EntityPlayerMP) p).getCommandSenderName()))
+                .findFirst().orElse(null);
     }
 
     private static UUID controllerKey(@Nullable UUID controllerUUID) {
@@ -443,7 +548,7 @@ public class ComputerCluster {
     }
 
     public static void receiveUUIDAssignedData(UUID uuid, byte @Nullable [] data) {
-        if (data == null) return;
+        if (data == null || uuid == null || data.length == 0) return;
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
              DataInputStream dis = new DataInputStream(bis)) {
             byte packetType = dis.readByte();
@@ -451,7 +556,8 @@ public class ComputerCluster {
                 UUID controllerUUID = dis.readBoolean() ? new UUID(dis.readLong(), dis.readLong()) : null;
                 byte[] snapshotData = new byte[bis.available()];
                 dis.readFully(snapshotData);
-                allClusterUUIDsClient.computeIfAbsent(uuid, k -> new HashMap<>()).put(controllerKey(controllerUUID), ComputerClusterClientData.ClusterSnapshot.deserialize(snapshotData));
+                ComputerClusterClientData.ClusterSnapshot snapshot = ComputerClusterClientData.ClusterSnapshot.deserialize(snapshotData);
+                allClusterUUIDsClient.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>()).put(controllerKey(controllerUUID), snapshot);
                 return;
             }
             if (packetType == PACKET_NOT_FOUND) {
@@ -461,30 +567,46 @@ public class ComputerCluster {
 
             String playerID = dis.readUTF();
             UUID controllerUUID = dis.readBoolean() ? new UUID(dis.readLong(), dis.readLong()) : null;
-            EntityPlayerMP playerMP = (EntityPlayerMP) MinecraftServer.getServer().getConfigurationManager().playerEntityList.stream()
-                    .filter(p -> playerID.equals(((EntityPlayerMP) p).getCommandSenderName()))
-                    .findFirst().orElse(null);
-            if (playerMP == null) return;
-
-            ComputerCluster cluster = allClusterUUIDsServer.get(uuid);
-            if (cluster == null) {
-                kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData(PACKET_TYPE, uuid, PACKET_NOT_FOUND), playerMP);
-                return;
-            }
-            if (packetType == PACKET_REQUEST_SYNC) {
-                sendClusterData(playerMP, cluster, controllerUUID);
-                return;
-            }
-            if (packetType == PACKET_SUBSCRIBE) {
-                cluster.portableViewerPlayers.put(playerMP, controllerUUID);
-                sendClusterData(playerMP, cluster, controllerUUID);
-                return;
-            }
-            if (packetType == PACKET_UNSUBSCRIBE) {
-                cluster.portableViewerPlayers.remove(playerMP);
-            }
+            //This runs on the netty thread, the cluster state may only be touched from the server thread.
+            if (pendingRequests.size() >= MAX_PENDING_REQUESTS) return;
+            pendingRequests.add(new PendingRequest(packetType, uuid, playerID, controllerUUID));
         } catch (IOException e) {
             FMLLog.log(Level.ERROR, "ComputerCluster packet decode failed", e);
+        }
+    }
+
+    /**A client request parked by the netty thread, see {@link #processPendingRequests()}.**/
+    private static final class PendingRequest {
+        final byte packetType;
+        final UUID clusterUUID;
+        final String playerID;
+        final @Nullable UUID controllerUUID;
+
+        PendingRequest(byte packetType, UUID clusterUUID, String playerID, @Nullable UUID controllerUUID) {
+            this.packetType = packetType;
+            this.clusterUUID = clusterUUID;
+            this.playerID = playerID;
+            this.controllerUUID = controllerUUID;
+        }
+    }
+
+    /**Handles the requests parked by the netty thread. Must be called from the server thread once per tick.**/
+    public static void processPendingRequests() {
+        PendingRequest request;
+        while ((request = pendingRequests.poll()) != null) {
+            EntityPlayerMP playerMP = findPlayer(request.playerID);
+            if (playerMP == null) continue;
+            ComputerCluster cluster = allClusterUUIDsServer.get(request.clusterUUID);
+            if (cluster == null) {
+                kNetworkHandler.sendToPlayer(new PacketUUIDAssignedData(PACKET_TYPE, request.clusterUUID, PACKET_NOT_FOUND), playerMP);
+                continue;
+            }
+            if (request.packetType == PACKET_SUBSCRIBE) cluster.viewerPlayers.put(request.playerID, request.controllerUUID);
+            if (request.packetType == PACKET_UNSUBSCRIBE) {
+                cluster.viewerPlayers.remove(request.playerID);
+                continue;
+            }
+            sendClusterData(playerMP, cluster, request.controllerUUID);
         }
     }
 
@@ -525,9 +647,5 @@ public class ComputerCluster {
         } catch (IOException e) {
             FMLLog.log(Level.ERROR, "ComputerCluster request packet encode failed", e);
         }
-    }
-
-    protected void recordClusterEvent(short event, String extra) {
-        pushClusterEvent(event, extra);
     }
 }

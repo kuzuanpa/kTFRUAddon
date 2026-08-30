@@ -14,22 +14,23 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller;
 
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
-import codechicken.lib.vec.BlockCoord;
+import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
 
 public class ControllerWireless extends ControllerBase{
-    long maxConnectDistance = 512;
-    @Override
-    public boolean canReachController(IComputerClusterController controller) {
-        BlockCoord targetCoord = controller.getPos();
-        return getDistanceFrom(targetCoord.x,targetCoord.y,targetCoord.z) < maxConnectDistance;
-    }
+    /**In blocks. TileEntity.getDistanceFrom returns the squared distance, so it gets squared before comparing.**/
+    public static final int MAX_CONNECT_DISTANCE = 512;
 
     @Override
-    public boolean canReachUser(IComputerClusterUser user) {
-        return true;
+    public boolean canReachPos(WorldPos pos) {
+        if (pos == null) return false;
+        return isInRange(pos);
     }
+
+    protected boolean isInRange(WorldPos target) {
+        if (target == null) return false;
+        return getDistanceFrom(target.x, target.y, target.z) <= (double) MAX_CONNECT_DISTANCE * MAX_CONNECT_DISTANCE;
+    }
+
     public String getTileEntityName() {
         return "ktfru.multitileentity.computecluster.controller.wireless";
     }

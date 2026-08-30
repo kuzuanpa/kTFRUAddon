@@ -28,11 +28,16 @@
  */
 
 
-package cn.kuzuanpa.ktfruaddon.api.tile.part;
+package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
 public interface IComputeNode {
+    ComputePower getType();
+    /**@return the total capacity of this node, per Compute Power type.**/
     long getComputePower();
-    void run();
-    void active();
+    /**Try to hold the requested amounts on this node.*/
+    boolean tryStart(long needed);
+    /**Node is not used by any host.**/
     void stop();
+    /**Node is powering a running host.**/
+    boolean isActive();
 }

@@ -22,10 +22,7 @@ import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
-import cn.kuzuanpa.ktfruaddon.tile.computerCluster.NetworkCable;
 import cn.kuzuanpa.ktfruaddon.tile.computerCluster.TestUser;
-import cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller.ControllerElectric;
-import cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller.ControllerWired;
 import cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller.ControllerWireless;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.*;
 import cn.kuzuanpa.ktfruaddon.tile.energy.storage.FlywheelBox;
@@ -97,12 +94,12 @@ public class tileEntityInit0 {
 
 
         //gregapi.tileentity.connectors.MultiTileEntityWireElectric.addElectricWires(50, 0, gregapi.data.CS.VMAX[4], 1, 0, 0, true, false, true, kRegistry0, tWireBlock, gregapi.tileentity.connectors.MultiTileEntityWireElectric.class, tExamplium);
-
-        aMat = MT.StainlessSteel;      kRegistry0.add("Test Electric Controller"                         , "ktfruaddon: Energy",  1100, 1304, ControllerElectric.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
-        aMat = MT.StainlessSteel;      kRegistry0.add("Test Wireless Controller"                         , "ktfruaddon: Energy",  1101, 1304, ControllerWireless.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
-        aMat = MT.StainlessSteel;      kRegistry0.add("Test Wired Controller"                            , "ktfruaddon: Energy",  1102, 1304, ControllerWired.class          , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
-        aMat = MT.StainlessSteel;      kRegistry0.add("Test User"                                        , "ktfruaddon: Energy",  1103, 1304, TestUser.class                 , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
-        aMat = MT.StainlessSteel;      kRegistry0.add("Network Wire"                                     , "ktfruaddon: Energy",  1104, 1304, NetworkCable.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        //TODO: wired connections needs to complete reachable check
+        //aMat = MT.StainlessSteel;      kRegistry0.add("Compute Cluster Controller (Powerline)"            , "ktfruaddon: Energy",  1100, 1304, ControllerElectric.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        aMat = MT.StainlessSteel;      kRegistry0.add("Compute Cluster Controller (Wireless)"             , "ktfruaddon: Energy",  1101, 1304, ControllerWireless.class       , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        //aMat = MT.StainlessSteel;      kRegistry0.add("Compute Cluster Controller (Wired)"                , "ktfruaddon: Energy",  1102, 1304, ControllerWired.class          , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        aMat = MT.StainlessSteel;      kRegistry0.add("Compute Cluster Test User"                        , "ktfruaddon: Energy",  1103, 1304, TestUser.class                 , aMat.mToolQuality, 16, aMachine   , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
+        //aMat = MT.StainlessSteel;      kRegistry0.add("Compute Cluster Network Cable"                     , "ktfruaddon: Energy",  1104, 1304, NetworkCable.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Tile Dream Brain"                                 , "ktfruaddon: Energy",  1105, 1304, TileDreamBrain.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
         aMat = MT.StainlessSteel;      kRegistry0.add("Tile Research Game Identify"                      , "ktfruaddon: Energy",  1106, 1304, ResearchTableIdentify.class             , aMat.mToolQuality, 16, tWireBlock , UT.NBT.make(NBT_MATERIAL, aMat, NBT_HARDNESS,  6.5F, NBT_RESISTANCE,  6.5F, NBT_OUTPUT, 512 ,NBT_ENERGY_EMITTED, TD.Energy.EU));
 

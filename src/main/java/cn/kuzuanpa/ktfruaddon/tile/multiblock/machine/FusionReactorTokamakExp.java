@@ -20,7 +20,8 @@ import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.part.IComputeNode;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeNode;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
@@ -90,6 +91,16 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
             mTanksInput = {mTanks[0],mTanks[1]}, mTanksOutput ={ mTanks[2],mTanks[3]};
     private List<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
 
+    /**Resolves the compute node parts of this structure, skipping the ones that are gone or not loaded.**/
+    protected List<IComputeNode> getComputeNodes(){
+        List<IComputeNode> nodes = new ArrayList<>();
+        for (ChunkCoordinates coord : computeNodesCoord) {
+            TileEntity tile = WD.te(worldObj, coord, true);
+            if (tile instanceof IComputeNode) nodes.add((IComputeNode) tile);
+        }
+        return nodes;
+    }
+
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -147,7 +158,10 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
             if(mEnergyCharged>1024)onError();
             return;
         }
-        isComputePowerEnough = (computeNodesCoord.stream().filter(coord->WD.te(worldObj,coord,true) instanceof IComputeNode).mapToLong(coord->((IComputeNode) WD.te(worldObj,coord,true)).getComputePower()).sum() >= computePowerNeeded);
+        isComputePowerEnough = computePowerNeeded <= getComputeNodes().stream()
+                .filter(node->node.getType().equals(ComputePower.Normal))
+                .mapToLong(IComputeNode::getComputePower).sum();
+
         if(!isComputePowerEnough){
             mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
             if(mFieldStrength<0&&mEnergyCharged>1024)onError();
@@ -216,9 +230,14 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     }
 
     protected void setState(byte state){
+        if(mState == state)return;
+
         mState=state;
-        if(state==STATE_STOPPED||state==STATE_ERROR)computeNodesCoord.stream().map(coord->WD.te(worldObj,coord,true)).filter(tile-> tile instanceof IComputeNode).forEach(tile->((IComputeNode) tile).stop());
-        else computeNodesCoord.stream().map(coord->WD.te(worldObj,coord,true)).filter(tile-> tile instanceof IComputeNode).forEach(tile->((IComputeNode) tile).active());
+        if(state != STATE_STOPPED && state != STATE_ERROR && getComputeNodes().stream().anyMatch(node -> !node.tryStart(node.getComputePower()))) {
+            mState = STATE_ERROR;
+        }
+
+        if(state==STATE_STOPPED||state==STATE_ERROR) getComputeNodes().forEach(IComputeNode::stop);
         updateClientData();
     }
     protected void setRecipe(Recipe recipe){
@@ -394,12 +413,12 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override
     public void onMagnifyingGlass(List<String> aChatReturn) {
         super.onMagnifyingGlass(aChatReturn);
-        if(lastFailedPos != null)aChatReturn.add("Last Failed Pos: "+ lastFailedPos.toString());
+        if(lastFailedPos != null)aChatReturn.add(LH.get(I18nHandler.STRUCTURE_LAST_FAILED_POS)+" "+ lastFailedPos.toString());
     }
 
     public void onMagnifyingGlass2(List<String> aChatReturn) {
-        aChatReturn.add("Structure is formed already!");
-        if(!isComputePowerEnough)aChatReturn.add("Insufficient Compute Power!");
+        aChatReturn.add(LH.get(I18nHandler.STRUCTURE_FORMED));
+        if(!isComputePowerEnough)aChatReturn.add(LH.get(I18nHandler.COMPUTE_POWER_INSUFFICIENT));
     }
 
 

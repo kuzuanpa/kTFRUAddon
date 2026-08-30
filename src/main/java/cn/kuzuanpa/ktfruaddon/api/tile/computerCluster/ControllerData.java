@@ -29,7 +29,7 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
 import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
-import codechicken.lib.vec.BlockCoord;
+import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import org.jetbrains.annotations.NotNull;
@@ -42,13 +42,15 @@ import java.util.Queue;
 
 public class ControllerData{
     public World world;
-    public BlockCoord pos;
+    public WorldPos pos;
     public byte state;
     @NotNull public Map.Entry<ComputePower, Long> power = new SingleEntry<>(ComputePower.Normal, 0L);
-    public boolean needToSendToClient = false;
     public Queue<Byte> events = new ArrayDeque<>();
     public Queue<String> eventExtra = new ArrayDeque<>();
-    public ControllerData(World world, BlockCoord pos){this.world=world;this.pos=pos;}
+    public ControllerData(World world, WorldPos pos){
+        this.world=world;
+        this.pos=pos;
+    }
 
     @Override
     public final boolean equals(Object o) {
@@ -56,14 +58,12 @@ public class ControllerData{
         if (!(o instanceof ControllerData)) return false;
 
         ControllerData that = (ControllerData) o;
-        return world.equals(that.world) && pos.equals(that.pos);
+        return pos.equals(that.pos);
     }
 
     @Override
     public int hashCode() {
-        int result = world.hashCode();
-        result = 31 * result + pos.hashCode();
-        return result;
+        return pos.hashCode();
     }
 
     public ControllerData copy() {
@@ -80,7 +80,7 @@ public class ControllerData{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] bytes;
         try (DataOutputStream dos = new DataOutputStream(baos)) {
-            dos.writeInt(data.world.provider.dimensionId);
+            dos.writeInt(data.pos.dim);
             dos.writeInt(data.pos.x);
             dos.writeShort((short) data.pos.y);
             dos.writeInt(data.pos.z);
@@ -113,8 +113,8 @@ public class ControllerData{
         byte state = dis.readByte();
         byte powerType = dis.readByte();
         long powerAmount = dis.readLong();
-        int eventCount = dis.readInt();
-        ControllerData data = new ControllerData(DimensionManager.getWorld(worldID),new BlockCoord(posX,posY,posZ));
+        int eventCount = ComputerClusterClientData.checkedCount(dis.readInt());
+        ControllerData data = new ControllerData(DimensionManager.getWorld(worldID),new WorldPos(posX,posY,posZ, worldID));
         data.state=state;
         data.power = new SingleEntry<>(ComputePower.getType(powerType),powerAmount);
         for (int i = 0; i < eventCount; i++) {

@@ -32,6 +32,23 @@ import java.io.*;
 import java.util.*;
 
 public class ComputerClusterClientData {
+    /**Upper bound for every length read out of a packet, a corrupt or hostile packet must not be able to allocate freely.**/
+    public static final int MAX_SECTION_LENGTH = 1 << 20;
+    /**Upper bound for list and event counts read out of a packet.**/
+    public static final int MAX_ELEMENT_COUNT = 4096;
+
+    /**@return a length that is safe to allocate for, throws when the packet claims more than {@link #MAX_SECTION_LENGTH}.**/
+    static int checkedLength(int length) throws IOException {
+        if (length < 0 || length > MAX_SECTION_LENGTH) throw new IOException("Cluster packet section length out of range: " + length);
+        return length;
+    }
+
+    /**@return a count that is safe to allocate for, throws when the packet claims more than {@link #MAX_ELEMENT_COUNT}.**/
+    static int checkedCount(int count) throws IOException {
+        if (count < 0 || count > MAX_ELEMENT_COUNT) throw new IOException("Cluster packet element count out of range: " + count);
+        return count;
+    }
+
     public static class ClusterSnapshot {
         public ControllerList controllerList;
         public UserList userList;
@@ -79,28 +96,28 @@ public class ComputerClusterClientData {
 
         private static ControllerList readControllerList(DataInputStream dis) throws IOException {
             if (!dis.readBoolean()) return null;
-            byte[] bytes = new byte[dis.readInt()];
+            byte[] bytes = new byte[checkedLength(dis.readInt())];
             dis.readFully(bytes);
             return ControllerList.deserialize(bytes);
         }
 
         private static UserList readUserList(DataInputStream dis) throws IOException {
             if (!dis.readBoolean()) return null;
-            byte[] bytes = new byte[dis.readInt()];
+            byte[] bytes = new byte[checkedLength(dis.readInt())];
             dis.readFully(bytes);
             return UserList.deserialize(bytes);
         }
 
         private static ClusterDetail readClusterDetail(DataInputStream dis) throws IOException {
             if (!dis.readBoolean()) return null;
-            byte[] bytes = new byte[dis.readInt()];
+            byte[] bytes = new byte[checkedLength(dis.readInt())];
             dis.readFully(bytes);
             return ClusterDetail.deserialize(bytes);
         }
 
         private static ControllerDetail readControllerDetail(DataInputStream dis) throws IOException {
             if (!dis.readBoolean()) return null;
-            byte[] bytes = new byte[dis.readInt()];
+            byte[] bytes = new byte[checkedLength(dis.readInt())];
             dis.readFully(bytes);
             return ControllerDetail.deserialize(bytes);
         }
@@ -136,11 +153,11 @@ public class ComputerClusterClientData {
             ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
             DataInputStream dis = new DataInputStream(bis);
 
-            int size = dis.readInt();
+            int size = checkedCount(dis.readInt());
             List<UserData> datas = new ArrayList<>(size);
 
             for (int i = 0; i < size; i++) {
-                int length = dis.readInt();
+                int length = checkedLength(dis.readInt());
                 byte[] dataBytes = new byte[length];
                 dis.readFully(dataBytes);
                 UserData data = UserData.deserialize(dataBytes);
@@ -179,11 +196,11 @@ public class ComputerClusterClientData {
             ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
             DataInputStream dis = new DataInputStream(bis);
 
-            int size = dis.readInt();
+            int size = checkedCount(dis.readInt());
             List<ControllerData> datas = new ArrayList<>(size);
 
             for (int i = 0; i < size; i++) {
-                int length = dis.readInt();
+                int length = checkedLength(dis.readInt());
                 byte[] dataBytes = new byte[length];
                 dis.readFully(dataBytes);
                 ControllerData data = ControllerData.deserialize(dataBytes);
@@ -273,7 +290,7 @@ public class ComputerClusterClientData {
             int userCount = dis.readInt();
 
             //availPowers
-            int availPowersSize = dis.readInt();
+            int availPowersSize = checkedCount(dis.readInt());
             Map<ComputePower, Long> availPowers = new HashMap<>();
             for (int i = 0; i < availPowersSize; i++) {
                 byte key = dis.readByte();
@@ -282,7 +299,7 @@ public class ComputerClusterClientData {
             }
 
             //usedPowers
-            int usedPowersSize = dis.readInt();
+            int usedPowersSize = checkedCount(dis.readInt());
             Map<ComputePower, Long> usedPowers = new HashMap<>();
             for (int i = 0; i < usedPowersSize; i++) {
                 byte key = dis.readByte();
@@ -291,10 +308,10 @@ public class ComputerClusterClientData {
             }
 
             //events
-            int eventsLength = dis.readInt();
+            int eventsLength = checkedCount(dis.readInt());
             byte[] events = new byte[eventsLength];
             dis.readFully(events);
-            int eventExtraLength = dis.readInt();
+            int eventExtraLength = checkedCount(dis.readInt());
             String[] eventExtra = new String[eventExtraLength];
             for (int i = 0; i < eventExtraLength; i++) {
                 eventExtra[i] = dis.readUTF();
@@ -363,10 +380,10 @@ public class ComputerClusterClientData {
             long clusterTotal = dis.readLong();
 
             //events
-            int eventsLength = dis.readInt();
+            int eventsLength = checkedCount(dis.readInt());
             byte[] events = new byte[eventsLength];
             dis.readFully(events);
-            int eventExtraLength = dis.readInt();
+            int eventExtraLength = checkedCount(dis.readInt());
             String[] eventExtra = new String[eventExtraLength];
             for (int i = 0; i < eventExtraLength; i++) {
                 eventExtra[i] = dis.readUTF();

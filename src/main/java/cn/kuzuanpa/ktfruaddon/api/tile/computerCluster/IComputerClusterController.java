@@ -28,17 +28,14 @@
  */
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
-import codechicken.lib.vec.BlockCoord;
+import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public interface IComputerClusterController {
     UUID getUUID();
@@ -49,21 +46,21 @@ public interface IComputerClusterController {
     void setSavedClusterUUID(UUID uuid);
     /**Designed for writeToNBT to save data, used for cluster recovery, data is simplified that only contains worldID and pos**/
     void setSavedClusterControllers(List<ControllerData> data);
+    /**The peer list saved in NBT, still pending replay while {@link #getCluster()} is null. Never null.**/
+    List<ControllerData> getSavedClusterControllers();
 
     void setUUID(UUID uuid);
     byte getState();
+    /**A controller provides exactly one Compute Power type, see the design of the multiblock.**/
     Map.Entry<ComputePower,Long> getComputePower();
-    void notifyControllerEvent(short event);
+    void notifyControllerEvent(byte event);
     boolean setCluster(ComputerCluster cluster);
     ComputerCluster getCluster();
-    boolean canReachController(IComputerClusterController controller);
-    boolean canReachUser(IComputerClusterUser user);
-    default void updateReachable() {};
-    default void checkUpdatedReachable() {};
+
     World getWorld();
-    BlockCoord getPos();
+    WorldPos getPos();
     default boolean allocateUserComputePower(IComputerClusterUser user){
-        if(getCluster() == null || !canReachUser(user))return false;
+        if(getCluster() == null)return false;
         return getCluster().allocateUserComputePower(user);
     }
     default boolean freeUserComputePower(IComputerClusterUser user){
@@ -75,16 +72,19 @@ public interface IComputerClusterController {
             nbt.setLong("myUUIDHigh", controller.getUUID().getMostSignificantBits());
             nbt.setLong("myUUIDLow", controller.getUUID().getLeastSignificantBits());
         }
-        if(controller.getCluster() !=null){
-            nbt.setLong("clusterUUIDHigh", controller.getCluster().clusterUUID.getMostSignificantBits());
-            nbt.setLong("clusterUUIDLow", controller.getCluster().clusterUUID.getLeastSignificantBits());
-            NBTTagList controllers = new NBTTagList();
-            for (Map.Entry<UUID, ControllerData> entry : controller.getCluster().controllerList.entrySet()) {
-                ControllerData data = entry.getValue();
-                controllers.appendTag(new NBTTagIntArray(new int[] {data.world.provider.dimensionId, data.pos.x, data.pos.y, data.pos.z}));
-            }
-            nbt.setTag("clusterControllers", controllers);
+        ComputerCluster cluster = controller.getCluster();
+        UUID clusterUUID = cluster == null ? controller.getSavedClusterUUID() : cluster.clusterUUID;
+        if(clusterUUID == null)return;
+        Collection<ControllerData> peers = cluster == null ? controller.getSavedClusterControllers() : cluster.controllerList.values();
+        if(peers == null || peers.isEmpty())return;
+        nbt.setLong("clusterUUIDHigh", clusterUUID.getMostSignificantBits());
+        nbt.setLong("clusterUUIDLow", clusterUUID.getLeastSignificantBits());
+        NBTTagList controllers = new NBTTagList();
+        for (ControllerData data : peers) {
+            if(data == null || data.pos == null)continue;
+            controllers.appendTag(new NBTTagIntArray(new int[] {data.pos.dim, data.pos.x, data.pos.y, data.pos.z}));
         }
+        nbt.setTag("clusterControllers", controllers);
     }
     static void readFromNBT(NBTTagCompound nbt, IComputerClusterController controller){
         if(nbt.hasKey("myUUIDHigh") && nbt.hasKey("myUUIDLow")) controller.setUUID(new UUID(nbt.getLong("myUUIDHigh"), nbt.getLong("myUUIDLow")));
@@ -95,7 +95,8 @@ public interface IComputerClusterController {
             NBTTagList list = nbt.getTagList("clusterControllers", 11);
             for (int i = 0; i < list.tagCount(); i++) {
                 int[] data = list.func_150306_c(i);
-                datas.add(new ControllerData(DimensionManager.getWorld(data[0]), new BlockCoord(data[1],data[2],data[3])));
+                if(data == null || data.length < 4)continue;
+                datas.add(new ControllerData(DimensionManager.getWorld(data[0]), new WorldPos(data[1],data[2],data[3], data[0])));
             }
             controller.setSavedClusterControllers(datas);
         }

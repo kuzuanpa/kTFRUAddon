@@ -41,6 +41,9 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class ScreenControllerList extends kGuiScreenContainerLayerBase {
 
     ButtonList dataListButton = null;
+    /**Row pitch and visible list height, they define how far the list may scroll.**/
+    protected static final int ROW_HEIGHT = 18, LIST_WIDTH = 226, LIST_HEIGHT = 129;
+
     public ScreenControllerList updateFromData(ComputerClusterClientData.ControllerList data){
         if(data == null)return this;
         updateControllerList(data.datas);
@@ -49,9 +52,9 @@ public class ScreenControllerList extends kGuiScreenContainerLayerBase {
     public void updateControllerList(List<ControllerData> datas){
         dataListButton.clearSubButton();
         for (int i = 0; i < datas.size(); i++) {
-            dataListButton.addSubButton(new ControllerButton(10+i,ContainerX+4,ContainerY+14,320).setData(datas.get(i)).setFBOOffset(0,i*18).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeTransparency(i*70,600+i*70,0,255)));
+            dataListButton.addSubButton(new ControllerButton(10+i,ContainerX+4,ContainerY+14,320).setData(datas.get(i)).setFBOOffset(0,i*ROW_HEIGHT).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeTransparency(i*70,600+i*70,0,255)));
         }
-        dataListButton.setMaxScrolled(datas.size()*10);
+        dataListButton.setMaxScrolled(Math.max(0, datas.size()*ROW_HEIGHT - LIST_HEIGHT));
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ScreenControllerList extends kGuiScreenContainerLayerBase {
 
         buttons.add(new Text(3,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_PROVIDING),ContainerX+162,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
-        dataListButton = new ButtonList(4, ContainerX,ContainerY+14,width,129);
+        dataListButton = new ButtonList(4, ContainerX,ContainerY+14,LIST_WIDTH,LIST_HEIGHT);
 
         buttons.add(dataListButton);
     }
@@ -100,7 +103,7 @@ public class ScreenControllerList extends kGuiScreenContainerLayerBase {
             mc.getTextureManager().bindTexture(background);
 
             this.drawTexturedModalRect(xPosition,yPosition,16*data.state,146,16,16);
-            wrappedDrawStr(data.pos.toString()+" @Dim"+data.world.provider.dimensionId,xPosition+24,yPosition+3,0x000000);
+            wrappedDrawStr(data.pos.toString()+" @Dim"+data.pos.dim,xPosition+24,yPosition+3,0x000000);
 
             if(data.power == null)return;
 

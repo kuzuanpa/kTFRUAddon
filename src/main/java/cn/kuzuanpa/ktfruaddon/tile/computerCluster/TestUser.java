@@ -14,10 +14,11 @@
  */
 package cn.kuzuanpa.ktfruaddon.tile.computerCluster;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUserContainer;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IReachabilityLimitedController;
 import gregapi.data.LH;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase07Paintable;
@@ -32,7 +33,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,11 +59,6 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
     }
 
     @Override
-    public @Nullable IComputerClusterUserContainer getContainer() {
-        return IComputerClusterUser.super.getContainer();
-    }
-
-    @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         IComputerClusterUser.writeToNBT(aNBT,this);
@@ -74,11 +69,6 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
         return false;
     }
 
-    @Override
-    public boolean onTickCheck(long aTimer) {
-        if(aTimer%10 == 0)return true;
-        return false;
-    }
     public boolean clickDoubleCheck=false;
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
@@ -99,7 +89,7 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
             NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
 
             if(!aNBT.hasKey("worldID") || !aNBT.hasKey(NBT_TARGET_X) || !aNBT.hasKey(NBT_TARGET_Y) || !aNBT.hasKey(NBT_TARGET_Z)){
-                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get("Join Failed: USB data not valid")));
+                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_USB_DATA_INVALID));
                 return false;
             }
 
@@ -107,7 +97,7 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
             World world = DimensionManager.getWorld(aNBT.getInteger("worldID"));
 
             if(world == null){
-                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get("Join Failed: World ID"+aNBT.getInteger("worldID")+" not exists")));
+                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_USB_WORLD_MISSING) + " " + aNBT.getInteger("worldID"));
                 return false;
             }
 
@@ -117,14 +107,29 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
             TileEntity tile = WD.te(world,coord,false);
 
             if(!(tile instanceof IComputerClusterController) || ((IComputerClusterController) tile).getCluster() == null){
-                aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get("Join Failed: target not exist or not loaded")));
+                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_NOT_LOADED));
                 return false;
             }
-            setController((IComputerClusterController) tile);
-            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get("Join Success")));
+            IComputerClusterController target = (IComputerClusterController) tile;
+            if(IReachabilityLimitedController.isUserReachable(target,this)){
+                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_UNREACHABLE_ANY));
+                return false;
+            }
+            setController(target);
+            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_SUCCESS)));
         }
 
         return true;
+    }
+
+    protected void sendJoinFailed(EntityPlayer aPlayer, String reason){
+        aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW + LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_FAILED) + " " + reason));
+    }
+
+    @Override
+    public boolean breakBlock() {
+        if(isServerSide())tryStop();
+        return super.breakBlock();
     }
     @Override
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {

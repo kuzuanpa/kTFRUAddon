@@ -17,21 +17,22 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import gregapi.data.LH;
 
 public class Constants {
-    public static final short EVENT_CLUSTER_DESTROY=0;
-    public static final short EVENT_WRONG_UUID =1;
-    public static final short EVENT_KICKING_FROM_CLUSTER =2;
-    public static final short EVENT_A_CONTROLLER_LEFT =3;
-    public static final short EVENT_CLUSTER_CREATED =4;
-    public static final short EVENT_CONTROLLER_JOINED =5;
-    public static final short EVENT_USER_JOINED =6;
-    public static final short EVENT_USER_LEFT =7;
-    public static final short EVENT_POWER_ALLOCATED =8;
-    public static final short EVENT_POWER_RELEASED =9;
-    public static final short EVENT_POWER_ALLOCATE_FAILED =10;
-    public static final short EVENT_STATE_CHANGED =11;
-    public static final short EVENT_REACHABILITY_OK =12;
-    public static final short EVENT_REACHABILITY_WARNING =13;
-    public static final short EVENT_REACHABILITY_FAILED =14;
+    /**Event IDs are stored and synced as a single byte, so they must stay within 0..127.**/
+    public static final byte EVENT_CLUSTER_DESTROY=0;
+    public static final byte EVENT_WRONG_UUID =1;
+    public static final byte EVENT_KICKING_FROM_CLUSTER =2;
+    public static final byte EVENT_A_CONTROLLER_LEFT =3;
+    public static final byte EVENT_CLUSTER_CREATED =4;
+    public static final byte EVENT_CONTROLLER_JOINED =5;
+    public static final byte EVENT_USER_JOINED =6;
+    public static final byte EVENT_USER_LEFT =7;
+    public static final byte EVENT_POWER_ALLOCATED =8;
+    public static final byte EVENT_POWER_RELEASED =9;
+    public static final byte EVENT_POWER_ALLOCATE_FAILED =10;
+    public static final byte EVENT_STATE_CHANGED =11;
+    public static final byte EVENT_REACHABILITY_OK =12;
+    public static final byte EVENT_REACHABILITY_WARNING =13;
+    public static final byte EVENT_REACHABILITY_FAILED =14;
     public static final byte STATE_OFFLINE=0;
     public static final byte STATE_NORMAL=1;
     public static final byte STATE_WARNING=2;

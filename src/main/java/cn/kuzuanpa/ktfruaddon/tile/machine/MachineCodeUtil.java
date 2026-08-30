@@ -15,23 +15,16 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.CodeTranslate;
 import cn.kuzuanpa.ktfruaddon.api.code.OreScanner;
-import cn.kuzuanpa.ktfruaddon.api.tile.ICircuitChangeableTileEntity;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cpw.mods.fml.common.FMLLog;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
-import gregapi.tileentity.base.TileEntityBase01Root;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
-import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -57,18 +50,9 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
 
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-    if (isServerSide()) {
-        openGUI(aPlayer, aSide);
-        try {
-            for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) FMLLog.log(Level.FATAL,""+ CodeTranslate.itemToCode(slot(i)));
-            //for (ItemStack computer : getComputers()) {
-            //    worldObj.spawnEntityInWorld(new EntityItem(worldObj,xCoord,yCoord + 2,zCoord,computer));
-            //}
-        }catch (Throwable ignored) {}
-        FMLLog.log(Level.FATAL, slot(0)==null?"/": String.valueOf(Block.getBlockFromItem(slot(0).getItem()).getMaterial().equals(Material.ice)));
+        if (isServerSide()) openGUI(aPlayer, aSide);
+        return false;
     }
-    return false;
-}
 
     @Override
     public NBTTagCompound writeItemNBT2(NBTTagCompound aNBT) {
@@ -104,16 +88,6 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
         return 2;
     }
 
-    public void genMultiTileName(){
-        TileEntity.classToNameMap.keySet().stream().forEach(clazz-> {
-            try {
-                Object obj = ((Class<?>)clazz).newInstance();
-                if(!(obj instanceof ITileEntityMultiBlockController))return;
-                TileEntityBase01Root tile = (TileEntityBase01Root)obj ;
-                FMLLog.log(Level.FATAL, "S:"+tile.getTileEntityName()+"=");
-            }catch (Throwable t){}
-        });
-    }
     public static IIconContainer
             sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/common"),
             sTextureCommosn= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/commsson");

@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.computerCluster;
 
+import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
 import codechicken.lib.vec.BlockCoord;
@@ -34,9 +35,15 @@ import java.util.*;
 
 import static gregapi.data.CS.*;
 
-public class NetworkCable extends TileEntityBase10ConnectorRendered implements IWiredNetworkConnectable{
+/**TODO: finialize cable walk& reachable checks**/
+public abstract class NetworkCable extends TileEntityBase10ConnectorRendered implements IWiredNetworkConnectable{
+    /**Hard cap on a single network walk, an unbounded search over a huge cable network would stall the server tick.**/
+    public static final int MAX_WALK_STEPS = 4096;
+
     public byte mRenderType = 0;
+    /**Set while this cable is part of a network walk that already ran in the current tick.**/
     public boolean checkedThisTick = false;
+    /**Controller UUIDs that claimed a channel on this network. Shared between every cable of the same network.**/
     public List<UUID> controllers = new ArrayList<>();
 
     @Override
@@ -51,12 +58,27 @@ public class NetworkCable extends TileEntityBase10ConnectorRendered implements I
         if (aNBT.hasKey(NBT_PIPERENDER)) mRenderType = aNBT.getByte(NBT_PIPERENDER);
     }
 
-    public boolean canReach(BlockCoord target, HashSetNoNulls<TileEntity> aAlreadyPassed) {
-        for (byte tSide : ALL_SIDES) if (connected(tSide)) {
-            TileEntity tDelegator = getTileEntityAtSideAndDistance(tSide, 1);
-            if (aAlreadyPassed.add(tDelegator)) {
-                if (tDelegator instanceof NetworkCable)if (((NetworkCable) tDelegator).canReach(target,aAlreadyPassed))return true;
-                if ((tDelegator instanceof IComputerClusterUser || tDelegator instanceof IComputerClusterController) && target.equals(new BlockCoord(tDelegator.xCoord,tDelegator.yCoord,tDelegator.zCoord))) return true;
+    /**
+     * Walks the cable network looking for {@code target}. Iterative on purpose, the recursive version
+     * could blow the stack on a large network, and the step cap keeps a pathological network bounded.
+     */
+    public boolean canReach(WorldPos target, HashSetNoNulls<TileEntity> aAlreadyPassed) {
+        if (target == null) return false;
+        Queue<NetworkCable> queue = new ArrayDeque<>();
+        queue.add(this);
+        aAlreadyPassed.add(this);
+        int steps = 0;
+        while (!queue.isEmpty()) {
+            if (++steps > MAX_WALK_STEPS) return false;
+            NetworkCable cable = queue.poll();
+            for (byte tSide : ALL_SIDES_VALID) if (cable.connected(tSide)) {
+                TileEntity tDelegator = cable.getTileEntityAtSideAndDistance(tSide, 1);
+                if (tDelegator == null || !aAlreadyPassed.add(tDelegator)) continue;
+                if (tDelegator instanceof NetworkCable) {
+                    queue.add((NetworkCable) tDelegator);
+                    continue;
+                }
+                if ((tDelegator instanceof IComputerClusterUser || tDelegator instanceof IComputerClusterController) && target.equals(new BlockCoord(tDelegator.xCoord, tDelegator.yCoord, tDelegator.zCoord))) return true;
             }
         }
         return false;
@@ -90,51 +112,55 @@ public class NetworkCable extends TileEntityBase10ConnectorRendered implements I
 
     @Override
     public void onConnectionChange(byte aPreviousConnections) {
-        for (byte tSide : ALL_SIDES_VALID) if (connected(tSide) || aPreviousConnections == tSide) {
+        for (byte tSide : ALL_SIDES_VALID) if (connected(tSide) || (aPreviousConnections & SBIT[tSide]) != 0) {
             TileEntity t = getTileEntityAtSideAndDistance(tSide, 1);
-            if(t instanceof NetworkCable)((NetworkCable) t).requestReachableCheck();
+            if(t instanceof NetworkCable)((NetworkCable) t).initCheck();
         }
     }
 
-    public void requestReachableCheck(){
+    /**
+     * Rebuilds the shared channel list of the whole network this cable belongs to and asks every attached
+     * endpoint to re-check its own reachability. Every cable visited is marked for the current tick, so a
+     * network wide change only walks the network once instead of once per cable.
+     */
+    public void initCheck(){
         if(checkedThisTick)return;
-        checkedThisTick=true;
-        int a= 1;
-        Queue<NetworkCable> tileEntities = new ArrayDeque<>();
-        List<NetworkCable> checkedCable = new ArrayList<>();
-        List<IWiredNetworkConnectable> checkedConnectable = new ArrayList<>();
-        for (byte tSide : ALL_SIDES_VALID) if (connected(tSide)) {
-            TileEntity t = getTileEntityAtSideAndDistance(tSide, 1);
-            if(t instanceof NetworkCable)tileEntities.add((NetworkCable) t);
-            else if(t instanceof IWiredNetworkConnectable)checkedConnectable.add((IWiredNetworkConnectable) t);
-        }
-        while(!tileEntities.isEmpty()){
-            NetworkCable tile = tileEntities.poll();
-            checkedCable.add(tile);
+        Queue<NetworkCable> queue = new ArrayDeque<>();
+        Set<NetworkCable> checkedCable = new HashSet<>();
+        Set<IWiredNetworkConnectable> checkedConnectable = new HashSet<>();
+        queue.add(this);
+        checkedCable.add(this);
+        int steps = 0;
+        while(!queue.isEmpty()){
+            if(++steps > MAX_WALK_STEPS)break;
+            NetworkCable tile = queue.poll();
+            tile.checkedThisTick = true;
             for (byte tSide : ALL_SIDES_VALID) if (tile.connected(tSide)) {
                 TileEntity t = tile.getTileEntityAtSideAndDistance(tSide, 1);
-                if(t instanceof NetworkCable) { if (!checkedCable.contains(t)) tileEntities.add((NetworkCable) t);}
-                else if(t instanceof IWiredNetworkConnectable && !checkedConnectable.contains(t))checkedConnectable.add((IWiredNetworkConnectable) t);
+                if(t instanceof NetworkCable){ if(checkedCable.add((NetworkCable) t))queue.add((NetworkCable) t);}
+                else if(t instanceof IWiredNetworkConnectable)checkedConnectable.add((IWiredNetworkConnectable) t);
             }
         }
-        controllers = new ArrayList<>();
-        if(checkedConnectable.isEmpty())return;
-        checkedCable.forEach(c->c.controllers=this.controllers);
-        checkedConnectable.forEach(IWiredNetworkConnectable::requestReachableCheck);
+        List<UUID> sharedChannels = new ArrayList<>();
+        checkedCable.forEach(c->c.controllers = sharedChannels);
+        checkedConnectable.forEach(IWiredNetworkConnectable::fillChannel);
+        checkedConnectable.forEach(IWiredNetworkConnectable::checkChannel);
     }
+
+
 
     @Override
     public boolean breakBlock() {
         for (byte tSide : ALL_SIDES_VALID) {
             TileEntity t = getTileEntityAtSideAndDistance(tSide, 1);
-            if(t instanceof IWiredNetworkConnectable)((IWiredNetworkConnectable) t).requestReachableCheck();
+            if(t instanceof IWiredNetworkConnectable)((IWiredNetworkConnectable) t).fillChannel();
         }
         return super.breakBlock();
     }
 
-    public void takeChannel(UUID user) {
-        if(!controllers.contains(user))controllers.add(user);
-
+    /**@param controllerUUID the controller claiming a channel on this network.**/
+    public void takeChannel(UUID controllerUUID) {
+        if(controllerUUID != null && !controllers.contains(controllerUUID))controllers.add(controllerUUID);
     }
 
 }

@@ -28,9 +28,11 @@
  */
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
+import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
 import gregapi.util.WD;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +50,27 @@ public interface IComputerClusterUser {
     /**@return state, note state except NORMAL and WARNING will interrupt Compute Power consume.**/
     byte getState();
     void onComputerPowerReleased();
+
+    /**
+     * Where this user sits in the world, used by controllers to decide whether they can reach it.
+     * Resolved from the container when there is one, otherwise from the TileEntity itself.
+     * @return null when the position cannot be determined, reach checks then have to fail closed.
+     */
+    default WorldPos getUserPos() {
+        IComputerClusterUserContainer container = getContainer();
+        if (container != null) return new WorldPos(container.getX(), container.getY(), container.getZ(), container.getWorld().provider.dimensionId);
+        if (this instanceof TileEntity) return new WorldPos(((TileEntity) this).xCoord, ((TileEntity) this).yCoord, ((TileEntity) this).zCoord, ((TileEntity) this).getWorldObj().provider.dimensionId);
+        return null;
+    }
+
+    /**@return the world this user sits in, null when unknown, see {@link #getUserPos()}.**/
+    @Nullable default World getUserWorld() {
+        IComputerClusterUserContainer container = getContainer();
+        if (container != null) return container.getWorld();
+        if (this instanceof TileEntity) return ((TileEntity) this).getWorldObj();
+        return null;
+    }
+
     default boolean tryStart(){
         if (getController() == null)return false;
         return getController().allocateUserComputePower(this);
@@ -73,7 +96,7 @@ public interface IComputerClusterUser {
         if(list.size() < 2)return;
         int[] ints = new int[list.size()*4];
         for (int i = 0; i < list.size(); i++) {
-            ints[i*4] = list.get(i).world.provider.dimensionId;
+            ints[i*4] = list.get(i).pos.dim;
             ints[i*4+1] = list.get(i).pos.x;
             ints[i*4+2] = list.get(i).pos.y;
             ints[i*4+3] = list.get(i).pos.z;
@@ -85,14 +108,19 @@ public interface IComputerClusterUser {
         else user.setUUID(UUID.randomUUID());
         if(nbt.hasKey("controller")){
             int[] controllerData = nbt.getIntArray("controller");
-            TileEntity tile = WD.te(DimensionManager.getWorld(controllerData[0]),controllerData[1],controllerData[2],controllerData[3],false);
-            if(tile instanceof IComputerClusterController)user.setController(((IComputerClusterController) tile));
+            if(controllerData.length >= 4){
+                World world = DimensionManager.getWorld(controllerData[0]);
+                TileEntity tile = world == null ? null : WD.te(world,controllerData[1],controllerData[2],controllerData[3],false);
+                if(tile instanceof IComputerClusterController)user.setController(((IComputerClusterController) tile));
+            }
         }
         if(nbt.hasKey("bkupControllers")){
             int[] data = nbt.getIntArray("bkupControllers");
             List<IComputerClusterController> bkupControllers = new ArrayList<>();
             for (int i = 0; i < data.length/4; i++) {
-                TileEntity tile = WD.te(DimensionManager.getWorld(data[i*4]),data[i*4+1],data[i*4+2],data[i*4+3],false);
+                World world = DimensionManager.getWorld(data[i*4]);
+                if(world == null)continue;
+                TileEntity tile = WD.te(world,data[i*4+1],data[i*4+2],data[i*4+3],false);
                 if(tile instanceof IComputerClusterController)bkupControllers.add(((IComputerClusterController) tile));
             }
             user.setBackupControllers(bkupControllers);

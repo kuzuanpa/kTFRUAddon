@@ -32,7 +32,6 @@ import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.code.codeUtil;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import gregapi.data.LH;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,5 +81,9 @@ public enum ComputePower {
         StringBuilder sb = new StringBuilder(LH.get(I18nHandler.COMPUTE_POWER)+": ");
         map.forEach((k,v)-> sb.append(k.desc(v)).append(", "));
         return sb.toString();
+    }
+
+    public static String getDescOneLine(Map.Entry<ComputePower, Long> entry){
+        return LH.get(I18nHandler.COMPUTE_POWER) + ": " + entry.getKey().desc(entry.getValue()) + ", ";
     }
 }

@@ -12,15 +12,7 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.computerCluster;
+package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
-import gregapi.code.TagData;
-
-import java.util.UUID;
-
-public interface IWiredNetworkConnectable {
-    public static final TagData WIRE_NETWORK                           = TagData.createTagData("CONNECTORS.WIRE_NETWORK", "Network Wire");
-    void fillChannel();
-    void checkChannel();
-    void takeChannel(UUID user);
+public interface IComputeUser {
 }

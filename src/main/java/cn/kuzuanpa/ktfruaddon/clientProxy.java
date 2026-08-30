@@ -18,6 +18,7 @@ package cn.kuzuanpa.ktfruaddon;
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import cn.kuzuanpa.ktfruaddon.client.render.*;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
@@ -35,7 +36,9 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.data.LH;
@@ -60,6 +63,12 @@ public class clientProxy extends commonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
+    }
+
+    /**The client side cluster snapshots are static, they have to go when leaving a world or server.**/
+    @SubscribeEvent
+    public void onClientDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        ComputerCluster.clearClientData();
     }
 
 

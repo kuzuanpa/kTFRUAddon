@@ -42,6 +42,9 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 public class ScreenUserList extends kGuiScreenContainerLayerBase {
 
     ButtonList dataListButton = null;
+    /**Row pitch and visible list height, they define how far the list may scroll.**/
+    protected static final int ROW_HEIGHT = 18, LIST_WIDTH = 226, LIST_HEIGHT = 129;
+
     public ScreenUserList updateFromData(ComputerClusterClientData.UserList data){
         if(data == null)return this;
         updateUserList(data.datas);
@@ -50,9 +53,9 @@ public class ScreenUserList extends kGuiScreenContainerLayerBase {
     public void updateUserList(List<UserData> datas){
         dataListButton.clearSubButton();
         for (int i = 0; i < datas.size(); i++) {
-            dataListButton.addSubButton(new UserButton(10+i,ContainerX+4,ContainerY+14,320).setData(datas.get(i)).setFBOOffset(0,i*18).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeTransparency(i*70,600+i*70,0,255)));
+            dataListButton.addSubButton(new UserButton(10+i,ContainerX+4,ContainerY+14,320).setData(datas.get(i)).setFBOOffset(0,i*ROW_HEIGHT).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeTransparency(i*70,600+i*70,0,255)));
         }
-        dataListButton.setMaxScrolled(datas.size()*10);
+        dataListButton.setMaxScrolled(Math.max(0, datas.size()*ROW_HEIGHT - LIST_HEIGHT));
     }
 
     @Override
@@ -65,7 +68,7 @@ public class ScreenUserList extends kGuiScreenContainerLayerBase {
 
         buttons.add(new Text(3,LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_CONSUMING),ContainerX+162,ContainerY+3)                                .setAnimatedInFBO(true).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeMoveSlowIn(0, 600,-50,0,2)).addAnime(new animeRGBA(0,400,255,255,255,55,-150,-150,-150,200)));
 
-        dataListButton = new ButtonList(4, ContainerX,ContainerY+14,width,height-14);
+        dataListButton = new ButtonList(4, ContainerX,ContainerY+14,LIST_WIDTH,LIST_HEIGHT);
 
         buttons.add(dataListButton);
     }
@@ -101,10 +104,13 @@ public class ScreenUserList extends kGuiScreenContainerLayerBase {
             mc.getTextureManager().bindTexture(background);
 
             this.drawTexturedModalRect(xPosition,yPosition,16*data.state,146,16,16);
-            wrappedDrawStr(LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_USER),xPosition+24,yPosition+3,0x000000);
+            //The user tile is not available on the client, the position comes with the snapshot instead.
+            String label = data.pos == null ? LH.get(I18nHandler.COMPUTE_CLUSTER_UI_LABEL_USER) : data.pos.toString();
+            wrappedDrawStr(label,xPosition+24,yPosition+3,0x000000);
 
             for (int i = 0; i < ComputePower.values().length; i++) {
-                if(data.consumingPower.get(ComputePower.getType(i)) == null)continue;
+                Long consuming = data.consumingPower.get(ComputePower.getType(i));
+                if(consuming == null)continue;
 
                 mc.getTextureManager().bindTexture(background);
 
@@ -113,7 +119,7 @@ public class ScreenUserList extends kGuiScreenContainerLayerBase {
                 GL11.glColor3ub((byte) (0xff & color >> 16), (byte)(0xff & color >> 8) , (byte)(color & 0xff));
                 this.drawTexturedModalRect(xPosition+width-94-(ComputePower.values().length - i)*22,yPosition+1,0,236,8,8);
 
-                String str = getDisplayShortNum(data.consumingPower.get(ComputePower.getType(i)), 1);
+                String str = getDisplayShortNum(consuming, 1);
                 wrappedDrawStr(str ,xPosition+width-90-(ComputePower.values().length - i)*22 - (fontRendererObj.getStringWidth(str)/2),yPosition+9,0x000000);
             }
         }

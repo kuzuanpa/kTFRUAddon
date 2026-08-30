@@ -17,23 +17,46 @@
 
 package cn.kuzuanpa.ktfruaddon.item.items.random;
 
+import cn.kuzuanpa.ktfruaddon.api.item.IComputerItem;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeUser;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
+import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
-public class itemComputer extends MultiItemRandom {
+public class itemComputer extends MultiItemRandom implements IComputerItem {
     public itemComputer() {
     super(MOD_ID, "ktfru.item.it.computer");
     setCreativeTab(new CreativeTab(getUnlocalizedName(), "kTFRUAddon: Computers", this, (short) 17));
 }
     public static long getComputePowerFromID(int id){
-        if (id > ComputePower.length||id<0) return 0;
-        return ComputePower[id];
+        if (id >= COMPUTE_POWER.length || id < 0) return 0;
+        return COMPUTE_POWER[id];
     }
+
+    @Override
+    public @NotNull Map.Entry<ComputePower, Long> getComputePower(int amount, int meta) {
+        return ComputePower.Normal.asEntry(getComputePowerFromID(meta) * Math.max(0, amount));
+    }
+
+    @Override
+    public boolean onStart(ItemStack stack, IComputeUser host) {
+        return true;
+    }
+
+    @Override
+    public void onStop(ItemStack stack, @Nullable IComputeUser host) {
+    }
+
     //Index:                                   0 ,1 ,2  ,3   ,4   ,5   ,6    ,7    ,8     ,9     ,10    ,11    ,12    ,13    ,14    ,15    ,16     ,17    ,18    ,19     ,20    ,21     ,22     ,23     ,24,25  ,26  ,27   ,28    ,29    ,30  ,31   ,32   ,33    ,34    ,35
-    private static final long[] ComputePower ={40,60,840,1020,6530,8160,34220,40370,102890,125540,161320,256330,305680,561300,453110,533120,1100230,806320,911310,1830770,939090,1566570,1025630,2285670,35,1020,2160,11820,42390,126230,2000,10000,30000,150000,500000,1500000};
+    private static final long[] COMPUTE_POWER ={40,60,840,1020,6530,8160,34220,40370,102890,125540,161320,256330,305680,561300,453110,533120,1100230,806320,911310,1830770,939090,1566570,1025630,2285670,35,1020,2160,11820,42390,126230,2000,10000,30000,150000,500000,1500000};
     @Override
     public void addItems() {
         ItemList.ComputerTF3386          .set(addItem(0 ,"TF3386 Computer"   ,"Computing Power: 40 MFLOPS"))                .registerOre("ktfruBasicComputer");

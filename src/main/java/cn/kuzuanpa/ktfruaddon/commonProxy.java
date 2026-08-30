@@ -33,6 +33,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import gregapi.api.Abstract_Proxy;
 import gregapi.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -93,10 +94,17 @@ public class commonProxy extends Abstract_Proxy {
     }
 
     public void serverStopped(FMLServerStoppedEvent aEvent) {
+        //Cluster state is static, without this a second world in the same session would see stale clusters.
+        ComputerCluster.clearServerData();
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e){
         sendMessage(e);
+    }
+    /**Cluster GUI requests arrive on the netty thread, they get applied here so cluster state stays single threaded.**/
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event){
+        if (event.phase == TickEvent.Phase.END) ComputerCluster.processPendingRequests();
     }
     public void sendMessage(PlayerEvent.PlayerLoggedInEvent e){
     }

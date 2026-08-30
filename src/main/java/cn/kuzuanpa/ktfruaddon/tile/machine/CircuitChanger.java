@@ -17,8 +17,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.tile.ICircuitChangeableTileEntity;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
@@ -28,9 +27,8 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class CircuitChanger extends MultiTileEntityBasicMachine implements ICircuitChangeableTileEntity {
+public class CircuitChanger extends MultiTileEntityBasicMachine {
 
 @Override
 public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
@@ -38,7 +36,7 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
         openGUI(aPlayer, aSide);
         try {
             for (int i=0;i<this.ACCESSIBLE_SLOTS.length;i++) {
-                if(slot(i).hasTagCompound() && slot(i).getTagCompound().hasKey("ktfru.circuits")){
+                if(slot(i).hasTagCompound() && slot(i).getTagCompound().hasKey(ICircuitChangeableTileEntity.NBT_CIRCUITS)){
                     List<ItemStack> stackList = ICircuitChangeableTileEntity.loadCircuitInfo(slot(i).getTagCompound());
                     for (int j=0; j < slot(i).stackSize; j++ )for (ItemStack computer : stackList) {
                         worldObj.spawnEntityInWorld(new EntityItem(worldObj,xCoord,yCoord + 2,zCoord,computer));
@@ -63,20 +61,4 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
     public static IIconContainer
             sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/common"),
             sTextureCommosn= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/commsson");
-
-    List<ItemStack> computerList = new ArrayList<>();
-    @Override
-    public List<ItemStack> getComputers() {
-        return computerList;
-    }
-
-    @Override
-    public Map<ComputePower, Long> getComputePowerRequired() {
-        return ComputePower.Normal.asMap(4000);
-    }
-
-    @Override
-    public void setComputers(List<ItemStack> computers) {
-        computerList = computers;
-    }
 }
