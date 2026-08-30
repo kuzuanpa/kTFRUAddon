@@ -120,6 +120,7 @@ PROXY.postInit(aEvent);
     @Override
     public void onModServerStarting2(cpw.mods.fml.common.event.FMLServerStartingEvent aEvent) {
         // Insert your ServerStarting Code here and not above
+        PROXY.serverStarting(aEvent);
     }
 
     @Override
@@ -134,11 +135,13 @@ PROXY.postInit(aEvent);
     @Override
     public void onModServerStopping2(cpw.mods.fml.common.event.FMLServerStoppingEvent aEvent) {
         // Insert your ServerStopping Code here and not above
+        PROXY.serverStopping(aEvent);
     }
 
     @Override
     public void onModServerStopped2(cpw.mods.fml.common.event.FMLServerStoppedEvent aEvent) {
         // Insert your ServerStopped Code here and not above
+        PROXY.serverStopped(aEvent);
     }
 
 }

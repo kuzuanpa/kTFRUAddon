@@ -111,7 +111,7 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
                 return false;
             }
             IComputerClusterController target = (IComputerClusterController) tile;
-            if(IReachabilityLimitedController.isUserReachable(target,this)){
+            if(!IReachabilityLimitedController.isUserReachable(target,this)){
                 sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_UNREACHABLE_ANY));
                 return false;
             }

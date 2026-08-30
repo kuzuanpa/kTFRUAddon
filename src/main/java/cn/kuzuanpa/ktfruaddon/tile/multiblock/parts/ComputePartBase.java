@@ -70,9 +70,14 @@ public abstract class ComputePartBase extends TileEntityBase09FacingSingle imple
     }
 
     @Override
+    public boolean onTickCheck(long aTimer) {
+        return super.onTickCheck(aTimer)||mState.isChangedAndClear();
+    }
+
+    @Override
     public boolean tryStart(long needed) {
         if (needed > mComputePower || mState.get() == 1)return false;
-        IComputerItem.tryStartAll(Arrays.asList(getInventory()), this, true);
+        if(IComputerItem.tryStartAll(Arrays.asList(getInventory()), this, true))return false;
         mState.set(1);
         return true;
     }
