@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface ICircuitChangeableTileEntity extends IComputeUser {
+public interface ICircuitChangeableTileEntity extends IComputeItemUser {
     String NBT_CIRCUITS = "ktfru.circuits";
 
     List<ItemStack> getComputers();
@@ -82,6 +82,7 @@ public interface ICircuitChangeableTileEntity extends IComputeUser {
         return computePowers;
     }
 
+    /**Start all computers. will auto stop if failed**/
     default boolean tryStart(){
         Map<ComputePower, Long> installed = getComputePowerInstalled();
         for (Map.Entry<ComputePower, Long> required : getComputePowerRequired().entrySet()) {
@@ -91,7 +92,7 @@ public interface ICircuitChangeableTileEntity extends IComputeUser {
         return IComputerItem.tryStartAll(getComputers(), this,true);
     }
 
-    default void stop(boolean force){
+    default void stop(){
         IComputerItem.stopAll(getComputers(), this);
     }
     default void addCircuitTooltip(List<String> aList, ItemStack aStack, boolean aF3_H){

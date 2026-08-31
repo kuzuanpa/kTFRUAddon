@@ -73,57 +73,13 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if(isServerSide()) {
-            addControllerFromUSB(aPlayer);
+            IComputerClusterUser.bindControllerFromUSB(aPlayer, this);
             mActive = true;
             if(aPlayer.isSneaking())tryStop();
             else tryStart();
             return true;
         }
         return false;
-    }
-    public boolean addControllerFromUSB(EntityPlayer aPlayer){
-        ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
-        if (!(OM.is(OD_USB_STICKS[0],equippedItem))) return false;
-
-        if (equippedItem.hasTagCompound() && equippedItem.getTagCompound().hasKey(NBT_USB_DATA)) {
-            NBTTagCompound aNBT = equippedItem.getTagCompound().getCompoundTag(NBT_USB_DATA);
-
-            if(!aNBT.hasKey("worldID") || !aNBT.hasKey(NBT_TARGET_X) || !aNBT.hasKey(NBT_TARGET_Y) || !aNBT.hasKey(NBT_TARGET_Z)){
-                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_USB_DATA_INVALID));
-                return false;
-            }
-
-            ChunkCoordinates coord = new ChunkCoordinates();
-            World world = DimensionManager.getWorld(aNBT.getInteger("worldID"));
-
-            if(world == null){
-                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_USB_WORLD_MISSING) + " " + aNBT.getInteger("worldID"));
-                return false;
-            }
-
-            coord.posX = aNBT.getInteger(NBT_TARGET_X);
-            coord.posY = aNBT.getInteger(NBT_TARGET_Y);
-            coord.posZ = aNBT.getInteger(NBT_TARGET_Z);
-            TileEntity tile = WD.te(world,coord,false);
-
-            if(!(tile instanceof IComputerClusterController) || ((IComputerClusterController) tile).getCluster() == null){
-                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_NOT_LOADED));
-                return false;
-            }
-            IComputerClusterController target = (IComputerClusterController) tile;
-            if(!IReachabilityLimitedController.isUserReachable(target,this)){
-                sendJoinFailed(aPlayer, LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_UNREACHABLE_ANY));
-                return false;
-            }
-            setController(target);
-            aPlayer.addChatMessage(new ChatComponentText(LH.Chat.CYAN+LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_SUCCESS)));
-        }
-
-        return true;
-    }
-
-    protected void sendJoinFailed(EntityPlayer aPlayer, String reason){
-        aPlayer.addChatMessage(new ChatComponentText(LH.Chat.YELLOW + LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_FAILED) + " " + reason));
     }
 
     @Override

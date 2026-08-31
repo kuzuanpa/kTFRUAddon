@@ -31,5 +31,11 @@ public final class kTileNBT {
     public static final String LIQUID_CATALYST_REQUIRED ="ktfru.nbt.machine.liquid_catalyst.required";
     public static final String SPEED ="ktfru.nbt.machine.speed";
     public static final String MINER_MAX_HARDNESS="ktfru.nbt.machine.miner.hardness";
+    /**Ordinal of the {@link cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower} a wireless compute part deals in.**/
+    public static final String COMPUTE_POWER_TYPE ="ktfru.nbt.computePower.type";
+    /**What a wireless compute part hands to its host multiblock.**/
+    public static final String COMPUTE_POWER_PROVIDED ="ktfru.nbt.computePower.provided";
+    /**What a wireless compute part rents from its cluster, the part above provided is the wireless overhead.**/
+    public static final String COMPUTE_POWER_REQUESTED ="ktfru.nbt.computePower.requested";
 }
 

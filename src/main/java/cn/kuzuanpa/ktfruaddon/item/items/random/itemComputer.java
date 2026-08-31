@@ -20,7 +20,7 @@ package cn.kuzuanpa.ktfruaddon.item.items.random;
 import cn.kuzuanpa.ktfruaddon.api.item.IComputerItem;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeUser;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeItemUser;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 import net.minecraft.item.ItemStack;
@@ -47,12 +47,12 @@ public class itemComputer extends MultiItemRandom implements IComputerItem {
     }
 
     @Override
-    public boolean onStart(ItemStack stack, IComputeUser host) {
+    public boolean onStart(ItemStack stack, IComputeItemUser host) {
         return true;
     }
 
     @Override
-    public void onStop(ItemStack stack, @Nullable IComputeUser host) {
+    public void onStop(ItemStack stack, @Nullable IComputeItemUser host) {
     }
 
     //Index:                                   0 ,1 ,2  ,3   ,4   ,5   ,6    ,7    ,8     ,9     ,10    ,11    ,12    ,13    ,14    ,15    ,16     ,17    ,18    ,19     ,20    ,21     ,22     ,23     ,24,25  ,26  ,27   ,28    ,29    ,30  ,31   ,32   ,33    ,34    ,35

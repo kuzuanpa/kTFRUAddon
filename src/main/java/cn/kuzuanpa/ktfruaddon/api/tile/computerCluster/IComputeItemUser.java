@@ -14,5 +14,5 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
-public interface IComputeUser {
+public interface IComputeItemUser {
 }

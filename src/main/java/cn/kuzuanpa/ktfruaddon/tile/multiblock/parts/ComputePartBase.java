@@ -21,7 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.item.IComputerItem;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeNode;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeUser;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeItemUser;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -47,7 +47,7 @@ import java.util.Map;
 
 import static gregapi.data.CS.*;
 
-public abstract class ComputePartBase extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputeUser, IComputeNode {
+public abstract class ComputePartBase extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputeItemUser, IComputeNode {
     public StateMgr mState = new StateMgr();
     protected long mComputePower = 0;
     public final byte nodeCount;
@@ -77,7 +77,7 @@ public abstract class ComputePartBase extends TileEntityBase09FacingSingle imple
     @Override
     public boolean tryStart(long needed) {
         if (needed > mComputePower || mState.get() == 1)return false;
-        if(IComputerItem.tryStartAll(Arrays.asList(getInventory()), this, true))return false;
+        if(!IComputerItem.tryStartAll(Arrays.asList(getInventory()), this, true))return false;
         mState.set(1);
         return true;
     }

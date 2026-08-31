@@ -15,9 +15,8 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.OreScanner;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
@@ -35,9 +34,10 @@ import static gregapi.data.CS.PX_P;
 import static gregapi.data.CS.SIDES_VALID;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICircuitChangeableTileEntity {
-    public OreScanner oreVeinScanner;
+    public boolean isActive = true;
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
+        aNBT.setBoolean("state", isActive);
         setComputers(ICircuitChangeableTileEntity.loadCircuitInfo(aNBT));
        // oreVeinScanner = new OreScanner(0,xCoord,yCoord,zCoord, worldObj,true,true);
     }
@@ -45,12 +45,17 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
+        isActive = aNBT.getBoolean("state");
         ICircuitChangeableTileEntity.saveCircuitInfo(aNBT,getComputers());
     }
 
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()) openGUI(aPlayer, aSide);
+        if (isServerSide()) {
+            if(!isActive && tryStart())isActive = true;
+            else stop();
+            //openGUI(aPlayer, aSide);
+        }
         return false;
     }
 

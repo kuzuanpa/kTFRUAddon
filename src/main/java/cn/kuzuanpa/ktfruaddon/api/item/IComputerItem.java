@@ -16,7 +16,7 @@ package cn.kuzuanpa.ktfruaddon.api.item;
 
 import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeUser;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeItemUser;
 import cpw.mods.fml.common.FMLLog;
 import gregapi.data.IL;
 import gregapi.data.MD;
@@ -36,20 +36,19 @@ import java.util.Map;
 public interface IComputerItem {
     @NotNull Map<String, Map.Entry<ComputePower, Long>> plainItemRegistry = new HashMap<>();
     @NotNull Map<Integer, ItemStack> typeRegistry = new HashMap<>();
-
     @NotNull Map.Entry<ComputePower, Long> getComputePower(int amount, int meta);
 
-    boolean onStart(ItemStack stack, IComputeUser host);
-    void onStop(ItemStack stack, @Nullable IComputeUser host);
+    boolean onStart(ItemStack stack, IComputeItemUser host);
+    void onStop(ItemStack stack, @Nullable IComputeItemUser host);
 
-    static boolean tryStartAll(List<ItemStack> stacks, @Nullable IComputeUser host, boolean autoStopOnFail) {
+    static boolean tryStartAll(List<ItemStack> stacks, @Nullable IComputeItemUser host, boolean autoStopOnFail) {
         if (stacks.stream().allMatch(s -> tryStart(s, host, false))) return true;
 
         if(autoStopOnFail)stacks.forEach(s->stop(s,host));
         return false;
     }
 
-    static boolean tryStart(ItemStack stack, @Nullable IComputeUser host, boolean autoStopOnFail) {
+    static boolean tryStart(ItemStack stack, @Nullable IComputeItemUser host, boolean autoStopOnFail) {
         if (!ST.valid(stack)) return true;
 
         Item i = stack.getItem();
@@ -63,19 +62,20 @@ public interface IComputerItem {
         return true;
     }
 
-    static void stopAll(List<ItemStack> stacks, @Nullable IComputeUser host){
+    static void stopAll(List<ItemStack> stacks, @Nullable IComputeItemUser host){
         stacks.forEach(s->stop(s,host));
     }
-    static void stop(ItemStack stack, @Nullable IComputeUser host) {
+    static void stop(ItemStack stack, @Nullable IComputeItemUser host) {
         if (!ST.valid(stack)) return;
         if (stack.getItem() instanceof IComputerItem) ((IComputerItem) stack.getItem()).onStop(stack, host);
     }
 
-    static @NotNull Map.Entry<ComputePower, Long> getComputePower(ItemStack stack, @Nullable IComputeUser host) {
+    static @NotNull Map.Entry<ComputePower, Long> getComputePower(ItemStack stack, @Nullable IComputeItemUser host) {
         if (!ST.valid(stack)) return new SingleEntry<>(ComputePower.Normal,0L);
         if(stack.getItem() instanceof IComputerItem) return ((IComputerItem) stack.getItem()).getComputePower(stack.stackSize, stack.getItemDamage());
         else return getComputePowerForPlainItem(stack);
     }
+    //plain item usually is simple circuit and so on. starting them should have no cost and always success
     static @NotNull Map.Entry<ComputePower, Long> getComputePowerForPlainItem(ItemStack stack){
         Map.Entry<ComputePower, Long> map = plainItemRegistry.get(ST.regMeta(stack));
         return map == null? new SingleEntry<>(ComputePower.Normal,0L) : map;
