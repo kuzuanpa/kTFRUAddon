@@ -50,10 +50,6 @@ public class ControllerWirelessHuge extends ControllerWireless {
             .setOffset(-3, 0, 0);
 
     @Override public IStringBaseStructure getStructure() {return structure;}
-    @Override public short getSizeX() {return 7;}
-    @Override public short getSizeY() {return 6;}
-    @Override public short getSizeZ() {return 7;}
-    @Override public short getMapOffsetX() {return -3;}
 
     @Override
     public String getTileEntityName() {

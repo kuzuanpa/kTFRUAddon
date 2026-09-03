@@ -52,10 +52,6 @@ public class ControllerWireless extends ControllerBase {
             .setOffset(-1, 0, 0);
 
     @Override public IStringBaseStructure getStructure() {return structure;}
-    @Override public short getSizeX() {return 3;}
-    @Override public short getSizeY() {return 3;}
-    @Override public short getSizeZ() {return 3;}
-    @Override public short getMapOffsetX() {return -1;}
 
     @Override
     public boolean canReachPos(WorldPos pos) {

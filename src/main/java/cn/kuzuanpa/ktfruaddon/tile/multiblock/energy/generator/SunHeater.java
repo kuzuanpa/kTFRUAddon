@@ -64,6 +64,7 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
     public TagData mEnergyTypeEmitted=TD.Energy.HU;
     public boolean clickDoubleCheck=false;
     public short machineY=0;
+    //todo: move to new structure API
     //决定结构检测的起始位置，默认情况下是从主方块起始
     //This controls where is the start point to check structure,Default is the position of controller block
     public final short xMapOffset = -2, zMapOffset = 0;

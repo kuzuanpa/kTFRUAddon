@@ -214,8 +214,7 @@ public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
     public String getTileEntityName() {
         return "ktfru.multitileentity.multiblock.oilMiner";
     }
-    public final short machineX = 3, machineY = 2, machineZ = 3;
-    public final short xMapOffset = -1, zMapOffset = 0;
+
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return structure.isInsideStructure(this, mFacing, aX, aY, aZ);

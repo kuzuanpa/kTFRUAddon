@@ -60,7 +60,7 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
 
     public short progress = 0;
     public final short xMapOffset = -2, zMapOffset = 0;
-
+    //todo: move to new structure API
     public static int[][][] blockIDMap = {{
             {18004, 18004, 18004, 18004, 18004},
             {18004, 18004, 18004, 18004, 18004},
@@ -216,7 +216,7 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
     }
     public float getTemperature(){return ((float)mEnergyStored/(float)getCapacity() *961)+DEFAULT_ENVIRONMENT_TEMPERATURE;}
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}//todo: move to new structure API
+    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}
 
     @Override
     public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {
