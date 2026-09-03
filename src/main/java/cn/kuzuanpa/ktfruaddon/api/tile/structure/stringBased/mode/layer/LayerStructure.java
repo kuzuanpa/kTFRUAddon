@@ -15,6 +15,7 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer;
 
+import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.network.PacketFxBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
@@ -22,6 +23,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerTyp
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.IStructureLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.IStructurePredicate;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.HashMap;
@@ -99,6 +101,30 @@ public class LayerStructure implements IStringBaseStructure {
         for(char c : layerSequence.toCharArray()) y += layers.get(c).getSize().posY;
         char firstLayer = layerSequence.charAt(0);
         return new ChunkCoordinates(layers.get(firstLayer).getSize().posX, y, layers.get(firstLayer).getSize().posZ);
+    }
+
+    /**
+     * The layers span rows and columns of the plane they stack in, the sequence spans the expand axis,
+     * see {@link FixedLayer#validate}. Expandable layers report their maximum, so this box is an upper
+     * bound: it never rejects a block of a valid structure, but it does accept the holes of the layout
+     * and the yet unbuilt part of an expandable range.
+     */
+    @Override
+    public boolean isInsideStructure(ITileEntityMultiBlockController controller, byte facing, int aX, int aY, int aZ) {
+        int tThickness = 0, tRows = 0, tCols = 0;
+        for(char c : layerSequence.toCharArray()) {
+            ChunkCoordinates tLayerSize = layers.get(c).getSize();
+            tThickness += tLayerSize.posY;
+            tRows = Math.max(tRows, tLayerSize.posX);
+            tCols = Math.max(tCols, tLayerSize.posZ);
+        }
+        int tSizeX = expandAxis == StructureContext.Axis.X ? tThickness : expandAxis == StructureContext.Axis.Z ? tCols : tRows;
+        int tSizeY = expandAxis == StructureContext.Axis.Y ? tThickness : tRows;
+        int tSizeZ = expandAxis == StructureContext.Axis.Z ? tThickness : tCols;
+        //The two opposing corners of the layout, BoundingBox sorts them so a mirrored facing is fine.
+        int[] tCorner1 = StructureContext.convertCoord(facing, controller.getX(), controller.getY(), controller.getZ(), controllerOffsetPos.posX, controllerOffsetPos.posY, controllerOffsetPos.posZ);
+        int[] tCorner2 = StructureContext.convertCoord(facing, controller.getX(), controller.getY(), controller.getZ(), controllerOffsetPos.posX + tSizeX - 1, controllerOffsetPos.posY + tSizeY - 1, controllerOffsetPos.posZ + tSizeZ - 1);
+        return new BoundingBox(tCorner1[0], tCorner1[1], tCorner1[2], tCorner2[0], tCorner2[1], tCorner2[2]).isXYZInBox(aX, aY, aZ);
     }
 
     @Override
