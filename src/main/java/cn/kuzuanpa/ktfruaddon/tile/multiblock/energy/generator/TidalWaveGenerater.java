@@ -14,7 +14,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
@@ -25,7 +24,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.LiquidPre
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.OpaqueCubePredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.TagData;
 import gregapi.data.LH;
@@ -131,9 +129,6 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
         return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
-    public static final short sizeX = 3, sizeY = 3, sizeZ = 5;
-    public final short xMapOffset = -1, zMapOffset = 0;
-
     @Override
     public boolean[] getValidSides() {
         return SIDES_HORIZONTAL;
@@ -153,7 +148,7 @@ public class TidalWaveGenerater extends TileEntityBase10MultiBlockBase implement
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

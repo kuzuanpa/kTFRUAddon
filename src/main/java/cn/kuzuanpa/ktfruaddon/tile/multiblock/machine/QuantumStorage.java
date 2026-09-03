@@ -169,7 +169,7 @@ public class QuantumStorage extends TileEntityBase10MultiBlockBase implements II
     }
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return true;
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override public byte getDefaultSide() {return SIDE_FRONT;}

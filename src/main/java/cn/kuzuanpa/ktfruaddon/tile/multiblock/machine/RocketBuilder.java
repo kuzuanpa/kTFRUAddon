@@ -99,7 +99,7 @@ public class RocketBuilder extends TileEntityBase10MultiBlockMachine {
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return true;
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

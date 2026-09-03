@@ -16,13 +16,11 @@ package cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller;
 
 import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.*;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.computerCluster.ContainerClientClusterController;
 import cn.kuzuanpa.ktfruaddon.client.gui.computerCluster.ContainerCommonClusterController;
 import cpw.mods.fml.common.FMLLog;
@@ -490,19 +488,9 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
         super.addToolTips(aList, aStack, aF3_H);
     }
 
-    /**The bounding box of this model, {@code x/y/zSize} count blocks, the offsets are the map origin.**/
-    public short getSizeX() {return 1;}
-    public short getSizeY() {return 1;}
-    public short getSizeZ() {return 1;}
-    public short getMapOffsetX() {return 0;}
-    public short getMapOffsetZ() {return 0;}
-
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(
-                utils.getRealX(mFacing, xCoord, getMapOffsetX(), getMapOffsetZ()), yCoord, utils.getRealZ(mFacing, zCoord, getMapOffsetX(), getMapOffsetZ()),
-                utils.getRealX(mFacing, utils.getRealX(mFacing, xCoord, getMapOffsetX(), getMapOffsetZ()), getSizeX(), getSizeZ()), yCoord + getSizeY(), utils.getRealZ(mFacing, utils.getRealZ(mFacing, zCoord, getMapOffsetX(), getMapOffsetZ()), getSizeX(), getSizeZ())
-        ).isXYZInBox(aX, aY, aZ);
+        return getStructure().isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override public byte getDefaultSide() {return SIDE_FRONT;}

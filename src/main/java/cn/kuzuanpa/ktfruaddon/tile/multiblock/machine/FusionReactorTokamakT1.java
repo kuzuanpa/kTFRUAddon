@@ -16,7 +16,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
@@ -29,7 +28,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.ComputePartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakT1;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -708,11 +706,6 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         return true;
     }
 
-
-
-    public final short machineX = 27, machineY = 14, machineZ = 27;
-    public final short xMapOffset = -12,yMapOffset = -1, zMapOffset = 0;
-
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
@@ -720,7 +713,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     }
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override public byte getDefaultSide() {return SIDE_FRONT;}

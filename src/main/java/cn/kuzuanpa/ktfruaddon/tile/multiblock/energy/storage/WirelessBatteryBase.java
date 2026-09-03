@@ -239,11 +239,9 @@ public class WirelessBatteryBase extends MultiBatteryBase implements IWailaTile 
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
     }
 
-    public static final short sizeX = 4, sizeY = 7, sizeZ = 4;
-    public static final short xMapOffset = 0, zMapOffset = 0;
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

@@ -16,7 +16,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
@@ -29,11 +28,9 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredi
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.ComputePartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakExp;
 import gregapi.block.multitileentity.IMultiTileEntity;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -388,12 +385,6 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         return new ContainerCommonFusionTokamakExp(aPlayer.inventory, this, mRecipes, aGUIID);
     }
 
-    public static final short machineX = 17, machineY = 7, machineZ = 18;
-    public static final short xMapOffset = -8,yMapOffset = 0, zMapOffset = 0;
-
-    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-
     @Override
     public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
         computeNodesCoord.add(partPos);
@@ -406,7 +397,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     }
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),machineX,machineZ)).isXYZInBox(aX,aY,aZ);
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

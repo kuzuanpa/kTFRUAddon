@@ -289,7 +289,7 @@ public class AsteroidFinder extends TileEntityBase10MultiBlockBase implements IT
     }
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return true;
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

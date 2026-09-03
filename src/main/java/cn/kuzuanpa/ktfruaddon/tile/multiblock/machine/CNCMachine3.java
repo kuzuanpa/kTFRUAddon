@@ -15,7 +15,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.ModelRenderBaseMultiBlockMachine;
@@ -102,8 +101,9 @@ public class  CNCMachine3 extends ModelRenderBaseMultiBlockMachine {
     }
 
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) { return new BoundingBox(utils.getRealX(mFacing,xCoord,-1,0),yCoord,utils.getRealZ(mFacing,zCoord,-1,0),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,-1,0),machineX,machineZ),yCoord+machineY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,-1,0),machineX,machineZ)).isXYZInBox(aX,aY,aZ);}
-
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
+    }
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
         return getAdjacentTank(SIDE_UP);

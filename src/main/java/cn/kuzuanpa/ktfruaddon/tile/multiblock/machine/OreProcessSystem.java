@@ -101,10 +101,10 @@ public class OreProcessSystem extends TileEntityBase10MultiBlockMachine {
         aList.add(LH.Chat.WHITE+LH.get("ktfru.tooltip.multiblock.oreprocesssystem.1"));
         super.addToolTips(aList, aStack, aF3_H);
     }
-
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) { return true;}
-
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
+    }
     @Override
     public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
         DelegatorTileEntity<TileEntity> te = WD.te(this.worldObj, utils.getRealX(mFacing,xCoord,6,0), this.yCoord , utils.getRealZ(mFacing,zCoord,6,0), mFacing, false);

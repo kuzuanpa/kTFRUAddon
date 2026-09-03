@@ -216,7 +216,7 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
     }
     public float getTemperature(){return ((float)mEnergyStored/(float)getCapacity() *961)+DEFAULT_ENVIRONMENT_TEMPERATURE;}
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}
+    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}//todo: move to new structure API
 
     @Override
     public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {

@@ -110,8 +110,8 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
     }
 
     @Override
-    public boolean isInsideStructure ( int aX, int aY, int aZ){
-        return new BoundingBox(utils.getRealX(mFacing, xCoord, xMapOffset, 0), yCoord, utils.getRealZ(mFacing, zCoord, xMapOffset, 0), utils.getRealX(mFacing, utils.getRealX(mFacing, xCoord, xMapOffset, 0), sizeX, sizeZ), yCoord + sizeY, utils.getRealZ(mFacing, utils.getRealZ(mFacing, zCoord, xMapOffset, 0), sizeX, sizeZ)).isXYZInBox(aX, aY, aZ);
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

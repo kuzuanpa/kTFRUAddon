@@ -271,7 +271,7 @@ public class ElectromagnetCrucible extends TileEntityBase10MultiBlockBase implem
     }
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return true;
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

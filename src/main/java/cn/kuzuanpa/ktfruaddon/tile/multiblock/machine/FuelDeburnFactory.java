@@ -524,11 +524,10 @@ public class FuelDeburnFactory extends TileEntityBase10MultiBlockMachine impleme
         return lastFailedPos==null;
     }
 
-    public final short xMapOffset = -6, zMapOffset = 0;
-
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}
-
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
+    }
 
     // Icons
     public final static IIconContainer

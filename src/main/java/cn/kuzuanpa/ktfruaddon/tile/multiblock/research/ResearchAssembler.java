@@ -14,7 +14,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.research;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.IResearchDatabase;
@@ -92,8 +91,6 @@ public class ResearchAssembler extends MultiResearchRequiredBasicMachine impleme
         return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
-    public final short sizeX = 3, sizeY = 2, sizeZ = 2;
-
     static {
         //LH.add("ktfru.tooltip.multiblock.maskaligner.0.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
         //LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Fluid inputs from anyblock in upside, Item input from upside of IO manager, output from backside.");
@@ -109,7 +106,7 @@ public class ResearchAssembler extends MultiResearchRequiredBasicMachine impleme
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(xCoord, yCoord, zCoord, utils.getRealX(mFacing, xCoord, sizeX, sizeZ), yCoord + sizeY, utils.getRealZ(mFacing, zCoord, sizeX, sizeZ)).isXYZInBox(aX, aY, aZ);
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

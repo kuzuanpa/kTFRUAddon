@@ -122,7 +122,7 @@ public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, 
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return true;
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     static {

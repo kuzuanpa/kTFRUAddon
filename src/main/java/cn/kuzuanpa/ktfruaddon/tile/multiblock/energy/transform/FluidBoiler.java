@@ -206,10 +206,10 @@ public class FluidBoiler extends TileEntityBase10MultiBlockBase implements IMult
         current.add(tankInfoOutput);
         return current;
     }
-
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) { return true;}
-
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
+    }
     public static IIconContainer sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/multiblockmains/fluidBoiler/base"),
             sOverlayFront= new Textures.BlockIcons.CustomIcon("machines/multiblockmains/fluidBoiler/front");
     @Override

@@ -248,8 +248,8 @@ public class SunHeaterMirrorLarge extends TileEntityBase10MultiBlockBase impleme
             .setOffset(-1,0,-1);
 
     @Override
-    public boolean isInsideStructure(int i, int i1, int i2) {
-        return true;
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     public static IIconContainer sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/multiblockmains/transformer/common"),
