@@ -27,6 +27,7 @@ ktfru.text.kortex.state.8=受机器限制
 ktfru.part.air=必须为空气
 ktfru.part.sky=上方必须无方块遮挡
 ktfru.part.liquid=任意流体
+ktfru.part.compute=任意计算节点
 ktfru.part.opaque_cube=任意不透明固体方块
 ktfru.structure.complex.tip=该机器结构较复杂, 请拆除错误方块后重新检查投影.
 

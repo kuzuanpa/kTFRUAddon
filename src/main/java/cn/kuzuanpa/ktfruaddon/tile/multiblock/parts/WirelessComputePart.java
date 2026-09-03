@@ -15,10 +15,7 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.parts;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeNode;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.*;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import com.google.common.io.ByteArrayDataInput;
@@ -62,7 +59,7 @@ import static gregapi.data.CS.*;
  * presents it to the host multiblock as if it was local. Type and amounts come from the registry NBT
  * only, so a placed part is fixed to the model it was built as.
  */
-public class WirelessComputePart extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputerClusterUser, IComputeNode {
+public class WirelessComputePart extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputerClusterUser, IComputePart {
     public ComputePower mType = ComputePower.Normal;
     /**What the host multiblock sees.**/
     public long mProvided = 0;
@@ -117,7 +114,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
         return "ktfru.multitileentity.computenode.wireless";
     }
 
-    // IComputeNode
+    // IComputePart
     @Override public ComputePower getType() {return mType;}
     /**The capacity, not the current output. Hosts check this before they ask us to start.**/
     @Override public long getComputePower() {return mProvided;}
@@ -127,8 +124,11 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     public boolean tryStart(long needed) {
         if (needed > mProvided) return false;
         if (mRunning) return true;
-        if (!IComputerClusterUser.super.tryStart()) return false;
         mRunning = true;
+        if (!IComputerClusterUser.super.tryStart()) {
+            mRunning = false;
+            return false;
+        }
         updateClientData();
         return true;
     }
@@ -168,7 +168,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         //Nothing keeps this part running once the structure fell apart.
-        if (aIsServerSide && aTimer % 20 == 0 && getTarget(true) == null) stop();
+        //if (aIsServerSide && aTimer % 20 == 0 && getTarget(true) == null) stop();
     }
 
     @Override

@@ -20,7 +20,7 @@ import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.item.IComputerItem;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeNode;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeItemUser;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
 import com.google.common.io.ByteArrayDataInput;
@@ -47,7 +47,7 @@ import java.util.Map;
 
 import static gregapi.data.CS.*;
 
-public abstract class ComputePartBase extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputeItemUser, IComputeNode {
+public abstract class ComputePartBase extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputeItemUser, IComputePart {
     public StateMgr mState = new StateMgr();
     protected long mComputePower = 0;
     public final byte nodeCount;

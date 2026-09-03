@@ -21,12 +21,13 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeNode;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.ComputePartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
@@ -47,10 +48,7 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase01Root;
 import gregapi.tileentity.energy.ITileEntityEnergy;
-import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
-import gregapi.tileentity.multiblocks.IMultiBlockFluidHandler;
-import gregapi.tileentity.multiblocks.IMultiBlockInventory;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
+import gregapi.tileentity.multiblocks.*;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
@@ -93,11 +91,11 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     private List<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
 
     /**Resolves the compute node parts of this structure, skipping the ones that are gone or not loaded.**/
-    protected List<IComputeNode> getComputeNodes(){
-        List<IComputeNode> nodes = new ArrayList<>();
+    protected List<IComputePart> getComputeNodes(){
+        List<IComputePart> nodes = new ArrayList<>();
         for (ChunkCoordinates coord : computeNodesCoord) {
             TileEntity tile = WD.te(worldObj, coord, true);
-            if (tile instanceof IComputeNode) nodes.add((IComputeNode) tile);
+            if (tile instanceof IComputePart) nodes.add((IComputePart) tile);
         }
         return nodes;
     }
@@ -160,7 +158,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
         isComputePowerEnough = computePowerNeeded <= getComputeNodes().stream()
                 .filter(node->node.getType().equals(ComputePower.Normal))
-                .mapToLong(IComputeNode::getComputePower).sum();
+                .mapToLong(IComputePart::getComputePower).sum();
 
         if(!isComputePowerEnough){
             mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
@@ -238,7 +236,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             mState = STATE_ERROR;
         }
 
-        if(state==STATE_STOPPED||state==STATE_ERROR) getComputeNodes().forEach(IComputeNode::stop);
+        if(state==STATE_STOPPED||state==STATE_ERROR) getComputeNodes().forEach(IComputePart::stop);
         updateClientData();
     }
     protected void setRecipe(Recipe recipe){
@@ -678,15 +676,15 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
                     "                           "
                     )
 
-            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31015)))
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31015, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
             .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31025)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31019)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31019, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN)))
             .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31026)))
             .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31027)))
             .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31028)))
             .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31024)))
-            .where('H', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
-            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .where('H', new ComputePartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
             .setOffset(-12,-1,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {

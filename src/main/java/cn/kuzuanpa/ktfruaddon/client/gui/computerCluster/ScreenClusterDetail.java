@@ -70,7 +70,7 @@ public class ScreenClusterDetail extends kGuiScreenContainerLayerBase {
         for (int i = 0; i < events.length; i++) {
             String fullText = Constants.getClusterEventDesc(events[i], i < eventExtra.length ? eventExtra[i] :"");
             String shortText = Constants.getClusterEventShortDesc(events[i]);
-            kGuiButtonBase button = new ClusterEventButton(20+i, ContainerX+144, 14 + ContainerY + i*EVENT_LINE_HEIGHT, 104, shortText, fullText).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
+            kGuiButtonBase button = new ClusterEventButton(20+i, ContainerX+144, 14 + ContainerY, 104, shortText, fullText).setFBOOffset(0,i*EVENT_LINE_HEIGHT).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
             clusterEventListButton.addSubButton(button);
         }
         clusterEventListButton.setMaxScrolled(Math.max(0, events.length*EVENT_LINE_HEIGHT - EVENT_LIST_HEIGHT));

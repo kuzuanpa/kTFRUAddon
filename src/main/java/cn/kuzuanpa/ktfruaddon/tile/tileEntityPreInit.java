@@ -44,6 +44,7 @@ public class tileEntityPreInit {
         MultiTileEntityBlock.getOrCreate(MOD_ID, "redstoneLight", Material.redstoneLight    , Block.soundTypeWood , TOOL_axe    , 0, 0, 15, F, F);
         MultiTileEntityBlock.getOrCreate(MOD_ID, "redstoneLight", Material.redstoneLight    , Block.soundTypeCloth, TOOL_shears , 0, 0, 15, F, F);
         MultiTileEntityBlock.getOrCreate(MOD_ID, "rock"         , MaterialScoopable.instance, Block.soundTypeWood , TOOL_scoop  , 0, 0, 15, F, F);
+        MultiTileEntityBlock.getOrCreate(MOD_ID, "glass"        , Material.glass            , Block.soundTypeGlass, TOOL_wrench , 0, 0, 15, F, F);
 
     }
 }

@@ -30,7 +30,7 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.computerCluster;
 
-public interface IComputeNode {
+public interface IComputePart {
     ComputePower getType();
     /**@return the total capacity of this node, per Compute Power type.**/
     long getComputePower();

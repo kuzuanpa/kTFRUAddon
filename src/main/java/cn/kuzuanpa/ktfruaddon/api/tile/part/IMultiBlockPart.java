@@ -67,7 +67,7 @@ public interface IMultiBlockPart extends IWailaTile {
     static ChunkCoordinates readTargetPosFromNBT(NBTTagCompound aNBT){
         return new ChunkCoordinates(UT.Code.bindInt(aNBT.getLong(NBT_TARGET_X)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Y)), UT.Code.bindInt(aNBT.getLong(NBT_TARGET_Z)));
     }
-    /**@param aCheckValidity will we send checkStructure request to target to ensure structure is valid?**/
+    /**@param aCheckValidity send checkStructure request to target to ensure structure is valid**/
     default ITileEntityMultiBlockController getTarget(boolean aCheckValidity) {
         if (getTargetPos() == null) {
             return null;

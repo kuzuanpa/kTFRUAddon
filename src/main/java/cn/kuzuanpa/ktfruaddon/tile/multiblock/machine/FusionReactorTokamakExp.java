@@ -21,12 +21,13 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeNode;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.ComputePartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakExp;
@@ -48,10 +49,7 @@ import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase01Root;
 import gregapi.tileentity.energy.ITileEntityEnergy;
-import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
-import gregapi.tileentity.multiblocks.IMultiBlockFluidHandler;
-import gregapi.tileentity.multiblocks.IMultiBlockInventory;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
+import gregapi.tileentity.multiblocks.*;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
@@ -89,14 +87,14 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public FluidStack[] mOutputFluids = ZL_FS;
     public FluidTankGT[] mTanks = {new FluidTankGT(2000),new FluidTankGT(2000), new FluidTankGT(2000), new FluidTankGT(2000)},
             mTanksInput = {mTanks[0],mTanks[1]}, mTanksOutput ={ mTanks[2],mTanks[3]};
-    private List<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
+    private final List<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
 
     /**Resolves the compute node parts of this structure, skipping the ones that are gone or not loaded.**/
-    protected List<IComputeNode> getComputeNodes(){
-        List<IComputeNode> nodes = new ArrayList<>();
+    protected List<IComputePart> getComputeNodes(){
+        List<IComputePart> nodes = new ArrayList<>();
         for (ChunkCoordinates coord : computeNodesCoord) {
             TileEntity tile = WD.te(worldObj, coord, true);
-            if (tile instanceof IComputeNode) nodes.add((IComputeNode) tile);
+            if (tile instanceof IComputePart) nodes.add((IComputePart) tile);
         }
         return nodes;
     }
@@ -160,7 +158,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         }
         isComputePowerEnough = computePowerNeeded <= getComputeNodes().stream()
                 .filter(node->node.getType().equals(ComputePower.Normal))
-                .mapToLong(IComputeNode::getComputePower).sum();
+                .mapToLong(IComputePart::getComputePower).sum();
 
         if(!isComputePowerEnough){
             mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
@@ -213,14 +211,15 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         if(mState==STATE_RUNNING) {
             progress += mEnergyCharged *1F / recipeChargeRequired;
             if (progress < recipeTotalTime) return;
+            //Recipe completed
             if(mOutputFluids!=null)Arrays.stream(mOutputFluids).forEach(fluid-> {for (FluidTankGT tank : mTanksOutput) if(tank.fill(fluid, true)>0)return;});
             if(mOutputItems!=null)Arrays.stream(mOutputItems).filter(Objects::nonNull).forEach(item-> addStackToSlot(1, item));
             nullifyCurrentRecipe();
-            mState=STATE_STOPPED;
+            setState(STATE_STOPPED);
         }
 
 
-        if(!isInputEmpty&& (mState==STATE_STOPPED||mState==STATE_VOID_CHARGING|| (mState==STATE_CHARGING&&mCurrentRecipe==null) )){
+        if(!isInputEmpty&& (mState==STATE_STOPPED || mState==STATE_VOID_CHARGING || (mState==STATE_CHARGING && mCurrentRecipe==null) )){
             Recipe tRecipe = mRecipes.findRecipe(this, lastRecipe, T, mRate, NI, mTanksInput, slot(0));
             if (tRecipe !=null&&tRecipe.isRecipeInputEqual(F,F,mTanksInput,slot(0)))setRecipe(tRecipe);
             else setState(STATE_VOID_CHARGING);
@@ -233,12 +232,20 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         if(mState == state)return;
 
         mState=state;
-        if(state != STATE_STOPPED && state != STATE_ERROR && getComputeNodes().stream().anyMatch(node -> !node.tryStart(node.getComputePower()))) {
-            mState = STATE_ERROR;
-        }
+        if(state != STATE_STOPPED && state != STATE_ERROR && !nodeStarted && !startNodes()) mState = STATE_ERROR;
 
-        if(state==STATE_STOPPED||state==STATE_ERROR) getComputeNodes().forEach(IComputeNode::stop);
+
+        if((mState==STATE_STOPPED||mState==STATE_ERROR) && nodeStarted) stopNodes();
         updateClientData();
+    }
+    boolean nodeStarted = false;
+    public boolean startNodes(){
+        nodeStarted = true;
+        return getComputeNodes().stream().allMatch(node -> node.tryStart(node.getComputePower()));
+    }
+    public void stopNodes(){
+        nodeStarted = false;
+        getComputeNodes().forEach(IComputePart::stop);
     }
     protected void setRecipe(Recipe recipe){
         setState(STATE_CHARGING);
@@ -556,15 +563,15 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
                     "         C        ",
                     "         C        "
             )
-            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31015)))
+            .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31015, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
             .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31017)))
-            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31016)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31016, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN)))
             .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31018)))
-            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31019)))
+            .where('F', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31019, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID_IN)))
             .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31024)))
-            .where('H', new SpecialPartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 32005)))
-            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
-            .setOffset(-1,-1,0) ;
+            .where('H', new ComputePartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
+            .setOffset(-8,0,0) ;
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;

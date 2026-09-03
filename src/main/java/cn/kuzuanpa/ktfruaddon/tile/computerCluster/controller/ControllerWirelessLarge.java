@@ -1,0 +1,58 @@
+/*
+ * This class was created by <kuzuanpa>. It is distributed as
+ * part of the kTFRUAddon Mod. Get the Source Code in github:
+ * https://github.com/kuzuanpa/kTFRUAddon
+ *
+ * kTFRUAddon is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * kTFRUAddon is Open Source and distributed under the
+ * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
+ */
+
+package cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller;
+
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.ComputePartPredicate;
+
+/**
+ * 5x3x5 wireless controller, four compute node slots on the top layer. Everything besides the layout
+ * and the node count is inherited from {@link ControllerWireless}.
+ */
+public class ControllerWirelessLarge extends ControllerWireless {
+    static final IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+            .fixedLayer('A',
+                    "WWWWW",
+                    "WGGGW",
+                    "WWGWW",
+                    "WGGGW",
+                    "WWWWW"
+            ).layer('B', new ExpandableLayer(6).variation(
+                    "WWWWN",
+                    "N   N",
+                    "NW WN",
+                    "N   N",
+                    "WWWWN"
+            ))
+            .where('W', new PartPredicate(WALL))
+            .where('G', new PartPredicate(GLASS))
+            .where('N', new ComputePartPredicate(WALL))
+            .setOffset(-2, 0, 0);
+
+    @Override public IStringBaseStructure getStructure() {return structure;}
+    @Override public short getSizeX() {return 5;}
+    @Override public short getSizeY() {return 3;}
+    @Override public short getSizeZ() {return 5;}
+    @Override public short getMapOffsetX() {return -2;}
+
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.computecluster.controller.wireless.large";
+    }
+}

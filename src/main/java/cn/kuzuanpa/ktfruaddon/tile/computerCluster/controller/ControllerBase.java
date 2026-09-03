@@ -16,8 +16,13 @@ package cn.kuzuanpa.ktfruaddon.tile.computerCluster.controller;
 
 import cn.kuzuanpa.ktfruaddon.api.code.SingleEntry;
 import cn.kuzuanpa.ktfruaddon.api.code.WorldPos;
+import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.*;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.gui.computerCluster.ContainerClientClusterController;
 import cn.kuzuanpa.ktfruaddon.client.gui.computerCluster.ContainerCommonClusterController;
 import cpw.mods.fml.common.FMLLog;
@@ -25,12 +30,10 @@ import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
-import gregapi.render.ITexture;
-import gregapi.tileentity.base.TileEntityBase07Paintable;
+import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import gregapi.util.OM;
 import gregapi.util.UT;
 import gregapi.util.WD;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -43,6 +46,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.io.*;
 import java.util.*;
@@ -51,7 +55,7 @@ import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_NO
 import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_OFFLINE;
 import static gregapi.data.CS.*;
 
-public class ControllerBase extends TileEntityBase07Paintable implements IReachabilityLimitedController, IMultiTileEntity.IMTE_SyncDataByteArray {
+public class ControllerBase extends TileEntityBase10MultiBlockBase implements IReachabilityLimitedController, IMultiTileEntity.IMTE_SyncDataByteArray, SpecialPartPredicate.IReceiveSpecialPart {
     @Override
     public String getTileEntityName() {
         return "ktfru.multitileentity.computecluster.controller.base";
@@ -88,7 +92,7 @@ public class ControllerBase extends TileEntityBase07Paintable implements IReacha
             if(aChatReturn != null) aChatReturn.add(LH.get(cluster == null ? I18nHandler.COMPUTE_CLUSTER_MSG_CLUSTER_CREATE_FAILED : I18nHandler.COMPUTE_CLUSTER_MSG_CLUSTER_CREATED));
             return 10000;
         }
-        return 0;
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
 
     @Override
@@ -155,11 +159,12 @@ public class ControllerBase extends TileEntityBase07Paintable implements IReacha
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(bos);
-            //The colour bytes are always written, receiveDataByteArray of the paintable base reads them unconditionally.
+            //The colour and direction bytes are always written, the directional base reads them unconditionally.
             dos.writeByte((byte) UT.Code.getR(this.mRGBa));
             dos.writeByte((byte) UT.Code.getG(this.mRGBa));
             dos.writeByte((byte) UT.Code.getB(this.mRGBa));
             dos.writeByte(this.getVisualData());
+            dos.writeByte(this.getDirectionData());
             writeUUIDSyncData(dos, myUUID, clusterUUID);
             dos.flush();
             return getClientDataPacketByteArray(aSendAll, bos.toByteArray());
@@ -171,7 +176,7 @@ public class ControllerBase extends TileEntityBase07Paintable implements IReacha
 
     @Override
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
-        if (aData == null || aData.length < 4) return false;
+        if (aData == null || aData.length < 5) return false;
         super.receiveDataByteArray(aData, aNetworkHandler);
         readUUIDSyncData(aData);
         return true;
@@ -295,16 +300,18 @@ public class ControllerBase extends TileEntityBase07Paintable implements IReacha
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if(isServerSide()) {
+            if(!mStructureOkay) aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+
+            ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
+            if (equippedItem != null && equippedItem.getItem() instanceof ItemProjector) {
+                getStructure().checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+                return true;
+            }
             if(aPlayer.isSneaking())writePosToUSB(aPlayer);
             else if(!addControllerFromUSB(aPlayer))openGUI(aPlayer, aSide);
             return true;
         }
         return false;
-    }
-
-    @Override
-    public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return null;
     }
 
     @Override
@@ -347,23 +354,24 @@ public class ControllerBase extends TileEntityBase07Paintable implements IReacha
     public long mProvidedAmount = 0L;
 
     /**
-     * The nodes feeding this controller. Until the controller itself becomes a multiblock, those are
-     * the {@link IComputeNode} blocks directly touching it.
+     * The nodes feeding this controller, collected by the structure check from the
+     * {@link IComputePart} part slots of the multiblock. Positions whose tile is gone or not loaded
+     * are skipped, so a partially unloaded structure simply provides less.
      */
-    protected List<IComputeNode> getComputeNodes() {
-        List<IComputeNode> nodes = new ArrayList<>();
-        for (byte tSide : ALL_SIDES_VALID) {
-            TileEntity tile = getTileEntityAtSideAndDistance(tSide, 1);
-            if (tile instanceof IComputeNode) nodes.add((IComputeNode) tile);
+    protected List<IComputePart> getComputeNodes() {
+        List<IComputePart> nodes = new ArrayList<>();
+        for (ChunkCoordinates coord : computeNodesCoord) {
+            TileEntity tile = WD.te(worldObj, coord, true);
+            if (tile instanceof IComputePart) nodes.add((IComputePart) tile);
         }
         return nodes;
     }
 
     /**Recomputes what this controller offers to its cluster, keeping the single type rule.**/
     public void updateProvidedComputePower() {
-        ComputePower type = ComputePower.Normal;
         long amount = 0L;
-        for (IComputeNode node : getComputeNodes()) {
+        //A broken structure must not keep feeding the cluster.
+        if (mStructureOkay) for (IComputePart node : getComputeNodes()) {
             if(!node.getType().equals(mProvidedType))continue;
             amount += node.getComputePower();
         }
@@ -439,4 +447,64 @@ public class ControllerBase extends TileEntityBase07Paintable implements IReacha
     public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) {
         return new ContainerCommonClusterController(aPlayer.inventory, this, aGUIID);
     }
+
+    //Structure
+    /**The compute node part positions found by the last structure check.**/
+    protected final List<ChunkCoordinates> computeNodesCoord = new ArrayList<>();
+    protected ChunkCoordinates lastFailedPos = null;
+
+    /**@return the layout of this controller model, subclasses only differ in this and in the node count.**/
+    public IStringBaseStructure getStructure() {
+        return null;
+    }
+
+    @Override
+    public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
+        computeNodesCoord.add(partPos);
+    }
+
+    @Override
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        if (getStructure() == null) return true;
+        if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        computeNodesCoord.clear();
+        lastFailedPos = getStructure().checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null) ? StructureContext.StringBaseMode.SET : StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos == null;
+    }
+
+    @Override
+    public void onMagnifyingGlass(List<String> aChatReturn) {
+        super.onMagnifyingGlass(aChatReturn);
+        if (lastFailedPos != null) aChatReturn.add(LH.get(I18nHandler.STRUCTURE_LAST_FAILED_POS) + " " + lastFailedPos);
+    }
+
+    @Override
+    public void onMagnifyingGlass2(List<String> aChatReturn) {
+        aChatReturn.add(LH.get(I18nHandler.STRUCTURE_FORMED));
+        aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_2) + ComputePower.getDescOneLine(getComputePower()));
+    }
+
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
+        super.addToolTips(aList, aStack, aF3_H);
+    }
+
+    /**The bounding box of this model, {@code x/y/zSize} count blocks, the offsets are the map origin.**/
+    public short getSizeX() {return 1;}
+    public short getSizeY() {return 1;}
+    public short getSizeZ() {return 1;}
+    public short getMapOffsetX() {return 0;}
+    public short getMapOffsetZ() {return 0;}
+
+    @Override
+    public boolean isInsideStructure(int aX, int aY, int aZ) {
+        return new BoundingBox(
+                utils.getRealX(mFacing, xCoord, getMapOffsetX(), getMapOffsetZ()), yCoord, utils.getRealZ(mFacing, zCoord, getMapOffsetX(), getMapOffsetZ()),
+                utils.getRealX(mFacing, utils.getRealX(mFacing, xCoord, getMapOffsetX(), getMapOffsetZ()), getSizeX(), getSizeZ()), yCoord + getSizeY(), utils.getRealZ(mFacing, utils.getRealZ(mFacing, zCoord, getMapOffsetX(), getMapOffsetZ()), getSizeX(), getSizeZ())
+        ).isXYZInBox(aX, aY, aZ);
+    }
+
+    @Override public byte getDefaultSide() {return SIDE_FRONT;}
+    @Override public boolean[] getValidSides() {return SIDES_HORIZONTAL;}
 }

@@ -34,9 +34,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
 public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
@@ -67,7 +64,7 @@ public class ScreenControllerDetail extends kGuiScreenContainerLayerBase {
         for (int i = 0; i < events.length; i++) {
             String fullText = Constants.getControllerEventDesc(events[i], i < eventExtra.length ? eventExtra[i] : "");
             String shortText = Constants.getControllerEventShortDesc(events[i]);
-            kGuiButtonBase button = new ControllerEventButton(20+i, ContainerX+140, 14 + ContainerY + i*EVENT_LINE_HEIGHT, 104, shortText, fullText).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
+            kGuiButtonBase button = new ControllerEventButton(20+i, ContainerX+140, 14 + ContainerY, 104, shortText, fullText).setFBOOffset(0, i*EVENT_LINE_HEIGHT).setJoinLeaveTime(i*70,Integer.MAX_VALUE).addAnime(new animeMoveLinear(-1,0, 50,0)).addAnime(new animeTransparency(-1,0,255,-255)).addAnime(new animeMoveSlowIn(i*70, 800+i*70,-50,0,2)).addAnime(new animeRGBA(i*70,600+i*70,255,255,255,55,-150,-150,-150,200));
             controllerEventListButton.addSubButton(button);
         }
         controllerEventListButton.setMaxScrolled(Math.max(0, events.length*EVENT_LINE_HEIGHT - EVENT_LIST_HEIGHT));
