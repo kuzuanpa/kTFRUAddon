@@ -16,6 +16,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
+import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
@@ -75,7 +76,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
     public static final short MAX_FIELD_STRENGTH=1000, KEEP_CHARGE_EUt=8192;
     public static final long MAX_CHARGE = 1073741824L;//1024^3
-    public byte mState= STATE_STOPPED;
+    public StateMgr mState=new StateMgr();
     public boolean isComputePowerEnough=false;
     public short mFieldStrength=0;
     public float dischargeRate=0.2F, progress =0;
@@ -101,7 +102,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey(NBT_STATE)) mState = aNBT.getByte(NBT_STATE);
+        if (aNBT.hasKey(NBT_STATE)) mState.set( aNBT.getByte(NBT_STATE));
         if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
         if (aNBT.hasKey(NBT_ENERGY+".1")) mEnergyCharged = aNBT.getLong(NBT_ENERGY+".1");
         if (aNBT.hasKey(NBT_EFFICIENCY)) mFieldStrength = aNBT.getShort(NBT_EFFICIENCY);
@@ -131,7 +132,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
 
-        aNBT.setByte(NBT_STATE, mState);
+        aNBT.setByte(NBT_STATE, mState.get());
         UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
         UT.NBT.setNumber(aNBT, NBT_ENERGY+".1", mEnergyCharged);
         aNBT.setShort(NBT_EFFICIENCY,mFieldStrength);
@@ -140,7 +141,6 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         aNBT.setLong(NBT_PROGRESS+".req", recipeTotalTime);
         UT.NBT.setNumber(aNBT, NBT_INPUT_EU,recipeEUt);
         aNBT.setByte(NBT_FACING, mFacing);
-        aNBT.setByte(NBT_STATE, mState);
         for (int i = 0; i < 12; i++) mTanks[i].writeToNBT(aNBT, NBT_TANK+"."+i);
 
         for (int i = 0; i < mOutputFluids.length; i++) FL.save(aNBT, NBT_TANK_OUT+"."+i, mOutputFluids[i]);
@@ -164,7 +164,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             return;
         }
         //refresh state
-        if(mState==STATE_ERROR){
+        if(mState.is(STATE_ERROR)){
             mEnergyCharged=0;
             if(mEnergy < KEEP_CHARGE_EUt)return;
             mFieldStrength = (short) Math.min(mFieldStrength+4,MAX_FIELD_STRENGTH);
@@ -172,7 +172,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         }
         //If no plasma in reactor
         boolean isInputEmpty = Arrays.stream(mTanksInput).allMatch(FluidTankGT::isEmpty);
-        if(isInputEmpty&&mState!=STATE_RUNNING){
+        if(isInputEmpty&& !mState.is(STATE_RUNNING)){
             setState(STATE_STOPPED);
             mEnergyCharged=0;
             nullifyCurrentRecipe();
@@ -200,7 +200,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
         //Field Handle
         if(mEnergy >= (recipeEUt==0? KEEP_CHARGE_EUt : recipeEUt))mFieldStrength= (short) Math.min(MAX_FIELD_STRENGTH,mFieldStrength+4);
-        else if(mState==STATE_CHARGING||mState==STATE_RUNNING||mState==STATE_VOID_CHARGING)mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
+        else if(mState.is(STATE_CHARGING)||mState.is(STATE_RUNNING)||mState.is(STATE_VOID_CHARGING))mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
         mEnergy=0;
         if(mFieldStrength<0){
             if(mEnergyCharged>0) onError();
@@ -208,30 +208,28 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         }
 
         //do recipe
-        if(mState==STATE_RUNNING) {
+        if(mState.is(STATE_RUNNING)) {
             progress += mEnergyCharged *1F / recipeChargeRequired;
             if (progress < recipeTotalTime) return;
             if(mOutputFluids!=null)Arrays.stream(mOutputFluids).forEach(fluid-> {for (FluidTankGT tank : mTanksOutput) if(tank.canFillAll(fluid)&&tank.fill(fluid, true)>0)return;});
             nullifyCurrentRecipe();
-            mState=STATE_STOPPED;
+            mState.set(STATE_STOPPED);
         }
 
-        if(!isInputEmpty&& (mState==STATE_STOPPED||mState==STATE_VOID_CHARGING|| (mState==STATE_CHARGING&&mCurrentRecipe==null) )){
+        if(!isInputEmpty&& (mState.is(STATE_STOPPED)||mState.is(STATE_VOID_CHARGING)|| (mState.is(STATE_CHARGING)&&mCurrentRecipe==null) )){
             Recipe tRecipe = mRecipes.findRecipe(this, lastRecipe, T, mRate, NI, mTanksInput, slot(0),slot(1));
             if (tRecipe !=null&&tRecipe.isRecipeInputEqual(F,F,mTanksInput,slot(0),slot(1)))setRecipe(tRecipe);
             else setState(STATE_VOID_CHARGING);
         }
 
-        if (mEnergyCharged > recipeChargeRequired && mState==STATE_CHARGING && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0),slot(1)))setState(STATE_RUNNING);
+        if (mEnergyCharged > recipeChargeRequired && mState.is(STATE_CHARGING) && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0),slot(1)))setState(STATE_RUNNING);
 
     }
 
     protected void setState(byte state){
-        if(mState == state)return;
-
-        mState=state;
+        mState.set(state);
         if(state != STATE_STOPPED && state != STATE_ERROR && getComputeNodes().stream().anyMatch(node -> !node.tryStart(node.getComputePower()))) {
-            mState = STATE_ERROR;
+            mState.set(STATE_ERROR);
         }
 
         if(state==STATE_STOPPED||state==STATE_ERROR) getComputeNodes().forEach(IComputePart::stop);
@@ -266,6 +264,12 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         nullifyCurrentRecipe();
         setState(STATE_ERROR);
     }
+
+    @Override
+    public boolean onTickCheck(long aTimer) {
+        return super.onTickCheck(aTimer) || mState.isChangedAndClear();
+    }
+
     @Override
     protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {
         for (FluidTankGT fluidTankGT : mTanksInput) if (fluidTankGT.isEmpty() || aFluidToFill.isFluidEqual(fluidTankGT.getFluid())) return fluidTankGT;
@@ -293,7 +297,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             sOverlayVoidCharge= new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_void_charging");
 
     public long doInject (TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject ) {
-        if(aEnergyType==mEnergyTypeCharging&&mState!=STATE_STOPPED&&mState!=STATE_ERROR){
+        if(aEnergyType==mEnergyTypeCharging&&!mState.is(STATE_STOPPED)&&!mState.is(STATE_ERROR)){
             mRateCharging += aSize*aAmount;
             return aAmount;
         }
@@ -310,7 +314,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
         if (!aShouldSideBeRendered[aSide]) return null;
         if(aSide!=mFacing)return BlockTextureDefault.get(sTextureSides);
-        switch(mState){
+        switch(mState.get()){
             case STATE_STOPPED      : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayStop      ));
             case STATE_CHARGING     : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayCharge    ));
             case STATE_RUNNING      : return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides),BlockTextureDefault.get(sOverlayRun       ));
@@ -328,25 +332,25 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
 
     public short clientDensity(){
-        return mState==STATE_RUNNING||mState==STATE_CHARGING?32767: (short) (((Arrays.stream(mTanksInput).mapToLong(FluidTankGT::amount).sum()*1D) / (Arrays.stream(mTanksInput).mapToLong(FluidTankGT::getCapacity).sum()))*32767);
+        return mState.is(STATE_RUNNING)||mState.is(STATE_CHARGING)?32767: (short) (((Arrays.stream(mTanksInput).mapToLong(FluidTankGT::amount).sum()*1D) / (Arrays.stream(mTanksInput).mapToLong(FluidTankGT::getCapacity).sum()))*32767);
     }
     public short clientTemp(){
         return (short) ((mEnergyCharged*1D/ MAX_CHARGE)*1400);
     }
     public short clientProgress(){
-        return mState==STATE_RUNNING ? (short) ((progress * 1D / recipeTotalTime) * 32767) : 0;
+        return mState.is(STATE_RUNNING )? (short) ((progress * 1D / recipeTotalTime) * 32767) : 0;
     }
     //client
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mState);
+        return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mState.get());
     }
 
     @Override
     public boolean receiveDataByteArray(byte[] aData, INetworkHandler aNetworkHandler) {
         mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
         setDirectionData(aData[3]);
-        mState=aData[4];
+        mState.set(aData[4]);
         return T;
     }
 

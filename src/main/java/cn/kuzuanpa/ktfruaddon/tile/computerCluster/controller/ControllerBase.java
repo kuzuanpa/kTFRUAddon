@@ -49,6 +49,7 @@ import zmaster587.libVulpes.items.ItemProjector;
 import java.io.*;
 import java.util.*;
 
+import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_ERROR;
 import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_NORMAL;
 import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_OFFLINE;
 import static gregapi.data.CS.*;
@@ -68,12 +69,16 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
         super.readFromNBT2(aNBT);
         IComputerClusterController.readFromNBT(aNBT,this);
         clusterRecoveryPending = !clusterControllers.isEmpty();
+        if (aNBT.hasKey(NBT_STATE)) mState = aNBT.getByte(NBT_STATE);
+        if (aNBT.hasKey(NBT_ACTIVE)) mPartsStarted = aNBT.getBoolean(NBT_ACTIVE);
     }
 
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         IComputerClusterController.writeToNBT(aNBT,this);
+        aNBT.setByte(NBT_STATE, mState);
+        UT.NBT.setBoolean(aNBT, NBT_ACTIVE, mPartsStarted);
     }
 
     @Override
@@ -104,14 +109,18 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
                 clusterControllers.clear();
             }
         }
-        if(aTimer%CLUSTER_UPDATE_INTERVAL == 0)updateProvidedComputePower();
+        if(aTimer%CLUSTER_UPDATE_INTERVAL == 0) updateComputeParts();
         if(cluster!=null && aTimer%CLUSTER_UPDATE_INTERVAL == 0)cluster.update();
     }
 
     /**Only one controller of a cluster has to drive the update, the cluster itself skips duplicated calls in the same tick.**/
     public static final int CLUSTER_UPDATE_INTERVAL = 20;
+    /**Ticks between two attempts to start parts that refused, a part usually only recovers once something else changed.**/
+    public static final int PART_RETRY_INTERVAL = 100;
     /**Reach results are cached for this many ticks, walking a wire or cable network per query is far too costly.**/
     public static final int REACH_CACHE_TICKS = 40;
+
+    private long lastPartRetryTick = -PART_RETRY_INTERVAL;
 
     private final Map<WorldPos, Boolean> reachCache = new HashMap<>();
     private long reachCacheTick = -1;
@@ -142,8 +151,18 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
 
     @Override
     public boolean breakBlock() {
-        if(isServerSide() && cluster != null && myUUID != null) cluster.quit(myUUID, this);
+        if(isServerSide()) {
+            stopComputeParts();
+            if(cluster != null && myUUID != null) cluster.quit(myUUID, this);
+        }
         return super.breakBlock();
+    }
+
+    /**A part may have been taken out, the next {@link #updateComputeParts()} has to start the new set.**/
+    @Override
+    public void onStructureChange() {
+        super.onStructureChange();
+        if (isServerSide()) stopComputeParts();
     }
 
     @Override
@@ -350,6 +369,12 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
 
     public ComputePower mProvidedType = ComputePower.Normal;
     public long mProvidedAmount = 0L;
+    /**
+     * Whether the parts were told to start. A controller that is online is expected to keep its parts
+     * running for its whole lifetime, so this has to survive a world reload: the parts persist their own
+     * running state too and nobody would ever call stop() on them again otherwise.
+     */
+    public boolean mPartsStarted = false;
 
     /**
      * The nodes feeding this controller, collected by the structure check from the
@@ -358,6 +383,7 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
      */
     protected List<IComputePart> getComputeNodes() {
         List<IComputePart> nodes = new ArrayList<>();
+        if (worldObj == null) return nodes;
         for (ChunkCoordinates coord : computeNodesCoord) {
             TileEntity tile = WD.te(worldObj, coord, true);
             if (tile instanceof IComputePart) nodes.add((IComputePart) tile);
@@ -365,12 +391,57 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
         return nodes;
     }
 
+    /**
+     * Brings the parts in line with the structure state and recomputes what this controller offers.
+     * A part only produces once it was told to start, so an online controller has to start them and
+     * keep them started, and a broken structure has to stop them again.
+     */
+    public void updateComputeParts() {
+        if (!mStructureOkay) stopComputeParts();
+            //Parts do not persist their running state, a reloaded controller has to start them again.
+        else if (!mPartsStarted || mTimer - lastPartRetryTick >= PART_RETRY_INTERVAL) startComputeParts();
+        updateProvidedComputePower();
+    }
+
+    /**
+     * Starts every part that is not running yet, which makes this idempotent and also the retry path for
+     * parts that refused earlier. A part refusing means it cannot deliver what it promises, and this
+     * controller cannot honour what it reported to the cluster, so it goes to ERROR instead of silently
+     * providing less.
+     */
+    protected void startComputeParts() {
+        lastPartRetryTick = mTimer;
+        boolean allStarted = true;
+        for (IComputePart node : getComputeNodes()) {
+            if (node.isActive()) continue;
+            if (!node.tryStart(node.getComputePower())) allStarted = false;
+        }
+        //Set even when a part failed, otherwise stopComputeParts would not release the ones that did start.
+        mPartsStarted = true;
+        setControllerState(allStarted ? STATE_NORMAL : STATE_ERROR);
+    }
+
+    /**Releases whatever the parts hold, they must not keep consuming once this controller is out.**/
+    protected void stopComputeParts() {
+        if (!mPartsStarted) return;
+        getComputeNodes().forEach(IComputePart::stop);
+        mPartsStarted = false;
+        setControllerState(STATE_NORMAL);
+    }
+
+    protected void setControllerState(byte state) {
+        if (mState == state) return;
+        mState = state;
+        updateClientData();
+    }
+
     /**Recomputes what this controller offers to its cluster, keeping the single type rule.**/
     public void updateProvidedComputePower() {
         long amount = 0L;
-        //A broken structure must not keep feeding the cluster.
-        if (mStructureOkay) for (IComputePart node : getComputeNodes()) {
+        //A broken structure or parts that never started must not keep feeding the cluster.
+        if (mStructureOkay && mState == STATE_NORMAL) for (IComputePart node : getComputeNodes()) {
             if(!node.getType().equals(mProvidedType))continue;
+            if(!node.isActive())continue;
             amount += node.getComputePower();
         }
         if (amount == mProvidedAmount) return;
@@ -397,6 +468,7 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
     }
 
     protected void detachFromCluster() {
+        stopComputeParts();
         cluster = null;
         clusterUUID = null;
         clusterControllers = new ArrayList<>();

@@ -19,6 +19,8 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPa
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.TransformerPart;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
 public class TransformerPartPredicate extends SpecialPartPredicate {
@@ -27,12 +29,13 @@ public class TransformerPartPredicate extends SpecialPartPredicate {
     }
     @Override
     public boolean check(StructureContext ctx, int x, int y, int z) {
-        if(utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare)) return true;
+        TileEntity part = ctx.controller.getTileEntity(x,y,z);
 
-        if(ctx.controller.getTileEntity(x,y,z) instanceof TransformerPart) {
-            ((IReceiveSpecialPart)ctx.controller).receiveSpecialPart(new ChunkCoordinates(x,y,z), ctx.controller.getTileEntity(x,y,z));
+        if(part instanceof TransformerPart) {
+            utils.setTarget(ctx.controller, part, 0, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, false);
+            ((IReceiveSpecialPart)ctx.controller).receiveSpecialPart(new ChunkCoordinates(x,y,z), part);
             return true;
         }
-        return false;
+        return utils.checkAndSetTarget(ctx.controller, x,y,z, null, null, null, expected, allowPartShare);
     }
 }

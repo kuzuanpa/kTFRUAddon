@@ -71,7 +71,7 @@ public abstract class ComputePartBase extends TileEntityBase09FacingSingle imple
 
     @Override
     public boolean onTickCheck(long aTimer) {
-        return super.onTickCheck(aTimer)||mState.isChangedAndClear();
+        return super.onTickCheck(aTimer) || mState.isChangedAndClear();
     }
 
     @Override

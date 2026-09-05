@@ -168,7 +168,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         //Nothing keeps this part running once the structure fell apart.
-        //if (aIsServerSide && aTimer % 20 == 0 && getTarget(true) == null) stop();
+        if (aIsServerSide && aTimer % 20 == 0 && getTarget(false) == null) stop();
     }
 
     @Override

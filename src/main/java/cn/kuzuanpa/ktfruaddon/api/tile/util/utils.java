@@ -133,34 +133,28 @@ public class utils {
             break;
         }
 
-        if(result == null && (aInventory != null || aPlayer != null))for (TileDesc tTile : availTiles) {
+        if(result == null && (aInventory != null || aPlayer != null)) for (TileDesc tTile : availTiles) {
             if(!tryPlaceTile(tTile, aController, coord, aPlayer, aInventory))continue;
             result = tTile;
             tTileEntity = aController.getTileEntity(coord);
             break;
         }
 
-        if(result != null)return setTarget(aController, aClickedAt, aPlayer, aInventory, tTileEntity, result.aDesign, result.aUsage, allowPartShare);
+        if(result != null)return setTarget(aController, tTileEntity, result.aDesign, result.aUsage, allowPartShare);
         return false;
     }
-    public static boolean setTarget(ITileEntityMultiBlockController aController, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory, TileEntity tile, int aDesign, int aMode, boolean allowShare) {
+    public static boolean setTarget(ITileEntityMultiBlockController aController, TileEntity tile, int aDesign, int aMode, boolean allowShare) {
         if(tile instanceof MultiTileEntityMultiBlockPart) {
             MultiTileEntityMultiBlockPart part = (MultiTileEntityMultiBlockPart)tile;
             ITileEntityMultiBlockController tTarget = part.getTarget(false);
-            if (tTarget != aController && tTarget != null) {
-                if(!allowShare) debugLog("not share");
-                return allowShare;
-            }
+            if (tTarget != aController && tTarget != null)  return allowShare;
 
             part.setTarget(aController, aDesign, aMode);
             return true;
         }else if (tile instanceof IMultiBlockPart) {
             IMultiBlockPart part = (IMultiBlockPart)tile;
             ITileEntityMultiBlockController tTarget = part.getTarget(false);
-            if (tTarget != aController && tTarget != null) {
-                if(!allowShare) debugLog("not share");
-                return allowShare;
-            }
+            if (tTarget != aController && tTarget != null)  return allowShare;
 
             part.setTarget(aController, aDesign, aMode);
             return true;

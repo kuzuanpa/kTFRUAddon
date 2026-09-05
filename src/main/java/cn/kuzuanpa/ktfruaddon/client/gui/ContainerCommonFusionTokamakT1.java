@@ -80,7 +80,7 @@ public class ContainerCommonFusionTokamakT1 extends ContainerCommon {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 		for (ICrafting tUpdate : (List<ICrafting>)crafters) {
-			tUpdate.sendProgressBarUpdate(this, 0, ((FusionReactorTokamakT1)mTileEntity).mState);
+			tUpdate.sendProgressBarUpdate(this, 0, ((FusionReactorTokamakT1)mTileEntity).mState.get());
 			tUpdate.sendProgressBarUpdate(this, 1, ((FusionReactorTokamakT1)mTileEntity).mFieldStrength);
 			tUpdate.sendProgressBarUpdate(this, 2, ((FusionReactorTokamakT1)mTileEntity).clientTemp());
 			tUpdate.sendProgressBarUpdate(this, 3, ((FusionReactorTokamakT1)mTileEntity).clientProgress());

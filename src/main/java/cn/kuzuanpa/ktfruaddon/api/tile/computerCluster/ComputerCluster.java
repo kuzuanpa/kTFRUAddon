@@ -44,9 +44,9 @@ public class ComputerCluster {
     public static final byte PACKET_UNSUBSCRIBE = 2;
     public static final byte PACKET_SYNC_DATA = -1;
     public static final byte PACKET_NOT_FOUND = -2;
-    public static final int MAX_CLUSTER_EVENTS = 32;
-    public static final int MAX_CONTROLLER_EVENTS = 24;
-    public static final int MAX_USER_EVENTS = 16;
+    public static final int MAX_CLUSTER_EVENTS = 320;
+    public static final int MAX_CONTROLLER_EVENTS = 240;
+    public static final int MAX_USER_EVENTS = 160;
 
     /**Ticks between two forced pushes to the viewing clients, used as a keep alive when nothing changed.**/
     public static final int CLIENT_SYNC_HEARTBEAT_TICKS = 100;
@@ -108,6 +108,7 @@ public class ComputerCluster {
         if (oldClusterState != state) pushClusterEvent(Constants.EVENT_STATE_CHANGED, oldClusterState + " -> " + state);
         if (!totalComputePowerMap.equals(totalComputePower)) clientDataDirty = true;
         totalComputePower = totalComputePowerMap;
+        enforceComputePowerLimit();
         updateUsers();
         syncViewerPlayers();
     }
@@ -119,16 +120,17 @@ public class ComputerCluster {
     }
 
     protected byte computeClusterState() {
+        boolean hasError = false;
         boolean hasOnline = false;
         boolean hasWarning = false;
         for (ControllerData data : controllerList.values()) {
-            if (data.state == Constants.STATE_ERROR || data.state == Constants.STATE_BELONG_ERR) return Constants.STATE_ERROR;
+            if (data.state == Constants.STATE_ERROR || data.state == Constants.STATE_BELONG_ERR) hasError = true;
             if (data.state == Constants.STATE_WARNING) hasWarning = true;
             if (data.state == Constants.STATE_NORMAL) hasOnline = true;
         }
-        if (hasWarning) return Constants.STATE_WARNING;
-        if (hasOnline) return Constants.STATE_NORMAL;
-        return Constants.STATE_OFFLINE;
+        if (!hasOnline)return Constants.STATE_ERROR;
+        if (hasWarning || hasError) return Constants.STATE_WARNING;
+        return Constants.STATE_NORMAL;
     }
 
     protected static void pushEvent(Queue<Byte> events, Queue<String> eventExtra, byte event, String extra, int maxSize) {
@@ -276,6 +278,23 @@ public class ComputerCluster {
 
     public boolean isComputePowerSufficient(Map<ComputePower, Long> additions){
         return additions.entrySet().stream().allMatch(this::isComputePowerSufficient);
+    }
+
+    protected void enforceComputePowerLimit(){
+        for (Map.Entry<ComputePower, Long> entry : totalComputePower.entrySet()) {
+            ComputePower type = entry.getKey();
+            long deficit = usedComputePower.getOrDefault(type, 0L) - entry.getValue();
+            if (deficit <= 0) continue;
+            pushClusterEvent(Constants.EVENT_POWER_ALLOCATE_FAILED, "oversubscribed " + type.desc(deficit));
+            for (UserData data : userList.values()) {
+                if (deficit <= 0) break;
+                long held = data.consumingPower.getOrDefault(type, 0L);
+                if (held <= 0) continue;
+                deficit -= held;
+                if (data.user == null) releaseHeldPower(data);
+                else freeUserComputePower(data.user);
+            }
+        }
     }
 
     public boolean isComputePowerSufficient(Map.Entry<ComputePower, Long> power){
