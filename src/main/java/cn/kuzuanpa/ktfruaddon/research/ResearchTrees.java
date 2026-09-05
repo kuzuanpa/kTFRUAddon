@@ -389,10 +389,17 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,8)));
 
-                    //Identify:辨别催化效果; Pt/Pd贵金属催化剂+Ni过渡金属催化剂
+                    ResearchProject computerCluster = new ResearchProject(tree, "计算集群", "", Items.paper, 0, 33)
+                            .setPos(2080, 70)//todo
+                            .addPrerequisite(computerT4);
+
+                    ResearchProject researchWithModel = new ResearchProject(tree, "数字建模研究", "通过对问题进行建模，依靠高算力进行仿真模拟研究", Items.paper, 0, 33)
+                            .setPos(2080, 70)//todo
+                            .addPrerequisite(computerT4);
+
                     ResearchProject catalyzerTheory = new ResearchProject(tree, "催化剂原理", "研究催化剂起作用的具体原理", Items.paper, 0, 34)
                             .setPos(2180, 70)
-                            .addPrerequisite(computerT4)
+                            .addPrerequisite(researchWithModel)
                             .addTask(new ComputeTask(ComputePower.Normal, 131072))
                             .addTask(new MiniGameIdentifyTask(128))
                             .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Pt,4)))
@@ -467,305 +474,111 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,128)))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,32)));
 
-                    //Identify+CurrentControl:辨别硅岩特性+控制实验; Naquadah样品
-                    ResearchProject naquadahTheory = new ResearchProject(tree, "硅岩性质研究", "", Items.paper, 0, 41)
-                            .setPos(2580, 70)
-                            .addPrerequisite(computerT6)
-                            .addTask(new EnergyTask(TD.Energy.EU, 1048576, 64))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 1024))
-                            .addTask(new MiniGameIdentifyTask(256))
-                            .addTask(new MiniGameCurrentControlTask(128))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,4)));
 
-                    //CurrentControl+Fill:镜金加工控制+规划; Naquadah替代(镜金TODO)
-                    ResearchProject mirroiteUsage = new ResearchProject(tree, "镜金应用", "", Items.paper, 0, 42)
-                            .setPos(2680, 70)
-                            .addPrerequisite(naquadahTheory)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 2048))
-                            .addTask(new MiniGameCurrentControlTask(256))
-                            .addTask(new MiniGameFillTask(192))
-                            //TODO: 镜金材料未注册，待补充镜金相关物品消耗
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Nq,16)));
+                    ResearchProject fusionTokamakExp = new ResearchProject(tree, "托卡马克聚变", "实验性的托卡马克聚变堆", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(computerT6);
 
-                    //CurrentControl+Fill+Identify:终极逻辑工艺; Si+Au+NaquadahAlloy
-                    ResearchProject computerT7 = new ResearchProject(tree, "计算机T7", "逻辑计算的绝唱, 解锁36v4系列计算机", Items.paper, 0, 43)
-                            .setPos(2780, 70)
-                            .addPrerequisite(mirroiteUsage)
-                            .addTask(new EnergyTask(TD.Energy.EU, 2097152, 64))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 4096))
-                            .addTask(new MiniGameCurrentControlTask(512))
-                            .addTask(new MiniGameFillTask(384))
-                            .addTask(new MiniGameIdentifyTask(256))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,192)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,192)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,8)));
 
-                    //Identify:辨别聚变条件; D+T燃料+钨钢容器
-                    ResearchProject fusionTheory = new ResearchProject(tree, "聚变基础理论", "", Items.paper, 0, 44)
-                            .setPos(1780, 0)
-                            .addPrerequisite(nuclearTheory)
-                            .addTask(new EnergyTask(TD.Energy.EU, 262144, 32))
-                            .addTask(new ComputeTask(ComputePower.Normal, 65536))
-                            .addTask(new MiniGameIdentifyTask(64))
-                            .addTask(new FluidConsumeTaskSimple(MT.D.mGas.getFluid(), 4000))
-                            .addTask(new FluidConsumeTaskSimple(MT.T.mGas.getFluid(), 4000))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)));
+                    ResearchProject fusionTokamak = new ResearchProject(tree, "商用托卡马克", "托卡马克聚变堆", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(computerT6);
 
-                    //CurrentControl:磁场控制; Cu导线(超导TODO)+不锈钢+Nd磁体
-                    ResearchProject magneticConfinement = new ResearchProject(tree, "磁约束理论", "", Items.paper, 0, 45)
-                            .setPos(1880, 0)
-                            .addPrerequisite(fusionTheory)
-                            .addTask(new EnergyTask(TD.Energy.EU, 524288, 32))
-                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
-                            .addTask(new MiniGameCurrentControlTask(128))
-                            //TODO: 超导材料NiobiumTitanium/Neodymium待确认，暂用替代
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Neodymium,8)));
+                    ResearchProject fusionLaser = new ResearchProject(tree, "激光聚变", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(computerT6);
 
-                    //Identify:辨别有效数据; 不锈钢+Cu导线
-                    ResearchProject magneticDataSummary = new ResearchProject(tree, "数据汇总-磁", "", Items.paper, 0, 46)
-                            .setPos(1980, 0)
-                            .addPrerequisite(magneticConfinement)
-                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
-                            .addTask(new MiniGameIdentifyTask(128))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,32)));
 
-                    //CurrentControl+Fill:磁场控制+反应规划; Cu(超导TODO)+钨钢+Nd磁体
-                    ResearchProject commercialMagneticConfinement = new ResearchProject(tree, "商用磁约束", "", Items.paper, 0, 47)
-                            .setPos(2080, 0)
-                            .addPrerequisite(magneticConfinement)
-                            .addTask(new EnergyTask(TD.Energy.EU, 1048576, 64))
-                            .addTask(new ComputeTask(ComputePower.Normal, 262144))
-                            .addTask(new MiniGameCurrentControlTask(192))
-                            .addTask(new MiniGameFillTask(96))
-                            //TODO: 超导材料NiobiumTitanium待确认，暂用替代
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,128)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Neodymium,16)));
+                    ResearchProject naqudahTheory = new ResearchProject(tree, "硅岩性质理论", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(fusionLaser);
 
-                    //Fill:精确时空规划; Glass透镜+钨钢容器+D燃料
-                    ResearchProject inertialConfinement = new ResearchProject(tree, "惯性约束理论", "", Items.paper, 0, 48)
-                            .setPos(1880, -70)
-                            .addPrerequisite(fusionTheory)
-                            .addTask(new EnergyTask(TD.Energy.LU, 131072, 32))
-                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
-                            .addTask(new MiniGameFillTask(128))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
-                            .addTask(new FluidConsumeTaskSimple(MT.D.mGas.getFluid(), 4000));
 
-                    //Identify:辨别有效数据; 钨钢+Glass透镜
-                    ResearchProject inertialDataSummary = new ResearchProject(tree, "数据汇总-惯性", "", Items.paper, 0, 49)
-                            .setPos(1980, -70)
-                            .addPrerequisite(inertialConfinement)
-                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
-                            .addTask(new MiniGameIdentifyTask(128))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,8)));
+                    ResearchProject computerT7 = new ResearchProject(tree, "计算机T7", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(naqudahTheory);
 
-                    //Fill+CurrentControl:时空规划+激光控制; Glass透镜+钨钢+D燃料
-                    ResearchProject commercialInertialConfinement = new ResearchProject(tree, "商用惯性约束", "", Items.paper, 0, 50)
-                            .setPos(2080, -70)
-                            .addPrerequisite(inertialDataSummary)
-                            .addTask(new EnergyTask(TD.Energy.LU, 262144, 64))
-                            .addTask(new ComputeTask(ComputePower.Normal, 262144))
-                            .addTask(new MiniGameFillTask(192))
-                            .addTask(new MiniGameCurrentControlTask(96))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,32)))
-                            .addTask(new FluidConsumeTaskSimple(MT.D.mGas.getFluid(), 4000));
+                    ResearchProject AIResearch = new ResearchProject(tree, "人工智能研究", "制造人工智能，并借用人工智能来辅助科学研究", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(computerT7);
 
-                    //CurrentControl+Identify:量子态控制+辨别; Naquadah+智金(镜金TODO)
-                    ResearchProject quantumizeMirroite = new ResearchProject(tree, "量子化镜金", "", Items.paper, 0, 51)
-                            .setPos(2880, 70)
-                            .addPrerequisite(commercialInertialConfinement)
-                            .addPrerequisite(computerT7)
-                            .addTask(new EnergyTask(TD.Energy.EU, 2097152, 64))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 8192))
-                            .addTask(new MiniGameCurrentControlTask(640))
-                            .addTask(new MiniGameIdentifyTask(512))
-                            //TODO: 镜金材料未注册，待补充镜金相关物品消耗
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,32)));
 
-                    //Fill+Identify:量金结构规划+性质辨别; Naquadah+智金(镜金TODO)
-                    ResearchProject quantumiteUsage = new ResearchProject(tree, "量金性质应用", "", Items.paper, 0, 52)
-                            .setPos(2980, 70)
-                            .addPrerequisite(quantumizeMirroite)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 16384))
-                            .addTask(new MiniGameFillTask(640))
-                            .addTask(new MiniGameIdentifyTask(384))
-                            //TODO: 镜金材料未注册，待补充镜金相关物品消耗
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Nq,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,48)));
+                    ResearchProject todo001 = new ResearchProject(tree, "镜金性质", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(computerT7);
 
-                    //Identify:量子态辨别; Naquadah+NaquadahAlloy
-                    ResearchProject quantumObserve = new ResearchProject(tree, "量子观测", "", Items.paper, 0, 53)
-                            .setPos(3080, 70)
-                            .addPrerequisite(quantumiteUsage)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 16384))
-                            .addTask(new MiniGameIdentifyTask(768))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,4)));
 
-                    //CurrentControl:量子门控制; Naquadah导线+智金
-                    ResearchProject quantumProcess = new ResearchProject(tree, "量子处理", "", Items.paper, 0, 54)
-                            .setPos(3180, 70)
-                            .addPrerequisite(quantumObserve)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 32768))
-                            .addTask(new MiniGameCurrentControlTask(896))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Nq,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,64)));
+                    ResearchProject todo002 = new ResearchProject(tree, "量子通信", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo001);
 
-                    //CurrentControl+Fill+Identify:量子计算全流程; Naquadah+智金
-                    ResearchProject quantumComputer = new ResearchProject(tree, "量子计算", "", Items.paper, 0, 55)
-                            .setPos(3280, 70)
-                            .addPrerequisite(quantumProcess)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 65536))
-                            .addTask(new MiniGameCurrentControlTask(1024))
-                            .addTask(new MiniGameFillTask(768))
-                            .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Nq,128)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,128)));
+                    ResearchProject todo003 = new ResearchProject(tree, "镜金量子化", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo001);
 
-                    //Fill+Identify:跃迁路径规划+辨别; Naquadah+NaquadahAlloy
-                    ResearchProject warpTheory = new ResearchProject(tree, "跃迁理论", "", Items.paper, 0, 56)
-                            .setPos(3380, 140)
-                            .addPrerequisite(quantumComputer)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 131072))
-                            .addTask(new MiniGameFillTask(1024))
-                            .addTask(new MiniGameIdentifyTask(768))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,16)));
+                    ResearchProject todo004 = new ResearchProject(tree, "量金性质", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo003);
 
-                    //CurrentControl+Identify:有机量子控制+辨别; 智金+Naquadah+C有机基底
-                    ResearchProject biologicalQuantumProcess = new ResearchProject(tree, "有机量子处理", "", Items.paper, 0, 57)
-                            .setPos(3380, 0)
-                            .addPrerequisite(quantumComputer)
-                            .addTask(new ComputeTask(ComputePower.Biology, 65536))
-                            .addTask(new MiniGameCurrentControlTask(768))
-                            .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,128)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.C,32)));
+                    ResearchProject todo005 = new ResearchProject(tree, "量子观测", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo004);
 
-                    //Identify+CurrentControl:辨别量子结构+控制实验; Naquadah+NaquadahAlloy
-                    ResearchProject quantumStructure = new ResearchProject(tree, "量子结构理论", "研究夸克", Items.paper, 0, 58)
-                            .setPos(3380, 70)
-                            .addPrerequisite(quantumComputer)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 131072))
-                            .addTask(new MiniGameIdentifyTask(1024))
-                            .addTask(new MiniGameCurrentControlTask(768))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,16)));
+                    ResearchProject todo006 = new ResearchProject(tree, "量子有机生产", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo004);
 
-                    //Fill+CurrentControl:刻金结构规划+控制; NaquadahAlloy(刻金TODO)
-                    ResearchProject engravedGoldUsage = new ResearchProject(tree, "刻金性质应用", "", Items.paper, 0, 59)
-                            .setPos(3480, 70)
-                            .addPrerequisite(quantumStructure)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 262144))
-                            .addTask(new MiniGameFillTask(1280))
-                            .addTask(new MiniGameCurrentControlTask(640))
-                            //TODO: 镜金材料未注册，待补充刻金相关物品消耗
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,96)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,24)));
+                    ResearchProject todo007 = new ResearchProject(tree, "量子元素制造", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo004);
 
-                    //Fill+CurrentControl:微型化布局+控制; Naquadah+智金
-                    ResearchProject microQuantumComputer = new ResearchProject(tree, "量子计算微型化", "", Items.paper, 0, 60)
-                            .setPos(3580, 70)
-                            .addPrerequisite(engravedGoldUsage)
-                            .addTask(new ComputeTask(ComputePower.Quantum, 524288))
-                            .addTask(new MiniGameFillTask(1536))
-                            .addTask(new MiniGameCurrentControlTask(1024))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq,96)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Nq,128)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,192)));
+                    ResearchProject todo008 = new ResearchProject(tree, "量子计算T1", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo005);
 
-                    //CurrentControl+Identify:强力控制+辨别; Naquadah+NaquadahAlloy+智金
-                    ResearchProject strongForceMatter = new ResearchProject(tree, "强力物质", "", Items.paper, 0, 61)
-                            .setPos(3680, 70)
-                            .addPrerequisite(microQuantumComputer)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 1024))
-                            .addTask(new MiniGameCurrentControlTask(1536))
-                            .addTask(new MiniGameIdentifyTask(1280))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,128)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,256)));
+                    ResearchProject todo009 = new ResearchProject(tree, "跃迁理论", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo008);
 
-                    //Identify+Fill:虚空信号辨别+规划; Naquadah+NaquadahAlloy
-                    ResearchProject voidTheory = new ResearchProject(tree, "虚空理论", "", Items.paper, 0, 62)
-                            .setPos(3780, 70)
-                            .addPrerequisite(strongForceMatter)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 2048))
-                            .addTask(new MiniGameIdentifyTask(1536))
-                            .addTask(new MiniGameFillTask(1280))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,192)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,48)));
+                    ResearchProject todo010 = new ResearchProject(tree, "量子结构理论", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo008);
 
-                    //Identify+CurrentControl:零点场辨别+控制; Naquadah+NaquadahAlloy+智金
-                    ResearchProject zeroPointField = new ResearchProject(tree, "零点场论", "", Items.paper, 0, 63)
-                            .setPos(3880, 70)
-                            .addPrerequisite(voidTheory)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 4096))
-                            .addTask(new MiniGameIdentifyTask(1792))
-                            .addTask(new MiniGameCurrentControlTask(1536))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,256)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,320)));
+                    ResearchProject todo011 = new ResearchProject(tree, "刻金性质", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo010);
 
-                    //CurrentControl+Fill:零点能量控制+规划; Naquadah+NaquadahAlloy
-                    ResearchProject zeroPointEnergy = new ResearchProject(tree, "零点能量生成", "", Items.paper, 0, 64)
-                            .setPos(3980, 70)
-                            .addPrerequisite(zeroPointField)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 8192))
-                            .addTask(new MiniGameCurrentControlTask(1792))
-                            .addTask(new MiniGameFillTask(1536))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,320)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,96)));
+                    ResearchProject todo012 = new ResearchProject(tree, "量子计算微型化", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo011);
 
-                    //Fill+CurrentControl:零点物质规划+控制; Naquadah+NaquadahAlloy+智金
-                    ResearchProject zeroPointMatter = new ResearchProject(tree, "零点物质生成", "", Items.paper, 0, 65)
-                            .setPos(4080, 70)
-                            .addPrerequisite(zeroPointEnergy)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 16384))
-                            .addTask(new MiniGameFillTask(1792))
-                            .addTask(new MiniGameCurrentControlTask(1536))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,384)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,128)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,384)));
+                    ResearchProject todo013 = new ResearchProject(tree, "强力理论", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo011);
 
-                    //CurrentControl+Identify+Fill:科魔统一全流程; Naquadah+NaquadahAlloy+智金
-                    ResearchProject scienceMagicUnification = new ResearchProject(tree, "科魔统一理论", "", Items.paper, 0, 66)
-                            .setPos(4180, 70)
-                            .addPrerequisite(zeroPointMatter)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 32768))
-                            .addTask(new MiniGameCurrentControlTask(2048))
-                            .addTask(new MiniGameIdentifyTask(2048))
-                            .addTask(new MiniGameFillTask(2048))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,448)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,192)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,448)));
+                    ResearchProject todo014 = new ResearchProject(tree, "强力物质生产", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo013);
 
-                    //CurrentControl+Identify+Fill:终极全流程; Naquadah+NaquadahAlloy+智金
-                    ResearchProject endless = new ResearchProject(tree, "无尽", "", Items.paper, 0, 67)
-                            .setPos(4280, 70)
-                            .addPrerequisite(scienceMagicUnification)
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 65536))
-                            .addTask(new MiniGameCurrentControlTask(2048))
-                            .addTask(new MiniGameIdentifyTask(2048))
-                            .addTask(new MiniGameFillTask(2048))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Nq,512)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Nq_522,256)))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,512)));
+                    ResearchProject todo015 = new ResearchProject(tree, "零点场论", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo013);
 
+                    ResearchProject todo016 = new ResearchProject(tree, "零点能量生成", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo015);
+
+                    ResearchProject todo017 = new ResearchProject(tree, "物质能量转换", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo016);
+
+                    ResearchProject todo018 = new ResearchProject(tree, "科魔统一理论", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo017);
+
+                    ResearchProject todo019 = new ResearchProject(tree, "无尽", "", Items.paper, 0, 40)
+                            .setPos(2480, 70)//todo
+                            .addPrerequisite(todo018);
                     return tree;
         }
         );
