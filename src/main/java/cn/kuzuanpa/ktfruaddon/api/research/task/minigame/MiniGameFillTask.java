@@ -37,7 +37,8 @@ public class MiniGameFillTask implements IResearchTask {
 
     @Override
     public long tryPromoteProgress(Object consume, boolean dryRun) {
-        long consumeAmount = Math.min((long)consume, requiredAmount - finishedCount);
+        if (!(consume instanceof Number)) return 0;
+        long consumeAmount = Math.min(Math.max(0L, ((Number) consume).longValue()), requiredAmount - finishedCount);
         if(!dryRun)finishedCount += consumeAmount;
         return consumeAmount;
     }

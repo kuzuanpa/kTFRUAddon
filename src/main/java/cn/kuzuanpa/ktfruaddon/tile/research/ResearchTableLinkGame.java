@@ -16,22 +16,27 @@ package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
+import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameCurrentControlTask;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientLinkGame;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonLinkGame;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
+import gregapi.old.Textures;
+import gregapi.render.BlockTextureDefault;
+import gregapi.render.BlockTextureMulti;
+import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 
 import java.io.*;
 import java.util.Random;
 
-public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
+public class ResearchTableLinkGame extends ResearchTableBase implements ITileReceiveContainerButtonClick, ITileSyncByteArrayLong {
 
     // 游戏配置
     public static final int GRID_SIZE = 8; // 8x8 网格
@@ -202,6 +207,7 @@ public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implemen
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
         if (aIsServerSide) {
+            if (scores > 0) scores -= tryPromoteCurrentProjectProgress(MiniGameCurrentControlTask.class, scores, false);
             // 处理路径计时器
             if (pathTimer > 0) {
                 pathTimer--;
@@ -215,7 +221,9 @@ public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implemen
 
     @Override
     public ITexture getTexture2(Block block, int i, byte b, boolean[] booleans) {
-        return null;
+        if (!booleans[b]) return null;
+        if (b == mFacing) return BlockTextureMulti.get(BlockTextureDefault.get(sTextureSides, mRGBa), BlockTextureDefault.get(sOverlayStop));
+        return BlockTextureDefault.get(sTextureSides, mRGBa);
     }
 
     @Override
@@ -232,7 +240,7 @@ public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implemen
             return;
         }
 
-        if (data != null && data.length >= 2) {
+        if (buttonID == 1 && data != null && data.length >= 2) {
             // 处理点击: data[0]=x, data[1]=y
             int x = data[0] & 0xFF;
             int y = data[1] & 0xFF;
@@ -245,6 +253,7 @@ public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implemen
         scores = 0;
         gameActive = false;
         pathPoints = null;
+        lastClickX = lastClickY = -1;
         startLevel();
     }
 
@@ -277,11 +286,12 @@ public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implemen
         }
 
         gameActive = true;
+        lastClickX = lastClickY = -1;
         markDirty();
     }
 
     // 记录上一次点击的位置
-    private int lastClickX = -1, lastClickY = -1;
+    public int lastClickX = -1, lastClickY = -1;
 
     private void handleClick(int x, int y) {
         if (!gameActive) return;
@@ -417,4 +427,10 @@ public class ResearchTableLinkGame extends TileEntityBase09FacingSingle implemen
 
         return null;
     }
+
+    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) {return new ItemStack[0];}
+
+    public static final IIconContainer
+            sTextureSides = new Textures.BlockIcons.CustomIcon("machines/research/table/current/base"),
+            sOverlayStop = new Textures.BlockIcons.CustomIcon("machines/research/table/current/front");
 }

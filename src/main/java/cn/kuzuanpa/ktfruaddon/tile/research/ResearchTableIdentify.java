@@ -7,6 +7,7 @@ package cn.kuzuanpa.ktfruaddon.tile.research;
 
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
+import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameIdentifyTask;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientIdentify;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonIdentify;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
@@ -40,7 +41,7 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
     public int targetColor = 0xFFFFFF; // 目标颜色 (RGB)
     public int decoyColor = 0xFFFFFF; // 干扰颜色 (RGB)
     public int level = 1; // 当前关卡
-    public float scores = 0; // 玩家得分
+    public long scores = 0; // 玩家得分
     public boolean gameActive = false, needSync = false; // 游戏是否进行中
 
     private final Random random = new Random();
@@ -64,13 +65,13 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        aNBT.setFloat("scores", scores);
+        aNBT.setLong("scores", scores);
     }
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        if (aNBT.hasKey("scores")) scores = aNBT.getFloat("scores");
+        if (aNBT.hasKey("scores")) scores = aNBT.getLong("scores");
     }
 
     @Override
@@ -117,7 +118,7 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
             targetColor = dis.readInt();
             decoyColor = dis.readInt();
             level = dis.readInt();
-            scores = dis.readFloat();
+            scores = dis.readLong();
             gameActive = dis.readBoolean();
 
         } catch (IOException e) {
@@ -138,7 +139,7 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
             dos.writeInt(targetColor);
             dos.writeInt(decoyColor);
             dos.writeInt(level);
-            dos.writeFloat(scores);
+            dos.writeLong(scores);
             dos.writeBoolean(gameActive);
 
             dos.flush();
@@ -220,7 +221,7 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
 
     private void handleSuccess() {
         // 计算得分：基础分 + 难度加成
-        float points = (float) (1 + 0.15F*Math.pow(level, 2F));
+        long points = Math.max(1L, Math.round(1 + 0.15D * level * level));
         scores += points;
 
         // 进入下一关
@@ -236,11 +237,8 @@ public class ResearchTableIdentify extends ResearchTableBase implements ITileRec
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         super.onTick2(aTimer, aIsServerSide);
-        // 如果有分数，可以在这里尝试推进研究进度
-        // 类似于 ResearchTableFillInPack 中的逻辑
         if (aIsServerSide && scores > 0) {
-            // scores -= tryPromoteCurrentProjectProgress(MiniGameIdentifyTask.class, scores, false);
-            // 注意：你需要创建对应的 MiniGameIdentifyTask 类
+            scores -= tryPromoteCurrentProjectProgress(MiniGameIdentifyTask.class, scores, false);
         }
     }
 
