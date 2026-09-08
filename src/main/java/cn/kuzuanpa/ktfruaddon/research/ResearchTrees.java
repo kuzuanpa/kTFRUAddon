@@ -680,7 +680,7 @@ public class ResearchTrees {
                             .addPrerequisite(todo003)
                             .addTask(new EnergyTask(TD.Energy.QU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Normal, 68719476736L))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 1048576))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 65536))
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new MiniGameIdentifyTask(384))
                             .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Naquadria,4)));
@@ -691,7 +691,7 @@ public class ResearchTrees {
                             .addPrerequisite(todo004)
                             .addTask(new EnergyTask(TD.Energy.QU, 33554432, 4096))
                             .addTask(new EnergyTask(TD.Energy.CU, 33554432, 2048))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 4194304))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 262144))
                             .addTask(new MiniGameIdentifyTask(768));
 
                     //Biology算力:分子装配的构型搜索; 从原子出发装配分子, 制造精度降到原子级
@@ -699,7 +699,7 @@ public class ResearchTrees {
                             .setPos(3580, 0)
                             .addPrerequisite(todo004)
                             .addTask(new EnergyTask(TD.Energy.QU, 16777216, 2048))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 2097152))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 131072))
                             .addTask(new ComputeTask(ComputePower.Biology, 268435456))
                             .addTask(new MiniGameFillTask(512))
                             .addTask(new ItemConsumeTaskSimple(ItemList.Proton.get(16)))
@@ -711,7 +711,7 @@ public class ResearchTrees {
                             .addPrerequisite(todo004)
                             .addTask(new EnergyTask(TD.Energy.QU, 67108864, 4096))
                             .addTask(new EnergyTask(TD.Energy.NU, 16777216, 1024))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 8388608))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 524288))
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskSimple(ItemList.Neutron.get(32)))
                             .addTask(new ItemConsumeTaskSimple(ItemList.Alpha_Particle.get(16)));
@@ -723,7 +723,7 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.QU, 134217728, 8192))
                             .addTask(new EnergyTask(TD.Energy.CU, 134217728, 4096))
                             .addTask(new ComputeTask(ComputePower.Normal, 137438953472L))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 16777216))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 1048576))
                             .addTask(new MiniGameCurrentControlTask(768))
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,32)));
@@ -734,8 +734,8 @@ public class ResearchTrees {
                             .addPrerequisite(todo008)
                             .addTask(new EnergyTask(TD.Energy.QU, 268435456, 8192))
                             .addTask(new EnergyTask(TD.Energy.TU, 4194304, 512))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 33554432))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 1048576))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 2097152))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 65536))
                             .addTask(new MiniGameIdentifyTask(768));
 
                     //第二次世界观翻转: 量子之下仍有亚量子自由度
@@ -743,8 +743,8 @@ public class ResearchTrees {
                             .setPos(3680, 70)
                             .addPrerequisite(todo008)
                             .addTask(new EnergyTask(TD.Energy.QU, 536870912, 32768))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 67108864))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 2097152))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 4194304))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 131072))
                             .addTask(new MiniGameIdentifyTask(1024));
 
                     //多个亚量子自由度稳定耦合形成的奇异物质, 一切亚量子工程的基础材料
@@ -752,8 +752,8 @@ public class ResearchTrees {
                             .setPos(3780, 70)
                             .addPrerequisite(todo010)
                             .addTask(new EnergyTask(TD.Energy.QU, 1073741824, 32768))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 134217728))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 8388608))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 8388608))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 524288))
                             .addTask(new MiniGameCurrentControlTask(1024))
                             .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,64)))
                             .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Naquadria,16)));
@@ -763,10 +763,9 @@ public class ResearchTrees {
                             .setPos(3880, 0)
                             .addPrerequisite(todo011)
                             .addTask(new EnergyTask(TD.Energy.QU, 2147483648L, 65536))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 268435456))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 16777216))
                             .addTask(new MiniGameCurrentControlTask(1024))
-                            .addTask(new MiniGameFillTask(768))
-                            .addTask(new ItemConsumeTaskSimple(ItemList.WirelessComputeNodeQuantumT4.get(4)));
+                            .addTask(new MiniGameFillTask(768));
 
                     //不再依赖化学键与晶格, 直接用强相互作用稳定核层面的结构
                     ResearchProject todo013 = new ResearchProject(tree, "强力物质理论", "不再依赖化学键、金属键与晶格结构，而是直接利用强相互作用稳定原子核层面的结构。材料性能从此不再受普通化学规律的约束", Items.paper, 0, 62)
@@ -774,8 +773,8 @@ public class ResearchTrees {
                             .addPrerequisite(todo011)
                             .addTask(new EnergyTask(TD.Energy.QU, 2147483648L, 65536))
                             .addTask(new EnergyTask(TD.Energy.NU, 134217728, 4096))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 536870912))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 33554432))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 33554432))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 2097152))
                             .addTask(new MiniGameIdentifyTask(1024));
 
                     //性能直接来自材料本身, 而不再靠堆砌材料抵抗压力
@@ -784,7 +783,7 @@ public class ResearchTrees {
                             .addPrerequisite(todo013)
                             .addTask(new EnergyTask(TD.Energy.QU, 4294967296L, 65536))
                             .addTask(new EnergyTask(TD.Energy.NU, 536870912, 8192))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 1073741824))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 67108864))
                             .addTask(new MiniGameFillTask(1024));
 
                     //研究对象从物质转向物质存在的背景本身
@@ -792,8 +791,8 @@ public class ResearchTrees {
                             .setPos(3980, 70)
                             .addPrerequisite(todo013)
                             .addTask(new EnergyTask(TD.Energy.QU, 8589934592L, 262144))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 2147483648L))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 134217728))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 134217728))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 8388608))
                             .addTask(new MiniGameIdentifyTask(1536));
 
                     //能量来源近乎无限, 但真正的限制变成了控制能力
@@ -801,8 +800,8 @@ public class ResearchTrees {
                             .setPos(4080, 70)
                             .addPrerequisite(todo015)
                             .addTask(new EnergyTask(TD.Energy.QU, 34359738368L, 1048576))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 8589934592L))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 536870912))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 536870912))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 33554432))
                             .addTask(new MiniGameCurrentControlTask(2048));
 
                     //代价用信息复杂度衡量: 后期的稀缺从矿石不够变成信息不够
@@ -810,9 +809,9 @@ public class ResearchTrees {
                             .setPos(4180, 70)
                             .addPrerequisite(todo016)
                             .addTask(new EnergyTask(TD.Energy.QU, 137438953472L, 1048576))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 34359738368L))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 2147483648L))
                             .addTask(new ComputeTask(ComputePower.Biology, 8589934592L))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 2147483648L))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 134217728))
                             .addTask(new MiniGameFillTask(2048));
 
                     //科学描述规则, 工程利用规则, 魔法操作规则, 三者在此统一
@@ -821,8 +820,8 @@ public class ResearchTrees {
                             .addPrerequisite(todo017)
                             .addTask(new EnergyTask(TD.Energy.QU, 549755813888L, 4194304))
                             .addTask(new EnergyTask(TD.Energy.TU, 34359738368L, 1048576))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 137438953472L))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 34359738368L))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 8589934592L))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 2147483648L))
                             .addTask(new MiniGameIdentifyTask(4096))
                             .addTask(new MiniGameCurrentControlTask(4096));
 
@@ -834,8 +833,8 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.TU, 274877906944L, 4194304))
                             .addTask(new ComputeTask(ComputePower.Normal, 4398046511104L))
                             .addTask(new ComputeTask(ComputePower.Biology, 274877906944L))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 1099511627776L))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 274877906944L))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 68719476736L))
+                            .addTask(new ComputeTask(ComputePower.Spacetime, 17179869184L))
                             .addTask(new MiniGameFillTask(8192))
                             .addTask(new MiniGameIdentifyTask(8192))
                             .addTask(new MiniGameCurrentControlTask(8192));

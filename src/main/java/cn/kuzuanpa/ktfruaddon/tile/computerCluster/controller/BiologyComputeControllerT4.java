@@ -33,8 +33,8 @@ public class BiologyComputeControllerT4 extends BiologyComputeController {
             .fixedLayer('F', "WNWNW WNWNW", "N A     A N", "W A AAA A W", "N A AAA A N", "WNWNW WNWNW")
             .fixedLayer('G', "WNNNW WNNNW", "N K     K N", "N K AAA K N", "N N AAA N N", "WNNNW WNNNW")
             .fixedLayer('H', "WWWWWWWWWWW", "WNNNNNNNNNW", "WNNNNNNNNNW", "WNNNNNNNNNW", "WWWWWWWWWWW")
-            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31623, MultiTileEntityMultiBlockPart.NOTHING)))
-            .where('N', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31627)))
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31060, MultiTileEntityMultiBlockPart.ONLY_ENERGY)))
+            .where('N', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31064)))
             .where('K', new ComputePartPredicate())
             .where('A', new AirPredicate())
             .setOffset(-2, 0, 0);
