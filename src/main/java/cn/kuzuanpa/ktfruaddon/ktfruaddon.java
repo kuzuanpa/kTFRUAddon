@@ -16,6 +16,8 @@
 package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.command.CommandARRecipeGen;
+import cn.kuzuanpa.ktfruaddon.command.CommandRecipeExport;
+import cn.kuzuanpa.ktfruaddon.command.CommandRecipeHeadsTails;
 import cn.kuzuanpa.ktfruaddon.command.CommandTileCodeConvert;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -49,6 +51,8 @@ public final class ktfruaddon extends Abstract_Mod {
     public void registerCommands(FMLServerStartingEvent e){
         e.registerServerCommand(new CommandTileCodeConvert());
         e.registerServerCommand(new CommandARRecipeGen());
+        e.registerServerCommand(new CommandRecipeExport());
+        e.registerServerCommand(new CommandRecipeHeadsTails());
     }
     public String getModID() {
         return "ktfruaddon";
@@ -145,4 +149,3 @@ PROXY.postInit(aEvent);
     }
 
 }
-

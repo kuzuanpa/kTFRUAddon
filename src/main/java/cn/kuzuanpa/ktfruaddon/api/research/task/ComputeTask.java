@@ -41,6 +41,8 @@ public class ComputeTask implements IResearchTask{
     @Override
     public long tryPromoteProgress(Object consume, boolean dryRun) {
         if(!(consume instanceof SingleEntry && ((SingleEntry<?,?>) consume).getKey() instanceof ComputePower && ((SingleEntry<?,?>) consume).getValue() instanceof Long))return 0;
+        ComputePower type = (ComputePower) ((SingleEntry<?, ?>) consume).getKey();
+        if(!type.equals(this.type))return 0;
         long avail = (Long) ((SingleEntry<?, ?>) consume).getValue();
         long consumeAmount = Math.min(avail, requiredAmount - finishedCount);
         if(!dryRun)finishedCount += consumeAmount;
