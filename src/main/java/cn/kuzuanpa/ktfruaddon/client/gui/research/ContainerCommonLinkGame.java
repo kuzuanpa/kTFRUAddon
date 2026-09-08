@@ -15,10 +15,10 @@
 package cn.kuzuanpa.ktfruaddon.client.gui.research;
 
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableLinkGame;
-import gregapi.gui.ContainerCommon;
+import gregapi.gui.ContainerCommonDefault;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ContainerCommonLinkGame extends ContainerCommon {
+public class ContainerCommonLinkGame extends ContainerCommonDefault {
 
     public final ResearchTableLinkGame mTile;
 
@@ -26,4 +26,10 @@ public class ContainerCommonLinkGame extends ContainerCommon {
         super(aPlayer.inventory, aTile, aGUIID);
         this.mTile = aTile;
     }
+
+    @Override public boolean doesBindPlayerInventory() {return false;}
+    @Override public int getStartIndex() {return 0;}
+    @Override public int getSlotCount() {return 0;}
+    @Override public int getShiftClickStartIndex() {return 0;}
+    @Override public int getShiftClickSlotCount() {return 0;}
 }

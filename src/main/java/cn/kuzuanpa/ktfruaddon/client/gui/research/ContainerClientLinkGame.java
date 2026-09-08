@@ -14,20 +14,19 @@
 
 package cn.kuzuanpa.ktfruaddon.client.gui.research;
 
+import cn.kuzuanpa.ktfruaddon.api.network.PacketContainerButtonPressed;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTableLinkGame;
 import gregapi.gui.ContainerClientDefault;
 import gregapi.tileentity.ITileEntityInventoryGUI;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
 
 public class ContainerClientLinkGame extends ContainerClientDefault {
 
     private final ResearchTableLinkGame mTile;
-
-    // 纹理资源：512x512 的大图，包含 16x16 个小图块
-    // 请确保这个资源文件存在于你的 mod 中
-    private static final ResourceLocation TILES_TEXTURE = new ResourceLocation("ktfruaddon", "textures/gui/research/linkgame_tiles.png");
 
     // 布局参数
     private int gridOriginX;
@@ -36,7 +35,7 @@ public class ContainerClientLinkGame extends ContainerClientDefault {
     private int gap = 2; // 间隙
 
     public ContainerClientLinkGame(InventoryPlayer aInventoryPlayer, ITileEntityInventoryGUI aTileEntity, int aGUIID) {
-        super(new ContainerCommonIdentify(aInventoryPlayer, aTileEntity, aGUIID));
+        super(new ContainerCommonLinkGame(aInventoryPlayer.player, (ResearchTableLinkGame) aTileEntity, aGUIID));
         this.mTile = (ResearchTableLinkGame) ((ContainerCommonLinkGame) inventorySlots).mTileEntity;
     }
 
@@ -69,8 +68,6 @@ public class ContainerClientLinkGame extends ContainerClientDefault {
     }
 
     private void drawGrid(int mouseX, int mouseY) {
-        mc.getTextureManager().bindTexture(TILES_TEXTURE);
-
         for (int y = 0; y < ResearchTableLinkGame.GRID_SIZE; y++) {
             for (int x = 0; x < ResearchTableLinkGame.GRID_SIZE; x++) {
                 byte tileType = mTile.grid[y][x];
@@ -79,31 +76,17 @@ public class ContainerClientLinkGame extends ContainerClientDefault {
                 int screenX = gridOriginX + x * (tileSize + gap);
                 int screenY = gridOriginY + y * (tileSize + gap);
 
-                // 计算纹理坐标
-                // 纹理被分为 16x16，每个小图块大小为 32x32 (512/16)
-                // tileType 1-16 对应索引 0-15
-                int texIndex = tileType - 1;
-                int u = (texIndex % 16) * 32;
-                int v = (texIndex / 16) * 32;
-
                 // 检查鼠标悬停
                 boolean isHovered = mouseX >= screenX && mouseX < screenX + tileSize &&
                         mouseY >= screenY && mouseY < screenY + tileSize;
 
-                // 绘制图块
-                if (isHovered) {
-                    // 悬停时稍微提亮
-                    GL11.glColor4f(1.2F, 1.2F, 1.2F, 1.0F);
-                } else {
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                }
-
-                drawTexturedModalRect(screenX, screenY, u, v, tileSize, tileSize);
-
-                // 绘制选中框
-                //if (mTile.lastClickX == x && mTile.lastClickY == y) {
-                    drawRect(screenX - 1, screenY - 1, screenX + tileSize + 1, screenY + tileSize + 1, 0xFFFF0000);
-                //}
+                int color = 0xFF000000 | ((tileType * 73) & 0xFF) << 16 | ((tileType * 131) & 0xFF) << 8 | ((tileType * 197) & 0xFF);
+                drawRect(screenX, screenY, screenX + tileSize, screenY + tileSize, color);
+                int border = mTile.lastClickX == x && mTile.lastClickY == y ? 0xFFFFFF00 : isHovered ? 0xFFFFFFFF : 0xFF30343B;
+                drawRect(screenX - 1, screenY - 1, screenX + tileSize + 1, screenY, border);
+                drawRect(screenX - 1, screenY + tileSize, screenX + tileSize + 1, screenY + tileSize + 1, border);
+                drawRect(screenX - 1, screenY, screenX, screenY + tileSize, border);
+                drawRect(screenX + tileSize, screenY, screenX + tileSize + 1, screenY + tileSize, border);
             }
         }
 
@@ -160,13 +143,14 @@ public class ContainerClientLinkGame extends ContainerClientDefault {
             int x = (mouseX - gridOriginX) / (tileSize + gap);
             int y = (mouseY - gridOriginY) / (tileSize + gap);
 
-            // 发送点击事件
-            byte[] data = new byte[]{(byte) x, (byte) y};
-            //sendContainerButtonClick(1, data);
+            int localX = (mouseX - gridOriginX) % (tileSize + gap);
+            int localY = (mouseY - gridOriginY) % (tileSize + gap);
+            if (localX >= tileSize || localY >= tileSize) return;
+            kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(mTile.getWorldObj()), mTile.xCoord, mTile.yCoord, mTile.zCoord, 1, (byte) x, (byte) y));
         } else {
             // 点击外部，尝试开始游戏
             if (!mTile.gameActive) {
-               // sendContainerButtonClick(0, null);
+                kNetworkHandler.sendToServer(new PacketContainerButtonPressed(utils.dimID(mTile.getWorldObj()), mTile.xCoord, mTile.yCoord, mTile.zCoord, 0));
             }
         }
     }

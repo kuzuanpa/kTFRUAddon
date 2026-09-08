@@ -115,9 +115,17 @@ public class ResearchTree{
         }
     }
     public void onCreated(){
+        ensureConcreteUnlocks();
         rootItem.isUnlocked = true;
         rootItem.isCompleted = true;
         rootItem.onCompleted();
+    }
+
+    /**Ensures that legacy research entries retain a concrete, usable unlock target.*/
+    public void ensureConcreteUnlocks() {
+        for (ResearchProject project : allResearch.values()) {
+            if (project != null && project != rootItem) project.addFallbackUnlockIfMissing();
+        }
     }
     public void init(){
         if(cpw.mods.fml.common.FMLCommonHandler.instance().getEffectiveSide().isServer()) allTreeUUIDsServer.put(uuid, this);
