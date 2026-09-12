@@ -42,5 +42,12 @@ public class itemParticle extends MultiItemRandom {
         ItemList.Higgs_Boson.set(addItem(1008, "Higgs-Boson", "A Standard Model particle. Origin of mass. "));
         ItemList.Kerr_Blackhole.set(addItem(1009, "Kerr Blackhole", "An extremely rare tiny blackhole that can be manually produced in particle collider "));
 
+        ItemList.LaserTargetDT.set(addItem(1100, "Deuterium-Tritium Target Pellet", "Consumed by a laser fusion pulse."));
+        ItemList.LaserTargetLi6.set(addItem(1101, "Lithium-6 Breeding Target", "Consumes a laser pulse to breed tritium."));
+        ItemList.LaserTargetLead.set(addItem(1102, "Lead Isotope Target", "Industrial laser fusion target."));
+        ItemList.LaserTargetTantalum.set(addItem(1103, "Tantalum Isotope Target", "Industrial laser fusion target."));
+        ItemList.LaserTargetGraphite.set(addItem(1104, "Graphite Compression Target", "Industrial laser fusion target."));
+        ItemList.LaserTargetBismuth.set(addItem(1105, "Bismuth Superheavy Target", "High-energy industrial laser fusion target."));
+
     }
 }
