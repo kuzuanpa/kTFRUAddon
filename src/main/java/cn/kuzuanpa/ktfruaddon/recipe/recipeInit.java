@@ -23,6 +23,7 @@ public class recipeInit {
     public static void init(FMLPostInitializationEvent aEvent){
         HeatMixer.init();
         ParticleCollinder.init();
+        PurityRefining.init();
         OreProcessing.init();
         Chemistry.init();
         Circuits.init();
