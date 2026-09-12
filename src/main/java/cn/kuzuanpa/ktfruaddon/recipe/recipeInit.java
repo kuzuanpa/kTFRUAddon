@@ -24,6 +24,7 @@ public class recipeInit {
         HeatMixer.init();
         ParticleCollinder.init();
         PurityRefining.init();
+        QuantumEntry.init();
         OreProcessing.init();
         Chemistry.init();
         Circuits.init();

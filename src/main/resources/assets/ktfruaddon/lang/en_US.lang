@@ -1594,3 +1594,13 @@ ktfru.multitileentity.multiblock.laser_fusion.industrial=Laser Inertial Fusion T
 ktfru.recipe.fusion.laser=Laser Inertial Fusion
 ktfru.text.multiblock.laser_fusion.pulse=Charge LU through Pulse Storage Modules; each recipe discharges one complete pulse.
 ktfru.text.multiblock.laser_fusion.peak=Peak pulse energy is determined by the installed Laser Arrays.
+
+ktfru.multitileentity.30070=Mirror Gold Synthesis Chamber
+ktfru.multitileentity.30071=Quantum Communication Relay
+ktfru.multitileentity.31111=Quantum Coherence Chamber Wall
+ktfru.multitileentity.31112=Quantum Stabilization Substrate
+ktfru.multitileentity.31113=Entanglement Channel Module
+ktfru.multitileentity.31114=Quantum Readout Coil
+gt.material.MirrorGold=Mirror Gold
+ktfru.recipe.mirror_gold_synthesis=Mirror Gold Synthesis
+ktfru.text.quantum_relay.discovery=Pair two relays with a screwdriver: the primary consumes analytical-pure Intellite and the other consumes analytical-pure Nq_522; calibration discovers Mirror Gold and outputs QU.

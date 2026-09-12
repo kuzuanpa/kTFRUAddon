@@ -1899,3 +1899,13 @@ ktfru.multitileentity.multiblock.laser_fusion.industrial=激光惯性约束聚�
 ktfru.recipe.fusion.laser=激光惯性约束聚变
 ktfru.text.multiblock.laser_fusion.pulse=通过脉冲储能模块充入 LU；每个配方会释放一个完整脉冲。
 ktfru.text.multiblock.laser_fusion.peak=峰值脉冲能量由已安装的激光阵列数量决定。
+
+ktfru.multitileentity.30070=镜金合成腔
+ktfru.multitileentity.30071=量子通信中继器
+ktfru.multitileentity.31111=相干腔壁
+ktfru.multitileentity.31112=量子稳定衬底
+ktfru.multitileentity.31113=纠缠信道模块
+ktfru.multitileentity.31114=量子读出线圈
+gt.material.MirrorGold=镜金
+ktfru.recipe.mirror_gold_synthesis=镜金合成
+ktfru.text.quantum_relay.discovery=将两台中继器用螺丝刀配对：主端消耗分析纯智金，另一端消耗分析纯 Nq_522；通信校准会发现镜金并输出 QU。

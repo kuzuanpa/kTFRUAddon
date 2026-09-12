@@ -51,7 +51,7 @@ public enum matList {
 
     ,/**CaiXuKunMeme**/ HensSoPretty
 
-    ,/**智金**/Ij
+    ,/**智金**/Ij,/**镜金**/MirrorGold,/**量金**/QuantumGold
 
     ;
     //PC,聚碳酸酯/工程塑料: MT.Polycarbonate

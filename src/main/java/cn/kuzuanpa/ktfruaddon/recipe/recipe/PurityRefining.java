@@ -6,6 +6,7 @@
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
+import cn.kuzuanpa.ktfruaddon.api.material.matList;
 import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import gregapi.data.FL;
@@ -31,13 +32,13 @@ public final class PurityRefining {
         // Oxophilic / valve metals: alkaline leach and chloride re-distillation.
         registerValveMetals(MT.Al, MT.Ti, MT.Zr, MT.Nb, MT.Ta, MT.Cr);
         // Noble metals: chloride complexation followed by selective reduction.
-        registerNobleMetals(MT.Au, MT.Pt, MT.Pd, MT.Rh, MT.Ir, MT.Os);
+        registerNobleMetals(MT.Au, MT.Pt, MT.Pd, MT.Rh, MT.Ir, MT.Os, matList.Ij.mat);
         // Refractory metal: hydrogen reduction followed by vacuum-grade degassing.
         registerRefractoryMetal(MT.W);
         // Semiconductor precursors: volatile-halide purification and zone-refining equivalent.
         registerSemiconductors(MT.Si, MT.Ge, MT.Ga, MT.In);
         // Nuclear feedstocks: nitric dissolution / ion separation; no ores or isotopes are created.
-        registerNuclearMaterials(MT.U_238, MT.Th);
+        registerNuclearMaterials(MT.U_238, MT.Th, MT.Nq_522);
     }
 
     private static void registerAcidMetals(OreDictMaterial... materials) {
