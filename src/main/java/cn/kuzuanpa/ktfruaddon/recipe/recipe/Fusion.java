@@ -37,14 +37,39 @@ public class Fusion {
         recipeMaps.LaserFusion.addRecipeX(F, 4096, 1, ST.array(ItemList.LaserTargetLi6.get(1)),
                 FL.array(MT.D.gas(2 * U, T)), FL.array(MT.T.gas(2 * U, F), MT.He.gas(U100, F)), ItemList.Neutron.get(1)).setSpecialNumber(12000000L);
 
+        // R03: industrial irradiation produces artificial intermediates rather
+        // than ordinary metals. They feed the dedicated nuclear-material chain.
         recipeMaps.LaserFusion.addRecipeX(F, 8192, 1, ST.array(ItemList.LaserTargetLead.get(1)),
-                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(U100, F)), OP.dustTiny.mat(MT.Bi, 2)).setSpecialNumber(100000000L);
+                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(U100, F)), ItemList.NeutronRichBismuth.get(2)).setSpecialNumber(100000000L);
         recipeMaps.LaserFusion.addRecipeX(F, 8192, 1, ST.array(ItemList.LaserTargetTantalum.get(1)),
-                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(U100, F)), OP.dustTiny.mat(MT.W, 2)).setSpecialNumber(120000000L);
+                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(U100, F)), ItemList.MetastableTantalum.get(2)).setSpecialNumber(120000000L);
         recipeMaps.LaserFusion.addRecipeX(F, 8192, 1, ST.array(ItemList.LaserTargetGraphite.get(1)),
-                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(U100, F)), OP.dustTiny.mat(MT.Graphene, 1)).setSpecialNumber(150000000L);
-        recipeMaps.LaserFusion.addRecipeX(F, 32768, 1, ST.array(ItemList.LaserTargetBismuth.get(1)),
-                FL.array(MT.D.gas(8 * U, T)), FL.array(MT.He.gas(U100, F)), OP.dustTiny.mat(MT.Nq, 1)).setSpecialNumber(1000000000L);
+                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(U100, F)), ItemList.DenseGraphenePrecursor.get(1)).setSpecialNumber(150000000L);
+
+        // R04: 900M LU stays below the industrial chamber's 983,040,000 LU
+        // peak while remaining exclusive to that chamber. The alpha particle is
+        // a non-recoverable trigger, not a source of energy or common matter.
+        recipeMaps.LaserFusion.addRecipeX(F, 32768, 1, ST.array(ItemList.LaserTargetBismuth.get(1), ItemList.Alpha_Particle.get(1)),
+                FL.array(MT.D.gas(8 * U, T)), FL.array(MT.He.gas(U100, F)), ItemList.SuperheavyNuclidePrecursor.get(1)).setSpecialNumber(900000000L);
+
+        // R03/R04 refinement loop. Each fusion product has an explicit, limited
+        // downstream use; no recipe returns a target pellet, energy, or an ore.
+        recipeMaps.NeutronAbsorption.addRecipe1(F, 8192, 600, ItemList.NeutronRichBismuth.get(2),
+                FL.array(MT.n.gas(U100, T)), ZL_FS, ItemList.NuclearTargetSubstrate.get(1));
+        recipeMaps.Assembler.addRecipeX(F, 8192, 600,
+                ST.array(ItemList.MetastableTantalum.get(2), OP.wireFine.mat(MT.Pt, 16), ItemList.ComputerUltimateCircuits.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, ItemList.QuantumControlElement.get(1));
+        recipeMaps.CVD.addRecipeX(F, 8192, 1200, ST.array(ItemList.DenseGraphenePrecursor.get(1)),
+                FL.array(MT.H.gas(4 * U, T)), ZL_FS, OP.foil.mat(MT.Graphene, 1));
+        recipeMaps.Assembler.addRecipeX(F, 32768, 1200,
+                ST.array(ItemList.SuperheavyNuclidePrecursor.get(1), ItemList.NuclearTargetSubstrate.get(1), ItemList.MetastableTantalum.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, ItemList.NaquadriaPrecursor.get(1));
+        // The final refinement is deliberately expensive and produces only a
+        // tiny unit. It closes the chain into existing Naquadria-based recipes
+        // without making the laser chamber a general-purpose matter source.
+        recipeMaps.HeatMixer.addRecipeX(F, 32768, 2400,
+                ST.array(ItemList.NaquadriaPrecursor.get(1), ItemList.QuantumControlElement.get(1)),
+                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dustTiny.mat(MT.Nq, 1));
 
         // Target pellets and both chamber controllers are regular manufacturing
         // products; the reactor never creates its own fuel or structure parts.

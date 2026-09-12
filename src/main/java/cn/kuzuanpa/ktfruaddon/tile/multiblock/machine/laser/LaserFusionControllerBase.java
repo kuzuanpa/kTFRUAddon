@@ -195,8 +195,8 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
     @Override public boolean onTickCheck(long timer) { return super.onTickCheck(timer) || mState.isChangedAndClear(); }
     @Override public void addToolTips(List<String> tips, ItemStack stack, boolean f3) {
         tips.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
-        tips.add(LH.Chat.WHITE + "Charge LU through Pulse Storage Modules; a recipe discharges one complete pulse.");
-        tips.add(LH.Chat.WHITE + "Peak energy is set by the number of Laser Arrays.");
+        tips.add(LH.Chat.WHITE + LH.get(I18nHandler.LASER_FUSION_TOOLTIP_PULSE));
+        tips.add(LH.Chat.WHITE + LH.get(I18nHandler.LASER_FUSION_TOOLTIP_PEAK));
         super.addToolTips(tips, stack, f3);
     }
     @Override public boolean onBlockActivated3(EntityPlayer player, byte side, float hitX, float hitY, float hitZ) {

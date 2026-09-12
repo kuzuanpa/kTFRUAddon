@@ -1553,3 +1553,44 @@ ktfru.text.research.compute.status.unbound=No compute cluster is bound; sneak-ri
 ktfru.text.research.compute.status.offline=The bound compute cluster is offline or unloaded
 ktfru.text.research.compute.status.insufficient=The cluster does not have enough %s compute power
 ktfru.text.research.compute.status.running=Continuously consuming %s
+
+# Laser inertial fusion: targets and artificial nuclear-material chain
+ktfru.item.particle.1100=Deuterium-Tritium Target Pellet
+ktfru.item.particle.1100.tooltip=Single-use target for experimental laser fusion.
+ktfru.item.particle.1101=Lithium-6 Tritium-Breeding Target
+ktfru.item.particle.1101.tooltip=Single-use target that converts a costly laser pulse into tritium.
+ktfru.item.particle.1102=Lead Isotope Target
+ktfru.item.particle.1102.tooltip=Industrial target for neutron-rich bismuth isotope production.
+ktfru.item.particle.1103=Tantalum Isotope Target
+ktfru.item.particle.1103.tooltip=Industrial target for metastable tantalum isotope production.
+ktfru.item.particle.1104=Graphite Compression Target
+ktfru.item.particle.1104.tooltip=Industrial target for high-density graphene precursor production.
+ktfru.item.particle.1105=Bismuth Superheavy Target
+ktfru.item.particle.1105.tooltip=Industrial target for superheavy-nuclide synthesis; requires an alpha trigger.
+ktfru.item.particle.1106=Neutron-Rich Bismuth Isotope
+ktfru.item.particle.1106.tooltip=Artificial isotope. Absorb neutrons to prepare a nuclear target substrate.
+ktfru.item.particle.1107=Metastable Tantalum Isotope
+ktfru.item.particle.1107.tooltip=Artificial isotope consumed in quantum control and Naquadria precursor assembly.
+ktfru.item.particle.1108=High-Density Graphene Precursor
+ktfru.item.particle.1108.tooltip=Laser-compressed carbon precursor. Refine it with hydrogen in a CVD.
+ktfru.item.particle.1109=Nuclear Target Substrate
+ktfru.item.particle.1109.tooltip=Neutron-conditioned substrate required to stabilize a Naquadria precursor.
+ktfru.item.particle.1110=High-Energy Quantum Control Element
+ktfru.item.particle.1110.tooltip=Metastable-tantalum control element consumed during Naquadria refinement.
+ktfru.item.particle.1111=Superheavy Nuclide Precursor
+ktfru.item.particle.1111.tooltip=Short-lived artificial nuclear matter. Assemble it into a Naquadria precursor immediately.
+ktfru.item.particle.1112=Naquadria Precursor
+ktfru.item.particle.1112.tooltip=Refine with helium and a quantum control element to obtain a tiny Naquadria dust.
+
+# Laser inertial fusion machines and UI
+ktfru.multitileentity.30060=Laser Inertial Fusion Target Chamber (Experimental)
+ktfru.multitileentity.30061=Laser Inertial Fusion Target Chamber (Industrial)
+ktfru.multitileentity.31060=Laser Fusion Focusing Array
+ktfru.multitileentity.31061=Laser Fusion Target Injector
+ktfru.multitileentity.31062=Laser Fusion Pulse Storage Module
+ktfru.multitileentity.31063=Laser Fusion Neutron Product Collector
+ktfru.multitileentity.multiblock.laser_fusion.experimental=Laser Inertial Fusion Target Chamber (Experimental)
+ktfru.multitileentity.multiblock.laser_fusion.industrial=Laser Inertial Fusion Target Chamber (Industrial)
+ktfru.recipe.fusion.laser=Laser Inertial Fusion
+ktfru.text.multiblock.laser_fusion.pulse=Charge LU through Pulse Storage Modules; each recipe discharges one complete pulse.
+ktfru.text.multiblock.laser_fusion.peak=Peak pulse energy is determined by the installed Laser Arrays.

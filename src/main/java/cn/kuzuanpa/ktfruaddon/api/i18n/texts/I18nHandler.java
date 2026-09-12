@@ -42,6 +42,8 @@ public class I18nHandler {
             , OUTPUTTING="ktfru.text.common.outputting"
             , AUTO="ktfru.text.common.auto"
             , HAS_PROJECTOR_STRUCTURE="ktfru.text.common.structure_projector"
+            , LASER_FUSION_TOOLTIP_PULSE="ktfru.text.multiblock.laser_fusion.pulse"
+            , LASER_FUSION_TOOLTIP_PEAK="ktfru.text.multiblock.laser_fusion.peak"
             , ALLOW_PART_SHARE="ktfru.text.common.part_share"
             , HAS_USB_IO_CLICK="ktfru.text.common.usb_io_click"
             , REQUIRE_MANA_BURST="ktfru.text.common.require_mana_burst"

@@ -1858,3 +1858,44 @@ gt.material.SodiumAcetate=醋酸钠
 gt.material.Ketene=乙烯酮
 gt.material.PhosphorusPentoxide=五氧化二磷
 gt.material.TitanicSulfate=硫酸钛
+
+# 激光惯性约束聚变：靶丸与人工核材料链
+ktfru.item.particle.1100=氘氚靶丸
+ktfru.item.particle.1100.tooltip=实验型激光聚变使用的一次性靶丸。
+ktfru.item.particle.1101=锂-6 氚增殖靶
+ktfru.item.particle.1101.tooltip=以高成本激光脉冲增殖氚的一次性靶丸。
+ktfru.item.particle.1102=铅同位素靶
+ktfru.item.particle.1102.tooltip=用于制备中子富集铋同位素的工业靶丸。
+ktfru.item.particle.1103=钽同位素靶
+ktfru.item.particle.1103.tooltip=用于制备亚稳态钽同位素的工业靶丸。
+ktfru.item.particle.1104=石墨压缩靶
+ktfru.item.particle.1104.tooltip=用于制备高密度石墨烯前驱体的工业靶丸。
+ktfru.item.particle.1105=铋超重核素靶
+ktfru.item.particle.1105.tooltip=用于合成超重核素的工业靶丸；需要 α 粒子触发。
+ktfru.item.particle.1106=中子富集铋同位素
+ktfru.item.particle.1106.tooltip=人工同位素。吸收中子后可制备核素靶基底。
+ktfru.item.particle.1107=亚稳态钽同位素
+ktfru.item.particle.1107.tooltip=用于量子控制元件和 Naquadria 前体组装的人工同位素。
+ktfru.item.particle.1108=高密度石墨烯前驱体
+ktfru.item.particle.1108.tooltip=激光压缩碳前驱体；在化学气相沉积机中通入氢气精炼。
+ktfru.item.particle.1109=核素靶基底
+ktfru.item.particle.1109.tooltip=经中子调制的靶基底，用于稳定 Naquadria 前体。
+ktfru.item.particle.1110=高能量子控制元件
+ktfru.item.particle.1110.tooltip=由亚稳态钽制成，在 Naquadria 精炼时消耗。
+ktfru.item.particle.1111=超重核素前驱体
+ktfru.item.particle.1111.tooltip=短寿命人工核物质；应立即组装为 Naquadria 前体。
+ktfru.item.particle.1112=Naquadria 前体
+ktfru.item.particle.1112.tooltip=在高温搅拌机中消耗氦和量子控制元件，精炼为微小 Naquadria 粉。
+
+# 激光惯性约束聚变机器与界面
+ktfru.multitileentity.30060=激光惯性约束聚变靶室（实验型）
+ktfru.multitileentity.30061=激光惯性约束聚变靶室（工业型）
+ktfru.multitileentity.31060=激光聚变聚焦阵列
+ktfru.multitileentity.31061=激光聚变靶丸注入器
+ktfru.multitileentity.31062=激光聚变脉冲储能模块
+ktfru.multitileentity.31063=激光聚变中子/产物收集器
+ktfru.multitileentity.multiblock.laser_fusion.experimental=激光惯性约束聚变靶室（实验型）
+ktfru.multitileentity.multiblock.laser_fusion.industrial=激光惯性约束聚变靶室（工业型）
+ktfru.recipe.fusion.laser=激光惯性约束聚变
+ktfru.text.multiblock.laser_fusion.pulse=通过脉冲储能模块充入 LU；每个配方会释放一个完整脉冲。
+ktfru.text.multiblock.laser_fusion.peak=峰值脉冲能量由已安装的激光阵列数量决定。

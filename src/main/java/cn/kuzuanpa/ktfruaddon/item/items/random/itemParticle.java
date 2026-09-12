@@ -49,5 +49,15 @@ public class itemParticle extends MultiItemRandom {
         ItemList.LaserTargetGraphite.set(addItem(1104, "Graphite Compression Target", "Industrial laser fusion target."));
         ItemList.LaserTargetBismuth.set(addItem(1105, "Bismuth Superheavy Target", "High-energy industrial laser fusion target."));
 
+        // These are deliberately artificial nuclear materials. They have no ore
+        // dictionary entries and are consumed only by the late-game fusion chain.
+        ItemList.NeutronRichBismuth.set(addItem(1106, "Neutron-Rich Bismuth Isotope", "Artificial isotope from an industrial lead target."));
+        ItemList.MetastableTantalum.set(addItem(1107, "Metastable Tantalum Isotope", "Artificial isotope for high-energy control components."));
+        ItemList.DenseGraphenePrecursor.set(addItem(1108, "High-Density Graphene Precursor", "Laser-compressed carbon precursor; refine it before use."));
+        ItemList.NuclearTargetSubstrate.set(addItem(1109, "Nuclear Target Substrate", "Neutron-conditioned substrate for superheavy target synthesis."));
+        ItemList.QuantumControlElement.set(addItem(1110, "High-Energy Quantum Control Element", "A metastable-tantalum control component for later quantum machinery."));
+        ItemList.SuperheavyNuclidePrecursor.set(addItem(1111, "Superheavy Nuclide Precursor", "Short-lived artificial nuclear matter requiring immediate refinement."));
+        ItemList.NaquadriaPrecursor.set(addItem(1112, "Naquadria Precursor", "Fusion-made precursor for the late-game Naquadria material chain."));
+
     }
 }
