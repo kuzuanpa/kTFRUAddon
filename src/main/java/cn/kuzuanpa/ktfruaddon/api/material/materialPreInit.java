@@ -404,7 +404,7 @@ public class materialPreInit {
         //镜金：量子通信链路中由硅岩显现的宏观相干材料
         matList.MirrorGold.registerC(22131,"MirrorGold","Mirror Gold",1064,2856,230,220,128,255,"Mg")
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.FOILS);
-        //量金：将镜金的量子关联转化为可宏观驱动的工程材料
+        //量金：镜金经量子化过程后形成的宏观量子工程材料
         matList.QuantumGold.registerC(22132,"QuantumGold","Quantum Gold",1280,4096,180,96,255,255,"Qg")
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.FOILS);
         //22400-22499 reserved for Purification

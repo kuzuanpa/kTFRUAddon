@@ -77,38 +77,33 @@ public final class QuantumEntry {
                 FL.array(MT.SolderingAlloy.liquid(CS.U2, CS.F)), CS.ZL_FS,
                 registry.getItem(31114));
 
-        // Q2-R01: quantumization is a hard absolute-purity gate; this is the
-        // first process that turns preserved coherence into a driven degree of freedom.
-        recipeMaps.MirrorGoldSynthesis.addRecipeX(CS.F, 16384, 2400,
+        // Q2-R01: quantumization is an in-machine operation, not an
+        // intermediate material.  It prepares the field components that the
+        // synthesis chamber must contain before it can form Quantum Gold.
+        recipeMaps.MirrorGoldQuantumization.addRecipeX(CS.F, 16384, 2400,
                 ST.array(OP.plate.mat(matList.MirrorGold.mat, 1),
                         prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 8),
-                        prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4)),
-                CS.ZL_FS, CS.ZL_FS, OP.plate.mat(matList.QuantumGold.mat, 1));
-
-        // Q2-R02: Naquadria supplies the anomalous nuclear precursor while
-        // absolute-purity Intellite selects the macroscopic quantum lattice.
-        recipeMaps.MirrorGoldSynthesis.addRecipeX(CS.F, 65536, 4800,
-                ST.array(OP.plate.mat(matList.QuantumGold.mat, 1),
-                        OP.dustTiny.mat(MT.Naquadria, 8),
-                        OP.nugget.mat(matList.Ij.mat, 16),
-                        prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 8)),
-                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.QuantumGold.mat, 1));
-
-        // Q2-R03/Q2-R04.  The required pure inputs are all covered by
-        // PurityRefining: Ij and Nq_522 have commercial -> analytical -> absolute routes.
-        recipeMaps.Assembler.addRecipeX(CS.F, 32768, 3200,
-                ST.array(OP.plate.mat(matList.QuantumGold.mat, 2),
-                        prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 4),
-                        OP.foil.mat(matList.MirrorGold.mat, 4),
+                        prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4),
                         IL.Emitter_LuV.get(2), IL.Circuit_Ultimate.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(CS.U4, CS.F)), CS.ZL_FS,
                 registry.getItem(31115));
-        recipeMaps.Assembler.addRecipeX(CS.F, 32768, 3200,
-                ST.array(OP.plate.mat(matList.QuantumGold.mat, 1),
+        recipeMaps.MirrorGoldQuantumization.addRecipeX(CS.F, 16384, 2400,
+                ST.array(OP.foil.mat(matList.MirrorGold.mat, 4),
                         prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4),
                         registry.getItem(31112), OP.wireFine.mat(MT.Naquadria, 16),
                         IL.Circuit_Ultimate.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(CS.U4, CS.F)), CS.ZL_FS,
                 registry.getItem(31116));
+
+        // Q2-R02: all quantumization remains inside the multi-block field;
+        // Mirror Gold is consumed directly and no "quantumized Mirror Gold"
+        // item exists or can bypass the chamber.
+        recipeMaps.QuantumGoldSynthesis.addRecipeX(CS.F, 65536, 4800,
+                ST.array(OP.plate.mat(matList.MirrorGold.mat, 1),
+                        OP.dustTiny.mat(MT.Naquadria, 8),
+                        OP.nugget.mat(matList.Ij.mat, 16),
+                        prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 8)),
+                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.QuantumGold.mat, 1));
+
     }
 }

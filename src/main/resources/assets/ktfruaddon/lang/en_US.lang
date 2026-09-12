@@ -1597,10 +1597,17 @@ ktfru.text.multiblock.laser_fusion.peak=Peak pulse energy is determined by the i
 
 ktfru.multitileentity.30070=Mirror Gold Synthesis Chamber
 ktfru.multitileentity.30071=Quantum Communication Relay
+ktfru.multitileentity.30072=Mirror Gold Quantumization Furnace
+ktfru.multitileentity.30073=Quantum Gold Synthesis Chamber
 ktfru.multitileentity.31111=Quantum Coherence Chamber Wall
 ktfru.multitileentity.31112=Quantum Stabilization Substrate
 ktfru.multitileentity.31113=Entanglement Channel Module
 ktfru.multitileentity.31114=Quantum Readout Coil
+ktfru.multitileentity.31115=Quantum Gold Drive Module
+ktfru.multitileentity.31116=Quantum Gold Lattice Stabilizer
 gt.material.MirrorGold=Mirror Gold
+gt.material.QuantumGold=Quantum Gold
 ktfru.recipe.mirror_gold_synthesis=Mirror Gold Synthesis
+ktfru.recipe.mirror_gold_quantumization=Mirror Gold Quantumization
+ktfru.recipe.quantum_gold_synthesis=Quantum Gold Synthesis
 ktfru.text.quantum_relay.discovery=Pair two relays with a screwdriver: the primary consumes analytical-pure Intellite and the other consumes analytical-pure Nq_522; calibration discovers Mirror Gold and outputs QU.

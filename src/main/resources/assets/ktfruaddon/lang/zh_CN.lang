@@ -1902,10 +1902,17 @@ ktfru.text.multiblock.laser_fusion.peak=峰值脉冲能量由已安装的激光�
 
 ktfru.multitileentity.30070=镜金合成腔
 ktfru.multitileentity.30071=量子通信中继器
+ktfru.multitileentity.30072=镜金量子化炉
+ktfru.multitileentity.30073=量金合成腔
 ktfru.multitileentity.31111=相干腔壁
 ktfru.multitileentity.31112=量子稳定衬底
 ktfru.multitileentity.31113=纠缠信道模块
 ktfru.multitileentity.31114=量子读出线圈
+ktfru.multitileentity.31115=量金驱动模块
+ktfru.multitileentity.31116=量金晶格稳定器
 gt.material.MirrorGold=镜金
+gt.material.QuantumGold=量金
 ktfru.recipe.mirror_gold_synthesis=镜金合成
+ktfru.recipe.mirror_gold_quantumization=镜金量子化
+ktfru.recipe.quantum_gold_synthesis=量金合成
 ktfru.text.quantum_relay.discovery=将两台中继器用螺丝刀配对：主端消耗分析纯智金，另一端消耗分析纯 Nq_522；通信校准会发现镜金并输出 QU。
