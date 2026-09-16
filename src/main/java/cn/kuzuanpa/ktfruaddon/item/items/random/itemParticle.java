@@ -56,7 +56,7 @@ public class itemParticle extends MultiItemRandom {
         ItemList.DenseGraphenePrecursor.set(addItem(1108, "High-Density Graphene Precursor", "Laser-compressed carbon precursor; refine it before use."));
         ItemList.NuclearTargetSubstrate.set(addItem(1109, "Nuclear Target Substrate", "Neutron-conditioned substrate for superheavy target synthesis."));
         ItemList.QuantumControlElement.set(addItem(1110, "High-Energy Quantum Control Element", "A metastable-tantalum control component for later quantum machinery."));
-        ItemList.SuperheavyNuclidePrecursor.set(addItem(1111, "Superheavy Nuclide Precursor", "Short-lived artificial nuclear matter requiring immediate refinement."));
+        ItemList. SuperheavyNuclidePrecursor.set(addItem(1111, "Superheavy Nuclide Precursor", "Short-lived artificial nuclear matter requiring immediate refinement."));
         ItemList.NaquadriaPrecursor.set(addItem(1112, "Naquadria Precursor", "Fusion-made precursor for the late-game Naquadria material chain."));
 
     }

@@ -40,6 +40,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import zmaster587.libVulpes.items.ItemProjector;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -75,7 +76,6 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
     protected abstract long peakEnergyPerLaserArray();
     protected abstract long maxPulseInputPacket();
     protected abstract int cooldownTicks();
-    protected abstract String controllerName();
     protected abstract String texturePath();
 
     @Override public void readFromNBT2(NBTTagCompound nbt) {
@@ -218,7 +218,20 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
         return BlockTextureMulti.get(BlockTextureDefault.get(base), BlockTextureDefault.get(new Textures.BlockIcons.CustomIcon(texturePath() + "/overlay_" + state)));
     }
 
-    @Override public IPacket getClientDataPacket(boolean all) { return getClientDataPacketByteArray(all, getDirectionData(), mState.get()); }
-    @Override public boolean receiveDataByteArray(byte[] data, INetworkHandler network) { if (data.length > 1) mState.set(data[1]); return true; }
-    @Override public String getTileEntityName() { return controllerName(); }
+    @Override public IPacket getClientDataPacket(boolean aSendAll) {
+        return aSendAll ?
+                this.getClientDataPacketByteArray(aSendAll, (byte) UT.Code.getR(this.mRGBa), (byte) UT.Code.getG(this.mRGBa), (byte) UT.Code.getB(this.mRGBa), this.getVisualData(), this.getDirectionData(), mState.get()) :
+                this.getClientDataPacketByteArray(aSendAll, this.getVisualData(), mState.get());
+    }
+    @Override public boolean receiveDataByteArray(byte[] data, INetworkHandler network) {
+        if (data.length > 2) {
+            byte[] array = Arrays.copyOf(data, 5);
+            super.receiveDataByteArray(array, network);
+            mState.set(data[5]);
+        }else{
+            super.receiveDataByte(data[0], network);
+            mState.set(data[1]);
+        }
+        return true;
+    }
 }

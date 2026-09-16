@@ -35,6 +35,11 @@ public final class LaserFusionExperimental extends LaserFusionControllerBase {
     @Override protected long peakEnergyPerLaserArray() { return 2L * 1024L * 1024L; }
     @Override protected long maxPulseInputPacket() { return 131072L; }
     @Override protected int cooldownTicks() { return 20 * 12; }
-    @Override protected String controllerName() { return "ktfru.multitileentity.multiblock.laser_fusion.experimental"; }
+
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.multiblock.laser_fusion.experimental";
+    }
+
     @Override protected String texturePath() { return "machines/fusion/laser/experimental"; }
 }

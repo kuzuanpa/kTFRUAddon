@@ -25,7 +25,6 @@ import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
 import cn.kuzuanpa.ktfruaddon.tile.machine.TFCPresser;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator.SunHeaterMirrorLarge;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.storage.LiquidBattery;
-import cn.kuzuanpa.ktfruaddon.tile.multiblock.example.exampleMachineModel;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.CNCMachine3;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.ElectromagnetCrucible;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.MaskAlignerUVPlus;
@@ -74,7 +73,6 @@ public class clientProxy extends commonProxy {
 
     @SideOnly(Side.CLIENT)
     public void registerRenderers(){
-        ClientRegistry.bindTileEntitySpecialRenderer(exampleMachineModel.class, new TESRExampleMultiBlock());
         ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirror.class, new TESRSunBoilerMirror());
         ClientRegistry.bindTileEntitySpecialRenderer(SunHeaterMirrorLarge.class, new TESRSunBoilerMirrorLarge());
         ClientRegistry.bindTileEntitySpecialRenderer(WaterMill.class, new TESRWaterMill());

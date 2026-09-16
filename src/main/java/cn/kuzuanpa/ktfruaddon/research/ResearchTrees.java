@@ -19,10 +19,7 @@ import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.material.matList;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
-import cn.kuzuanpa.ktfruaddon.api.research.task.ComputeTask;
-import cn.kuzuanpa.ktfruaddon.api.research.task.EnergyTask;
-import cn.kuzuanpa.ktfruaddon.api.research.task.FluidConsumeTaskSimple;
-import cn.kuzuanpa.ktfruaddon.api.research.task.ItemConsumeTaskSimple;
+import cn.kuzuanpa.ktfruaddon.api.research.task.*;
 import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameCurrentControlTask;
 import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameFillTask;
 import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameIdentifyTask;
@@ -231,6 +228,7 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,4)))
                             .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Sn,8)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30003)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30077)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30009)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30010)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30011)));
@@ -284,7 +282,8 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(32))
                             .addTask(new ItemConsumeTaskSimple(ItemList.EngineCrankShaftManual1.get(1)))
                             .addTask(new ItemConsumeTaskSimple(ItemList.EngineCylinderManual1.get(1)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,8)));
+                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,8)))
+                            .addUnlockItem(new ItemType(ST.make(MD.GC_ADV_ROCKETRY, "rocketBuilder",1)));
 
                     //Fill:空间站布局规划; 不锈钢结构+Al隔热+Glass密封管
                     ResearchProject spaceTheory = new ResearchProject(tree, "空间概论", "研究太空中如何进行航行和维持生命等", Items.paper, 0, 23)
@@ -293,7 +292,8 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 8192))
                             .addTask(new MiniGameFillTask(64))
                             .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,16)));
+                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,16)))
+                            .addUnlockItem(new ItemType(ST.make(MD.GC_ADV_ROCKETRY, "tile.guidanceComputer",1)));
 
                     //CurrentControl:气体流量控制; Glass容器+Ar保护气+Steel容器
                     ResearchProject protectionUsage = new ResearchProject(tree, "保护气应用", "研究如何利用保护气制作纯度更高，性能更好的物品", Items.paper, 0, 24)
@@ -301,7 +301,7 @@ public class ResearchTrees {
                             .addPrerequisite(computerSystemTheory)
                             .addTask(new MiniGameCurrentControlTask(16))
                             .addTask(new FluidConsumeTaskSimple(FL.Argon.fluid(), 8000))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Steel,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.foil.mat(MT.Steel,4)))
                             .addUnlockItem(new ItemType(IL.Comp_Laser_Gas_He.get(1)))
                             .addUnlockItem(new ItemType(IL.Comp_Laser_Gas_Ne.get(1)))
                             .addUnlockItem(new ItemType(IL.Comp_Laser_Gas_Ar.get(1)))
@@ -319,9 +319,9 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 8192))
                             .addTask(new MiniGameCurrentControlTask(64))
                             .addTask(new MiniGameFillTask(32))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Si,8)))
+                            .addTask(new ItemConsumeTaskScope(OP.wireFine.mat(MT.Au,32)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Polycarbonate,4)))
                             .addUnlockItem(new ItemType(ItemList.ComputerTF3586.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerTF3586S.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGoodCircuits.get(1)));
@@ -333,8 +333,12 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.RU, 8192, 16))
                             .addTask(new ComputeTask(ComputePower.Normal, 8192))
                             .addTask(new MiniGameFillTask(64))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Titanium,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.rotor.mat(MT.Titanium,2)));
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Titanium,8)))
+                            .addTask(new ItemConsumeTaskScope(OP.rotor.mat(MT.Titanium,2)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30020)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30021)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30022)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30023)));
 
                     //Identify:辨别原子信号; U放射性源+Pb屏蔽+Au探测器
                     ResearchProject nuclearStructure = new ResearchProject(tree, "原子结构", "利用物质之间的反应初步确定分子，原子的结构，对不同原子的性质进行研究", Items.paper, 0, 27)
@@ -343,9 +347,9 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.EU, 16384, 16))
                             .addTask(new ComputeTask(ComputePower.Normal, 8192))
                             .addTask(new MiniGameIdentifyTask(16))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_238,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Pb,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Au,4)));
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.U_238,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.Pb,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.foil.mat(MT.Au,4)));
 
                     //Identify:辨别核反应; U235/U238/Th核燃料同位素
                     ResearchProject nuclearTheory = new ResearchProject(tree, "原子核理论", "通过研究原子核在各种情况下的状态，提出可能修改原子核的理论", Items.paper, 0, 28)
@@ -354,9 +358,9 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.EU, 32768, 16))
                             .addTask(new ComputeTask(ComputePower.Normal, 16384))
                             .addTask(new MiniGameIdentifyTask(32))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_235,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_238,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Th,4)));
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.U_235,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.U_238,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.Th,4)));
 
                     //CurrentControl+Fill:电路设计+布局; Si+Au+PCB
                     ResearchProject computerT3 = new ResearchProject(tree, "计算机T3", "原子核研究产生的海量数据迫使你重新规划指令流与缓存结构，解锁10系列计算机", Items.paper, 0, 29)
@@ -366,9 +370,9 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 32768))
                             .addTask(new MiniGameCurrentControlTask(64))
                             .addTask(new MiniGameFillTask(64))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,8)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Si,16)))
+                            .addTask(new ItemConsumeTaskScope(OP.wireFine.mat(MT.Au,64)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Polycarbonate,8)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32005)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT1000.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT1090.get(1)));
@@ -380,12 +384,10 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.EU, 65536, 32))
                             .addTask(new ComputeTask(ComputePower.Normal, 32768))
                             .addTask(new MiniGameCurrentControlTask(96))
-                            .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Cd,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Pb,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_235,8)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(9970)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(9980)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(9990)));
+                            .addTask(new ItemConsumeTaskScope(OP.stick.mat(MT.Cd,8)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Pb,16)))
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.U_235,8)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(9200)));
 
                     //Identify:辨别成像结果; Pb屏蔽+Co放射源+Glass透镜
                     ResearchProject rayPhoto = new ResearchProject(tree, "放射成像", "研究如何利用强穿透性的放射线对物体内部进行成像", Items.paper, 0, 31)
@@ -394,9 +396,9 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.EU, 65536, 16))
                             .addTask(new ComputeTask(ComputePower.Normal, 32768))
                             .addTask(new MiniGameIdentifyTask(96))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Pb,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.Co,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,8)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Pb,16)))
+                            .addTask(new ItemConsumeTaskScope(OP.dust.mat(MT.Co,4)))
+                            .addTask(new ItemConsumeTaskScope(OP.lens.mat(MT.Glass,8)))
                             .addUnlockItem(new ItemType(ItemList.Co60FlawDetectionCore.get(1)))
                             .addUnlockItem(new ItemType(ItemList.Tm170FlawDetectionCore.get(1)));
 
@@ -408,22 +410,23 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 65536))
                             .addTask(new MiniGameIdentifyTask(128))
                             .addTask(new MiniGameCurrentControlTask(64))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.W,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,8)));
+                            .addTask(new ItemConsumeTaskScope(OP.wireFine.mat(MT.W,32)))
+                            .addTask(new ItemConsumeTaskScope(OP.lens.mat(MT.Glass,8)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Si,8)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30078)));
 
                     //CurrentControl+Fill+Identify:电路设计+布局+缺陷检测; Si+Au+PTFE绝缘
                     ResearchProject computerT4 = new ResearchProject(tree, "计算机T4", "电子显微技术让你第一次看清刻蚀留下的缺陷，良率随之提升，解锁20, 36系列计算机", Items.paper, 0, 33)
                             .setPos(2080, 70)
                             .addPrerequisite(electronMicroscope)
                             .addTask(new EnergyTask(TD.Energy.EU, 131072, 32))
-                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
+                            .addTask(new ComputeTask(ComputePower.Normal, 65536))
                             .addTask(new MiniGameCurrentControlTask(128))
                             .addTask(new MiniGameFillTask(128))
                             .addTask(new MiniGameIdentifyTask(32))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,8)))
+                            .addTask(new ItemConsumeTaskEScope(ItemList.CPUDieGT1000.get(12)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Si,32)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.PTFE,8)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT2000.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT2090.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3660.get(1)))
@@ -435,30 +438,24 @@ public class ResearchTrees {
                             .setPos(2180, 70)
                             .addPrerequisite(computerT4)
                             .addTask(new EnergyTask(TD.Energy.EU, 262144, 32))
-                            .addTask(new ComputeTask(ComputePower.Normal, 262144))
+                            .addTask(new ComputeTask(ComputePower.Normal, 131072))
                             .addTask(new MiniGameCurrentControlTask(64))
                             .addTask(new MiniGameFillTask(96))
-                            .addTask(new ItemConsumeTaskSimple(ItemList.ComputerGT3660.get(2)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,16)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(1101)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(1107)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(1108)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32010)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32011)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32012)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32013)));
+                            .addTask(new ItemConsumeTaskScope(ItemList.ComputerGT3660.get(2)))
+                            .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Polycarbonate,16)))
+                            .addTask(new ItemConsumeTaskScope(OP.wireFine.mat(MT.Au,64)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30058)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30059)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30060)));
 
                     //Fill:模型离散化; Identify:用实验校正模型; 自此算力与能源取代物质成为科研主要开销
                     ResearchProject researchWithModel = new ResearchProject(tree, "数字建模研究", "科研方式本身发生了改变：不再是实验得到结果，而是建模，计算，预测，再用实验修正模型。分子，材料，流体，核反应都可以先在集群中跑一遍，超级计算自此成为科研设备", Items.paper, 0, 46)
                             .setPos(2280, 70)
                             .addPrerequisite(computerCluster)
                             .addTask(new EnergyTask(TD.Energy.EU, 524288, 64))
-                            .addTask(new ComputeTask(ComputePower.Normal, 1048576))
-                            .addTask(new MiniGameFillTask(64))
-                            .addTask(new MiniGameIdentifyTask(64))
-                            .addTask(new ItemConsumeTaskSimple(ST.make(Items.paper, 64,0)));
+                            .addTask(new ComputeTask(ComputePower.Normal, 2097152))
+                            .addTask(new MiniGameFillTask(256))
+                            .addTask(new MiniGameIdentifyTask(256));
 
                     //Identify:在模拟结果中辨认中间态; 建模之后只需极少量催化剂做验证
                     ResearchProject catalyzerTheory = new ResearchProject(tree, "催化剂原理", "模拟揭示了一件事：很多反应并非不能发生，只是能垒太高。研究反应路径，活化能，表面催化与中间态，你意识到催化剂并不提供能量，而是改变能量如何通过整个系统", Items.paper, 0, 34)
@@ -466,10 +463,10 @@ public class ResearchTrees {
                             .addPrerequisite(researchWithModel)
                             .addTask(new EnergyTask(TD.Energy.EU, 524288, 64))
                             .addTask(new ComputeTask(ComputePower.Normal, 1048576))
-                            .addTask(new MiniGameIdentifyTask(96))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Pt,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Pd,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Ni,8)));
+                            .addTask(new MiniGameIdentifyTask(512))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pd,4)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Ni,8)));
 
                     //Fill:聚合物链结构规划; 链结构由模拟给出, 实物只做少量成型验证
                     ResearchProject advancedPlastic = new ResearchProject(tree, "高级塑料", "有了可控的催化路径，你能按设计规划聚合物的链结构，造出耐热，绝缘，抗腐蚀的工程塑料与纤维增强材料，它们是精密设备无法替代的结构与绝缘件", Items.paper, 0, 35)
@@ -477,23 +474,19 @@ public class ResearchTrees {
                             .addPrerequisite(catalyzerTheory)
                             .addTask(new EnergyTask(TD.Energy.EU, 524288, 64))
                             .addTask(new ComputeTask(ComputePower.Normal, 2097152))
-                            .addTask(new MiniGameFillTask(96))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Polycarbonate,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.PTFE,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(matList.EpoxyResin.mat, 4)));
+                            .addTask(new MiniGameFillTask(512))
+                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.PTFE,8)));
 
                     //CurrentControl+Fill+Identify:FinFET工艺; Si+Au+PTFE
                     ResearchProject computerT5 = new ResearchProject(tree, "计算机T5", "平面晶体管的漏电已无法忍受，改用立体的鳍式结构重新组织沟道，解锁36v2系列计算机", Items.paper, 0, 36)
                             .setPos(2580, 70)
                             .addPrerequisite(advancedPlastic)
-                            .addTask(new EnergyTask(TD.Energy.EU, 1048576, 64))
-                            .addTask(new ComputeTask(ComputePower.Normal, 4194304))
+                            .addTask(new EnergyTask(TD.Energy.EU, 4194304, 64))
+                            .addTask(new ComputeTask(ComputePower.Normal, 8388608))
                             .addTask(new MiniGameCurrentControlTask(192))
-                            .addTask(new MiniGameFillTask(128))
-                            .addTask(new MiniGameIdentifyTask(64))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,8)))
+                            .addTask(new MiniGameFillTask(256))
+                            .addTask(new MiniGameIdentifyTask(512))
+                            .addTask(new ItemConsumeTaskEScope(OP.dust.mat(MT.Si,32)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3660v2.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3680v2.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3699v2.get(1)));
@@ -506,9 +499,10 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 32768))
                             .addTask(new MiniGameFillTask(64))
                             .addTask(new MiniGameCurrentControlTask(32))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Titanium,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.StainlessSteel,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.gear.mat(MT.Titanium,8)));
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Titanium,32)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.StainlessSteel,32)))
+                            .addTask(new ItemConsumeTaskEScope(OP.gear.mat(MT.Titanium,8)))
+                            .addUnlockItem(new ItemType(ST.make(MD.GC_ADV_ROCKETRY, "tile.stationAssembler",1)));
 
                     //Fill:微重力实验规划; Ti容器+Al轻质
                     ResearchProject lowGravityUsage = new ResearchProject(tree, "微重力应用", "研究微重力环境可能的用途", Items.paper, 0, 38)
@@ -516,8 +510,8 @@ public class ResearchTrees {
                             .addPrerequisite(spaceStationTheory)
                             .addTask(new ComputeTask(ComputePower.Normal, 65536))
                             .addTask(new MiniGameFillTask(96))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Titanium,16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Al,32)));
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Titanium,16)))
+                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.Al,32)));
 
                     //Identify:辨别辐射信号; Pb屏蔽+钨钢结构+U放射源
                     ResearchProject universeRadio = new ResearchProject(tree, "宇宙辐射研究", "研究宇宙辐射和其对物体可能的用途", Items.paper, 0, 39)
@@ -525,9 +519,9 @@ public class ResearchTrees {
                             .addPrerequisite(lowGravityUsage)
                             .addTask(new ComputeTask(ComputePower.Normal, 131072))
                             .addTask(new MiniGameIdentifyTask(128))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Lead,32)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dust.mat(MT.U_238,8)));
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Lead,32)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.TungstenSteel,8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dust.mat(MT.U_238,8)));
 
                     //CurrentControl+Fill+Identify:微重力芯片工艺; Si+Au+PTFE
                     ResearchProject computerT6 = new ResearchProject(tree, "计算机T6", "轨道上没有重力导致的熔体对流，也没有沉降，晶圆能长得更完美，解锁36v3系列计算机", Items.paper, 0, 40)
@@ -539,9 +533,9 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(256))
                             .addTask(new MiniGameFillTask(192))
                             .addTask(new MiniGameIdentifyTask(128))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,48)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Au,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.PTFE,16)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Si,48)))
+                            .addTask(new ItemConsumeTaskEScope(OP.wireFine.mat(MT.Au,64)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.PTFE,16)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3660v3.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3680v3.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3699v3.get(1)));
@@ -557,15 +551,11 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(256))
                             .addTask(new FluidConsumeTaskSimple(FL.Deuterium.fluid(), 16000))
                             .addTask(new FluidConsumeTaskSimple(FL.Tritium.fluid(), 4000))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.TungstenSteel,32)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.TungstenSteel,32)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30014)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31015)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31016)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31017)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31018)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31019)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31024)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31028)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31018)));
 
                     //CurrentControl+Fill:长脉冲运行+氚增殖包层与偏滤器布局; 目标是并网而不是点火
                     ResearchProject fusionTokamak = new ResearchProject(tree, "商用托卡马克", "把实验堆变成能并入电网的工业能源设施：长时间持续运行，输出稳定，功率巨大，代价是对燃料供应与维护的苛刻要求。氘氚循环只是起点，更先进的燃料循环与更高温的等离子体会带来更高级的聚变电站", Items.paper, 0, 47)
@@ -579,7 +569,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameFillTask(256))
                             .addTask(new FluidConsumeTaskSimple(FL.Deuterium.fluid(), 64000))
                             .addTask(new FluidConsumeTaskSimple(FL.Helium.fluid(), 32000))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Trinitanium,16)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Trinitanium,16)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30015)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31025)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31026)))
@@ -595,8 +585,9 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(320))
                             .addTask(new MiniGameIdentifyTask(256))
                             .addTask(new FluidConsumeTaskSimple(FL.Deuterium.fluid(), 32000))
-                            .addTask(new ItemConsumeTaskSimple(IL.Comp_Laser_Gas_CO2.get(16)))
-                            .addTask(new ItemConsumeTaskSimple(OP.lens.mat(MT.Glass,32)));
+                            .addTask(new ItemConsumeTaskEScope(IL.Comp_Laser_Gas_CO2.get(16)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30071)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30072)));
 
                     //NU:中子俘获通道测绘; Identify:异常核过程的能谱辨认
                     ResearchProject naqudahTheory = new ResearchProject(tree, "硅岩性质理论", "硅岩从来不只是燃料。研究它的晶格结构、中子俘获、同位素性质、裂变通道与高能态，你会发现它是一种能够进入异常核过程的媒介。", Items.paper, 0, 41)
@@ -606,9 +597,9 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.NU, 1048576, 128))
                             .addTask(new ComputeTask(ComputePower.Normal, 134217728))
                             .addTask(new MiniGameIdentifyTask(384))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Nq,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Nq_528,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Pb,32)));
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq,8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_528,4)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Pb,32)));
 
                     //CurrentControl+Fill+Identify:把经典范式榨到极限; 物质开销已可忽略, 瓶颈只剩算力与配电
                     ResearchProject computerT7 = new ResearchProject(tree, "计算机T7", "对经典计算的最后一次榨取：CPU集群、专用加速器与超高速互联全部推到极限，建成极限经典计算体系。", Items.paper, 0, 43)
@@ -620,9 +611,9 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(384))
                             .addTask(new MiniGameFillTask(320))
                             .addTask(new MiniGameIdentifyTask(256))
-                            .addTask(new ItemConsumeTaskSimple(OP.plate.mat(MT.Si,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Graphene,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.foil.mat(MT.Nq,16)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Si,64)))
+                            .addTask(new ItemConsumeTaskEScope(OP.wireFine.mat(MT.Graphene,64)))
+                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.Nq,16)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3660v4.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3680v4.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3699v4.get(1)))
@@ -649,9 +640,9 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.CU, 4194304, 512))
                             .addTask(new ComputeTask(ComputePower.Normal, 8589934592L))
                             .addTask(new MiniGameIdentifyTask(384))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,8)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Pt,4)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Nq_522,4)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)));
 
                     //QU:纠缠信道; 通道无法窃听也无法复制, 代价是维持相干的能耗
                     ResearchProject todo002 = new ResearchProject(tree, "量子通信", "利用镜金保存下来的纠缠关系传递信息，通道既无法窃听也无法复制。同一套原理还能做出量子传感与超高精度测量设备", Items.paper, 0, 54)
@@ -661,7 +652,7 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.CU, 8388608, 512))
                             .addTask(new ComputeTask(ComputePower.Normal, 17179869184L))
                             .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,4)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,4)));
 
                     //QU:把被动保存的量子关系驱动起来; 退相干率随纯度逐级下降
                     ResearchProject todo003 = new ResearchProject(tree, "镜金量子化", "对镜金进行进一步的量子化处理，让材料内部的量子关系从被动保存变成可以被外部驱动的自由度。这是通往量金的最后一步加工", Items.paper, 0, 51)
@@ -672,7 +663,7 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.CU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Normal, 34359738368L))
                             .addTask(new MiniGameCurrentControlTask(512))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,16)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,16)));
 
                     //QU:宏观量子操作的第一件工程材料; 对应GT6的QU级设备
                     ResearchProject todo004 = new ResearchProject(tree, "量金性质", "镜金保存量子关系，量金则把量子关系变成宏观可操作的工程对象。它是量子装置的核心、量子信号的介质、量子放大器与控制器的本体，也是QU级设备的基础材料。你第一次获得宏观量子操作能力", Items.paper, 0, 52)
@@ -683,7 +674,7 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 65536))
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new MiniGameIdentifyTask(384))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Naquadria,4)));
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,4)));
 
                     //Identify:测量本身就会破坏被测的量子态, 没有它量子设备连自己算错了都不知道
                     ResearchProject todo005 = new ResearchProject(tree, "量子观测", "知道一个系统，和对系统进行测量，并不是一回事。研究量子态、测量、退相干、纠缠、叠加与量子概率，造出量子观测仪、量子态分析器、纠缠检测器与相干性稳定器——没有它们，量子设备连自己算错了都不会知道", Items.paper, 0, 53)
@@ -702,8 +693,8 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 131072))
                             .addTask(new ComputeTask(ComputePower.Biology, 268435456))
                             .addTask(new MiniGameFillTask(512))
-                            .addTask(new ItemConsumeTaskSimple(ItemList.Proton.get(16)))
-                            .addTask(new ItemConsumeTaskSimple(ItemList.Electron.get(16)));
+                            .addTask(new ItemConsumeTaskEScope(ItemList.Proton.get(16)))
+                            .addTask(new ItemConsumeTaskEScope(ItemList.Electron.get(16)));
 
                     //按需编排核子与电子, 合成自然界不存在的元素与同位素
                     ResearchProject todo007 = new ResearchProject(tree, "量子元素制造", "在量子层面直接编排核子与电子的排布，按需要合成元素与同位素，包括自然界中根本不存在的那些。元素周期表从此由你续写", Items.paper, 0, 50)
@@ -713,8 +704,8 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.NU, 16777216, 1024))
                             .addTask(new ComputeTask(ComputePower.Quantum, 524288))
                             .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskSimple(ItemList.Neutron.get(32)))
-                            .addTask(new ItemConsumeTaskSimple(ItemList.Alpha_Particle.get(16)));
+                            .addTask(new ItemConsumeTaskEScope(ItemList.Neutron.get(32)))
+                            .addTask(new ItemConsumeTaskEScope(ItemList.Alpha_Particle.get(16)));
 
                     //新的计算范式而非更快的电脑: 初代机的开销几乎全在纠错与制冷
                     ResearchProject todo008 = new ResearchProject(tree, "量子计算T1", "真正意义上的量子计算终于实现，但初代机问题严重：退相干、高错误率、散热、昂贵的量子纠错，以及体积惊人的控制设备。它不是更快的电脑，而是一种新的计算范式——有些问题它一步得解，有些问题它比经典机还慢", Items.paper, 0, 55)
@@ -726,7 +717,7 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 1048576))
                             .addTask(new MiniGameCurrentControlTask(768))
                             .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,32)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,32)));
 
                     //同一个跳跃逐级放大尺度: 电子->原子->能态->物态->宏观物体->空间; Spacetime算力首次介入
                     ResearchProject todo009 = new ResearchProject(tree, "跃迁理论", "从电子跃迁到原子跃迁，再到能态跃迁、物质状态跃迁、宏观物体跃迁，最后是空间跃迁。每一级都只是把同一个跳跃放大一个尺度，而终点是传送与星际航行", Items.paper, 0, 56)
@@ -755,11 +746,11 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 8388608))
                             .addTask(new ComputeTask(ComputePower.Spacetime, 524288))
                             .addTask(new MiniGameCurrentControlTask(1024))
-                            .addTask(new ItemConsumeTaskSimple(OP.nugget.mat(matList.Ij.mat,64)))
-                            .addTask(new ItemConsumeTaskSimple(OP.dustTiny.mat(MT.Naquadria,16)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,64)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,16)));
 
                     //集成化->模块化->微型化->工程化: 量子计算从科研设备变成工业基础设施
-                    ResearchProject todo012 = new ResearchProject(tree, "量子计算微型化", "初代量子计算机巨大、脆弱且昂贵。经过集成化、模块化、微型化与工程化，你得到量子处理芯片、量子控制器、集成量子模块与小型量子计算机——量子计算从科研设备变成工业基础设施", Items.paper, 0, 60)
+                    ResearchProject todo012 = new ResearchProject(tree, "微型量子计算", "初代量子计算机巨大、脆弱且昂贵。经过集成化、模块化、微型化与工程化，你得到量子处理芯片、量子控制器、集成量子模块与小型量子计算机——量子计算从科研设备变成工业基础设施", Items.paper, 0, 60)
                             .setPos(3880, 0)
                             .addPrerequisite(todo011)
                             .addTask(new EnergyTask(TD.Energy.QU, 2147483648L, 65536))

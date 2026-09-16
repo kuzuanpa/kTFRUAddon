@@ -42,6 +42,11 @@ public final class LaserFusionIndustrial extends LaserFusionControllerBase {
     @Override protected long peakEnergyPerLaserArray() { return 41943040L; }
     @Override protected long maxPulseInputPacket() { return 2097152L; }
     @Override protected int cooldownTicks() { return 20 * 4; }
-    @Override protected String controllerName() { return "ktfru.multitileentity.multiblock.laser_fusion.industrial"; }
+
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.multiblock.laser_fusion.industrial";
+    }
+
     @Override protected String texturePath() { return "machines/fusion/laser/industrial"; }
 }

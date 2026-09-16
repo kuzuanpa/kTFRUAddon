@@ -15,6 +15,7 @@ import gregapi.data.OP;
 import gregapi.data.RM;
 import gregapi.oredict.OreDictMaterial;
 import gregapi.util.ST;
+import net.minecraftforge.fluids.FluidStack;
 
 import static gregapi.data.CS.*;
 
@@ -92,18 +93,18 @@ public final class PurityRefining {
     }
 
     /** Fixed 4 -> 3 yield: dissolution and removal of bulk contaminants. */
-    private static void commercialBath(OreDictMaterial material, net.minecraftforge.fluids.FluidStack reagent, long eut, long duration) {
+    private static void commercialBath(OreDictMaterial material, FluidStack reagent, long eut, long duration) {
         RM.Bath.addRecipeX(F, eut, duration, ST.array(OP.dust.mat(material, 4)),
                 FL.array(reagent), FL.array(FL.Water.make(1000)), prefixList.CommercialPureDust.mat(material, 3));
     }
 
     /** Fixed 4 -> 3 yield: the analytical stage deliberately uses purified water. */
-    private static void analyticalCentrifuge(OreDictMaterial material, net.minecraftforge.fluids.FluidStack reagent, long eut, long duration) {
+    private static void analyticalCentrifuge(OreDictMaterial material, FluidStack reagent, long eut, long duration) {
         RM.Centrifuge.addRecipeX(F, eut, duration, ST.array(prefixList.CommercialPureDust.mat(material, 4)),
                 FL.array(reagent), FL.array(FL.Water.make(1000)), prefixList.AnalyticalPureDust.mat(material, 3));
     }
 
-    private static void analyticalHeatRefine(OreDictMaterial material, net.minecraftforge.fluids.FluidStack reagent, long eut, long duration) {
+    private static void analyticalHeatRefine(OreDictMaterial material, FluidStack reagent, long eut, long duration) {
         recipeMaps.HeatMixer.addRecipeX(F, eut, duration,
                 ST.array(prefixList.CommercialPureDust.mat(material, 4)), FL.array(reagent),
                 FL.array(FL.Water.make(1000)), prefixList.AnalyticalPureDust.mat(material, 3));

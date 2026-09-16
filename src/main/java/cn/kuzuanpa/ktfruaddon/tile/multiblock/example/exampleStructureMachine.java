@@ -14,39 +14,30 @@
  */
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
-//This is an example machine used to learn structures, grammars etc. It's based on large bath vat in gregtech6
-//这是一个示例机器，用于学习多方块机器的结构，语法等，这个机器是基于gregtech6中的大浸洗器创建的
+//This is an example machine used to learn structures
+//这是一个示例机器，用于学习多方块机器的结构
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import gregapi.data.LH;
-import gregapi.tileentity.delegate.DelegatorTileEntity;
+import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.IFluidHandler;
 import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
 
-import static gregapi.data.CS.SIDES_VALID;
-import static gregapi.data.CS.SIDE_BOTTOM;
-
-public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMachine {
+public class exampleStructureMachine extends TileEntityBase10MultiBlockBase {
     //Structure
     ChunkCoordinates lastFailedPos=null;
     static final IStringBaseStructure structure  = new LayerStructure(StructureContext.Axis.Y).layerRule("A")
@@ -86,63 +77,19 @@ public class exampleMappedStructureMachine extends TileEntityBaseLimitedOutputMa
         }
         return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
-    public final short sizeX = 5, sizeY = 1, sizeZ = 4;
-    //决定结构检测的起始位置，默认情况下是从主方块起始
-    //This controls where is the start point to check structure,Default is the position of controller block
-    public final short xMapOffset = -2, zMapOffset = 0;
-    //这里是设置该机器的内部区域
-    //controls areas inside the machine
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return new BoundingBox(utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset),yCoord,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset),utils.getRealX(mFacing,utils.getRealX(mFacing,xCoord,xMapOffset,zMapOffset), sizeX, sizeZ),yCoord+ sizeY,utils.getRealZ(mFacing,utils.getRealZ(mFacing,zCoord,xMapOffset,zMapOffset), sizeX, sizeZ)).isXYZInBox(aX,aY,aZ);
+        return structure.isInsideStructure(this, mFacing, aX,aY,aZ);
     }
-    //这是设置主方块的物品提示
-    //controls tooltip of controller block
-    static {
-        LH.add("gt.tooltip.multiblock.example.complex.1", "5x5x2 of Stainless Steel Walls");
-        LH.add("gt.tooltip.multiblock.example.complex.2", "Main Block centered on Side-Bottom and facing outwards");
-        LH.add("gt.tooltip.multiblock.example.complex.3", "Input and Output at any Blocks");
-    }
-
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.1"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.2"));
-        aList.add(LH.Chat.WHITE + LH.get("gt.tooltip.multiblock.example.complex.3"));
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
         super.addToolTips(aList, aStack, aF3_H);
-    }
-
-    //下面四个是设置输入输出的地方,return null是任意面
-    //controls where to I/O, return null=any side
-    @Override
-    public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) {
-        return getAdjacentTank(SIDE_BOTTOM);
-    }
-
-    @Override
-    public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) {
-        return getAdjacentTileEntity(SIDE_BOTTOM);
-    }
-
-    @Override
-    public DelegatorTileEntity<IInventory> getItemInputTarget(byte aSide) {
-        return null;
-    }
-
-    @Override
-    public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) {
-        return null;
-    }
-
-    @Override
-    public boolean[] getValidSides() {
-        return SIDES_VALID;
     }
 
     //这里填写多方块结构的名称
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.example.complex";
+        return "ktfru.multitileentity.multiblock.example.structure";
     }
 }
