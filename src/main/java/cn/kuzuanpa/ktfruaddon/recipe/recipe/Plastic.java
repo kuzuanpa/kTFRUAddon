@@ -29,7 +29,7 @@ import gregapi.util.UT;
 import static gregapi.data.CS.*;
 public class Plastic {
     public static void init(){
-        for(OreDictMaterial material:new OreDictMaterial[]{matList.EpoxyResin.mat,matList.SBR.mat,matList.SiliconeRubber.mat})for (OreDictPrefix prefix:new OreDictPrefix[]{OP.dust,OP.dustTiny,OP.dustSmall,OP.plate,OP.plateTiny,OP.plateCurved,OP.foil}) {
+        for(OreDictMaterial material:new OreDictMaterial[]{matList.EpoxyResin.mat,matList.SBR.mat,matList.SiliconeRubber.mat,matList.PEEK.mat})for (OreDictPrefix prefix:new OreDictPrefix[]{OP.dust,OP.dustTiny,OP.dustSmall,OP.plate,OP.plateTiny,OP.plateCurved,OP.foil}) {
             if(prefix!=OP.plate)      RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_Extruder_Plate.get(0), ZL_FS, ZL_FS, OP.plate.mat(material, 1));
             if(prefix!=OP.plate)      RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_SimpleEx_Plate.get(0), ZL_FS, ZL_FS, OP.plate.mat(material, 1));
             if(prefix!=OP.plateCurved)RM.Extruder.addRecipe2(F, 16, 60,prefix.mat(material, UT.Code.units_(1,prefix.mAmount,U,true)), IL.Shape_Extruder_Plate_Curved.get(0), ZL_FS, ZL_FS, OP.plateCurved.mat(material, 1));

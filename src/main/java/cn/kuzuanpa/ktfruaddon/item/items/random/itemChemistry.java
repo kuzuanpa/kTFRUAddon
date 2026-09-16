@@ -35,5 +35,10 @@ public class itemChemistry extends MultiItemRandom {
         ItemList.ProtonExchangeMembrane.set(addItem(0, "Proton Exchange Membrane", ""));
         ItemList.AlkalineIonExchangeMembrane.set(addItem(1, "Alkaline Ion Exchange Membrane", ""));
         ItemList.IrAlkalineIonExchangeMembrane.set(addItem(2, "Ir-Contained Alkaline Ion Exchange Membrane", ""));
+        ItemList.NickelCatalystCluster.set(addItem(3, "Nickel Catalyst Cluster", "A reusable nickel-based catalyst for hydrogenation and oxidation."));
+        ItemList.PlatinumPalladiumCatalystCluster.set(addItem(4, "Platinum-Palladium Catalyst Cluster", "A reusable precious-metal catalyst for reforming and coupling."));
+        ItemList.ZeoliteCatalystCluster.set(addItem(5, "Zeolite Catalyst Cluster", "A reusable shape-selective catalyst for cracking and fluorination."));
+        ItemList.ZieglerNattaCatalystCluster.set(addItem(6, "Ziegler-Natta Catalyst Cluster", "A reusable catalyst for controlled olefin polymerization."));
+        ItemList.PolycondensationCatalystCluster.set(addItem(7, "Polycondensation Catalyst Cluster", "A reusable high-temperature catalyst for polyether ketone synthesis."));
     }
 }

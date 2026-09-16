@@ -466,16 +466,26 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pd,4)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Ni,8)));
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Ni,8)))
+                            .addUnlockItem(new ItemType(ItemList.NickelCatalystCluster.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.PlatinumPalladiumCatalystCluster.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.ZeoliteCatalystCluster.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.ZieglerNattaCatalystCluster.get(1)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30120)));
 
-                    //Fill:聚合物链结构规划; 链结构由模拟给出, 实物只做少量成型验证
-                    ResearchProject advancedPlastic = new ResearchProject(tree, "高级塑料", "有了可控的催化路径，你能按设计规划聚合物的链结构，造出耐热，绝缘，抗腐蚀的工程塑料与纤维增强材料，它们是精密设备无法替代的结构与绝缘件", Items.paper, 0, 35)
+                    //Fill:聚合物链结构规划; 用催化中间体验证PEEK链结构, 完成后再解锁缩聚催化团
+                    ResearchProject advancedPlastic = new ResearchProject(tree, "终极塑料", "有了可控的催化路径和聚醚醚酮前体样本，你能按设计规划聚合物的链结构。PEEK将成为后续所有高强度、耐热与精密绝缘塑料的基体材料", Items.paper, 0, 35)
                             .setPos(2480, 70)
                             .addPrerequisite(catalyzerTheory)
-                            .addTask(new EnergyTask(TD.Energy.EU, 524288, 64))
+                            .addTask(new EnergyTask(TD.Energy.EU, 1048576, 64))
                             .addTask(new ComputeTask(ComputePower.Normal, 2097152))
                             .addTask(new MiniGameFillTask(512))
-                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.PTFE,8)));
+                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.PTFE,8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dust.mat(matList.Difluorobenzophenone.mat,1)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dust.mat(matList.Hydroquinone.mat,4)))
+                            .addUnlockItem(new ItemType(ItemList.PolycondensationCatalystCluster.get(1)))
+                            .addUnlockItem(new ItemType(OP.plate.mat(matList.PEEK.mat,1)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30121)));
 
                     //CurrentControl+Fill+Identify:FinFET工艺; Si+Au+PTFE
                     ResearchProject computerT5 = new ResearchProject(tree, "计算机T5", "平面晶体管的漏电已无法忍受，改用立体的鳍式结构重新组织沟道，解锁36v2系列计算机", Items.paper, 0, 36)

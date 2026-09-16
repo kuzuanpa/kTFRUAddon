@@ -27,4 +27,9 @@ public class LocalQuantumComputePart extends WirelessComputePart {
         aList.add(ComputePower.Normal.prefixedDesc(mRequested));
         aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
+    @Override
+    public String getTileEntityName() {
+        return "ktfru.multitileentity.computenode.wireless.quantum";
+    }
+
 }

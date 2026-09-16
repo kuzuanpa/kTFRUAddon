@@ -124,6 +124,7 @@ public enum ItemList implements IItemContainer{
     VibrateDetector,UltrasonicGenerator,PiezoelectricCeramicPlate,
     //Chemistry
     ProtonExchangeMembrane, AlkalineIonExchangeMembrane, IrAlkalineIonExchangeMembrane,
+    NickelCatalystCluster, PlatinumPalladiumCatalystCluster, ZeoliteCatalystCluster, ZieglerNattaCatalystCluster, PolycondensationCatalystCluster,
 
 
     //itemComputer

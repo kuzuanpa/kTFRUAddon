@@ -407,6 +407,27 @@ public class materialPreInit {
         //量金：镜金经量子化过程后形成的宏观量子工程材料
         matList.QuantumGold.registerC(22132,"QuantumGold","Quantum Gold",1280,4096,180,96,255,255,"Qg")
                 .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.INGOTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.FOILS);
+        //氟苯
+        matList.Fluorobenzene.registerC(22133,"Fluorobenzene","Fluorobenzene",-41,85,220,235,245,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[5]+"F")
+                .put(TD.ItemGenerator.LIQUID,TD.Properties.FLAMMABLE);
+        //对氟甲苯
+        matList.Fluorotoluene.registerC(22134,"Fluorotoluene","4-Fluorotoluene",-95,116,225,240,245,130,"C"+NUM_SUB[7]+"H"+NUM_SUB[7]+"F")
+                .put(TD.ItemGenerator.LIQUID,TD.Properties.FLAMMABLE);
+        //对氟苯甲酸
+        matList.FluorobenzoicAcid.registerC(22135,"FluorobenzoicAcid","4-Fluorobenzoic Acid",183,253,245,245,245,130,"C"+NUM_SUB[7]+"H"+NUM_SUB[5]+"FO"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //对氟苯甲酰氯
+        matList.FluorobenzoylChloride.registerC(22136,"FluorobenzoylChloride","4-Fluorobenzoyl Chloride",-10,194,235,245,210,130,"C"+NUM_SUB[7]+"H"+NUM_SUB[4]+"ClFO")
+                .put(TD.ItemGenerator.LIQUID);
+        //4,4'-二氟二苯甲酮
+        matList.Difluorobenzophenone.registerC(22137,"Difluorobenzophenone","4,4'-Difluorobenzophenone",107,375,240,235,220,130,"C"+NUM_SUB[13]+"H"+NUM_SUB[8]+"F"+NUM_SUB[2]+"O")
+                .put(TD.ItemGenerator.DUSTS);
+        //对苯二酚
+        matList.Hydroquinone.registerC(22138,"Hydroquinone","Hydroquinone",172,287,240,240,240,130,"C"+NUM_SUB[6]+"H"+NUM_SUB[6]+"O"+NUM_SUB[2])
+                .put(TD.ItemGenerator.DUSTS);
+        //聚醚醚酮
+        matList.PEEK.registerC(22139,"PEEK","Polyether Ether Ketone",343,600,210,190,160,130,"(C"+NUM_SUB[19]+"H"+NUM_SUB[12]+"O"+NUM_SUB[3]+")n")
+                .put(TD.ItemGenerator.DUSTS,TD.ItemGenerator.PLATES,TD.ItemGenerator.FOILS);
         //22400-22499 reserved for Purification
     }
 }

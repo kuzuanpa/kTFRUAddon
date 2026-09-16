@@ -31,6 +31,7 @@ public class recipeInit {
         ComputerBuilding.init();
         OilProcessing.init();
         Plastic.init();
+        CatalyticChemistry.init();
         ResearchUnlock.init();
         CompactItem.init();
         RocketBuilding.init();
