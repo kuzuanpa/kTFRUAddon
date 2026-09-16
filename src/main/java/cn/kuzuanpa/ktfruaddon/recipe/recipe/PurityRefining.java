@@ -115,7 +115,7 @@ public final class PurityRefining {
      * is shared by every material which has a registered chemical route.
      */
     private static void absolutelyPure(OreDictMaterial material) {
-        recipeMaps.ParticleCollider.addRecipeX(F, 32768, 1200,
+        recipeMaps.LaserFusion.addRecipeX(F, 32768, 1200,
                 ST.array(prefixList.AnalyticalPureDust.mat(material, 4), ItemList.QuantumControlElement.get(1)),
                 FL.array(MT.Xe.gas(U4, T)), FL.array(), prefixList.AbsolutelyPureDust.mat(material, 1))
                 .setSpecialNumber(10000000L);

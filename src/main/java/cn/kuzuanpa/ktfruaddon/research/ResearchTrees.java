@@ -628,8 +628,8 @@ public class ResearchTrees {
                             .addPrerequisite(computerT7)
                             .addTask(new EnergyTask(TD.Energy.EU, 268435456, 8192))
                             .addTask(new ComputeTask(ComputePower.Normal, 4294967296L))
-                            .addTask(new ComputeTask(ComputePower.Biology, 16777216))
                             .addTask(new MiniGameIdentifyTask(256));
+                    // TODO(Biology tree): move the Biology compute gate into the independent Biology research tree.
 
 
                     //智能体接手了假设与试错, 实物只剩下最后的样品验证; 此后各节点主要开销为算力与能源
@@ -671,7 +671,6 @@ public class ResearchTrees {
                             .addPrerequisite(todo003)
                             .addTask(new EnergyTask(TD.Energy.QU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Normal, 68719476736L))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 65536))
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new MiniGameIdentifyTask(384))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,4)));
@@ -682,8 +681,23 @@ public class ResearchTrees {
                             .addPrerequisite(todo004)
                             .addTask(new EnergyTask(TD.Energy.QU, 33554432, 4096))
                             .addTask(new EnergyTask(TD.Energy.CU, 33554432, 2048))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 262144))
                             .addTask(new MiniGameIdentifyTask(768));
+
+                    //新的计算范式而非更快的电脑: 初代机的开销几乎全在纠错与制冷
+                    ResearchProject todo008 = new ResearchProject(tree, "量子计算T1", "真正意义上的量子计算终于实现，但初代机问题严重：退相干、高错误率、散热、昂贵的量子纠错，以及体积惊人的控制设备。它不是更快的电脑，而是一种新的计算范式——有些问题它一步得解，有些问题它比经典机还慢", Items.paper, 0, 55)
+                            .setPos(3580, 70)
+                            .addPrerequisite(todo005)
+                            .addTask(new EnergyTask(TD.Energy.QU, 134217728, 8192))
+                            .addTask(new EnergyTask(TD.Energy.CU, 134217728, 4096))
+                            .addTask(new ComputeTask(ComputePower.Normal, 137438953472L))
+                            .addTask(new MiniGameCurrentControlTask(768))
+                            .addTask(new MiniGameIdentifyTask(512))
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,32)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30065)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31065)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31066)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31067)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31068)));
 
                     //Biology算力:分子装配的构型搜索; 从原子出发装配分子, 制造精度降到原子级
                     ResearchProject todo006 = new ResearchProject(tree, "量子有机生产", "传统路线是矿物到材料再到产品，现在你从原子出发装配分子，再把分子摆进指定的结构。高级聚合物、生物材料、特殊药物与自定义有机材料都可以按设计生产，制造精度第一次下降到原子级", Items.paper, 0, 57)
@@ -691,10 +705,10 @@ public class ResearchTrees {
                             .addPrerequisite(todo004)
                             .addTask(new EnergyTask(TD.Energy.QU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Quantum, 131072))
-                            .addTask(new ComputeTask(ComputePower.Biology, 268435456))
                             .addTask(new MiniGameFillTask(512))
                             .addTask(new ItemConsumeTaskEScope(ItemList.Proton.get(16)))
                             .addTask(new ItemConsumeTaskEScope(ItemList.Electron.get(16)));
+                    // TODO(Biology tree): the Biology compute portion of quantum organic production belongs to the independent Biology tree.
 
                     //按需编排核子与电子, 合成自然界不存在的元素与同位素
                     ResearchProject todo007 = new ResearchProject(tree, "量子元素制造", "在量子层面直接编排核子与电子的排布，按需要合成元素与同位素，包括自然界中根本不存在的那些。元素周期表从此由你续写", Items.paper, 0, 50)
@@ -707,17 +721,6 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskEScope(ItemList.Neutron.get(32)))
                             .addTask(new ItemConsumeTaskEScope(ItemList.Alpha_Particle.get(16)));
 
-                    //新的计算范式而非更快的电脑: 初代机的开销几乎全在纠错与制冷
-                    ResearchProject todo008 = new ResearchProject(tree, "量子计算T1", "真正意义上的量子计算终于实现，但初代机问题严重：退相干、高错误率、散热、昂贵的量子纠错，以及体积惊人的控制设备。它不是更快的电脑，而是一种新的计算范式——有些问题它一步得解，有些问题它比经典机还慢", Items.paper, 0, 55)
-                            .setPos(3580, 70)
-                            .addPrerequisite(todo005)
-                            .addTask(new EnergyTask(TD.Energy.QU, 134217728, 8192))
-                            .addTask(new EnergyTask(TD.Energy.CU, 134217728, 4096))
-                            .addTask(new ComputeTask(ComputePower.Normal, 137438953472L))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 1048576))
-                            .addTask(new MiniGameCurrentControlTask(768))
-                            .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,32)));
 
                     //同一个跳跃逐级放大尺度: 电子->原子->能态->物态->宏观物体->空间; Spacetime算力首次介入
                     ResearchProject todo009 = new ResearchProject(tree, "跃迁理论", "从电子跃迁到原子跃迁，再到能态跃迁、物质状态跃迁、宏观物体跃迁，最后是空间跃迁。每一级都只是把同一个跳跃放大一个尺度，而终点是传送与星际航行", Items.paper, 0, 56)
@@ -726,8 +729,11 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.QU, 268435456, 8192))
                             .addTask(new EnergyTask(TD.Energy.TU, 4194304, 512))
                             .addTask(new ComputeTask(ComputePower.Quantum, 2097152))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 65536))
-                            .addTask(new MiniGameIdentifyTask(768));
+                            .addTask(new MiniGameIdentifyTask(768))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30066)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31069)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31070)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31071)));
 
                     //第二次世界观翻转: 量子之下仍有亚量子自由度
                     ResearchProject todo010 = new ResearchProject(tree, "量子结构理论", "你曾以为原子之下就是量子，现在却发现量子本身仍然存在更深层的结构。亚量子自由度、量子内部结构、亚量子耦合与异常量子态，这是整条科技树第二次世界观翻转", Items.paper, 0, 58)
@@ -735,8 +741,12 @@ public class ResearchTrees {
                             .addPrerequisite(todo008)
                             .addTask(new EnergyTask(TD.Energy.QU, 536870912, 32768))
                             .addTask(new ComputeTask(ComputePower.Quantum, 4194304))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 131072))
-                            .addTask(new MiniGameIdentifyTask(1024));
+                            .addTask(new MiniGameIdentifyTask(1024))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30067)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31072)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31073)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31074)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31075)));
 
                     //多个亚量子自由度稳定耦合形成的奇异物质, 一切亚量子工程的基础材料
                     ResearchProject todo011 = new ResearchProject(tree, "刻金性质", "刻金是由多个亚量子自由度稳定耦合形成的奇异物质。镜金操纵量子之间的关系，刻金操纵量子内部更深层的结构，它是一切亚量子工程的基础材料", Items.paper, 0, 59)
@@ -744,10 +754,34 @@ public class ResearchTrees {
                             .addPrerequisite(todo010)
                             .addTask(new EnergyTask(TD.Energy.QU, 1073741824, 32768))
                             .addTask(new ComputeTask(ComputePower.Quantum, 8388608))
-                            .addTask(new ComputeTask(ComputePower.Spacetime, 524288))
                             .addTask(new MiniGameCurrentControlTask(1024))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,64)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,16)));
+
+                    // TODO(Materials): add the 刻金 material and its recipes, then make the first Spacetime node consume it.
+                    ResearchProject spacetimeComputing = new ResearchProject(tree, "时空计算", "刻金把可控自由度推进到量子内部结构。以此为基础，把场演化、尺度变换与因果约束纳入统一计算模型，制造能够处理时空变量的计算阵列。", Items.paper, 0, 68)
+                            .setPos(3880, 70)
+                            .addPrerequisite(todo011)
+                            .addTask(new EnergyTask(TD.Energy.QU, 2147483648L, 65536))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 16777216))
+                            .addTask(new MiniGameCurrentControlTask(1024))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30069)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30070)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31080)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31081)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31082)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31083)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31084)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31085)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31086)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31087)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31088)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31089)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31090)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32040)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32041)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32042)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32043)));
 
                     //集成化->模块化->微型化->工程化: 量子计算从科研设备变成工业基础设施
                     ResearchProject todo012 = new ResearchProject(tree, "微型量子计算", "初代量子计算机巨大、脆弱且昂贵。经过集成化、模块化、微型化与工程化，你得到量子处理芯片、量子控制器、集成量子模块与小型量子计算机——量子计算从科研设备变成工业基础设施", Items.paper, 0, 60)
@@ -756,12 +790,22 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.QU, 2147483648L, 65536))
                             .addTask(new ComputeTask(ComputePower.Quantum, 16777216))
                             .addTask(new MiniGameCurrentControlTask(1024))
-                            .addTask(new MiniGameFillTask(768));
+                            .addTask(new MiniGameFillTask(768))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30068)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30079)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31076)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31077)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31078)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31079)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32040)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32041)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32042)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32043)));
 
                     //不再依赖化学键与晶格, 直接用强相互作用稳定核层面的结构
                     ResearchProject todo013 = new ResearchProject(tree, "强力物质理论", "不再依赖化学键、金属键与晶格结构，而是直接利用强相互作用稳定原子核层面的结构。材料性能从此不再受普通化学规律的约束", Items.paper, 0, 62)
-                            .setPos(3880, 70)
-                            .addPrerequisite(todo011)
+                            .setPos(3880, 140)
+                            .addPrerequisite(spacetimeComputing)
                             .addTask(new EnergyTask(TD.Energy.QU, 2147483648L, 65536))
                             .addTask(new EnergyTask(TD.Energy.NU, 134217728, 4096))
                             .addTask(new ComputeTask(ComputePower.Quantum, 33554432))
@@ -770,7 +814,7 @@ public class ResearchTrees {
 
                     //性能直接来自材料本身, 而不再靠堆砌材料抵抗压力
                     ResearchProject todo014 = new ResearchProject(tree, "强力物质生产", "极高强度、极高耐热、极高抗辐射、极高密度、极端稳定。过去要靠堆砌大量材料来抵抗压力，现在性能直接来自材料本身，它将成为后期工业的基础建筑材料", Items.paper, 0, 61)
-                            .setPos(3980, 140)
+                            .setPos(3980, 210)
                             .addPrerequisite(todo013)
                             .addTask(new EnergyTask(TD.Energy.QU, 4294967296L, 65536))
                             .addTask(new EnergyTask(TD.Energy.NU, 536870912, 8192))
@@ -800,10 +844,10 @@ public class ResearchTrees {
                             .setPos(4180, 70)
                             .addPrerequisite(todo016)
                             .addTask(new EnergyTask(TD.Energy.QU, 137438953472L, 1048576))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 2147483648L))
-                            .addTask(new ComputeTask(ComputePower.Biology, 8589934592L))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 536870912L))
                             .addTask(new ComputeTask(ComputePower.Spacetime, 134217728))
                             .addTask(new MiniGameFillTask(2048));
+                    // TODO(Biology tree): complex structure writing will consume Biology compute from the independent tree.
 
                     //科学描述规则, 工程利用规则, 魔法操作规则, 三者在此统一
                     ResearchProject todo018 = new ResearchProject(tree, "科魔统一理论", "所谓魔法从来没有违反物理规律，它只是直接调用现实底层自由度的一种技术。科学描述规则，工程利用规则，魔法操作规则，三者在此统一。于是出现全新的机器范式：规则编译器、因果控制器、现实场发生器、概念稳定器与物理规则接口——你不再只是制造物质，而开始制造能够改变物质行为的规则", Items.paper, 0, 66)
@@ -811,7 +855,7 @@ public class ResearchTrees {
                             .addPrerequisite(todo017)
                             .addTask(new EnergyTask(TD.Energy.QU, 549755813888L, 4194304))
                             .addTask(new EnergyTask(TD.Energy.TU, 34359738368L, 1048576))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 8589934592L))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 2147483648L))
                             .addTask(new ComputeTask(ComputePower.Spacetime, 2147483648L))
                             .addTask(new MiniGameIdentifyTask(4096))
                             .addTask(new MiniGameCurrentControlTask(4096));
@@ -823,12 +867,12 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.QU, 4398046511104L, 16777216))
                             .addTask(new EnergyTask(TD.Energy.TU, 274877906944L, 4194304))
                             .addTask(new ComputeTask(ComputePower.Normal, 4398046511104L))
-                            .addTask(new ComputeTask(ComputePower.Biology, 274877906944L))
-                            .addTask(new ComputeTask(ComputePower.Quantum, 68719476736L))
+                            .addTask(new ComputeTask(ComputePower.Quantum, 8589934592L))
                             .addTask(new ComputeTask(ComputePower.Spacetime, 17179869184L))
                             .addTask(new MiniGameFillTask(8192))
                             .addTask(new MiniGameIdentifyTask(8192))
                             .addTask(new MiniGameCurrentControlTask(8192));
+                    // TODO(Biology tree): the endgame Biology requirement belongs to the independent tree.
                     return tree;
         }
         );

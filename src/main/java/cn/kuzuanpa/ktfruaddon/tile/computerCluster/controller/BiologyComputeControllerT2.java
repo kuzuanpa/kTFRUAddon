@@ -26,14 +26,14 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 public class BiologyComputeControllerT2 extends BiologyComputeController {
     private static final IStringBaseStructure STRUCTURE = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCDEF")
             .fixedLayer('A', "WWWWWWW", "WW   WW", "W     W", "WW   WW", "WWWWWWW")
-            .fixedLayer('B', "WNN NNW", "N A AN", "N A AN", "N K KN", "WNN NNW")
-            .fixedLayer('C', "WNW WNW", "N A AN", "W A AW", "N A AN", "WNW WNW")
-            .fixedLayer('D', "WNW WNW", "N A AN", "W A AW", "N A AN", "WNW WNW")
-            .fixedLayer('E', "WNN NNW", "N A AN", "N A AN", "N N NN", "WNN NNW")
+            .fixedLayer('B', "WNN NNW", "N A A N", "N A A N", "N K K N", "WNN NNW")
+            .fixedLayer('C', "WNW WNW", "N A A N", "W A A W", "N A A N", "WNW WNW")
+            .fixedLayer('D', "WNW WNW", "N A A N", "W A A W", "N A A N", "WNW WNW")
+            .fixedLayer('E', "WNN NNW", "N A A N", "N A A N", "N N N N", "WNN NNW")
             .fixedLayer('F', "WWWWWWW", "WNNNNNW", "WNNNNNW", "WNNNNNW", "WWWWWWW")
             .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31058, MultiTileEntityMultiBlockPart.ONLY_ENERGY
             )))
-            .where('N', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31062)))
+            .where('N', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31132)))
             .where('K', new ComputePartPredicate())
             .where('A', new AirPredicate())
             .setOffset(-3, 0, 0);

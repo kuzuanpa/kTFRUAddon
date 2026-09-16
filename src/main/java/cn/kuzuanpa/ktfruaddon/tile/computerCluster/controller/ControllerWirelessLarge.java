@@ -26,7 +26,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.C
  * and the node count is inherited from {@link ControllerWireless}.
  */
 public class ControllerWirelessLarge extends ControllerWireless {
-    static final IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+    static final IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABA")
             .fixedLayer('A',
                     "WWWWW",
                     "WGGGW",
