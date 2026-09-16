@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
@@ -22,6 +23,8 @@ import cn.kuzuanpa.ktfruaddon.api.tile.IResearchTable;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
+import cn.kuzuanpa.ktfruaddon.tile.multiblock.research.MultiResearchTableBase;
+import gregapi.data.LH;
 import gregapi.data.CS;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
@@ -33,16 +36,22 @@ import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase09FacingSingle;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.List;
 
 public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick, IResearchTable {
     @Override public boolean isUseableByPlayerGUI(EntityPlayer aPlayer) {return !isDead() && allowInteraction(aPlayer);}
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.monitor";}
     public ResearchTree theTree = new ResearchTree();
+
+    static {
+        LH.add("ktfru.tooltip.research.monitor.usb", "Sneak-right-click with a USB to save this monitor's coordinates.");
+    }
 
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
@@ -77,11 +86,18 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
     }
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide() && aPlayer.isSneaking() && MultiResearchTableBase.writeMonitorPosToUSB(aPlayer, this)) return true;
         if (isServerSide() && !aPlayer.isSneaking()) {
             openGUI(aPlayer, aSide);
             return true;
         }
         return !aPlayer.isSneaking();
+    }
+
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        aList.add(LH.Chat.DGRAY + LH.get("ktfru.tooltip.research.monitor.usb"));
+        super.addToolTips(aList, aStack, aF3_H);
     }
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {

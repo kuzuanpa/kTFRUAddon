@@ -55,6 +55,10 @@ public abstract class MultiResearchItemScopeBase extends MultiResearchTableBase 
     protected abstract Class<? extends IResearchTask> getAcceptedTaskType();
     protected abstract IStringBaseStructure getStructure();
 
+    static {
+        LH.add("ktfru.tooltip.research.scope.usb", "Right-click with a monitor-bound USB to link this machine to the research monitor.");
+    }
+
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
@@ -130,6 +134,7 @@ public abstract class MultiResearchItemScopeBase extends MultiResearchTableBase 
             getStructure().checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
             return true;
         }
+        if (!aPlayer.isSneaking() && bindMonitorFromUSB(aPlayer)) return true;
         openGUI(aPlayer, aSide);
         return true;
     }
@@ -137,6 +142,7 @@ public abstract class MultiResearchItemScopeBase extends MultiResearchTableBase 
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
+        aList.add(LH.Chat.DGRAY + LH.get("ktfru.tooltip.research.scope.usb"));
         LH.addEnergyToolTips(this, aList, ENERGY_TYPE, null, null, null);
         super.addToolTips(aList, aStack, aF3_H);
     }
