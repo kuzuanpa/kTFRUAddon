@@ -61,11 +61,15 @@ import static gregapi.data.CS.*;
  */
 public class WirelessComputePart extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputerClusterUser, IComputePart {
     public ComputePower mType = ComputePower.Normal;
-    /**What the host multiblock sees.**/
-    public long mProvided = 0;
-    /**What gets taken out of the cluster, the part above {@link #mProvided} is the wireless overhead.**/
+    /**Maximum amount this part can provide to the host multiblock.**/
+    public long mMaxProvided = 0;
+    /**Extra fraction consumed from the bound cluster in addition to the amount actually provided.**/
+    public float mLossRate = 0F;
+    /**Amount currently held in the bound cluster. This tracks the active request, not the configured maximum.**/
     public long mRequested = 0;
     public boolean mRunning = false;
+    /**Whether the cluster currently holds power for this part. Keeps stop() and the release callback idempotent.**/
+    protected boolean mAllocated = false;
 
     public UUID myUUID = null;
     public IComputerClusterController mController = null;
@@ -79,8 +83,18 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
         if (aNBT.hasKey(NBT_TARGET)) mTargetPos = IMultiBlockPart.readTargetPosFromNBT(aNBT);
         if (aNBT.hasKey(NBT_DESIGN)) mDesign = UT.Code.unsignB(aNBT.getByte(NBT_DESIGN));
         if (aNBT.hasKey(kTileNBT.COMPUTE_POWER_TYPE)) mType = ComputePower.getType(aNBT.getInteger(kTileNBT.COMPUTE_POWER_TYPE));
-        if (aNBT.hasKey(kTileNBT.COMPUTE_POWER_PROVIDED)) mProvided = aNBT.getLong(kTileNBT.COMPUTE_POWER_PROVIDED);
-        if (aNBT.hasKey(kTileNBT.COMPUTE_POWER_REQUESTED)) mRequested = aNBT.getLong(kTileNBT.COMPUTE_POWER_REQUESTED);
+        if (aNBT.hasKey(kTileNBT.COMPUTE_POWER_MAX_PROVIDED)) {
+            mMaxProvided = Math.max(0L, aNBT.getLong(kTileNBT.COMPUTE_POWER_MAX_PROVIDED));
+        } else if (aNBT.hasKey("ktfru.nbt.computePower.provided")) {
+            // Keep existing worlds readable while only writing the new maxProvided key.
+            mMaxProvided = Math.max(0L, aNBT.getLong("ktfru.nbt.computePower.provided"));
+        }
+        if (aNBT.hasKey(kTileNBT.COMPUTE_POWER_LOSS_RATE)) {
+            mLossRate = normalizeLossRate(aNBT.getFloat(kTileNBT.COMPUTE_POWER_LOSS_RATE));
+        } else if (mMaxProvided > 0L && aNBT.hasKey("ktfru.nbt.computePower.requested")) {
+            long legacyRequested = Math.max(0L, aNBT.getLong("ktfru.nbt.computePower.requested"));
+            mLossRate = normalizeLossRate((float) ((double) legacyRequested / mMaxProvided - 1D));
+        }
         IComputerClusterUser.readFromNBT(aNBT, this);
 
         if (CODE_CLIENT) {
@@ -106,6 +120,9 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         IMultiBlockPart.writeToNBT(aNBT, mTargetPos, mDesign);
+        aNBT.setInteger(kTileNBT.COMPUTE_POWER_TYPE, mType.ordinal());
+        aNBT.setLong(kTileNBT.COMPUTE_POWER_MAX_PROVIDED, mMaxProvided);
+        aNBT.setFloat(kTileNBT.COMPUTE_POWER_LOSS_RATE, mLossRate);
         IComputerClusterUser.writeToNBT(aNBT, this);
     }
 
@@ -117,28 +134,41 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     // IComputePart
     @Override public ComputePower getType() {return mType;}
     /**The capacity, not the current output. Hosts check this before they ask us to start.**/
-    @Override public long getComputePower() {return mProvided;}
+    @Override public long getComputePower() {return mMaxProvided;}
     @Override public boolean isActive() {return mRunning;}
+    @Override public boolean isPartiallyAllocatable() {return true;}
 
     @Override
     public boolean tryStart(long needed) {
-        if (needed > mProvided) return false;
-        if (mRunning) return true;
+        if (needed < 0L || needed > mMaxProvided) return false;
+        long requested = calculateRequested(needed);
+        boolean wasRunning = mRunning;
+        long previousRequested = mRequested;
+        if (wasRunning && mAllocated && requested == previousRequested) return true;
+
+        // Set the requested amount before allocation because the cluster reads getComputePowerNeeded().
+        // ComputerCluster only applies the delta, so changing the load neither leaks nor double-charges power.
+        mRequested = requested;
         mRunning = true;
         if (!IComputerClusterUser.super.tryStart()) {
-            mRunning = false;
+            mRunning = wasRunning;
+            mRequested = previousRequested;
             return false;
         }
-        updateClientData();
+        mAllocated = true;
+        if (!wasRunning || previousRequested != requested) updateClientData();
         return true;
     }
 
     @Override
     public void stop() {
-        if (!mRunning) return;
+        boolean wasRunning = mRunning;
+        boolean wasAllocated = mAllocated;
         mRunning = false;
-        IComputerClusterUser.super.tryStop();
-        updateClientData();
+        mAllocated = false;
+        mRequested = 0L;
+        if (wasAllocated) IComputerClusterUser.super.tryStop();
+        if (wasRunning || wasAllocated) updateClientData();
     }
 
     // IComputerClusterUser
@@ -154,9 +184,26 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     /**Called by the cluster when it took the rented power away, the host has to notice through {@link #getComputePower()}.**/
     @Override
     public void onComputerPowerReleased() {
-        if (!mRunning) return;
+        boolean changed = mRunning || mAllocated || mRequested != 0L;
+        mAllocated = false;
         mRunning = false;
-        updateClientData();
+        mRequested = 0L;
+        if (changed) updateClientData();
+    }
+
+    /**Calculates the base request plus the configured wireless overhead, rounded up to a whole unit.**/
+    protected long calculateRequested(long needed) {
+        if (needed <= 0L) return 0L;
+        double extra = Math.ceil(needed * (double) mLossRate);
+        if (extra <= 0D) return needed;
+        if (extra >= Long.MAX_VALUE - needed) return Long.MAX_VALUE;
+        return needed + (long) extra;
+    }
+
+    protected static float normalizeLossRate(float lossRate) {
+        if (Float.isNaN(lossRate) || lossRate <= 0F) return 0F;
+        if (Float.isInfinite(lossRate)) return Float.MAX_VALUE;
+        return lossRate;
     }
 
     @Override
@@ -179,7 +226,8 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     }
 
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + mType.prefixedDesc(mProvided));
+        aList.add(LH.Chat.CYAN + mType.prefixedDesc(mMaxProvided));
+        aList.add(LH.Chat.DGRAY + String.format("Wireless loss: %.2f%%", mLossRate * 100F));
         aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
 
@@ -187,7 +235,8 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass) && aChatReturn != null) {
             aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_1) + (mRunning ? LH.get(I18nHandler.NORMAL) : LH.get(I18nHandler.COMPUTE_CLUSTER_3)));
-            aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_2) + mType.desc(mProvided));
+            aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_2) + mType.desc(mMaxProvided));
+            if (mRunning) aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_2) + mType.desc(mRequested));
             aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_SUCCESS) + ": " + (mController == null ? LH.get(I18nHandler.COMPUTE_CLUSTER_3) : mController.getPos().toString()));
         }
         if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}

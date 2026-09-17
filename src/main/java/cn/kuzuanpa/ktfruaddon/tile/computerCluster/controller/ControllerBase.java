@@ -115,12 +115,8 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
 
     /**Only one controller of a cluster has to drive the update, the cluster itself skips duplicated calls in the same tick.**/
     public static final int CLUSTER_UPDATE_INTERVAL = 20;
-    /**Ticks between two attempts to start parts that refused, a part usually only recovers once something else changed.**/
-    public static final int PART_RETRY_INTERVAL = 100;
     /**Reach results are cached for this many ticks, walking a wire or cable network per query is far too costly.**/
     public static final int REACH_CACHE_TICKS = 40;
-
-    private long lastPartRetryTick = -PART_RETRY_INTERVAL;
 
     private final Map<WorldPos, Boolean> reachCache = new HashMap<>();
     private long reachCacheTick = -1;
@@ -399,26 +395,38 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
     public void updateComputeParts() {
         if (!mStructureOkay) stopComputeParts();
             //Parts do not persist their running state, a reloaded controller has to start them again.
-        else if (!mPartsStarted || mTimer - lastPartRetryTick >= PART_RETRY_INTERVAL) startComputeParts();
+            //The demand can change every cluster update, so also resize partially allocatable parts here.
+        else startComputeParts();
         updateProvidedComputePower();
     }
 
     /**
-     * Starts every part that is not running yet, which makes this idempotent and also the retry path for
-     * parts that refused earlier. A part refusing means it cannot deliver what it promises, and this
-     * controller cannot honour what it reported to the cluster, so it goes to ERROR instead of silently
-     * providing less.
+     * Starts every part and reserves only the amount currently used from this cluster. Fixed parts keep
+     * their full capacity as before, while partially allocatable parts are resized to the actual demand.
+     * A part refusing means this controller cannot honour what it reports and it goes to ERROR.
      */
     protected void startComputeParts() {
-        lastPartRetryTick = mTimer;
-        boolean allStarted = true;
-        for (IComputePart node : getComputeNodes()) {
-            if (node.isActive()) continue;
-            if (!node.tryStart(node.getComputePower())) allStarted = false;
-        }
+        List<IComputePart> nodes = getComputeNodes();
+        long capacity = 0L;
+        for (IComputePart node : nodes) if (node.getType() == mProvidedType) capacity += node.getComputePower();
+        boolean allStarted = IComputePart.tryStartDemand(nodes, mProvidedType, getClusterComputeDemand(capacity));
         //Set even when a part failed, otherwise stopComputeParts would not release the ones that did start.
         mPartsStarted = true;
         setControllerState(allStarted ? STATE_NORMAL : STATE_ERROR);
+    }
+
+    /**
+     * This controller's proportional share of the power actually allocated by its cluster.
+     * There is no per-provider user assignment, so the proportional split prevents every
+     * provider from reserving the full cluster demand while still avoiding oversubscription.
+     */
+    protected long getClusterComputeDemand(long capacity) {
+        if (cluster == null || capacity <= 0L) return 0L;
+        long used = cluster.usedComputePower.getOrDefault(mProvidedType, 0L);
+        long total = cluster.totalComputePower.getOrDefault(mProvidedType, 0L);
+        if (used <= 0L || total <= 0L) return 0L;
+        long demand = (long) Math.floor((double) used * (double) capacity / (double) total);
+        return Math.min(capacity, Math.max(0L, demand));
     }
 
     /**Releases whatever the parts hold, they must not keep consuming once this controller is out.**/

@@ -234,7 +234,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     boolean nodeStarted = false;
     public boolean startNodes(){
         nodeStarted = true;
-        return getComputeNodes().stream().allMatch(node -> node.tryStart(node.getComputePower()));
+        return IComputePart.tryStartDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded);
     }
     public void stopNodes(){
         nodeStarted = false;

@@ -48,10 +48,7 @@ public abstract class BiologyComputeController extends ControllerBase {
             return;
         }
 
-        boolean allStarted = true;
-        for (IComputePart node : nodes) {
-            if (!node.isActive() && !node.tryStart(node.getComputePower())) allStarted = false;
-        }
+        boolean allStarted = IComputePart.tryStartDemand(nodes, ComputePower.Normal, requiredNormalCompute);
         mPartsStarted = true;
         setControllerState(allStarted ? STATE_NORMAL : STATE_ERROR);
         mProvidedAmount = allStarted ? biologyCompute : 0L;

@@ -271,9 +271,14 @@ public class ComputerCluster {
     /**Gives the amounts held by this user back to the cluster without touching the user itself.**/
     protected void releaseHeldPower(UserData data){
         if (data.consumingPower.isEmpty()) return;
-        data.consumingPower.forEach((type, amount) -> usedComputePower.merge(type, amount, (used, released) -> Math.max(0L, used - released)));
+        data.consumingPower.forEach(this::returnHeldComputePower);
         data.consumingPower.clear();
         clientDataDirty = true;
+    }
+
+    protected void returnHeldComputePower(ComputePower type, long amount){
+        if (type == null || amount <= 0L) return;
+        usedComputePower.compute(type, (ignored, used) -> Math.max(0L, (used == null ? 0L : used) - amount));
     }
 
     public boolean isComputePowerSufficient(Map<ComputePower, Long> additions){
@@ -309,18 +314,34 @@ public class ComputerCluster {
         if(getUserData(user.getUUID()) == null)joinUser(user);
         UserData data = getUserData(user.getUUID());
         if(data == null)return false;
-        if(!data.consumingPower.isEmpty()) return true;
 
         if(data.lastUpdatedTick < 0 || getServerTick() - data.lastUpdatedTick > 5)updateUserData(user);
         if(data.state == Constants.STATE_NORMAL || data.state == Constants.STATE_WARNING){
             Map<ComputePower, Long> needed = new HashMap<>(user.getComputePowerNeeded());
             needed.values().removeIf(amount -> amount == null || amount <= 0);
-            if (!isComputePowerSufficient(needed)) {
-                pushClusterEvent(Constants.EVENT_POWER_ALLOCATE_FAILED, "user=" + shortUUID(user.getUUID()) + " insufficient " + ComputePower.getDescOneLine(needed));
-                pushUserEvent(data, Constants.EVENT_POWER_ALLOCATE_FAILED, "insufficient " + ComputePower.getDescOneLine(needed));
+            Map<ComputePower, Long> held = new HashMap<>(data.consumingPower);
+            Map<ComputePower, Long> additions = new HashMap<>();
+            needed.forEach((type, amount) -> {
+                long delta = amount - held.getOrDefault(type, 0L);
+                if (delta > 0L) additions.put(type, delta);
+            });
+
+            if (!isComputePowerSufficient(additions)) {
+                pushClusterEvent(Constants.EVENT_POWER_ALLOCATE_FAILED, "user=" + shortUUID(user.getUUID()) + " insufficient " + ComputePower.getDescOneLine(additions));
+                pushUserEvent(data, Constants.EVENT_POWER_ALLOCATE_FAILED, "insufficient " + ComputePower.getDescOneLine(additions));
                 return false;
             }
-            needed.forEach((k,v)->usedComputePower.merge(k, v, Long::sum));
+
+            if (needed.equals(held)) return true;
+
+            held.forEach((type, oldAmount) -> {
+                long newAmount = needed.getOrDefault(type, 0L);
+                if (newAmount < oldAmount) returnHeldComputePower(type, oldAmount - newAmount);
+            });
+            needed.forEach((type, newAmount) -> {
+                long oldAmount = held.getOrDefault(type, 0L);
+                if (newAmount > oldAmount) usedComputePower.merge(type, newAmount - oldAmount, Long::sum);
+            });
             data.consumingPower = needed;
             clientDataDirty = true;
             pushClusterEvent(Constants.EVENT_POWER_ALLOCATED, "user=" + shortUUID(user.getUUID()) + " " + ComputePower.getDescOneLine(needed));

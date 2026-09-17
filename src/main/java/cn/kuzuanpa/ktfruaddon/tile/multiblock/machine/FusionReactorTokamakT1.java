@@ -228,7 +228,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
     protected void setState(byte state){
         mState.set(state);
-        if(state != STATE_STOPPED && state != STATE_ERROR && getComputeNodes().stream().anyMatch(node -> !node.tryStart(node.getComputePower()))) {
+        if(state != STATE_STOPPED && state != STATE_ERROR && !IComputePart.tryStartDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded)) {
             mState.set(STATE_ERROR);
         }
 

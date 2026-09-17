@@ -61,28 +61,26 @@ public class QuantumComputeCenterController extends ControllerBase {
             if (node instanceof ComputePartBase) ((ComputePartBase) node).updateComputePower();
         }
 
-        if (!mStructureOkay || nodes.isEmpty()) {
+        long total = 0L;
+        boolean correctTypes = true;
+        for (IComputePart node : nodes) {
+            if (node.getType() != ComputePower.Quantum) {
+                correctTypes = false;
+                break;
+            }
+            total += node.getComputePower();
+        }
+
+        if (!mStructureOkay || nodes.isEmpty() || !correctTypes) {
             stopComputeParts();
             mProvidedAmount = 0L;
             setControllerState(STATE_ERROR);
             return;
         }
 
-        boolean allStarted = true;
-        for (IComputePart node : nodes) {
-            if (node.getType() != ComputePower.Quantum || (!node.isActive() && !node.tryStart(node.getComputePower()))) {
-                allStarted = false;
-            }
-        }
+        boolean allStarted = IComputePart.tryStartDemand(nodes, ComputePower.Quantum, getClusterComputeDemand(total));
         mPartsStarted = true;
-
-        long total = 0L;
-        if (allStarted) {
-            for (IComputePart node : nodes) {
-                if (node.isActive()) total += node.getComputePower();
-            }
-        }
-        mProvidedAmount = total;
+        mProvidedAmount = allStarted ? total : 0L;
         setControllerState(allStarted && total > 0L ? STATE_NORMAL : STATE_ERROR);
     }
 

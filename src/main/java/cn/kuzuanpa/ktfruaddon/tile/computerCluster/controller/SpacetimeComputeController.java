@@ -37,10 +37,7 @@ public abstract class SpacetimeComputeController extends ControllerBase {
             return;
         }
 
-        boolean allStarted = true;
-        for (IComputePart node : nodes) {
-            if (!node.isActive() && !node.tryStart(node.getComputePower())) allStarted = false;
-        }
+        boolean allStarted = IComputePart.tryStartDemand(nodes, ComputePower.Quantum, requiredQuantumCompute);
         mPartsStarted = true;
         setControllerState(allStarted ? STATE_NORMAL : STATE_ERROR);
         mProvidedAmount = allStarted ? spacetimeCompute : 0L;

@@ -33,9 +33,8 @@ public final class kTileNBT {
     public static final String MINER_MAX_HARDNESS="ktfru.nbt.machine.miner.hardness";
     /**Ordinal of the {@link cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower} a wireless compute part deals in.**/
     public static final String COMPUTE_POWER_TYPE ="ktfru.nbt.computePower.type";
-    /**What a wireless compute part hands to its host multiblock.**/
-    public static final String COMPUTE_POWER_PROVIDED ="ktfru.nbt.computePower.provided";
-    /**What a wireless compute part rents from its cluster, the part above provided is the wireless overhead.**/
-    public static final String COMPUTE_POWER_REQUESTED ="ktfru.nbt.computePower.requested";
+    /**Maximum amount of Compute Power a wireless compute part can hand to its host multiblock.**/
+    public static final String COMPUTE_POWER_MAX_PROVIDED ="ktfru.nbt.computePower.maxProvided";
+    /**Extra fraction of the actually requested Compute Power that a wireless compute part also consumes. 0.5 means +50%.**/
+    public static final String COMPUTE_POWER_LOSS_RATE ="ktfru.nbt.computePower.lossRate";
 }
-
