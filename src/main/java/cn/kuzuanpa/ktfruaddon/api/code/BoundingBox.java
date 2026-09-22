@@ -69,4 +69,11 @@ public class BoundingBox {
                 minY<=y&&y<=maxY&&
                 minZ<=z&&z<=maxZ;
     }
+
+    public boolean intersects(BoundingBox other) {
+        return other != null
+                && minX <= other.maxX && maxX >= other.minX
+                && minY <= other.maxY && maxY >= other.minY
+                && minZ <= other.maxZ && maxZ >= other.minZ;
+    }
 }

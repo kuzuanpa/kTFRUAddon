@@ -35,7 +35,8 @@ public final class PurityRefining {
         // Noble metals: chloride complexation followed by selective reduction.
         registerNobleMetals(MT.Au, MT.Pt, MT.Pd, MT.Rh, MT.Ir, MT.Os, matList.Ij.mat);
         // Refractory metal: hydrogen reduction followed by vacuum-grade degassing.
-        registerRefractoryMetal(MT.W);
+        registerRefractoryMetal(MT.W, true);
+        registerRefractoryMetal(MT.Mo, false);
         // Semiconductor precursors: volatile-halide purification and zone-refining equivalent.
         registerSemiconductors(MT.Si, MT.Ge, MT.Ga, MT.In);
         // Nuclear feedstocks: nitric dissolution / ion separation; no ores or isotopes are created.
@@ -66,12 +67,12 @@ public final class PurityRefining {
         }
     }
 
-    private static void registerRefractoryMetal(OreDictMaterial material) {
+    private static void registerRefractoryMetal(OreDictMaterial material, boolean registerAbsolutePure) {
         recipeMaps.HeatMixer.addRecipeX(F, 1024, 1200,
                 ST.array(OP.dust.mat(material, 4)), FL.array(MT.H.gas(U4, T)),
                 FL.array(FL.Water.make(1000)), prefixList.CommercialPureDust.mat(material, 3));
         analyticalHeatRefine(material, MT.Ar.gas(U4, T), 4096, 2400);
-        absolutelyPure(material);
+        if (registerAbsolutePure) absolutelyPure(material);
     }
 
     private static void registerSemiconductors(OreDictMaterial... materials) {

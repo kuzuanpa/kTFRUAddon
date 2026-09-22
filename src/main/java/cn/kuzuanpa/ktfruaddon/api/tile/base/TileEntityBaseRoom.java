@@ -7,121 +7,76 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
-
+ *
  * kTFRUAddon is Open Source and distributed under the
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
- *
  */
-
 
 package cn.kuzuanpa.ktfruaddon.api.tile.base;
 
-import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
-import cn.kuzuanpa.ktfruaddon.api.code.codeUtil;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import codechicken.lib.vec.BlockCoord;
-import cpw.mods.fml.common.FMLLog;
-import gregapi.tileentity.base.TileEntityBase09FacingSingle;
-import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
-import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
-import net.minecraft.block.Block;
+import cn.kuzuanpa.ktfruaddon.api.tile.room.IRoomController;
+import cn.kuzuanpa.ktfruaddon.api.tile.room.IRoomRegion;
+import cn.kuzuanpa.ktfruaddon.api.tile.room.RoomContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.room.RoomManager;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ChunkCoordinates;
-import org.apache.logging.log4j.Level;
 
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
+public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockBase implements IRoomController {
+    private IRoomRegion roomRegion; private RoomContext roomContext;
+    protected ChunkCoordinates lastRoomFailedPos;
+    protected abstract IRoomRegion createRoomRegion();
+    protected abstract IStringBaseStructure getRoomStructure();
 
-public abstract class TileEntityBaseRoom extends TileEntityBase10MultiBlockMachine {
-    public TileEntityBaseRoom(){
+    // Room Registry
+    @Override public IRoomRegion getRoomRegion() {return roomRegion;}
+    public RoomContext getRoomContext() {return roomContext;}
+    @Override public RoomContext makeRoomContext() {
+        if (roomRegion == null || worldObj == null) return null;
+        return new RoomContext(roomRegion, getProvidedCapabilities(), worldObj.provider.dimensionId,
+                xCoord, yCoord, zCoord, isRoomActive());
     }
-    private static ArrayList<BlockCoord> insideSpace;
-    private static ArrayList<BlockCoord> roomSpace;
-    private static ConcurrentHashMap<Integer,BlockCoord> checkingBlockCoords = new ConcurrentHashMap<Integer,BlockCoord>(){};
-    private static ArrayList<BlockCoord> walls = new ArrayList<BlockCoord>();
+    protected boolean publishRoom() {
+        if (worldObj == null || worldObj.isRemote) return false;
+        RoomContext next = makeRoomContext();
+        if (next == null || !RoomManager.update(this, next)) {roomContext = null; return false;}
+        roomContext = next; return true;
+    }
+    protected void unregisterRoom() {
+        RoomManager.unregister(this);
+        roomContext = null;
+    }
 
-    /**
-     * @param availableTiles all available TileEntity in GregTech
-     * @param aController The ControllerBlock
-     * @param startFromTopOrBack Start Point,true=Top,false=Back
-     * @param checkRange Max range when checking
-     * @param shouldCornerBeSealed Should every corner be filled,or just the blocks next to RoomSpace
-     */
-    public static void checkAndGetRoom(TileDesc[] availableTiles, ITileEntityMultiBlockController aController, boolean startFromTopOrBack, BoundingBox checkRange, boolean shouldCornerBeSealed, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
-        checkingBlockCoords  = new ConcurrentHashMap<Integer,BlockCoord>(){};
-        roomSpace = new ArrayList<BlockCoord>();
-        walls = new ArrayList<BlockCoord>();
-        //Starting from TOP
-        if (startFromTopOrBack) checkingBlockCoords.put(0,new BlockCoord(aController.getX(),aController.getY()+1,aController.getZ()));
-        //Starting from Back
-        if (!startFromTopOrBack) checkingBlockCoords.put(0, codeUtil.MCCoord2CCCoord(utils.getRealCoord(((TileEntityBase09FacingSingle)aController).mFacing,aController.getX(),aController.getY(),aController.getZ(),0,0,1)));
-        byte[] fX = {1, -1, 0, 0, 0, 0};
-        byte[] fY = {0, 0, 1, -1, 0, 0};
-        byte[] fZ = {0, 0, 0, 0, 1, -1};
-        byte fi =6;
-        if (shouldCornerBeSealed){
-            fX = new byte[]{-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1,-1, 0, 1};
-            fY = new byte[]{-1,-1,-1,-1,-1,-1,-1,-1,-1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-            fZ = new byte[]{-1,-1,-1, 0, 0, 0, 1, 1, 1,-1,-1,-1, 0, 0, 1, 1, 1,-1,-1,-1, 0, 0, 0, 1, 1, 1};
-            fi=26;
+    // Structure
+    @Override public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        if (worldObj == null || !worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        IStringBaseStructure structure = getRoomStructure();
+        IRoomRegion region = createRoomRegion();
+        if (structure == null || region == null) {
+            roomRegion = null;
+            mStructureOkay = false;
+            unregisterRoom();
+            return false;
         }
-        final byte[] forX = fX;
-        final byte[] forY = fY;
-        final byte[] forZ = fZ;
-        final byte fori =fi;
-        checkingBlockCoords.values().forEach(coord ->{
-            //Check blocks at every side
-            for (int i = 0; i < fori; i++) {
-                BlockCoord checkingCoord=new BlockCoord(coord.x+forX[i],coord.y+forY[i],coord.z+forZ[i]);
-                if (!utils.checkAndSetTarget(aController, checkingCoord.x, checkingCoord.y,checkingCoord.z,aClickedAt,aPlayer,aInventory,availableTiles)){
-                    if (!checkRange.isCoordInBox(checkingCoord)) {
-                        FMLLog.log(Level.INFO,"Err: Out of range:"+checkingCoord.x+checkingCoord.y+checkingCoord.z);
-                        checkingBlockCoords.clear();
-                        walls.clear();
-                        roomSpace.clear();
-                        break;
-                    }
-                    if (!checkingBlockCoords.contains(checkingCoord)){
-                        FMLLog.log(Level.INFO,"will check block:"+checkingCoord.x+checkingCoord.y+checkingCoord.z);
-                      checkingBlockCoords.put(checkingBlockCoords.size(),checkingCoord);
-
-                    }
-                }else walls.add(checkingCoord);
-            }
-        });
-        checkingBlockCoords.forEachValue(0, roomSpace::add);
-        checkingBlockCoords.clear();
-    }
-
-    @Override
-    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        ChunkCoordinates test = utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,1,0,1);
-        aPlayer.worldObj.setBlock(test.posX,test.posY,test.posZ,Block.getBlockById(6));
+        lastRoomFailedPos = structure.checkStructure(new StructureContext(this,
+                (aPlayer != null || aInventory != null) ? StructureContext.StringBaseMode.SET : StructureContext.StringBaseMode.CHECK,
+                worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        if (lastRoomFailedPos != null) {
+            roomRegion = null;
+            mStructureOkay = false;
+            unregisterRoom();
+            return false;
+        }
+        roomRegion = region;
+        mStructureOkay = true;
+        publishRoom();
         return true;
     }
-
-    public abstract TileDesc[] getAvailableTiles();
-    public final static boolean startFromTopOrBack=false;
-    public final static boolean shouldCornerBeSealed=true;
-
-    public abstract int[] getCheckRange2();
-    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){
-        final int[] checkRange2= getCheckRange2();
-        final BlockCoord StartPoi= codeUtil.MCCoord2CCCoord(utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[0],checkRange2[1],checkRange2[2]));
-        final BlockCoord EndPoi= codeUtil.MCCoord2CCCoord(utils.getRealCoord(this.mFacing,this.xCoord,this.yCoord,this.zCoord,checkRange2[3],checkRange2[4],checkRange2[5]));
-        BoundingBox checkRange=new BoundingBox(StartPoi,EndPoi);
-        checkAndGetRoom(getAvailableTiles(),this,startFromTopOrBack,checkRange,shouldCornerBeSealed, aClickedAt, aPlayer, aInventory);
-        return !walls.isEmpty();
-    }
-    @Override
-    public String getTileEntityName() {
-        return "ktfru.multitileentity.multiblock.room.base";
-    }
-    @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return walls!=null&&roomSpace!=null && (roomSpace.contains(new BlockCoord(aX, aY, aZ))||walls.contains(new BlockCoord(aX,aY,aZ)));
-    }
+    @Override public boolean isInsideStructure(int aX, int aY, int aZ) {return roomRegion != null && roomRegion.contains(aX, aY, aZ);}
+    @Override public void onStructureChange() {unregisterRoom(); super.onStructureChange();}
+    @Override public void invalidate() {unregisterRoom(); super.invalidate();}
+    @Override public void onChunkUnload() {unregisterRoom(); super.onChunkUnload();}
 }

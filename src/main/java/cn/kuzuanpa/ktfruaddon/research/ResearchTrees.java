@@ -521,7 +521,14 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 65536))
                             .addTask(new MiniGameFillTask(96))
                             .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Titanium,16)))
-                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.Al,32)));
+                            .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.Al,32)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30122)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30123)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31204)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31205)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31206)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31207)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31208)));
 
                     //Identify:辨别辐射信号; Pb屏蔽+钨钢结构+U放射源
                     ResearchProject universeRadio = new ResearchProject(tree, "宇宙辐射研究", "研究宇宙辐射和其对物体可能的用途", Items.paper, 0, 39)
@@ -646,6 +653,7 @@ public class ResearchTrees {
                     ResearchProject todo001 = new ResearchProject(tree, "镜金性质", "镜金是一种能在宏观尺度上稳定保存量子关联的特殊材料，核心属性是量子相干性。", Items.paper, 0, 42)
                             .setPos(3180, 70)
                             .addPrerequisite(AIResearch)
+                            .addPrerequisite(universeRadio)
                             .addTask(new EnergyTask(TD.Energy.EU, 536870912, 8192))
                             .addTask(new EnergyTask(TD.Energy.CU, 4194304, 512))
                             .addTask(new ComputeTask(ComputePower.Normal, 8589934592L))

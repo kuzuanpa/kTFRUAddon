@@ -17,6 +17,7 @@ package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 import cn.kuzuanpa.ktfruaddon.api.fluid.flList;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.material.matList;
+import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
@@ -37,6 +38,7 @@ public class ComputerBuilding {
         initEDA();
         initPurify();
         initBoule();
+        initMicrogravity();
         initWafer();
         initMaskAlign();
         initDevelop();
@@ -153,9 +155,7 @@ public class ComputerBuilding {
         RM.CrystallisationCrucible.addRecipe1(T,16,144000,ST.tag(0),FL.array(MT.Xe.gas(20*U,false),flList.MolybdenumOxide.make(4000)),FL.array(ZL_FS),ItemList.MoO2Boule.get(1));
         RM.CrystallisationCrucible.addRecipe1(T,16,144000,ST.tag(0),FL.array(MT.Rn.gas(20*U,false),flList.MolybdenumOxide.make(4000)),FL.array(ZL_FS),ItemList.MoO2Boule.get(1));
 
-        RM.CrystallisationCrucible.addRecipe1(T,16,144000,new long[]{7500},OP.dust.mat(MT.Mo, 8),FL.array(MT.Kr.gas(40*U,false), FL.Oxygen.make(4000)),FL.array(ZL_FS),ItemList.MoO2BoulePure.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,144000,OP.dust.mat(MT.Mo, 8),FL.array(MT.Xe.gas(20*U,false), FL.Oxygen.make(4000)),FL.array(ZL_FS),ItemList.MoO2BoulePure.get(1));
-        RM.CrystallisationCrucible.addRecipe1(T,16,144000,OP.dust.mat(MT.Mo, 8),FL.array(MT.Rn.gas(20*U,false), FL.Oxygen.make(4000)),FL.array(ZL_FS),ItemList.MoO2BoulePure.get(1));
+        // Pure MoO2 now comes only from the room-aware microgravity growth machine.
 
 
 //Cut Boule to plate 切割单晶硅 LU
@@ -165,6 +165,11 @@ public class ComputerBuilding {
         recipeMaps.LaserCutter.addRecipeX(T,2048,2000, ST.array(ItemList.MoO2Boule.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.MoO2PlateT1.get(9));
         recipeMaps.LaserCutter.addRecipeX(T,2048,6000, ST.array(ItemList.MoO2BoulePure.get(1)),FL.array(ZL_FS),FL.array(ZL_FS), ItemList.MoO2PlateT2.get(9));
 
+    }
+    public static void initMicrogravity(){
+        recipeMaps.MicrogravityCrystalGrowth.addRecipe1(F,8192,144000,prefixList.AnalyticalPureDust.mat(MT.Mo, 8),FL.array(MT.Kr.gas(40*U,false), FL.Oxygen.make(4000)),ZL_FS,ItemList.MoO2BoulePure.get(1));
+        recipeMaps.MicrogravityCrystalGrowth.addRecipe1(F,8192,144000,prefixList.AnalyticalPureDust.mat(MT.Mo, 8),FL.array(MT.Xe.gas(20*U,false), FL.Oxygen.make(4000)),ZL_FS,ItemList.MoO2BoulePure.get(1));
+        recipeMaps.MicrogravityCrystalGrowth.addRecipe1(F,8192,144000,prefixList.AnalyticalPureDust.mat(MT.Mo, 8),FL.array(MT.Rn.gas(20*U,false), FL.Oxygen.make(4000)),ZL_FS,ItemList.MoO2BoulePure.get(1));
     }
     public static void initWafer(){
 //Clean 清洗 TU
@@ -202,7 +207,7 @@ public class ComputerBuilding {
         recipeMaps.MaskAligner.addRecipeX(T,  256,16000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT3 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT3 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,  512,16000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT4  .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT4  .get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 1024,24000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT5.get(1));
-        recipeMaps.MaskAligner.addRecipeX(T, 2048,48000, ST.array(ItemList.MoO2PlateSoftBakedT1.get(1),ItemList.CPUPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT6 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T, 2048,48000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT6 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 4096,48000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT7 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT7 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 8192,64000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.CPUPhotomaskT8 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.CPUWaferT8 .get(1));
 
@@ -211,7 +216,7 @@ public class ComputerBuilding {
         recipeMaps.MaskAligner.addRecipeX(T,  242, 10000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT3 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT3 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,  500, 10000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT4  .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT4  .get(1));
         recipeMaps.MaskAligner.addRecipeX(T,  980, 14000, ST.array(ItemList.SiliconPlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT5.get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT5.get(1));
-        recipeMaps.MaskAligner.addRecipeX(T, 1510, 24000, ST.array(ItemList.MoO2PlateSoftBakedT1.get(1),ItemList.RAMPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT6 .get(1));
+        recipeMaps.MaskAligner.addRecipeX(T, 1510, 24000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT6 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT6 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 3070, 24000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT7 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT7 .get(1));
         recipeMaps.MaskAligner.addRecipeX(T, 7092, 32000, ST.array(ItemList.MoO2PlateSoftBakedT2.get(1),ItemList.RAMPhotomaskT8 .get(0)), FL.array(ZL_FS), FL.array(ZL_FS), ItemList.RAMWaferT8 .get(1));
 
