@@ -1626,6 +1626,9 @@ ktfru.multitileentity.31063=Laser Fusion Neutron Product Collector
 ktfru.multitileentity.multiblock.laser_fusion.experimental=Laser Inertial Fusion Target Chamber (Experimental)
 ktfru.multitileentity.multiblock.laser_fusion.industrial=Laser Inertial Fusion Target Chamber (Industrial)
 ktfru.recipe.fusion.laser=Laser Inertial Fusion
+ktfru.recipe.fusion.laser.experimental=Experimental Laser Inertial Fusion
+ktfru.recipe.fusion.tokamak.experimental=Experimental Tokamak Fusion
+ktfru.recipe.cosmic_radiation=Cosmic Radiation Research
 ktfru.text.multiblock.laser_fusion.pulse=Charge LU through Pulse Storage Modules; each recipe discharges one complete pulse.
 ktfru.text.multiblock.laser_fusion.peak=Peak pulse energy is determined by the installed Laser Arrays.
 
@@ -1651,5 +1654,6 @@ ktfru.text.quantum_relay.discovery=Pair two relays with a screwdriver: the prima
 # Microgravity room chain
 ktfru.multitileentity.multiblock.microgravityroom=Centrifugal High-Shield Microgravity Controller
 ktfru.multitileentity.machine.microgravitycrystalgrowth=Microgravity Crystal Growth Machine
+ktfru.multitileentity.30124=Cosmic Radiation Analysis Chamber
 ktfru.tooltip.multiblock.microgravitycrystalgrowth.1=3x3x3 high-shield growth chamber
 ktfru.tooltip.multiblock.microgravitycrystalgrowth.2=Controller centered on the front-bottom wall; input, output and energy ports on the shell.

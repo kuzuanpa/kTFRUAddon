@@ -39,6 +39,7 @@ public class ComputerBuilding {
         initPurify();
         initBoule();
         initMicrogravity();
+        initResearchData();
         initWafer();
         initMaskAlign();
         initDevelop();
@@ -170,6 +171,13 @@ public class ComputerBuilding {
         recipeMaps.MicrogravityCrystalGrowth.addRecipe1(F,8192,144000,prefixList.AnalyticalPureDust.mat(MT.Mo, 8),FL.array(MT.Kr.gas(40*U,false), FL.Oxygen.make(4000)),ZL_FS,ItemList.MoO2BoulePure.get(1));
         recipeMaps.MicrogravityCrystalGrowth.addRecipe1(F,8192,144000,prefixList.AnalyticalPureDust.mat(MT.Mo, 8),FL.array(MT.Xe.gas(20*U,false), FL.Oxygen.make(4000)),ZL_FS,ItemList.MoO2BoulePure.get(1));
         recipeMaps.MicrogravityCrystalGrowth.addRecipe1(F,8192,144000,prefixList.AnalyticalPureDust.mat(MT.Mo, 8),FL.array(MT.Rn.gas(20*U,false), FL.Oxygen.make(4000)),ZL_FS,ItemList.MoO2BoulePure.get(1));
+    }
+    public static void initResearchData(){
+        recipeMaps.CosmicRadiationResearch.addRecipe1(F, 8192, 2400, new long[]{8000, 4000, 2000},
+                prefixList.AnalyticalPureDust.mat(MT.Au, 1),
+                ItemList.CosmicRadiationBackgroundData.get(1),
+                ItemList.CosmicRadiationSpectrumData.get(1),
+                ItemList.HighEnergyCosmicParticleData.get(1));
     }
     public static void initWafer(){
 //Clean 清洗 TU

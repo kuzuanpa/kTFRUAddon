@@ -528,7 +528,8 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31205)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31206)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31207)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31208)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31208)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30124)));
 
                     //Identify:辨别辐射信号; Pb屏蔽+钨钢结构+U放射源
                     ResearchProject universeRadio = new ResearchProject(tree, "宇宙辐射研究", "研究宇宙辐射和其对物体可能的用途", Items.paper, 0, 39)
@@ -538,7 +539,10 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(128))
                             .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Lead,32)))
                             .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.TungstenSteel,8)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dust.mat(MT.U_238,8)));
+                            .addTask(new ItemConsumeTaskEScope(OP.dust.mat(MT.U_238,8)))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.CosmicRadiationBackgroundData.get(1), 32))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.CosmicRadiationSpectrumData.get(1), 32))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.HighEnergyCosmicParticleData.get(1), 16));
 
                     //CurrentControl+Fill+Identify:微重力芯片工艺; Si+Au+PTFE
                     ResearchProject computerT6 = new ResearchProject(tree, "计算机T6", "轨道上没有重力导致的熔体对流，也没有沉降，晶圆能长得更完美，解锁36v3系列计算机", Items.paper, 0, 40)
@@ -587,13 +591,15 @@ public class ResearchTrees {
                             .addTask(new FluidConsumeTaskSimple(FL.Deuterium.fluid(), 64000))
                             .addTask(new FluidConsumeTaskSimple(FL.Helium.fluid(), 32000))
                             .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Trinitanium,16)))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.TokamakPlasmaData.get(32), 1))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.TokamakNeutronData.get(32), 1))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30015)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31025)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31026)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31027)));
 
-                    //LU:数百束激光同时压缩靶丸; Identify:在爆后碎片里辨认新核素; 它是核合成炉而非电厂
-                    ResearchProject fusionLaser = new ResearchProject(tree, "激光聚变", "它的目标和托卡马克完全不同，它不是优秀的发电厂，而是一座核合成炉。数百束激光在极短时间内向靶丸倾泻能量，制造出常规条件下不可能出现的能量密度，制造出超重同位素、短寿命核素与人工元素等产物。", Items.paper, 0, 48)
+                    //LU:数百束激光同时压缩靶丸; Identify:在爆后碎片里辨认新核素; 先验证脉冲压缩与诊断链
+                    ResearchProject fusionLaser = new ResearchProject(tree, "实验激光聚变", "用数百束激光同时压缩靶丸，验证激光能量能否在极短时间内转化为足够高的能量密度。实验靶室只负责建立聚变条件并采集压缩与中子诊断数据。", Items.paper, 0, 48)
                             .setPos(2780, 140)
                             .addPrerequisite(computerT6)
                             .addTask(new EnergyTask(TD.Energy.EU, 8388608, 1024))
@@ -603,13 +609,24 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(256))
                             .addTask(new FluidConsumeTaskSimple(FL.Deuterium.fluid(), 32000))
                             .addTask(new ItemConsumeTaskEScope(IL.Comp_Laser_Gas_CO2.get(16)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30071)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30071)));
+
+                    ResearchProject fusionLaserCommercial = new ResearchProject(tree, "商用激光聚变", "把实验靶室放大为工业核合成炉。确认激光压缩与中子诊断数据后，工业靶室可以提高峰值脉冲并开始量产超重同位素、短寿命核素与人工元素。", Items.paper, 0, 69)
+                            .setPos(2880, 140)
+                            .addPrerequisite(fusionLaser)
+                            .addTask(new EnergyTask(TD.Energy.EU, 8388608, 1024))
+                            .addTask(new EnergyTask(TD.Energy.LU, 16777216, 2048))
+                            .addTask(new ComputeTask(ComputePower.Normal, 67108864))
+                            .addTask(new MiniGameCurrentControlTask(320))
+                            .addTask(new MiniGameIdentifyTask(256))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.LaserFusionCompressionData.get(32), 1))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.LaserFusionNeutronData.get(32), 1))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30072)));
 
                     //NU:中子俘获通道测绘; Identify:异常核过程的能谱辨认
                     ResearchProject naqudahTheory = new ResearchProject(tree, "硅岩性质理论", "硅岩从来不只是燃料。研究它的晶格结构、中子俘获、同位素性质、裂变通道与高能态，你会发现它是一种能够进入异常核过程的媒介。", Items.paper, 0, 41)
-                            .setPos(2880, 140)
-                            .addPrerequisite(fusionLaser)
+                            .setPos(2980, 140)
+                            .addPrerequisite(fusionLaserCommercial)
                             .addTask(new EnergyTask(TD.Energy.EU, 16777216, 2048))
                             .addTask(new EnergyTask(TD.Energy.NU, 1048576, 128))
                             .addTask(new ComputeTask(ComputePower.Normal, 134217728))

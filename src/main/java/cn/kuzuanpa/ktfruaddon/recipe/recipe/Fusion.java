@@ -29,6 +29,12 @@ import static gregapi.data.CS.*;
 public class Fusion {
     public static void init(){
         recipeMaps.FusionTokamak .addRecipe1(F, 2048,400, ST.tag(0), FL.array(MT.D .gas (U, T),MT.T.gas(U, T)), FL.array(MT.He.gas (23*U100, F), MT.n.gas (10*U100, F) )  ).setSpecialNumber(1024L*1024L);
+        recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
+                FL.array(MT.D.gas(U, T), MT.T.gas(U, T)), FL.array(MT.He.gas(23*U100, F), MT.n.gas(10*U100, F)),
+                ItemList.TokamakNeutronData.get(1)).setSpecialNumber(1024L*1024L);
+        recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
+                FL.array(MT.D.gas(2*U, T)), FL.array(MT.He_3.gas(U100, F), MT.n.gas(U100, F)),
+                ItemList.TokamakPlasmaData.get(1)).setSpecialNumber(1024L*1024L);
 
         // Laser fusion is intentionally a net energy sink. SpecialNumber is the
         // complete LU pulse needed by a single target, never a continuous EU/t cost.
@@ -36,6 +42,12 @@ public class Fusion {
                 FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(2 * U, F), MT.T.gas(U100, F)), ItemList.Neutron.get(4)).setSpecialNumber(10000000L);
         recipeMaps.LaserFusion.addRecipeX(F, 4096, 1, ST.array(ItemList.LaserTargetLi6.get(1)),
                 FL.array(MT.D.gas(2 * U, T)), FL.array(MT.T.gas(2 * U, F), MT.He.gas(U100, F)), ItemList.Neutron.get(1)).setSpecialNumber(12000000L);
+        recipeMaps.LaserFusionExperimental.addRecipeX(F, 2048, 1, new long[]{5000}, ST.array(ItemList.LaserTargetDT.get(1)),
+                FL.array(MT.D.gas(4 * U, T)), FL.array(MT.He.gas(2 * U, F), MT.T.gas(U100, F)),
+                ItemList.LaserFusionCompressionData.get(1)).setSpecialNumber(10000000L);
+        recipeMaps.LaserFusionExperimental.addRecipeX(F, 4096, 1, new long[]{5000}, ST.array(ItemList.LaserTargetLi6.get(1)),
+                FL.array(MT.D.gas(2 * U, T)), FL.array(MT.T.gas(2 * U, F), MT.He.gas(U100, F)),
+                ItemList.LaserFusionNeutronData.get(1)).setSpecialNumber(12000000L);
 
         // R03: industrial irradiation produces artificial intermediates rather
         // than ordinary metals. They feed the dedicated nuclear-material chain.

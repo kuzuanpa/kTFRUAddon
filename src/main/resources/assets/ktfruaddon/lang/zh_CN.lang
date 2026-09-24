@@ -1929,6 +1929,9 @@ ktfru.item.particle.1112.tooltip=在高温搅拌机中消耗氦和量子控制�
 ktfru.multitileentity.multiblock.laser_fusion.experimental=激光惯性约束聚变靶室（实验型）
 ktfru.multitileentity.multiblock.laser_fusion.industrial=激光惯性约束聚变靶室（工业型）
 ktfru.recipe.fusion.laser=激光惯性约束聚变
+ktfru.recipe.fusion.laser.experimental=实验激光惯性约束聚变
+ktfru.recipe.fusion.tokamak.experimental=实验托卡马克聚变
+ktfru.recipe.cosmic_radiation=宇宙辐射研究
 ktfru.text.multiblock.laser_fusion.pulse=通过脉冲储能模块充入 LU；每个配方会释放一个完整脉冲。
 ktfru.text.multiblock.laser_fusion.peak=峰值脉冲能量由已安装的激光阵列数量决定。
 
@@ -1954,5 +1957,6 @@ ktfru.text.quantum_relay.discovery=将两台中继器用螺丝刀配对：主端
 # Microgravity room chain
 ktfru.multitileentity.multiblock.microgravityroom=离心式高屏蔽失重舱控制器
 ktfru.multitileentity.machine.microgravitycrystalgrowth=微重力晶体生长机
+ktfru.multitileentity.30124=宇宙辐射分析舱
 ktfru.tooltip.multiblock.microgravitycrystalgrowth.1=3x3x3 高屏蔽生长舱
 ktfru.tooltip.multiblock.microgravitycrystalgrowth.2=控制器位于前底部中央，输入、输出与能源端口位于外壳。

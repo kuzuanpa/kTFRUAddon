@@ -62,6 +62,7 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
     protected final StateMgr mState = new StateMgr(STATE_IDLE);
     protected long mPulseEnergy;
     protected int mCooldown;
+    protected Recipe.RecipeMap mRecipes = recipeMaps.LaserFusion;
     protected Recipe mLastRecipe;
     protected ChunkCoordinates mLastFailedPos;
     protected final FluidTankGT[] mTanks = {new FluidTankGT(8000), new FluidTankGT(8000), new FluidTankGT(8000), new FluidTankGT(8000)};
@@ -83,6 +84,7 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
         if (nbt.hasKey(NBT_PULSE_ENERGY)) mPulseEnergy = nbt.getLong(NBT_PULSE_ENERGY);
         if (nbt.hasKey(NBT_COOLDOWN)) mCooldown = nbt.getInteger(NBT_COOLDOWN);
         if (nbt.hasKey(NBT_STATE)) mState.set(nbt.getByte(NBT_STATE));
+        if (nbt.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(nbt.getString(NBT_FUELMAP));
         for (int i = 0; i < mTanks.length; i++) mTanks[i].readFromNBT(nbt, NBT_TANK + "." + i).setCapacity(8000);
     }
 
@@ -115,7 +117,7 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
 
     /** Finds, fully validates, consumes and resolves one pulse in a single server tick. */
     private void tryFirePulse() {
-        Recipe recipe = recipeMaps.LaserFusion.findRecipe(this, mLastRecipe, T, Integer.MAX_VALUE, NI, mInputTanks, slot(0));
+        Recipe recipe = mRecipes.findRecipe(this, mLastRecipe, T, Integer.MAX_VALUE, NI, mInputTanks, slot(0));
         if (recipe == null || !recipe.isRecipeInputEqual(F, F, mInputTanks, slot(0))) return;
         long requiredPulse = recipe.mSpecialValue;
         if (mPulseEnergy < requiredPulse || getPeakEnergy() < requiredPulse) return;

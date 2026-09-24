@@ -96,6 +96,15 @@ public class ItemResearchTech extends ItemResearchBase {
         ItemList.TechResearchData66.set(addItem(66, "研究数据-科魔统一理论",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData67.set(addItem(67, "研究数据-无尽",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData68.set(addItem(68, "研究数据-时空计算",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
+        ItemList.TechResearchData69.set(addItem(69, "研究数据-商用激光聚变",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
+
+        ItemList.CosmicRadiationBackgroundData .set(addItem(1000, "宇宙辐射本底数据", "记录宇宙辐射本底的普通研究样本。"));
+        ItemList.CosmicRadiationSpectrumData   .set(addItem(1001, "宇宙辐射能谱数据", "记录宇宙辐射能谱分布的普通研究样本。"));
+        ItemList.HighEnergyCosmicParticleData  .set(addItem(1002, "高能宇宙粒子数据", "记录高能宇宙粒子事件的普通研究样本。"));
+        ItemList.TokamakPlasmaData             .set(addItem(1003, "托卡马克等离子体数据", "记录磁约束等离子体状态的普通研究样本。"));
+        ItemList.TokamakNeutronData            .set(addItem(1004, "托卡马克中子数据", "记录聚变中子通量的普通研究样本。"));
+        ItemList.LaserFusionCompressionData    .set(addItem(1005, "激光聚变压缩数据", "记录靶丸压缩过程的普通研究样本。"));
+        ItemList.LaserFusionNeutronData        .set(addItem(1006, "激光聚变中子数据", "记录激光聚变中子产额的普通研究样本。"));
 
         ItemList.TechResearchData  .set(addItem(32766, "Common Research Data",  "A common data, You shouldn't get this."));
     }
