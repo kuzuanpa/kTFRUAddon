@@ -1951,7 +1951,13 @@ gt.material.QuantumGold=量金
 ktfru.recipe.mirror_gold_synthesis=镜金合成
 ktfru.recipe.mirror_gold_quantumization=镜金量子化
 ktfru.recipe.quantum_gold_synthesis=量金合成
+ktfru.recipe.quantum_communication=量子通信
+ktfru.text.quantum_relay.pair=用螺丝刀依次右键两台同维度中继器建立纠缠信道。
 ktfru.text.quantum_relay.discovery=将两台中继器用螺丝刀配对：主端消耗分析纯智金，另一端消耗分析纯 Nq_522；通信校准会发现镜金并输出 QU。
+ktfru.text.quantum_relay.recorded=已记录第一台量子通信中继器；继续用螺丝刀右键第二台完成配对。
+ktfru.text.quantum_relay.same_dimension=两台量子通信中继器必须位于同一维度。
+ktfru.text.quantum_relay.partner_missing=记录的中继器不可用。
+ktfru.text.quantum_relay.established=量子纠缠信道已建立。
 
 
 # Microgravity room chain

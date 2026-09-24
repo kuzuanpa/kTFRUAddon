@@ -29,7 +29,7 @@ public final class PurityRefining {
 
     public static void init() {
         // Common and interconnect metals: acid leach, then aqueous centrifugation.
-        registerAcidMetals(MT.Fe, MT.Ni, MT.Co, MT.Cu, MT.Zn, MT.Ag, MT.Sn, MT.Pb, MT.Bi);
+        registerAcidMetals(MT.Li, MT.Fe, MT.Ni, MT.Co, MT.Cu, MT.Zn, MT.Ag, MT.Sn, MT.Pb, MT.Bi);
         // Oxophilic / valve metals: alkaline leach and chloride re-distillation.
         registerValveMetals(MT.Al, MT.Ti, MT.Zr, MT.Nb, MT.Ta, MT.Cr);
         // Noble metals: chloride complexation followed by selective reduction.
@@ -38,7 +38,9 @@ public final class PurityRefining {
         registerRefractoryMetal(MT.W, true);
         registerRefractoryMetal(MT.Mo, false);
         // Semiconductor precursors: volatile-halide purification and zone-refining equivalent.
-        registerSemiconductors(MT.Si, MT.Ge, MT.Ga, MT.In);
+        registerSemiconductors(MT.C, MT.Si, MT.Ge, MT.Ga, MT.In);
+        // Hydrogen isotopes: gas feed into the same three purity tiers used by fusion targets.
+        registerHydrogenIsotopes(MT.D, MT.T);
         // Nuclear feedstocks: nitric dissolution / ion separation; no ores or isotopes are created.
         registerNuclearMaterials(MT.U_238, MT.Th, MT.Nq_522);
     }
@@ -53,7 +55,7 @@ public final class PurityRefining {
 
     private static void registerValveMetals(OreDictMaterial... materials) {
         for (OreDictMaterial material : materials) {
-            commercialBath(material, MT.NaOH.liquid(U4, T), 256, 600);
+            commercialBath(material, FL.DistW.make(4000), 256, 600);
             analyticalHeatRefine(material, MT.Cl.gas(U4, T), 1024, 1200);
             absolutelyPure(material);
         }
@@ -89,6 +91,15 @@ public final class PurityRefining {
         for (OreDictMaterial material : materials) {
             commercialBath(material, MT.HNO3.liquid(U2, T), 1024, 1200);
             analyticalCentrifuge(material, FL.DistW.make(2000), 4096, 2400);
+            absolutelyPure(material);
+        }
+    }
+
+    private static void registerHydrogenIsotopes(OreDictMaterial... materials) {
+        for (OreDictMaterial material : materials) {
+            RM.Freezer.addRecipeX(F, 512, 400, ST.array(ST.tag(0)), FL.array(material.gas(U4, T)), ZL_FS,
+                    prefixList.CommercialPureDust.mat(material, 3));
+            analyticalCentrifuge(material, FL.DistW.make(1000), 512, 800);
             absolutelyPure(material);
         }
     }

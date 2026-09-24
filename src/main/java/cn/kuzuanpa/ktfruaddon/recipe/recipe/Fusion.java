@@ -17,6 +17,7 @@
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
+import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import gregapi.data.FL;
@@ -28,12 +29,12 @@ import static gregapi.data.CS.*;
 
 public class Fusion {
     public static void init(){
-        recipeMaps.FusionTokamak .addRecipe1(F, 2048,400, ST.tag(0), FL.array(MT.D .gas (U, T),MT.T.gas(U, T)), FL.array(MT.He.gas (23*U100, F), MT.n.gas (10*U100, F) )  ).setSpecialNumber(1024L*1024L);
+        recipeMaps.FusionTokamak .addRecipe1(F, 2048,400, ST.tag(0), FL.array(MT.D .gas (U, T),MT.T.gas(U, T)), FL.array(MT.He.gas (23*U100, F), FL.MatterNeutral.make(10*U100) )  ).setSpecialNumber(1024L*1024L);
         recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
-                FL.array(MT.D.gas(U, T), MT.T.gas(U, T)), FL.array(MT.He.gas(23*U100, F), MT.n.gas(10*U100, F)),
+                FL.array(MT.D.gas(U, T), MT.T.gas(U, T)), FL.array(MT.He.gas(23*U100, F), FL.MatterNeutral.make(10*U100)),
                 ItemList.TokamakNeutronData.get(1)).setSpecialNumber(1024L*1024L);
         recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
-                FL.array(MT.D.gas(2*U, T)), FL.array(MT.He_3.gas(U100, F), MT.n.gas(U100, F)),
+                FL.array(MT.D.gas(2*U, T)), FL.array(MT.He_3.gas(U100, F), FL.MatterNeutral.make(U100)),
                 ItemList.TokamakPlasmaData.get(1)).setSpecialNumber(1024L*1024L);
 
         // Laser fusion is intentionally a net energy sink. SpecialNumber is the
@@ -67,7 +68,7 @@ public class Fusion {
         // R03/R04 refinement loop. Each fusion product has an explicit, limited
         // downstream use; no recipe returns a target pellet, energy, or an ore.
         recipeMaps.NeutronAbsorption.addRecipe1(F, 8192, 600, ItemList.NeutronRichBismuth.get(2),
-                FL.array(MT.n.gas(U100, T)), ZL_FS, ItemList.NuclearTargetSubstrate.get(1));
+                FL.array(FL.MatterNeutral.make(U100)), ZL_FS, ItemList.NuclearTargetSubstrate.get(1));
         recipeMaps.Assembler.addRecipeX(F, 8192, 600,
                 ST.array(ItemList.MetastableTantalum.get(2), OP.wireFine.mat(MT.Pt, 16), ItemList.ComputerUltimateCircuits.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, ItemList.QuantumControlElement.get(1));
@@ -85,18 +86,32 @@ public class Fusion {
 
         // Target pellets and both chamber controllers are regular manufacturing
         // products; the reactor never creates its own fuel or structure parts.
-        recipeMaps.Assembler.addRecipeX(F, 2048, 200, ST.array(OP.plateTiny.mat(MT.Ti, 2)),
-                FL.array(MT.D.gas(U, T), MT.T.gas(U, T)), ZL_FS, ItemList.LaserTargetDT.get(1));
-        recipeMaps.Assembler.addRecipeX(F, 2048, 200, ST.array(OP.foil.mat(MT.Li, 2)),
-                FL.array(MT.D.gas(U, T)), ZL_FS, ItemList.LaserTargetLi6.get(1));
-        recipeMaps.Assembler.addRecipeX(F, 4096, 300, ST.array(OP.plateTiny.mat(MT.Pb, 2)),
-                FL.array(MT.D.gas(U, T)), ZL_FS, ItemList.LaserTargetLead.get(1));
-        recipeMaps.Assembler.addRecipeX(F, 4096, 300, ST.array(OP.foil.mat(MT.Ta, 2)),
-                FL.array(MT.D.gas(U, T)), ZL_FS, ItemList.LaserTargetTantalum.get(1));
-        recipeMaps.Assembler.addRecipeX(F, 4096, 300, ST.array(OP.foil.mat(MT.C, 4)),
-                FL.array(MT.D.gas(U, T)), ZL_FS, ItemList.LaserTargetGraphite.get(1));
-        recipeMaps.Assembler.addRecipeX(F, 8192, 600, ST.array(OP.plateTiny.mat(MT.Bi, 2)),
-                FL.array(MT.D.gas(2 * U, T)), ZL_FS, ItemList.LaserTargetBismuth.get(1));
+        // Targets use analytical-pure feedstock so isotope purity is decided here.
+        recipeMaps.Assembler.addRecipeX(F, 2048, 200,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.Ti, 2),
+                        prefixList.AnalyticalPureDust.mat(MT.D, 1),
+                        prefixList.AnalyticalPureDust.mat(MT.T, 1)),
+                ZL_FS, ZL_FS, ItemList.LaserTargetDT.get(1));
+        recipeMaps.Assembler.addRecipeX(F, 2048, 200,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.Li, 2),
+                        prefixList.AnalyticalPureDust.mat(MT.D, 1)),
+                ZL_FS, ZL_FS, ItemList.LaserTargetLi6.get(1));
+        recipeMaps.Assembler.addRecipeX(F, 4096, 300,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.Pb, 2),
+                        prefixList.AnalyticalPureDust.mat(MT.D, 1)),
+                ZL_FS, ZL_FS, ItemList.LaserTargetLead.get(1));
+        recipeMaps.Assembler.addRecipeX(F, 4096, 300,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.Ta, 2),
+                        prefixList.AnalyticalPureDust.mat(MT.D, 1)),
+                ZL_FS, ZL_FS, ItemList.LaserTargetTantalum.get(1));
+        recipeMaps.Assembler.addRecipeX(F, 4096, 300,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.C, 4),
+                        prefixList.AnalyticalPureDust.mat(MT.D, 1)),
+                ZL_FS, ZL_FS, ItemList.LaserTargetGraphite.get(1));
+        recipeMaps.Assembler.addRecipeX(F, 8192, 600,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.Bi, 2),
+                        prefixList.AnalyticalPureDust.mat(MT.D, 2)),
+                ZL_FS, ZL_FS, ItemList.LaserTargetBismuth.get(1));
 
         recipeMaps.Assembler.addRecipeX(F, 8192, 600, ST.array(OP.plateDense.mat(MT.TungstenSteel, 4), OP.plate.mat(MT.Glass, 8), OP.wireFine.mat(MT.Pt, 16)),
                 FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31060));
@@ -106,9 +121,9 @@ public class Fusion {
                 FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31062));
         recipeMaps.Assembler.addRecipeX(F, 8192, 600, ST.array(OP.plateDense.mat(MT.Pb, 4), OP.plate.mat(MT.TungstenSteel, 2), OP.foil.mat(MT.Li, 8)),
                 FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31063));
-        recipeMaps.Assembler.addRecipeX(F, 32768, 2400, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 8), GTTileEntityRegistry.ktfruaddon.getItem(31061), GTTileEntityRegistry.ktfruaddon.getItem(31062, 2), GTTileEntityRegistry.ktfruaddon.getItem(31063, 2)),
+        recipeMaps.Assembler.addRecipeX(F, 32768, 2400, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 8), GTTileEntityRegistry.ktfruaddon.getItem(31061), GTTileEntityRegistry.ktfruaddon.getItem(31062, 2)),
                 FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30071));
-        recipeMaps.Assembler.addRecipeX(F, 131072, 4800, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 24), GTTileEntityRegistry.ktfruaddon.getItem(31061, 2), GTTileEntityRegistry.ktfruaddon.getItem(31062, 8), GTTileEntityRegistry.ktfruaddon.getItem(31063, 4)),
+        recipeMaps.Assembler.addRecipeX(F, 131072, 4800, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 24), GTTileEntityRegistry.ktfruaddon.getItem(31062, 8), GTTileEntityRegistry.ktfruaddon.getItem(31063, 4)),
                 FL.array(MT.SolderingAlloy.liquid(U64, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30072));
 
         recipeMaps.NeutronAbsorption.addRecipe0(false, 160,1, MT.Li_6.liquid(U144, true), FL.array(MT.He.gas(U20, false), MT.D.gas(U200,false)));

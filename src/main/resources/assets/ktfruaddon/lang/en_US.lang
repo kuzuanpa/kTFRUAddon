@@ -1648,7 +1648,13 @@ gt.material.QuantumGold=Quantum Gold
 ktfru.recipe.mirror_gold_synthesis=Mirror Gold Synthesis
 ktfru.recipe.mirror_gold_quantumization=Mirror Gold Quantumization
 ktfru.recipe.quantum_gold_synthesis=Quantum Gold Synthesis
+ktfru.recipe.quantum_communication=Quantum Communication
+ktfru.text.quantum_relay.pair=Use a screwdriver on two relays in the same dimension to establish an entanglement channel.
 ktfru.text.quantum_relay.discovery=Pair two relays with a screwdriver: the primary consumes analytical-pure Intellite and the other consumes analytical-pure Nq_522; calibration discovers Mirror Gold and outputs QU.
+ktfru.text.quantum_relay.recorded=The first quantum relay has been recorded; use the screwdriver on the second relay to pair them.
+ktfru.text.quantum_relay.same_dimension=Quantum communication relays must be paired in the same dimension.
+ktfru.text.quantum_relay.partner_missing=The recorded quantum relay is unavailable.
+ktfru.text.quantum_relay.established=Quantum entanglement channel established.
 
 
 # Microgravity room chain

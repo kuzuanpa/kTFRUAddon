@@ -214,6 +214,9 @@ public class fluidPreInit {
         flList.MoltenNaK.registerMolten("potassiumsodium","Potassium Sodium",matList.PotassiumSodium.mat);
         flList.HotMoltenNaK.registerMolten("potassiumsodiumhot","Hot Potassium Sodium",matList.PotassiumSodium.mat,800);
         flList.MoltenPolycarbonate.registerMolten("polycarbonate","Polycarbonate",MT.Polycarbonate);
+        flList.MoltenFluorine.registerMolten("fluorine","Fluorine",MT.F);
+        flList.MoltenChlorine.registerMolten("chlorine","Chlorine",MT.Cl);
+        flList.MoltenIodine.registerMolten("iodine","Iodine",MT.I);
         flList.MolybdenumOxide.registerMolten("molybdenumoxide","MolybdenumOxide",matList.MolybdenumOxide.get());
 
         //磷酸三丁酯

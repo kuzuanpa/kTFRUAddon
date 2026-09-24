@@ -17,15 +17,20 @@ import gregapi.data.CS;
 import gregapi.util.ST;
 
 /**
- * Q1-R02 through Q1-R06.  R01 is deliberately implemented by the paired
- * quantum relay: observing a live entanglement channel is what discovers
- * Mirror Gold, rather than letting an ordinary furnace create it first.
+ * Q1-R01 through Q1-R06.  R01 stays on its own recipe map so ordinary
+ * machines cannot bypass the paired-relay conditions.
  */
 public final class QuantumEntry {
     private QuantumEntry() { }
 
     public static void init() {
         MultiTileEntityRegistry registry = MultiTileEntityRegistry.getRegistry("ktfru.multitileentity");
+
+        // Q1-R01: each end contributes its own analytical-pure material. The
+        // relay only settles the primary-side completion and its QU reward.
+        recipeMaps.QuantumCommunication.addRecipeX(CS.F, 8192, 3600,
+                ST.array(prefixList.AnalyticalPureDust.mat(matList.Ij.mat, 4)),
+                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.MirrorGold.mat, 1));
 
         // Q1-R02: an expensive, low-yield reconstruction of the discovered sample.
         recipeMaps.MirrorGoldSynthesis.addRecipeX(CS.F, 8192, 2400,
@@ -56,9 +61,7 @@ public final class QuantumEntry {
 
         // Q1-R05: the chamber wall contains the first non-negotiable absolute-purity Ij core.
         recipeMaps.CNC.addRecipeX(CS.F, 8192, 1600,
-                ST.array(OP.plate.mat(matList.MirrorGold.mat, 2), registry.getItem(31112),
-                        prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 2),
-                        OP.plateDouble.mat(MT.Ir, 1)),
+                ST.array(OP.plate.mat(matList.MirrorGold.mat, 4), registry.getItem(31112)),
                 FL.array(FL.DistW.make(1000)), CS.ZL_FS, registry.getItem(31111));
 
         // Q1-R06 components.  The relay itself remains buildable before the

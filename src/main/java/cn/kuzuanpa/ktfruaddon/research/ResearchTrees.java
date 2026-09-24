@@ -677,7 +677,10 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(384))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,8)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)));
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30073)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30074)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31112)));
 
                     //QU:纠缠信道; 通道无法窃听也无法复制, 代价是维持相干的能耗
                     ResearchProject todo002 = new ResearchProject(tree, "量子通信", "利用镜金保存下来的纠缠关系传递信息，通道既无法窃听也无法复制。同一套原理还能做出量子传感与超高精度测量设备", Items.paper, 0, 54)
@@ -687,18 +690,25 @@ public class ResearchTrees {
                             .addTask(new EnergyTask(TD.Energy.CU, 8388608, 512))
                             .addTask(new ComputeTask(ComputePower.Normal, 17179869184L))
                             .addTask(new MiniGameIdentifyTask(512))
-                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,4)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31113)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31114)));
 
                     //QU:把被动保存的量子关系驱动起来; 退相干率随纯度逐级下降
                     ResearchProject todo003 = new ResearchProject(tree, "镜金量子化", "对镜金进行进一步的量子化处理，让材料内部的量子关系从被动保存变成可以被外部驱动的自由度。这是通往量金的最后一步加工", Items.paper, 0, 51)
                             .setPos(3280, 70)
                             .addPrerequisite(todo001)
+                            .addPrerequisite(todo002)
                             .addTask(new EnergyTask(TD.Energy.EU, 1073741824, 32768))
                             .addTask(new EnergyTask(TD.Energy.QU, 4194304, 512))
                             .addTask(new EnergyTask(TD.Energy.CU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Normal, 34359738368L))
                             .addTask(new MiniGameCurrentControlTask(512))
-                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,16)));
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,16)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30075)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31111)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31115)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31116)));
 
                     //QU:宏观量子操作的第一件工程材料; 对应GT6的QU级设备
                     ResearchProject todo004 = new ResearchProject(tree, "量金性质", "镜金保存量子关系，量金则把量子关系变成宏观可操作的工程对象。它是量子装置的核心、量子信号的介质、量子放大器与控制器的本体，也是QU级设备的基础材料。你第一次获得宏观量子操作能力", Items.paper, 0, 52)
@@ -801,22 +811,7 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 16777216))
                             .addTask(new MiniGameCurrentControlTask(1024))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30069)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30070)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31080)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31081)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31082)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31083)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31084)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31085)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31086)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31087)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31088)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31089)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31090)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32040)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32041)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32042)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32043)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30070)));
 
                     //集成化->模块化->微型化->工程化: 量子计算从科研设备变成工业基础设施
                     ResearchProject todo012 = new ResearchProject(tree, "微型量子计算", "初代量子计算机巨大、脆弱且昂贵。经过集成化、模块化、微型化与工程化，你得到量子处理芯片、量子控制器、集成量子模块与小型量子计算机——量子计算从科研设备变成工业基础设施", Items.paper, 0, 60)
@@ -827,15 +822,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(1024))
                             .addTask(new MiniGameFillTask(768))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30068)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30079)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31076)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31077)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31078)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31079)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32040)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32041)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32042)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32043)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30079)));
 
                     //不再依赖化学键与晶格, 直接用强相互作用稳定核层面的结构
                     ResearchProject todo013 = new ResearchProject(tree, "强力物质理论", "不再依赖化学键、金属键与晶格结构，而是直接利用强相互作用稳定原子核层面的结构。材料性能从此不再受普通化学规律的约束", Items.paper, 0, 62)

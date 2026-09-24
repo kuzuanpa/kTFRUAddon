@@ -33,7 +33,8 @@ public class KortexWorker {
     /**This is only used to display, inner logic doesn't use this**/
     public StateMgr mState = new StateMgr();
     public static final byte STATE_NO_RECIPE =0, STATE_ITEM_SHORTAGE=1, STATE_FLUID_SHORTAGE=2, STATE_ENERGY_SHORTAGE=3, STATE_OUTPUT_BLOCKED_FLUID=4, STATE_OUTPUT_BLOCKED_ITEM=5, STATE_OUTPUT_BLOCKED_ENERGY=6, STATE_RUNNING=7, STATE_MACHINE_LIMITED=8;
-    protected boolean outputBlocked = false, resetProgressWhenPowerLost = true;
+    protected boolean outputBlocked = false, resetProgressWhenPowerLost = true, consumeInputsOnFinish = false;
+    protected long maxProgressPerTick = Long.MAX_VALUE;
     public long mEnergyStored = 0, mEnergyCapacity = 0, mProgress = 0, mMaxProgress = 0, mCurrentParallel = 0, mRecipeEUt = 0, mInputTankSize = 16000,mOutputTankSize = 16000;
     protected ItemStack[] mRecipeOutputItems = ZL_IS;
     protected FluidStack[] mRecipeOutputFluids = ZL_FS;
@@ -76,6 +77,34 @@ public class KortexWorker {
         resetProgressWhenPowerLost = false;
         return this;
     }
+    public KortexWorker consumeInputsOnFinish(){
+        consumeInputsOnFinish = true;
+        return this;
+    }
+    public KortexWorker setMaxProgressPerTick(long aMaxProgressPerTick){
+        maxProgressPerTick = Math.max(1L, aMaxProgressPerTick);
+        return this;
+    }
+    public boolean hasActiveRecipe(){
+        return mMaxProgress > 0;
+    }
+    public boolean hasEnergyForNextTick(){
+        return mRecipeEUt * mCurrentParallel <= mEnergyStored;
+    }
+    public boolean hasActiveRecipeInputs(){
+        return lastRecipe != null && lastRecipe.isRecipeInputEqual(false, false, fluidInputs, itemInputs);
+    }
+    public Recipe findRecipe(){
+        return recipeMap.findRecipe(machine, lastRecipe, F, Integer.MAX_VALUE, machine.getSpecialSlot(id), fluidInputs, itemInputs);
+    }
+    public boolean canStartRecipe(){
+        if (hasActiveRecipe()) return true;
+        Recipe recipe = findRecipe();
+        return recipe != null && recipe.mDuration > 0 && calculateParallelAndConsume(recipe, machine.getMaxParallel(id, recipe.mEUt, recipe.mDuration), false) > 0;
+    }
+    public ItemStack[] getRecipeOutputItems(){
+        return mRecipeOutputItems;
+    }
     public void run() {
         if(outputBlocked){
             machine.receiveOutputs(fluidOutputs, itemOutputs);
@@ -108,7 +137,7 @@ public class KortexWorker {
         if (recipe == null || recipe.mDuration <= 0) return STATE_NO_RECIPE;
 
         lastRecipe = recipe;
-        int parallel = calculateParallelAndConsume(recipe, machine.getMaxParallel(id, recipe.mEUt,recipe.mDuration), true);
+        int parallel = calculateParallelAndConsume(recipe, machine.getMaxParallel(id, recipe.mEUt,recipe.mDuration), !consumeInputsOnFinish);
 
         if (parallel <= 0) return mState.get();
 
@@ -173,10 +202,13 @@ public class KortexWorker {
 
         if (!aConsume) return rPossibleParallel;
 
-        //remove fluid
+        consumeRecipeInputs(aRecipe, rPossibleParallel);
+        return rPossibleParallel;
+    }
+    private void consumeRecipeInputs(Recipe aRecipe, int aParallel) {
         if (aRecipe.mFluidInputs != null) for (FluidStack recipeFluid : aRecipe.mFluidInputs) {
             if (recipeFluid == null) continue;
-            long amountToDrain = (long) recipeFluid.amount * rPossibleParallel;
+            long amountToDrain = (long) recipeFluid.amount * aParallel;
             for (FluidTankGT tank : fluidInputs) {
                 if (tank.isEmpty() || !FL.equal(tank.getFluid(), recipeFluid)) continue;
 
@@ -184,10 +216,9 @@ public class KortexWorker {
                 if (amountToDrain <= 0) break;
             }
         }
-        //remove item
         if (aRecipe.mInputs != null) for (ItemStack recipeStack : aRecipe.mInputs) {
             if (recipeStack == null) continue;
-            int amountToRemove =  recipeStack.stackSize * rPossibleParallel;
+            int amountToRemove = recipeStack.stackSize * aParallel;
             for (int i = 0; i < itemInputs.length; i++) {
                 ItemStack invStack = itemInputs[i];
                 if (!ST.equal(recipeStack, invStack, T)) continue;
@@ -199,7 +230,6 @@ public class KortexWorker {
                 if (amountToRemove <= 0) break;
             }
         }
-        return rPossibleParallel;
     }
     private void updateProgress() {
         long requiredPerTick = mRecipeEUt * mCurrentParallel;
@@ -209,7 +239,7 @@ public class KortexWorker {
             mState.set(STATE_ENERGY_SHORTAGE);
             return;
         }
-        long speed = Math.min( (mEnergyStored / requiredPerTick), mMaxProgress - mProgress);
+        long speed = Math.min(Math.min(mEnergyStored / requiredPerTick, maxProgressPerTick), mMaxProgress - mProgress);
 
         if (speed <= 0) return;
         mEnergyStored -= speed * requiredPerTick;
@@ -234,6 +264,7 @@ public class KortexWorker {
     }
 
     private void finishRecipe() {
+        if (consumeInputsOnFinish && lastRecipe != null) consumeRecipeInputs(lastRecipe, (int)mCurrentParallel);
         for (int i = 0; i < mRecipeOutputFluids.length && i < fluidOutputs.length; i++) {
             if (mRecipeOutputFluids[i] != null && fluidOutputs[i] != null) fluidOutputs[i].fill(mRecipeOutputFluids[i]);
         }
@@ -273,6 +304,7 @@ public class KortexWorker {
 
     public void writeToNBT(NBTTagCompound aNBT) {
         NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setLong("rEnergy", mEnergyStored);
         nbt.setLong("rEUt", mRecipeEUt);
         nbt.setLong("rProg", mProgress);
         nbt.setLong("rMax", mMaxProgress);
@@ -293,6 +325,7 @@ public class KortexWorker {
 
     public void readFromNBT(NBTTagCompound aNBT) {
         NBTTagCompound nbt = aNBT.getCompoundTag("kortex"+id);
+        mEnergyStored = nbt.getLong("rEnergy");
         mRecipeEUt = nbt.getLong("rEUt");
         mProgress = nbt.getLong("rProg");
         mMaxProgress = nbt.getLong("rMax");
