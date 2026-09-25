@@ -38,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,6 +73,7 @@ public class ResearchTree{
     }
 
     public static Map<Byte,IResearchTreeTemplate> ResearchTreeTemplate = new HashMap<>();
+    public static Map<Byte, ResourceLocation> ResearchTreeTextureOverride = new HashMap<>();
     public static Map<UUID, ResearchTree> allTreeUUIDsClient = new HashMap<>();
     public static Map<UUID, ResearchTree> allTreeUUIDsServer = new HashMap<>();
     public UUID uuid = UUID.randomUUID();

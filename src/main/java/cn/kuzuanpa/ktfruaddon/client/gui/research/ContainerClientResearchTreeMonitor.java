@@ -63,7 +63,6 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 	}
 	ResearchTree theTree;
 	final ResourceLocation background = new ResourceLocation(MOD_ID,"textures/gui/research/background.png");
-	final ResourceLocation main = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
 	public ResearchProject pointingItem = null;
 	public ResearchProject selectedItem = null;
 	public ResearchCommonElements.CurrentPanel currentPanel= null;
@@ -177,6 +176,13 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		ResearchTree.sendGetTreeDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), theTree.uuid, (byte) 4);
 	}
 
+	private final ResourceLocation defaultMainTexture = new ResourceLocation(MOD_ID,"textures/gui/research/main.png");
+	public ResourceLocation getMainTexture() {
+		ResourceLocation texture = ResearchTree.ResearchTreeTextureOverride.get(theTree.id);
+		if(texture!=null)return texture;
+		return defaultMainTexture;
+	}
+
 	public class researchButton extends kGuiButtonBase {
 		public researchButton(int id, ResearchProject researchProject) {
 			super(id, researchProject.posX, researchProject.posY, 80, 32, "");
@@ -220,7 +226,7 @@ public class ContainerClientResearchTreeMonitor extends kGuiScreenBase implement
 		}
 		public void drawBackground(Tessellator tessellator, float colorTimer){
 			fillColor(colorTimer);
-			mc.getTextureManager().bindTexture(main);
+			mc.getTextureManager().bindTexture(getMainTexture());
 			ResearchCommonElements.drawTextureRect(tessellator, xPosition, yPosition, this.zLevel, 0, width, height, 0);
 			drawDependsLine(tessellator, colorTimer);
 			GL11.glColor4f(1,1,1,1);

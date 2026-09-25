@@ -14,7 +14,6 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.research;
 
-import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileReceiveContainerButtonClick;
 import cn.kuzuanpa.ktfruaddon.api.network.ITileSyncByteArrayLong;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
@@ -24,8 +23,8 @@ import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMon
 import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerCommonResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.ktfruaddon;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.research.MultiResearchTableBase;
-import gregapi.data.LH;
 import gregapi.data.CS;
+import gregapi.data.LH;
 import gregapi.network.INetworkHandler;
 import gregapi.network.IPacket;
 import gregapi.old.Textures;
@@ -41,7 +40,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements ITileSyncByteArrayLong, ITileReceiveContainerButtonClick, IResearchTable {
@@ -74,8 +75,10 @@ public class ResearchTreeMonitor extends TileEntityBase09FacingSingle implements
         super.readFromNBT2(aNBT);
         if(aNBT.hasKey("researchTree"))
             theTree.load(aNBT.getCompoundTag("researchTree"));
-        else if(worldObj != null)
-            theTree.createFromTemplate((byte)0);
+        else if(worldObj != null){
+            if(aNBT.hasKey("researchTreeTemplate"))theTree.createFromTemplate(aNBT.getByte("researchTreeTemplate"));
+            else theTree.createFromTemplate((byte)0);
+        }
     }
 
     @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) {
