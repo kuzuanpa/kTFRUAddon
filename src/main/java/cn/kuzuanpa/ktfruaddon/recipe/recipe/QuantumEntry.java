@@ -32,16 +32,19 @@ public final class QuantumEntry {
                 ST.array(prefixList.AnalyticalPureDust.mat(matList.Ij.mat, 4)),
                 CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.MirrorGold.mat, 1));
 
-        // Q1-R02: an expensive, low-yield reconstruction of the discovered sample.
+        // Q1-R02: economical re-synthesis after the first live-relay sample has
+        // been studied. The sample is a seed: one ingot becomes two, while each
+        // additional ingot costs half the analytical-pure input of R01.
         recipeMaps.MirrorGoldSynthesis.addRecipeX(CS.F, 8192, 2400,
-                ST.array(prefixList.AnalyticalPureDust.mat(matList.Ij.mat, 4),
-                        prefixList.AnalyticalPureDust.mat(MT.Nq_522, 4),
-                        prefixList.CommercialPureDust.mat(MT.Pt, 4),
-                        OP.nugget.mat(matList.Ij.mat, 8)),
-                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.MirrorGold.mat, 1));
+                ST.array(OP.ingot.mat(matList.MirrorGold.mat, 1),
+                        prefixList.AnalyticalPureDust.mat(matList.Ij.mat, 2),
+                        prefixList.AnalyticalPureDust.mat(MT.Nq_522, 2),
+                        OP.nugget.mat(matList.Ij.mat, 4)),
+                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.MirrorGold.mat, 2));
 
-        // Q1-R03: production-grade Mirror Gold plates have an absolute-purity hard gate.
-        recipeMaps.MirrorGoldSynthesis.addRecipeX(CS.F, 32768, 4800,
+        // Q1-R03: production-grade Mirror Gold plates have an absolute-purity
+        // hard gate. 30073 is an 8192 EU/t machine, so the recipe must fit it.
+        recipeMaps.MirrorGoldSynthesis.addRecipeX(CS.F, 8192, 4800,
                 ST.array(prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 8),
                         prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4),
                         prefixList.AbsolutelyPureDust.mat(MT.Pt, 4),

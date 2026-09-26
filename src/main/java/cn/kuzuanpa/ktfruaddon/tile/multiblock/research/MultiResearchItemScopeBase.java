@@ -26,7 +26,6 @@ import gregapi.gui.ContainerCommonDefault;
 import gregapi.tileentity.energy.ITileEntityEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockEnergy;
 import gregapi.tileentity.multiblocks.IMultiBlockInventory;
-import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.UT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +39,7 @@ import zmaster587.libVulpes.items.ItemProjector;
 import java.util.Collection;
 import java.util.List;
 
-import static gregapi.data.CS.*;
+import static gregapi.data.CS.NBT_ENERGY;
 
 public abstract class MultiResearchItemScopeBase extends MultiResearchTableBase implements ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockInventory {
     protected static final TagData ENERGY_TYPE = TD.Energy.EU;
@@ -204,21 +203,10 @@ public abstract class MultiResearchItemScopeBase extends MultiResearchTableBase 
     }
 
     @Override
-    public long doEnergyInjection(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
-        return doInject(aEnergyType, aSide, aSize, aAmount, aDoInject);
-    }
-
-    @Override
     public long getEnergyDemanded(TagData aEnergyType, byte aSide, long aSize) {
         if (!ENERGY_TYPE.equals(aEnergyType) || aSize <= 0) return 0;
         return Math.max(0, mEnergyCapacity - mEnergyStored) / aSize;
     }
-
-    @Override
-    public long doEnergyExtraction(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoExtract) {
-        return 0;
-    }
-
     @Override
     public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {
         return 0;
@@ -272,75 +260,5 @@ public abstract class MultiResearchItemScopeBase extends MultiResearchTableBase 
     @Override
     public Collection<TagData> getEnergyTypes(byte aSide) {
         return ENERGY_TYPE.AS_LIST;
-    }
-
-    @Override
-    public boolean isEnergyType(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, boolean aEmitting) {
-        return isEnergyType(aEnergyType, aSide, aEmitting);
-    }
-
-    @Override
-    public Collection<TagData> getEnergyTypes(MultiTileEntityMultiBlockPart aPart, byte aSide) {
-        return getEnergyTypes(aSide);
-    }
-
-    @Override
-    public boolean isEnergyAcceptingFrom(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, boolean aTheoretical) {
-        return isEnergyAcceptingFrom(aEnergyType, aSide, aTheoretical);
-    }
-
-    @Override
-    public boolean isEnergyEmittingTo(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, boolean aTheoretical) {
-        return false;
-    }
-
-    @Override
-    public long doEnergyInjection(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
-        return doEnergyInjection(aEnergyType, aSide, aSize, aAmount, aDoInject);
-    }
-
-    @Override
-    public long getEnergyDemanded(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize) {
-        return getEnergyDemanded(aEnergyType, aSide, aSize);
-    }
-
-    @Override
-    public long doEnergyExtraction(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoExtract) {
-        return 0;
-    }
-
-    @Override
-    public long getEnergyOffered(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize) {
-        return 0;
-    }
-
-    @Override
-    public long getEnergySizeInputMin(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
-        return getEnergySizeInputMin(aEnergyType, aSide);
-    }
-
-    @Override
-    public long getEnergySizeOutputMin(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
-        return 0;
-    }
-
-    @Override
-    public long getEnergySizeInputRecommended(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
-        return getEnergySizeInputRecommended(aEnergyType, aSide);
-    }
-
-    @Override
-    public long getEnergySizeOutputRecommended(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
-        return 0;
-    }
-
-    @Override
-    public long getEnergySizeInputMax(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
-        return getEnergySizeInputMax(aEnergyType, aSide);
-    }
-
-    @Override
-    public long getEnergySizeOutputMax(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
-        return 0;
     }
 }

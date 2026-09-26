@@ -665,36 +665,35 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(256));
                     // TODO(Biology tree): move the Biology compute gate into the independent Biology research tree.
 
-
-                    //智能体接手了假设与试错, 实物只剩下最后的样品验证; 此后各节点主要开销为算力与能源
-                    ResearchProject todo001 = new ResearchProject(tree, "镜金性质", "镜金是一种能在宏观尺度上稳定保存量子关联的特殊材料，核心属性是量子相干性。", Items.paper, 0, 42)
-                            .setPos(3180, 70)
-                            .addPrerequisite(AIResearch)
-                            .addPrerequisite(universeRadio)
-                            .addTask(new EnergyTask(TD.Energy.EU, 536870912, 8192))
-                            .addTask(new EnergyTask(TD.Energy.CU, 4194304, 512))
-                            .addTask(new ComputeTask(ComputePower.Normal, 8589934592L))
-                            .addTask(new MiniGameIdentifyTask(384))
-                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,8)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30073)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30074)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31112)));
-
-                    //QU:纠缠信道; 通道无法窃听也无法复制, 代价是维持相干的能耗
-                    ResearchProject todo002 = new ResearchProject(tree, "量子通信", "利用镜金保存下来的纠缠关系传递信息，通道既无法窃听也无法复制。同一套原理还能做出量子传感与超高精度测量设备", Items.paper, 0, 54)
+                    //QU:首次观测镜金; 中继器解锁后即可运行，研究完成时只保留正式信道组件
+                    ResearchProject todo001 = new ResearchProject(tree, "量子通信", "利用镜金保存下来的纠缠关系传递信息，通道既无法窃听也无法复制。同一套原理还能做出量子传感与超高精度测量设备", Items.paper, 0, 54)
                             .setPos(3280, 0)
-                            .addPrerequisite(todo001)
+                            .addPrerequisite(naqudahTheory)
                             .addTask(new EnergyTask(TD.Energy.QU, 1048576, 128))
                             .addTask(new EnergyTask(TD.Energy.CU, 8388608, 512))
                             .addTask(new ComputeTask(ComputePower.Normal, 17179869184L))
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30074)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31113)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31114)));
 
-                    //QU:把被动保存的量子关系驱动起来; 退相干率随纯度逐级下降
+                    //已有首发镜金样品，开始研究其宏观量子关联、复现方式与后续用途
+                    ResearchProject todo002 = new ResearchProject(tree, "镜金应用", "量子通信已经产出了第一批镜金样品。研究镜金如何在宏观尺度保存量子关联，并把样品复现与量子相干性推进到可工业利用的形态", Items.paper, 0, 42)
+                            .setPos(3180, 70)
+                            .addPrerequisite(todo001)
+                            .addTask(new EnergyTask(TD.Energy.EU, 536870912, 8192))
+                            .addTask(new EnergyTask(TD.Energy.CU, 4194304, 512))
+                            .addTask(new ComputeTask(ComputePower.Normal, 8589934592L))
+                            .addTask(new MiniGameIdentifyTask(384))
+                            .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.MirrorGold.mat,1)))
+                            .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30073)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31112)));
+
+                    //QU:把镜金量子化为量金; 30076 是量金唯一来源，必须在本节点先行产出样品
                     ResearchProject todo003 = new ResearchProject(tree, "镜金量子化", "对镜金进行进一步的量子化处理，让材料内部的量子关系从被动保存变成可以被外部驱动的自由度。这是通往量金的最后一步加工", Items.paper, 0, 51)
                             .setPos(3280, 70)
                             .addPrerequisite(todo001)
@@ -708,17 +707,20 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30075)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31111)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31115)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31116)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31116)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30076)));
 
-                    //QU:宏观量子操作的第一件工程材料; 对应GT6的QU级设备
-                    ResearchProject todo004 = new ResearchProject(tree, "量金性质", "镜金保存量子关系，量金则把量子关系变成宏观可操作的工程对象。它是量子装置的核心、量子信号的介质、量子放大器与控制器的本体，也是QU级设备的基础材料。你第一次获得宏观量子操作能力", Items.paper, 0, 52)
+                    //已有量金样品，研究其作为量子装置核心、量子信号介质与QU级设备基础材料的用途
+                    ResearchProject todo004 = new ResearchProject(tree, "量金应用", "镜金保存量子关系，量金则把量子关系变成宏观可操作的工程对象。既然量金样品已经由量子化场产出，现在研究它作为量子装置核心、量子信号介质、量子放大器与QU级设备基础材料的实际用途", Items.paper, 0, 52)
                             .setPos(3380, 70)
                             .addPrerequisite(todo003)
                             .addTask(new EnergyTask(TD.Energy.QU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Normal, 68719476736L))
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new MiniGameIdentifyTask(384))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,4)));
+                            .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.QuantumGold.mat,1)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30080)));
 
                     //Identify:测量本身就会破坏被测的量子态, 没有它量子设备连自己算错了都不知道
                     ResearchProject todo005 = new ResearchProject(tree, "量子观测", "知道一个系统，和对系统进行测量，并不是一回事。研究量子态、测量、退相干、纠缠、叠加与量子概率，造出量子观测仪、量子态分析器、纠缠检测器与相干性稳定器——没有它们，量子设备连自己算错了都不会知道", Items.paper, 0, 53)
@@ -738,6 +740,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(768))
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,32)))
+                            .addTask(new ItemConsumeTaskSimple(ItemList.TechResearchData53.get(8)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30065)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31065)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31066)))

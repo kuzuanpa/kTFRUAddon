@@ -140,7 +140,7 @@ public enum ItemList implements IItemContainer{
     Proton, Anti_Proton, Electron, Positron, Neutron, Alpha_Particle, Neutrino, Anti_Neutrino, Higgs_Boson, Kerr_Blackhole,
     LaserTargetDT, LaserTargetLi6, LaserTargetLead, LaserTargetTantalum, LaserTargetGraphite, LaserTargetBismuth,
     NeutronRichBismuth, MetastableTantalum, DenseGraphenePrecursor, NuclearTargetSubstrate,
-    QuantumControlElement, SuperheavyNuclidePrecursor, NaquadriaPrecursor,
+    QuantumControlElement, SuperheavyNuclidePrecursor, NaquadriaPrecursor, QuantumObservationData,
     //research-exclusive ordinary samples
     CosmicRadiationBackgroundData, CosmicRadiationSpectrumData, HighEnergyCosmicParticleData,
     TokamakPlasmaData, TokamakNeutronData, LaserFusionCompressionData, LaserFusionNeutronData,

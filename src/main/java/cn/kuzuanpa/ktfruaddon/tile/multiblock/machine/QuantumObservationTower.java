@@ -11,6 +11,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseControlledMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.data.LH;
@@ -31,45 +32,41 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-/**
- * Q2-02.  The chamber is deliberately a real multiblock: the quantumization
- * furnace prepares its drive and lattice parts, while this structure combines
- * their fields around Mirror Gold to create Quantum Gold.  There is no
- * persistent "quantumized Mirror Gold" material between the two operations.
- *
- * Structure (three layers, viewed from the controller front):
- * Bottom:  QEQ / Q D / QQQ
- * Middle:  QGQ / GLG / QGQ
- * Top:     SSS / SRS / SSS
- * Q=31111 coherence wall, D=31000 item/fluid port, E=31000 energy port,
- * G=31115 drive module, L=31116 lattice stabilizer, S=31112 substrate,
- * R=31113 entanglement channel module.  The controller occupies the blank
- * position in the bottom layer; E is the top-right Q position on that layer.
- */
-public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine {
+/** Q3-01. Fixed 3x3x5 observation tower; the controller occupies K in the middle layer. */
+public class QuantumObservationTower extends TileEntityBaseControlledMachine {
     private ChunkCoordinates lastFailedPos;
 
-    private static final IStringBaseStructure STRUCTURE = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+    private static final IStringBaseStructure STRUCTURE = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCDE")
             .fixedLayer('A',
-                    "QEQ",
-                    "Q D",
-                    "QQQ")
+                    "WWW",
+                    "WEW",
+                    "WWW")
             .fixedLayer('B',
-                    "QGQ",
-                    "GLG",
-                    "QGQ")
+                    "WIW",
+                    "BSB",
+                    "WIW")
             .fixedLayer('C',
-                    "SSS",
-                    "SRS",
-                    "SSS")
-            .where('Q', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31111, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID, 1)))
+                    "RCR",
+                    "DKS",
+                    "RCR")
+            .fixedLayer('D',
+                    "WIW",
+                    "BSB",
+                    "WIW")
+            .fixedLayer('E',
+                    "WWW",
+                    "WEW",
+                    "WWW")
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31111, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('B', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31112, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31113, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('R', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31114, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31115, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('S', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31116, MultiTileEntityMultiBlockPart.NOTHING, 1)))
             .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN, 1)))
-            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31115, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('L', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31116, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('S', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31112, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('R', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31113, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .setOffset(-1, 0, -1);
+            .where('I', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID, 1)))
+            .where('K', new ControllerPredicate())
+            .setOffset(-1, -2, -1);
 
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
@@ -78,7 +75,7 @@ public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine
         lastFailedPos = STRUCTURE.checkStructure(new StructureContext(this,
                 building ? StructureContext.StringBaseMode.SET : StructureContext.StringBaseMode.CHECK,
                 worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
-        if (lastFailedPos != null) resetParts();
+        if (lastFailedPos != null && building) resetParts();
         return lastFailedPos == null;
     }
 
@@ -104,10 +101,9 @@ public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.3"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.4"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumobservation.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumobservation.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumobservation.3"));
         super.addToolTips(aList, aStack, aF3_H);
     }
 
@@ -149,6 +145,6 @@ public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine
 
     @Override
     public String getTileEntityName() {
-        return "ktfru.multitileentity.30076";
+        return "ktfru.multitileentity.30080";
     }
 }

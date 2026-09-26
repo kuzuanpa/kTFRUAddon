@@ -134,12 +134,10 @@ public class CentrifugalMicrogravityController extends TileEntityBaseRoom implem
         aNBT.setBoolean("ktfru.room.active", roomActive);
     }
 
+
     // Energy
-    @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {return aEnergyType == TD.Energy.EU;}
-    @Override public Collection<TagData> getEnergyTypes(byte aSide) {return Collections.singleton(TD.Energy.EU);}
-    @Override public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aEnergyType == TD.Energy.EU;}
-    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {return false;}
-    @Override public long doEnergyInjection(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
+    @Override
+    public long doInject(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {
         if (aEnergyType != TD.Energy.EU || aSize <= 0 || aAmount <= 0) return 0;
         long available = ENERGY_CAPACITY - roomEnergy;
         long offered = aSize * aAmount;
@@ -148,8 +146,12 @@ public class CentrifugalMicrogravityController extends TileEntityBaseRoom implem
         if (aDoInject) roomEnergy += accepted;
         return accepted / aSize;
     }
+    @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {return aEnergyType == TD.Energy.EU;}
+    @Override public Collection<TagData> getEnergyTypes(byte aSide) {return Collections.singleton(TD.Energy.EU);}
+    @Override public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aEnergyType == TD.Energy.EU;}
+    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {return false;}
+
     @Override public long getEnergyDemanded(TagData aEnergyType, byte aSide, long aSize) {return aEnergyType == TD.Energy.EU ? Math.max(0, ENERGY_CAPACITY - roomEnergy) : 0;}
-    @Override public long doEnergyExtraction(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoExtract) {return 0;}
     @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {return 0;}
     @Override public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return aEnergyType == TD.Energy.EU ? 1 : 0;}
     @Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return 0;}
@@ -157,21 +159,6 @@ public class CentrifugalMicrogravityController extends TileEntityBaseRoom implem
     @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return 0;}
     @Override public long getEnergySizeInputMax(TagData aEnergyType, byte aSide) {return aEnergyType == TD.Energy.EU ? 8192 : 0;}
     @Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {return 0;}
-
-    @Override public boolean isEnergyType(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, boolean aEmitting) {return isEnergyType(aEnergyType, aSide, aEmitting);}
-    @Override public Collection<TagData> getEnergyTypes(MultiTileEntityMultiBlockPart aPart, byte aSide) {return getEnergyTypes(aSide);}
-    @Override public boolean isEnergyAcceptingFrom(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, boolean aTheoretical) {return isEnergyAcceptingFrom(aEnergyType, aSide, aTheoretical);}
-    @Override public boolean isEnergyEmittingTo(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, boolean aTheoretical) {return false;}
-    @Override public long doEnergyInjection(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject) {return doEnergyInjection(aEnergyType, aSide, aSize, aAmount, aDoInject);}
-    @Override public long getEnergyDemanded(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize) {return getEnergyDemanded(aEnergyType, aSide, aSize);}
-    @Override public long doEnergyExtraction(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoExtract) {return 0;}
-    @Override public long getEnergyOffered(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide, long aSize) {return 0;}
-    @Override public long getEnergySizeInputMin(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {return getEnergySizeInputMin(aEnergyType, aSide);}
-    @Override public long getEnergySizeOutputMin(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {return 0;}
-    @Override public long getEnergySizeInputRecommended(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {return getEnergySizeInputRecommended(aEnergyType, aSide);}
-    @Override public long getEnergySizeOutputRecommended(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {return 0;}
-    @Override public long getEnergySizeInputMax(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {return getEnergySizeInputMax(aEnergyType, aSide);}
-    @Override public long getEnergySizeOutputMax(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {return 0;}
 
     // GUI
     @Override public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {

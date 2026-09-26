@@ -82,7 +82,7 @@ public class Fusion {
         // without making the laser chamber a general-purpose matter source.
         recipeMaps.HeatMixer.addRecipeX(F, 32768, 2400,
                 ST.array(ItemList.NaquadriaPrecursor.get(1), ItemList.QuantumControlElement.get(1)),
-                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dustTiny.mat(MT.Nq, 1));
+                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dustTiny.mat(MT.Naquadria, 1));
 
         // Target pellets and both chamber controllers are regular manufacturing
         // products; the reactor never creates its own fuel or structure parts.

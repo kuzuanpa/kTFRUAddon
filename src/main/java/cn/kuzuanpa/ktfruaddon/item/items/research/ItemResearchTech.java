@@ -79,7 +79,7 @@ public class ItemResearchTech extends ItemResearchBase {
         ItemList.TechResearchData49.set(addItem(49, "研究数据-数据汇总-惯性",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData50.set(addItem(50, "研究数据-商用惯性约束",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData51.set(addItem(51, "研究数据-量子化镜金",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
-        ItemList.TechResearchData52.set(addItem(52, "研究数据-量金性质应用",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
+        ItemList.TechResearchData52.set(addItem(52, "研究数据-量金应用",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData53.set(addItem(53, "研究数据-量子观测",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData54.set(addItem(54, "研究数据-量子处理",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData55.set(addItem(55, "研究数据-量子计算",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
