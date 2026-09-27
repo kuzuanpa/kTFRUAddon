@@ -16,6 +16,7 @@
 package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.command.CommandARRecipeGen;
+import cn.kuzuanpa.ktfruaddon.command.CommandKTFRUWireless;
 import cn.kuzuanpa.ktfruaddon.command.CommandRecipeExport;
 import cn.kuzuanpa.ktfruaddon.command.CommandRecipeHeadsTails;
 import cn.kuzuanpa.ktfruaddon.command.CommandTileCodeConvert;
@@ -53,6 +54,7 @@ public final class ktfruaddon extends Abstract_Mod {
         e.registerServerCommand(new CommandARRecipeGen());
         e.registerServerCommand(new CommandRecipeExport());
         e.registerServerCommand(new CommandRecipeHeadsTails());
+        e.registerServerCommand(new CommandKTFRUWireless());
     }
     public String getModID() {
         return "ktfruaddon";

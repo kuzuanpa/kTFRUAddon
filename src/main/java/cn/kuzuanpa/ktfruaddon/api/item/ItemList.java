@@ -100,6 +100,7 @@ public enum ItemList implements IItemContainer{
     //Compact
     //Research Related
     ResearchViewer,
+    WirelessCLIWristband,
     //Useless
     GTQTIcon,
     //AdvancedRocketry

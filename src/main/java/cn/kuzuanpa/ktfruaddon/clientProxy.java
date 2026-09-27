@@ -17,8 +17,10 @@ package cn.kuzuanpa.ktfruaddon;
 
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.nei.NeiHiddener;
+import cn.kuzuanpa.ktfruaddon.api.network.PacketUUIDAssignedData;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
+import cn.kuzuanpa.ktfruaddon.client.gui.research.ContainerClientResearchTreeMonitor;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import cn.kuzuanpa.ktfruaddon.client.render.*;
 import cn.kuzuanpa.ktfruaddon.tile.energy.generator.WaterMill;
@@ -32,6 +34,7 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.miner.AsteroidMiner;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.DummyCrucibleScreen;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.SunHeaterMirror;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -41,9 +44,12 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.data.LH;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.UUID;
 
 import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.isAdvancedRocketryTFRU;
 
@@ -51,6 +57,21 @@ public class clientProxy extends commonProxy {
     ResearchTree researchTree = null;
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        PacketUUIDAssignedData.typeMap.put((byte) 2, clientProxy::openResearchTreeGUI);
+    }
+
+    /**Opens the portable research tree GUI for the tree with the given UUID, syncing its data first when the client has not cached it yet. Triggered by the /kTFRUWireless research command server side.**/
+    @SideOnly(Side.CLIENT)
+    public static void openResearchTreeGUI(UUID treeUUID, byte[] ignored) {
+        if (Minecraft.getMinecraft().thePlayer == null) return;
+        ResearchTree tree = ResearchTree.allTreeUUIDsClient.get(treeUUID);
+        if (tree == null) {
+            ResearchTree.sendGetTreeDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), treeUUID, (byte) 2);
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(LH.get("ktfru.wireless.cli.research.syncing")));
+            return;
+        }
+        ResearchTree.sendGetTreeDataPacket(Minecraft.getMinecraft().thePlayer.getCommandSenderName(), treeUUID, (byte) 3);
+        FMLCommonHandler.instance().showGuiScreen(new ContainerClientResearchTreeMonitor(tree));
     }
 
     public void init(FMLInitializationEvent event) {

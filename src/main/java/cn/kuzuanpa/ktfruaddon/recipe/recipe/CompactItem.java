@@ -52,6 +52,8 @@ public class CompactItem {
         CR.shaped(ItemList.CrucibleModelInnerLayer.get(1), CR.DEF, " I ", " I ", " f ", 'I', OP.ingot.mat(MT.RedSteel, 1));
 
         RM.LaserEngraver.addRecipe2(F, 32, 80, ST.tag(0), OP.plateGemTiny.mat(MT.Si, 1), ItemList.GoodCircuitPartCore.get(1));
+
+        CR.shaped(ItemList.WirelessCLIWristband.get(1), CR.DEF, "WCW", "PGP", "WLW", 'C', IL.Circuit_Good.get(1), 'G', ItemList.IntelligentCore.get(1), 'P', OP.plate.mat(MT.Al, 1), 'W', OP.wireFine.mat(MT.Au, 1), 'L', OP.foil.mat(MT.Rubber, 1));
         //Engine Parts
         {
             OreDictMaterial aMat;

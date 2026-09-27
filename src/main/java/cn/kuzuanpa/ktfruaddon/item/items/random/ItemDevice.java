@@ -18,6 +18,7 @@ package cn.kuzuanpa.ktfruaddon.item.items.random;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.item.behavior.Behavior_ResearchViewer;
+import cn.kuzuanpa.ktfruaddon.item.behavior.Behavior_Wristband;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 import net.minecraft.item.ItemStack;
@@ -56,6 +57,7 @@ public class ItemDevice extends MultiItemRandom {
         ItemList.DeprecatedAsteroidMinerRocketT5Fast.set(addItem(19, "Deprecated Fast Asteroid Miner Rocket (T5)",  ""));
 
         ItemList.ResearchViewer                      .set(addItem(20, "Research Viewer", "", Behavior_ResearchViewer.INSTANCE));
+        ItemList.WirelessCLIWristband                .set(addItem(21, "Wireless CLI Wristband", "Right-click to activate /kTFRUWireless", Behavior_Wristband.INSTANCE));
 
     }
 
