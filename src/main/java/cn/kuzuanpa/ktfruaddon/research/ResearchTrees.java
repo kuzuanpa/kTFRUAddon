@@ -17,6 +17,7 @@ package cn.kuzuanpa.ktfruaddon.research;
 import cn.kuzuanpa.ktfruaddon.api.code.ItemType;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.material.matList;
+import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchTree;
 import cn.kuzuanpa.ktfruaddon.api.research.task.*;
@@ -487,6 +488,20 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(OP.plate.mat(matList.PEEK.mat,1)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30121)));
 
+                    //Fill:感应耦合与远程配电; 分析纯导体+PEEK绝缘+石墨烯线圈, 在终极塑料后开放有限距离输电
+                    ResearchProject wirelessPowerInductive = new ResearchProject(tree, "感应无线输电", "把感应耦合从变压器尺度扩展到工业配电网。能量可以在没有实体电缆的情况下跨过厂区传输，但距离越远损耗越大，且只能处理EU。", Items.paper, 0, 70)
+                            .setPos(2480, 140)
+                            .addPrerequisite(advancedPlastic)
+                            .addTask(new EnergyTask(TD.Energy.EU, 4194304, 64))
+                            .addTask(new ComputeTask(ComputePower.Normal, 8388608))
+                            .addTask(new MiniGameFillTask(128))
+                            .addTask(new ItemConsumeTaskEScope(prefixList.AnalyticalPureDust.mat(MT.Cu, 16)))
+                            .addTask(new ItemConsumeTaskEScope(prefixList.AnalyticalPureDust.mat(MT.Ag, 8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.plate.mat(matList.PEEK.mat, 8)))
+                            .addTask(new ItemConsumeTaskEScope(OP.wireFine.mat(MT.Graphene, 32)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30114)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31117)));
+
                     //CurrentControl+Fill+Identify:FinFET工艺; Si+Au+PTFE
                     ResearchProject computerT5 = new ResearchProject(tree, "计算机T5", "平面晶体管的漏电已无法忍受，改用立体的鳍式结构重新组织沟道，解锁36v2系列计算机", Items.paper, 0, 36)
                             .setPos(2580, 70)
@@ -656,13 +671,21 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3680v4e.get(1)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT3699v4e.get(1)));
 
-                    //纯算力节点: 训练过程只烧算力与电, 之后所有研究的实物需求都由智能体压到最低
-                    ResearchProject AIResearch = new ResearchProject(tree, "人工智能研究", "在极限算力之上训练出能够自行提出假设、设计实验、归纳规律的智能体。科研第一次不再完全由你驱动，而是由你和机器共同推进", Items.paper, 0, 49)
+                    //人工监督训练: 海量识别校准后, 三种科研小游戏都可交给独立AI多方块自动完成
+                    ResearchProject AIResearch = new ResearchProject(tree, "人工智能研究", "在极限算力之上训练出能够自行提出假设、设计实验、归纳规律的智能体。训练需要你完成大规模人工识别校准；人工智能跨过这道门槛后，后续科研小游戏将交由专用机器自动推进", Items.paper, 0, 49)
                             .setPos(3080, 70)
                             .addPrerequisite(computerT7)
                             .addTask(new EnergyTask(TD.Energy.EU, 268435456, 8192))
                             .addTask(new ComputeTask(ComputePower.Normal, 4294967296L))
-                            .addTask(new MiniGameIdentifyTask(256));
+                            .addTask(new MiniGameIdentifyTask(8192))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30106)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30107)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30108)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31091)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31092)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31093)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31094)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31095)));
                     // TODO(Biology tree): move the Biology compute gate into the independent Biology research tree.
 
                     //QU:首次观测镜金; 中继器解锁后即可运行，研究完成时只保留正式信道组件
@@ -677,6 +700,21 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30074)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31113)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31114)));
+
+                    //QU:跨维度量子输电; 镜金保存纠缠关系, 绝对纯Ij/Nq_522提供稳定量子通道, 不设距离或损耗
+                    ResearchProject wirelessPowerQuantum = new ResearchProject(tree, "量子无线输电", "量子信道不再随距离衰减，也不再受维度边界限制。只要目标区块处于加载状态，能量就能以原始类型抵达接收端；传送EU、RU、LU、QU等能源都不需要转换。", Items.paper, 0, 71)
+                            .setPos(3380, 0)
+                            .addPrerequisite(wirelessPowerInductive)
+                            .addPrerequisite(todo001)
+                            .addTask(new EnergyTask(TD.Energy.QU, 4194304, 512))
+                            .addTask(new EnergyTask(TD.Energy.EU, 268435456, 8192))
+                            .addTask(new ComputeTask(ComputePower.Normal, 17179869184L))
+                            .addTask(new MiniGameIdentifyTask(256))
+                            .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.MirrorGold.mat, 1)))
+                            .addTask(new ItemConsumeTaskEScope(prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 4)))
+                            .addTask(new ItemConsumeTaskEScope(prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30115)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31118)));
 
                     //已有首发镜金样品，开始研究其宏观量子关联、复现方式与后续用途
                     ResearchProject todo002 = new ResearchProject(tree, "镜金应用", "量子通信已经产出了第一批镜金样品。研究镜金如何在宏观尺度保存量子关联，并把样品复现与量子相干性推进到可工业利用的形态", Items.paper, 0, 42)
