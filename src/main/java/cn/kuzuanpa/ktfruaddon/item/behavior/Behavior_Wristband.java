@@ -29,9 +29,8 @@ public class Behavior_Wristband extends IBehavior.AbstractBehaviorDefault {
     public static final Behavior_Wristband INSTANCE = new Behavior_Wristband();
 
     static {
-        LH.add("ktfru.wristband.activated", "无线设备通用命令行接口已激活, 使用 /kTFRUWireless 访问.");
-        LH.add("ktfru.wristband.already", "你已经激活过命令行接口了.");
-        LH.add("ktfru.wristband.tooltip", "右键佩戴后即可使用 /kTFRUWireless 命令行接口.");
+        LH.add("ktfru.wristband.activated", "Wireless device command line interface activated, use /kTFRUWireless to access it.");
+        LH.add("ktfru.wristband.already", "You have already activated the command line interface.");
     }
 
     @Override

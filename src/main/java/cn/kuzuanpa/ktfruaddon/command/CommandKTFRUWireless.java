@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.kNetworkHandler;
@@ -52,45 +53,66 @@ public class CommandKTFRUWireless extends CommandBase {
 
     static {
         LH.add("ktfru.wireless.cli.usage", "/kTFRUWireless <status|bind|energy|compute|research> ...");
-        LH.add("ktfru.wireless.cli.not_active", "");
-        LH.add("ktfru.wireless.cli.header", "=== 无线设备命令行接口 ===");
-        LH.add("ktfru.wireless.cli.bind.usage", "用法: bind <energy|compute|research> <x> <y> <z> [dim]");
-        LH.add("ktfru.wireless.cli.bind.bad_mode", "未知模式, 可用: energy, compute, research");
-        LH.add("ktfru.wireless.cli.bind.ok", "已绑定[%s]终端: ");
-        LH.add("ktfru.wireless.cli.bind.wrong_type", "该坐标不是有效的[%s]终端");
-        LH.add("ktfru.wireless.cli.status.title", "绑定状态:");
-        LH.add("ktfru.wireless.cli.status.active", "接口已激活");
-        LH.add("ktfru.wireless.cli.status.none", "  [%s] 未绑定");
+        LH.add("ktfru.wireless.cli.header", "=== Wireless Device Command Line Interface ===");
+        LH.add("ktfru.wireless.cli.bind.usage", "Usage: bind <energy|compute|research> <x> <y> <z> [dim]");
+        LH.add("ktfru.wireless.cli.bind.bad_mode", "Unknown mode, available: energy, compute, research");
+        LH.add("ktfru.wireless.cli.bind.ok", "Bound [%s] terminal: ");
+        LH.add("ktfru.wireless.cli.bind.wrong_type", "That position is not a valid [%s] terminal");
+        LH.add("ktfru.wireless.cli.status.title", "Bindings:");
+        LH.add("ktfru.wireless.cli.status.active", "Interface activated");
+        LH.add("ktfru.wireless.cli.status.none", "  [%s] not bound");
         LH.add("ktfru.wireless.cli.status.bound", "  [%s] -> ");
-        LH.add("ktfru.wireless.cli.no_binding", "未绑定[%s]终端, 请先使用 /kTFRUWireless bind %s <x> <y> <z>");
-        LH.add("ktfru.wireless.cli.unreachable", "无法连接到 %s: 目标区块未加载或无方块");
-        LH.add("ktfru.wireless.cli.wrong_type", "%s 不是有效的[%s]终端");
-        LH.add("ktfru.wireless.cli.energy.info", "无线发射机 %s: 储能 %d / %d, 链路 %d, 状态 %s");
-        LH.add("ktfru.wireless.cli.energy.link.usage", "用法: energy link <add|remove> <x> <y> <z> [dim]");
-        LH.add("ktfru.wireless.cli.energy.link.added", "已添加能源链路 -> ");
-        LH.add("ktfru.wireless.cli.energy.link.removed", "已移除能源链路 -> ");
-        LH.add("ktfru.wireless.cli.energy.link.duplicate", "该链路已存在");
-        LH.add("ktfru.wireless.cli.energy.link.missing", "未找到该链路");
-        LH.add("ktfru.wireless.cli.energy.link.not_receiver", "%s 不是无线能源接收机");
-        LH.add("ktfru.wireless.cli.compute.info", "算力集群 %s: 状态 %s, 控制器 %d, 用户 %d");
-        LH.add("ktfru.wireless.cli.compute.power", "  算力 %s: %d / %d");
-        LH.add("ktfru.wireless.cli.compute.no_cluster", "该控制器尚未组成集群");
-        LH.add("ktfru.wireless.cli.compute.add.usage", "用法: compute add <controller|user> <x> <y> <z> [dim]");
-        LH.add("ktfru.wireless.cli.compute.add.controller.ok", "已将控制器加入集群 -> ");
-        LH.add("ktfru.wireless.cli.compute.add.user.ok", "已将用户绑定到该控制器 -> ");
-        LH.add("ktfru.wireless.cli.compute.add.not_controller", "%s 不是算力控制器");
-        LH.add("ktfru.wireless.cli.compute.add.not_user", "%s 不是算力用户");
-        LH.add("ktfru.wireless.cli.compute.add.failed", "操作失败: ");
-        LH.add("ktfru.wireless.cli.research.open", "正在打开研究树界面...");
-        LH.add("ktfru.wireless.cli.research.syncing", "正在同步研究树数据, 请稍候重试");
-        LH.add("ktfru.wireless.cli.research.no_tree", "该监视器没有可用的研究树");
-        LH.add("ktfru.wireless.cli.player_only", "该操作只能由玩家执行");
+        LH.add("ktfru.wireless.cli.no_binding", "No [%s] terminal bound, use /kTFRUWireless bind %s <x> <y> <z> first");
+        LH.add("ktfru.wireless.cli.unreachable", "Cannot connect to %s: target chunk not loaded or no block there");
+        LH.add("ktfru.wireless.cli.wrong_type", "%s is not a valid [%s] terminal");
+        LH.add("ktfru.wireless.cli.energy.info", "Wireless transmitter %s: energy %d / %d, links %d, state %s");
+        LH.add("ktfru.wireless.cli.energy.link.usage", "Usage: energy link <add|remove> <x> <y> <z> [dim]");
+        LH.add("ktfru.wireless.cli.energy.link.added", "Energy link added -> ");
+        LH.add("ktfru.wireless.cli.energy.link.removed", "Energy link removed -> ");
+        LH.add("ktfru.wireless.cli.energy.link.duplicate", "That link already exists");
+        LH.add("ktfru.wireless.cli.energy.link.missing", "No such link found");
+        LH.add("ktfru.wireless.cli.energy.link.not_receiver", "%s is not a wireless energy receiver");
+        LH.add("ktfru.wireless.cli.compute.info", "Compute cluster %s: state %s, controllers %d, users %d");
+        LH.add("ktfru.wireless.cli.compute.power", "  Compute %s: %d / %d");
+        LH.add("ktfru.wireless.cli.compute.no_cluster", "That controller has not formed a cluster yet");
+        LH.add("ktfru.wireless.cli.compute.add.usage", "Usage: compute add <controller|user> <x> <y> <z> [dim]");
+        LH.add("ktfru.wireless.cli.compute.add.controller.ok", "Controller joined the cluster -> ");
+        LH.add("ktfru.wireless.cli.compute.add.user.ok", "User bound to the controller -> ");
+        LH.add("ktfru.wireless.cli.compute.add.not_controller", "%s is not a compute controller");
+        LH.add("ktfru.wireless.cli.compute.add.not_user", "%s is not a compute user");
+        LH.add("ktfru.wireless.cli.compute.add.failed", "Operation failed: ");
+        LH.add("ktfru.wireless.cli.research.open", "Opening the research tree GUI...");
+        LH.add("ktfru.wireless.cli.research.syncing", "Syncing research tree data, please retry shortly");
+        LH.add("ktfru.wireless.cli.research.no_tree", "That monitor has no available research tree");
+        LH.add("ktfru.wireless.cli.player_only", "This action can only be performed by a player");
     }
 
     @Override public String getCommandName() {return "kTFRUWireless";}
     @Override public String getCommandUsage(ICommandSender sender) {return LH.get("ktfru.wireless.cli.usage");}
     @Override public int getRequiredPermissionLevel() {return 0;}
     @Override public boolean canCommandSenderUseCommand(ICommandSender sender) {return true;}
+
+    @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+        //Only offer completions to senders that actually have access, so a player without a wristband cannot probe the command.
+        if (resolveBindings(sender) == null) return null;
+
+        if (args.length == 1)
+            return getListOfStringsMatchingLastWord(args, "status", "bind", MODE_ENERGY, MODE_COMPUTE, MODE_RESEARCH);
+
+        String domain = args[0].toLowerCase();
+        if (domain.equals("bind")) {
+            if (args.length == 2) return getListOfStringsMatchingLastWord(args, MODE_ENERGY, MODE_COMPUTE, MODE_RESEARCH);
+        } else if (domain.equals(MODE_ENERGY)) {
+            if (args.length == 2) return getListOfStringsMatchingLastWord(args, "link");
+            if (args[1].equalsIgnoreCase("link") && args.length == 3) return getListOfStringsMatchingLastWord(args, "add", "remove");
+        } else if (domain.equals(MODE_COMPUTE)) {
+            if (args.length == 2) return getListOfStringsMatchingLastWord(args, "add");
+            if (args[1].equalsIgnoreCase("add") && args.length == 3) return getListOfStringsMatchingLastWord(args, "controller", "user");
+        }
+        return null;
+    }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
