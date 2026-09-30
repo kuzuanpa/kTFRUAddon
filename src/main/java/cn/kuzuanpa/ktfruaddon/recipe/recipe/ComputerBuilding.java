@@ -74,7 +74,9 @@ public class ComputerBuilding {
         recipeMaps.HeatMixer.addRecipe2(F,160,90,OP.dust.mat(MT.Bakelite,8),matList.DiazoNaphthol.getDust(8),FL.array(flList.PGMEA.make(1000)),FL.array(flList.DNQPhotoresist.make(1000)),ZL_IS);
 
         recipeMaps.HeatMixer.addRecipe1(F,240,120,OP.dust.mat(MT.Pd,0),FL.array(flList.Phenol.make(100),FL.Hydrogen.make(100)),ZL_FS,matList.Cyclohexanol.getDust(1));
-        recipeMaps.HeatMixer.addRecipe2(F,240,120,OP.dust.mat(MT.Ag,0),matList.Cyclohexanone.getDust(1),FL.array(FL.Oxygen.make(100)),ZL_FS,matList.Cyclohexanol.getDust(1));
+        recipeMaps.HeatMixer.addRecipe2(F,240,120,OP.dust.mat(MT.Ag,0),matList.Cyclohexanol.getDust(1),FL.array(FL.Oxygen.make(100)),ZL_FS,matList.Cyclohexanone.getDust(1));
+
+        recipeMaps.HeatMixer   .addRecipe0(F,120,120, FL.array(MT.NitricAcid.fluid(U, false), MT.NH3.gas(U,false)), ZL_FS,matList.AmmoniumNitrate.getDust(1));
 
         RM.           Mixer    .addRecipe2(F,230,120,OP.dust.mat(matList.Acenaphthylene.mat, 1),OP.dust.mat(matList.AmmoniumNitrate.mat, 1),FL.array(flList.GlacialAceticAcid.make(0)),FL.array(MT.NH3.gas(U10,false),FL.Water.make(100)),matList.Nitroacenaphthene.getDust(1));
 

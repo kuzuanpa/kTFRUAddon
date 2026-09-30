@@ -1980,13 +1980,12 @@ ktfru.text.quantum_relay.partner_missing=记录的中继器不可用。
 ktfru.text.quantum_relay.established=量子纠缠信道已建立。
 
 
-# Microgravity room chain
 ktfru.multitileentity.multiblock.microgravityroom=离心式高屏蔽失重舱控制器
 ktfru.multitileentity.machine.microgravitycrystalgrowth=微重力晶体生长机
-ktfru.multitileentity.30124=宇宙辐射分析舱
 ktfru.tooltip.multiblock.microgravitycrystalgrowth.1=3x3x3 高屏蔽生长舱
 ktfru.tooltip.multiblock.microgravitycrystalgrowth.2=控制器位于前底部中央，输入、输出与能源端口位于外壳。
 
+ktfru.multitileentity.30124=宇宙辐射分析舱
 # 人工智能科研自动化
 ktfru.multitileentity.30106=AI 流程控制中心
 ktfru.multitileentity.30107=AI 装配规划中心

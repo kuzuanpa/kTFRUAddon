@@ -44,8 +44,8 @@ public class Plastic {
 
         recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80, OP.dust.mat(MT.CaCO3,1), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.CalciumAcetate.getDust(1));
         recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80, OP.dust.mat(MT.Na2CO3,1), flList.GlacialAceticAcid.make(100), FL.CarbonDioxide.make(1000), matList.SodiumAcetate.getDust(2));
-        recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80,OP.dust.mat(matList.ZincChromate.mat, 0),FL.array(FL.BioEthanol.make(100)),FL.array(flList.Acetone.make(45),FL.CarbonDioxide.make(50)),ZL_IS);
         RM.           Mixer              .addRecipe1(F,64 ,  80,OP.dust.mat(matList.Zincoxide.mat, 0),FL.array(flList.Acetylene.make(200),FL.Water.make(300)),FL.array(flList.Acetone.make(100),FL.CarbonDioxide.make(100),FL.Hydrogen.make(200)),ZL_IS);
+        recipeMaps.   HeatMixer          .addRecipe1(F,64 ,  80,OP.dust.mat(MT.Zn, 1),FL.array(FL.Oxygen.make(1000)),FL.array( ),OP.dust.mat(matList.Zincoxide.mat, 1));
         RM.           Mixer              .addRecipe0(F,100, 200,FL.array(FL.Propylene.make(100),flList.Benzene.make(100),FL.Oxygen.make(50)),FL.array(flList.Phenol.make(100),flList.Acetone.make(100)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,100, 120,FL.array(MT.Cl.gas(U10,false),flList.CarbonMonoxide.make(100)),FL.array(flList.Phosgene.make(100)),ZL_IS);
         RM.           Mixer              .addRecipe0(F,100,1200,FL.array(flList.Phosgene.make(100),flList.Phenol.make(100)),ZL_FS,matList.DiphenylCarbonate.getDust(1));
@@ -120,17 +120,19 @@ public class Plastic {
 
         RM.           Mixer              .addRecipe0(F,156,420,FL.array(flList.Ethylbenzene.make(100),MT.Cl.gas(U10,false)),FL.array(MT.HCl.gas(U10,false),flList.ChloroPhenylethane.make(100)),ZL_IS);
 
-        recipeMaps.   HeatMixer          .addRecipe1(F,412,120,OP.dust.mat(MT.Cr,0),FL.array(flList.Ethylbenzene.make(100),FL.Water.make(50)),FL.array(flList.Styrene.make(100), FL.Hydrogen.make(50)),ZL_IS);
+        recipeMaps.   HeatMixer          .addRecipe1(F,412,40,OP.dust.mat(MT.Cr,0),FL.array(flList.Ethylbenzene.make(100),FL.Water.make(50)),FL.array(flList.Styrene.make(100), FL.Hydrogen.make(50)),ZL_IS);
 
-        RM.           Mixer              .addRecipe1(F,212,120,OP.dust.mat(MT.NaOH,1),FL.array(flList.ChloroPhenylethane.make(100)),FL.array(flList.Styrene.make(100),FL.Water.make(100)),OP.dust.mat(MT.NaCl,1));
+        RM.           Mixer              .addRecipe1(F,212,80,OP.dust.mat(MT.NaOH,1),FL.array(flList.ChloroPhenylethane.make(100)),FL.array(flList.Styrene.make(100),FL.Water.make(100)),OP.dust.mat(MT.NaCl,1));
 
-        RM.           Mixer              .addRecipe0(F,348,120,FL.array(flList.Styrene.make(100),flList.Butadiene.make(100)),FL.array(flList.SBR.make(100)),ZL_IS);
+        RM.           Mixer              .addRecipe0(F,348,50,FL.array(flList.Styrene.make(100),flList.Butadiene.make(100)),FL.array(flList.SBR.make(100)),ZL_IS);
 
-        recipeMaps.   HeatMixer          .addRecipe1(F,120,120,matList.TriethylAluminium.getDust(0),FL.array(MT.TiCl4.liquid(0,false),flList.Isoprene.make(144)),FL.array(FL.Latex.make(720)),ZL_IS);
+        recipeMaps.   HeatMixer          .addRecipe1(F,120,60,OP.dust.mat(MT.Cr,0),FL.array(FL.Ethylene.make(200)),FL.array(flList.Isoprene.make(144)),ZL_IS);
+
+        recipeMaps.   HeatMixer          .addRecipe1(F,120,60,matList.TriethylAluminium.getDust(0),FL.array(MT.TiCl4.liquid(0,false),flList.Isoprene.make(144)),FL.array(FL.Latex.make(720)),ZL_IS);
 
         recipeMaps.   HeatMixer          .addRecipe0(F,210,100,FL.array(flList.Tetrafluoroethylene.make(100),MT.SO3.gas(U10,false)),FL.array(flList.TFES.make(100)),ZL_IS);
 
-        recipeMaps.   HeatMixer          .addRecipe0(F,256,120,FL.array(flList.Tetrafluoroethylene.make(600), flList.Acetylene.make(200)),FL.array(flList.HexaFluoroPropylene.make(200),flList.Perfluorocyclobutane.make(200)),ZL_IS);
+        recipeMaps.   HeatMixer          .addRecipe0(F,256,80,FL.array(flList.Tetrafluoroethylene.make(600), flList.Acetylene.make(200)),FL.array(flList.HexaFluoroPropylene.make(200),flList.Perfluorocyclobutane.make(200)),ZL_IS);
 
         RM.           Electrolyzer       .addRecipe1(F,320,40,ItemList.ProtonExchangeMembrane.get(0),FL.array(flList.MoltenTeflon.make(500),MT.Br.liquid(U5,false)),FL.array(flList.HFPO.make(200),flList.HydrobromicAcid.make(200),FL.Hydrogen.make(100)),ZL_IS);
 

@@ -96,22 +96,28 @@ public class OilProcessing {
 
         recipeMaps.HeatMixer.addRecipe2(false,64,200,OP.dust.mat(MT.Fe,0),OP.dust.mat(MT.Mo,0),FL.array(FL.Methane.make(100),FL.Oxygen.make(100)),FL.array(flList.Formaldehyde.make(100),FL.Water.make(100)));
 
-        recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Mo,0),FL.array(flList.Methanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Formaldehyde.make(100),FL.Water.make(100)));
-        recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Ag,0),FL.array(flList.Methanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Formaldehyde.make(100),FL.Water.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,44,20,OP.dust.mat(MT.Mo,0),FL.array(flList.Methanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Formaldehyde.make(100),FL.Water.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,44,20,OP.dust.mat(MT.Ag,0),FL.array(flList.Methanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Formaldehyde.make(100),FL.Water.make(100)));
 
-        recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Mo,0),FL.array(FL.BioEthanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Acetaldehyde.make(100),FL.Water.make(100)));
-        recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Ag,0),FL.array(FL.BioEthanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Acetaldehyde.make(100),FL.Water.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,44,20,OP.dust.mat(MT.Mo,0),FL.array(FL.BioEthanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Acetaldehyde.make(100),FL.Water.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,44,20,OP.dust.mat(MT.Ag,0),FL.array(FL.BioEthanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Acetaldehyde.make(100),FL.Water.make(100)));
 
-        recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Mo,0),FL.array(flList.Propanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Propionaldehyde.make(100),FL.Water.make(100)));
-        recipeMaps.HeatMixer.addRecipe1(false,64,80,OP.dust.mat(MT.Ag,0),FL.array(flList.Propanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Propionaldehyde.make(100),FL.Water.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,44,30,OP.dust.mat(MT.Mo,0),FL.array(flList.Propanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Propionaldehyde.make(100),FL.Water.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,44,30,OP.dust.mat(MT.Ag,0),FL.array(flList.Propanol.make(100),FL.Oxygen.make(50)),FL.array(flList.Propionaldehyde.make(100),FL.Water.make(100)));
+
+        recipeMaps.HeatMixer.addRecipe1(false,47,30,OP.dust.mat(MT.Co,0),FL.array(FL.BioEthanol.make(100),flList.CarbonMonoxide.make(50),FL.Hydrogen.make(50)),FL.array(flList.Propionaldehyde.make(100)));
+        recipeMaps.HeatMixer.addRecipe1(false,47,30,OP.dust.mat(MT.Rh,0),FL.array(FL.BioEthanol.make(100),flList.CarbonMonoxide.make(50),FL.Hydrogen.make(50)),FL.array(flList.Propionaldehyde.make(100)));
+
+        recipeMaps.HeatMixer.addRecipe0(false,217,15, FL.array(flList.Propionaldehyde.make(100),FL.Hydrogen.make(100)),FL.array(flList.Propanol.make(100)));
 
         RM.Mixer.addRecipe0(false,64,20,FL.array(flList.Propanol.make(100),MT.H2SO4.liquid(2*U,false)),FL.array(FL.Propylene.make(100),MT.H2SO4.liquid(U,false)));
 
-
         RM.Mixer.addRecipe0(false,64,20,FL.array(FL.BioEthanol.make(100),MT.H2SO4.liquid(2*U,false)),FL.array(FL.Ethylene.make(100),MT.H2SO4.liquid(U,false)));
 
+        recipeMaps.HeatMixer.addRecipe2(false,137,55, OP.dust.mat(MT.Ag,0), OP.dust.mat(MT.Rh,0), FL.array(FL.BioEthanol.make(100),FL.Water.make(100)),FL.array(flList.Propanol.make(100)));
+
         //Coal Boiling
-        RM.Centrifuge.addRecipe0(false,64,200,FL.array(flList.CoalTar.make(100)),FL.array(flList.Benzene.make(30),FL.Hydrogen.make(20),FL.Nitrogen.make(10),flList.CarbonMonoxide.make(70)),matList.Naphthalene.getDustTiny(1),matList.Naphthalene.getDustTiny(1));
+        RM.Centrifuge.addRecipe0(false,64,200,FL.array(flList.CoalTar.make(100)),FL.array(flList.Benzene.make(30),FL.Hydrogen.make(20),FL.Nitrogen.make(10),flList.CarbonMonoxide.make(70)),matList.Naphthalene.getDustTiny(3),matList.Acenaphthylene.getDustTiny(2));
 
         RM.Centrifuge.addRecipe0(false,64,100,flList.WoodTar.make(100),FL.array(FL.Methane.make(30),FL.CarbonDioxide.make(50),flList.CarbonMonoxide.make(20),FL.Hydrogen.make(5),FL.Ethylene.make(10),FL.Oil_Olive.make(60)));
 

@@ -6,7 +6,7 @@ import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockMachine;
 
 import java.util.List;
 import java.util.Objects;
-
+/**Lock some item craft recipe behind research. note that only the first item will be locked, others will be considered as byproducts**/
 public abstract class MultiResearchRequiredBasicMachine extends TileEntityBase10MultiBlockMachine {
     public ItemType lastItemStack=null;
     @Override

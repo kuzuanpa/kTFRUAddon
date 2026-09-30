@@ -57,24 +57,17 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(ST.make(Blocks.glass_pane, 8, 0)))
                             .addUnlockItem(new ItemType(ST.make(MD.VULPES, "item.holoProjector", 1)));
 
-                    ResearchProject siliconBasic = new ResearchProject(tree, "硅理论", "利用最初的芯片辅助你研究硅的特性，了解它的各项特性在芯片制造中的关键作用", Items.paper, 0, 3)
+                    ResearchProject siliconBasic = new ResearchProject(tree, "硅理论", "利用最初的电路辅助你研究硅的特性，了解它的各项特性在芯片制造中的关键作用", Items.paper, 0, 3)
                             .setPos(180, 70)
                             .addPrerequisite(circuitBasic)
-                            .addTask(new ItemConsumeTaskSimple(OP.plateTiny.mat(MT.Si,24)))
-                            .addUnlockItem(new ItemType(ItemList.SiliconBoulePure.get(1)))
-                            .addUnlockItem(new ItemType(ItemList.SiliconPlateT1.get(1)))
-                            .addUnlockItem(new ItemType(ItemList.SiliconPlateT2.get(1)));
+                            .addTask(new ItemConsumeTaskSimple(OP.plateTiny.mat(MT.Si,24)));
 
                     ResearchProject crystallizer = new ResearchProject(tree, "结晶器", "分析晶体生长过程，思考如何获得整齐排布的分子晶体结构", OP.bouleGt.mat(MT.Si, 0).getItem(), MT.Si.mID, 4)
                             .setPos(280, 70)
                             .addPrerequisite(siliconBasic)
                             .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cupronickel,32)))
                             .addTask(new ItemConsumeTaskSimple(OP.gem.mat(MT.NetherQuartz,8)))
-                            .addUnlockItem(new ItemType(ST.make(MD.GC_ADV_ROCKETRY, "crystallizer", 1)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20251)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20252)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20253)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20254)));
+                            .addUnlockItem(new ItemType(ST.make(MD.GC_ADV_ROCKETRY, "crystallizer", 1)));
 
                     ResearchProject circuitDesignT1 = new ResearchProject(tree, "基础电路设计", "利用计算器进一步改进电路，你认为你离真正的自动化控制不远了", Items.paper, 0, 5)
                             .setPos(380, 70)
@@ -82,6 +75,7 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(ST.make(MD.GC_ADV_ROCKETRY, "circuitIC", 2,3)))
                             .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,32)))
                             .addTask(new ItemConsumeTaskSimple(OP.plateTiny.mat(MT.Si,32)))
+                            .addUnlockItem(new ItemType(ST.make(MD.MO, "isolinear_circuit",1)))
                             .addUnlockItem(new ItemType(IL.Circuit_Basic.get(1)));
 
                     ResearchProject lightningProcess = new ResearchProject(tree, "电弧处理", "你的记忆中总能见到电弧，但如何利用它而不损坏材料，需要你进一步研究", Items.paper, 0, 6)
@@ -92,7 +86,6 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20501)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20502)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20503)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20504)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20504)));
 
                     ResearchProject pressureContainer = new ResearchProject(tree, "高压容器", "许多处理需要高压环境，通过研究常见材料在高压下的变化来制造耐压容器", Items.paper, 0, 7)
@@ -258,10 +251,7 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Steel,8)))
                             .addTask(new ItemConsumeTaskSimple(OP.gear.mat(MT.Steel,4)))
                             .addTask(new ItemConsumeTaskSimple(OP.stick.mat(MT.Cu,4)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30012)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31007)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31008)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31009)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30012)));
 
                     //Fill:轨道/任务规划; Steel结构+Al轻质+Steel支撑
                     ResearchProject SpaceBasicTheory = new ResearchProject(tree, "太空基础理论", "火箭与太空探索所需的基本理论", Items.paper, 0, 21)
@@ -537,14 +527,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameFillTask(96))
                             .addTask(new ItemConsumeTaskEScope(OP.plate.mat(MT.Titanium,16)))
                             .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.Al,32)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30122)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30123)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31204)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31205)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31206)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31207)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31208)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30124)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30104)));
 
                     //Identify:辨别辐射信号; Pb屏蔽+钨钢结构+U放射源
                     ResearchProject universeRadio = new ResearchProject(tree, "宇宙辐射研究", "研究宇宙辐射和其对物体可能的用途", Items.paper, 0, 39)
@@ -704,7 +687,6 @@ public class ResearchTrees {
                     //QU:跨维度量子输电; 镜金保存纠缠关系, 绝对纯Ij/Nq_522提供稳定量子通道, 不设距离或损耗
                     ResearchProject wirelessPowerQuantum = new ResearchProject(tree, "量子无线输电", "量子信道不再随距离衰减，也不再受维度边界限制。只要目标区块处于加载状态，能量就能以原始类型抵达接收端；传送EU、RU、LU、QU等能源都不需要转换。", Items.paper, 0, 71)
                             .setPos(3380, 0)
-                            .addPrerequisite(wirelessPowerInductive)
                             .addPrerequisite(todo001)
                             .addTask(new EnergyTask(TD.Energy.QU, 4194304, 512))
                             .addTask(new EnergyTask(TD.Energy.EU, 268435456, 8192))
@@ -805,7 +787,19 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 524288))
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskEScope(ItemList.Neutron.get(32)))
-                            .addTask(new ItemConsumeTaskEScope(ItemList.Alpha_Particle.get(16)));
+                            .addTask(new ItemConsumeTaskEScope(ItemList.Alpha_Particle.get(16)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(17199)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20411)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20412)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20413)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20414)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20415)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20423)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20431)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20432)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20433)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20434)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.gregtech.getItem(20435)));
 
 
                     //同一个跳跃逐级放大尺度: 电子->原子->能态->物态->宏观物体->空间; Spacetime算力首次介入
