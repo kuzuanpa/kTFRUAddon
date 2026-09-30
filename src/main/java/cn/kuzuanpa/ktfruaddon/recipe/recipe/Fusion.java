@@ -17,10 +17,12 @@
 package cn.kuzuanpa.ktfruaddon.recipe.recipe;
 
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
+import cn.kuzuanpa.ktfruaddon.api.material.matList;
 import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import gregapi.data.FL;
+import gregapi.data.IL;
 import gregapi.data.MT;
 import gregapi.data.OP;
 import gregapi.util.ST;
@@ -36,6 +38,21 @@ public class Fusion {
         recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
                 FL.array(MT.D.gas(2*U, T)), FL.array(MT.He_3.gas(U100, F), FL.MatterNeutral.make(U100)),
                 ItemList.TokamakPlasmaData.get(1)).setSpecialNumber(1024L*1024L);
+
+
+        recipeMaps.FusionTokamak.addRecipe0(F, 8192, 400,
+                FL.array(MT.D.gas(4 * U, T), MT.T.gas(4 * U, T)),
+                FL.array(MT.He.gas(2 * U, F)), ItemList.Neutron.get(2)).setSpecialNumber(1024L * 1024L);
+        recipeMaps.FusionTokamak.addRecipe0(F, 16384, 600,
+                FL.array(MT.D.gas(2 * U, T), MT.He_3.gas(U, T)),
+                FL.array(MT.He.gas(2 * U, F)), ItemList.Neutron.get(1)).setSpecialNumber(4L * 1024L * 1024L);
+
+        recipeMaps.FusionTokamakExperimental.addRecipe0(F, 8192, 400, new long[]{5000},
+                FL.array(MT.D.gas(4 * U, T), MT.T.gas(4 * U, T)),
+                FL.array(MT.He.gas(2 * U, F)), ItemList.TokamakNeutronData.get(1)).setSpecialNumber(1024L * 1024L);
+        recipeMaps.FusionTokamakExperimental.addRecipe0(F, 16384, 600, new long[]{7500},
+                FL.array(MT.D.gas(2 * U, T), MT.He_3.gas(U, T)),
+                FL.array(MT.He.gas(2 * U, F)), ItemList.TokamakPlasmaData.get(1)).setSpecialNumber(4L * 1024L * 1024L);
 
         // Laser fusion is intentionally a net energy sink. SpecialNumber is the
         // complete LU pulse needed by a single target, never a continuous EU/t cost.
@@ -125,6 +142,26 @@ public class Fusion {
                 FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30071));
         recipeMaps.Assembler.addRecipeX(F, 131072, 4800, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 24), GTTileEntityRegistry.ktfruaddon.getItem(31062, 8), GTTileEntityRegistry.ktfruaddon.getItem(31063, 4)),
                 FL.array(MT.SolderingAlloy.liquid(U64, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30072));
+
+        // Tokamak controllers and their dedicated structural parts follow the
+        // same assembly pattern as the laser-fusion chambers above.
+        recipeMaps.Assembler.addRecipeX(F, 16384, 1200, ST.array(OP.plateDense.mat(MT.Ti, 4), OP.wireGt04.mat(MT.Cu, 8), OP.plate.mat(MT.StainlessSteel, 2), IL.Circuit_Elite.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31016, 2));
+        recipeMaps.Assembler.addRecipeX(F, 32768, 1600, ST.array(OP.wireGt08.mat(MT.Cu, 16), OP.plateDense.mat(MT.StainlessSteel, 4), OP.plate.mat(matList.PEEK.mat, 2), IL.Circuit_Elite.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31017));
+        recipeMaps.Assembler.addRecipeX(F, 32768, 1600, ST.array(OP.plateDense.mat(MT.StainlessSteel, 4), OP.plate.mat(MT.Ti, 4), OP.plate.mat(matList.PEEK.mat, 2), IL.Circuit_Elite.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31018, 2));
+        recipeMaps.Assembler.addRecipeX(F, 65536, 3200, ST.array(OP.casingMachineDouble.mat(MT.StainlessSteel, 1), GTTileEntityRegistry.ktfruaddon.getItem(31016, 8), GTTileEntityRegistry.ktfruaddon.getItem(31017, 4), GTTileEntityRegistry.ktfruaddon.getItem(31018, 4), IL.Circuit_Elite.get(2), IL.SENSORS[4].get(2), ItemList.ComputerGT3660.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30014));
+
+        recipeMaps.Assembler.addRecipeX(F, 65536, 1800, ST.array(OP.plateDense.mat(MT.TungstenSteel, 4), OP.wireGt04.mat(MT.Graphene, 8), OP.plate.mat(matList.PEEK.mat, 2), IL.Circuit_Master.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31025, 2));
+        recipeMaps.Assembler.addRecipeX(F, 131072, 2400, ST.array(OP.wireGt08.mat(MT.Graphene, 16), OP.plateDense.mat(MT.TungstenSteel, 4), OP.plate.mat(matList.PEEK.mat, 4), IL.Circuit_Master.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31026));
+        recipeMaps.Assembler.addRecipeX(F, 131072, 2400, ST.array(OP.plateDense.mat(MT.TungstenSteel, 4), OP.plate.mat(MT.Trinaquadalloy, 4), OP.plate.mat(matList.PEEK.mat, 4), IL.Circuit_Master.get(1)),
+                FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31027, 2));
+        recipeMaps.Assembler.addRecipeX(F, 262144, 4800, ST.array(OP.casingMachineDouble.mat(MT.TungstenSteel, 1), GTTileEntityRegistry.ktfruaddon.getItem(31025, 16), GTTileEntityRegistry.ktfruaddon.getItem(31026, 8), GTTileEntityRegistry.ktfruaddon.getItem(31027, 8), IL.Circuit_Master.get(4), IL.SENSORS[5].get(2), ItemList.ComputerGT3699.get(2)),
+                FL.array(MT.SolderingAlloy.liquid(U32, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30015));
 
         recipeMaps.NeutronAbsorption.addRecipe0(false, 160,1, MT.Li_6.liquid(U144, true), FL.array(MT.He.gas(U20, false), MT.D.gas(U200,false)));
         recipeMaps.NeutronAbsorption.addRecipe0(false, 160,1, MT.F.liquid(U1000, true), FL.array(MT.Ne.gas(U100, false)));

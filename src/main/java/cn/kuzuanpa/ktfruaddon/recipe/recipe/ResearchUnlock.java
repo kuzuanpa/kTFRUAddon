@@ -21,12 +21,14 @@ import gregapi.util.ST;
 import net.minecraft.item.ItemStack;
 
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_DATA;
+import static gregapi.data.CS.ZL_FS;
 
 public class ResearchUnlock {
     public static void init() {
         ResearchItemManager.data.get((byte)0).forEach((id,unlockList)-> {
+            if(unlockList.isEmpty())return;
             ItemStack[] array = unlockList.stream().map(ItemType::getStack).distinct().toArray(ItemStack[]::new);
-            recipeMaps.ResearchUnlock.addRecipe1(false,4,4, ST.make(MOD_DATA,"ktfru.item.research.0",0,id), array);
+            recipeMaps.ResearchUnlock.addFakeRecipe(false, ST.array(ST.make(MOD_DATA,"ktfru.item.research.0",0,id)), array, null, ZL_FS,ZL_FS, 0,0,0);
         });
     }
 }
