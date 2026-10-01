@@ -41,5 +41,6 @@ public class recipeInit {
         FakeRecipe.init();
 
         if(Loader.isModLoaded("terrafirmacraft"))TFCRecipe.init();
+        ResearchRecipes.init();
     }
 }
