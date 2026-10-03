@@ -76,7 +76,7 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskSimple(OP.wireFine.mat(MT.Cu,32)))
                             .addTask(new ItemConsumeTaskSimple(OP.plateTiny.mat(MT.Si,32)))
                             .addUnlockItem(new ItemType(ST.make(MD.MO, "isolinear_circuit",1)))
-                            .addUnlockItem(new ItemType(IL.Circuit_Basic.get(1)));
+                            .addUnlockItem(new ItemType(IL.Circuit_Part_Basic.get(1)));
 
                     ResearchProject lightningProcess = new ResearchProject(tree, "电弧处理", "你的记忆中总能见到电弧，但如何利用它而不损坏材料，需要你进一步研究", Items.paper, 0, 6)
                             .setPos(500, 220)
@@ -458,10 +458,6 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pt,4)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Pd,4)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Ni,8)))
-                            .addUnlockItem(new ItemType(ItemList.NickelCatalystCluster.get(1)))
-                            .addUnlockItem(new ItemType(ItemList.PlatinumPalladiumCatalystCluster.get(1)))
-                            .addUnlockItem(new ItemType(ItemList.ZeoliteCatalystCluster.get(1)))
-                            .addUnlockItem(new ItemType(ItemList.ZieglerNattaCatalystCluster.get(1)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30120)));
 
                     //Fill:聚合物链结构规划; 用催化中间体验证PEEK链结构, 完成后再解锁缩聚催化团
@@ -474,8 +470,7 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskEScope(OP.foil.mat(MT.PTFE,8)))
                             .addTask(new ItemConsumeTaskEScope(OP.dust.mat(matList.Difluorobenzophenone.mat,1)))
                             .addTask(new ItemConsumeTaskEScope(OP.dust.mat(matList.Hydroquinone.mat,4)))
-                            .addUnlockItem(new ItemType(ItemList.PolycondensationCatalystCluster.get(1)))
-                            .addUnlockItem(new ItemType(OP.plate.mat(matList.PEEK.mat,1)))
+                            .addUnlockItem(new ItemType(OP.dust.mat(matList.PEEK.mat,1)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30121)));
 
                     //Fill:感应耦合与远程配电; 分析纯导体+PEEK绝缘+石墨烯线圈, 在终极塑料后开放有限距离输电
@@ -725,9 +720,6 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,16)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30075)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31111)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31115)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31116)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30076)));
 
                     //已有量金样品，研究其作为量子装置核心、量子信号介质与QU级设备基础材料的用途
@@ -739,7 +731,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new MiniGameIdentifyTask(384))
                             .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.QuantumGold.mat,1)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,4)))
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30080)));
 
                     //Identify:测量本身就会破坏被测的量子态, 没有它量子设备连自己算错了都不知道
@@ -761,11 +753,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(512))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,32)))
                             .addTask(new ItemConsumeTaskSimple(ItemList.TechResearchData53.get(8)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30065)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31065)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31066)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31067)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(31068)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30065)));
 
                     //Biology算力:分子装配的构型搜索; 从原子出发装配分子, 制造精度降到原子级
                     ResearchProject todo006 = new ResearchProject(tree, "量子有机生产", "传统路线是矿物到材料再到产品，现在你从原子出发装配分子，再把分子摆进指定的结构。高级聚合物、生物材料、特殊药物与自定义有机材料都可以按设计生产，制造精度第一次下降到原子级", Items.paper, 0, 57)
@@ -836,7 +824,7 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Quantum, 8388608))
                             .addTask(new MiniGameCurrentControlTask(1024))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,64)))
-                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Naquadria,16)));
+                            .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,16)));
 
                     // TODO(Materials): add the 刻金 material and its recipes, then make the first Spacetime node consume it.
                     ResearchProject spacetimeComputing = new ResearchProject(tree, "时空计算", "刻金把可控自由度推进到量子内部结构。以此为基础，把场演化、尺度变换与因果约束纳入统一计算模型，制造能够处理时空变量的计算阵列。", Items.paper, 0, 68)
@@ -934,7 +922,7 @@ public class ResearchTrees {
         }
         );
         ResearchTree tree = new ResearchTree();
-        tree.applyTemplate((byte)0);
+        tree.applyTemplate((byte) 0);
         exampleTrees.add(tree);
     }
 }

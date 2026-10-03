@@ -20,6 +20,9 @@ import gregapi.data.LH;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 
 public class itemIT extends MultiItemRandom {
@@ -335,36 +338,70 @@ public class itemIT extends MultiItemRandom {
         ItemList.RAMDie768M.set(addItem(30306, "RAMDie768M", "A RAM Die, can storage 768M data"));
         ItemList.RAMDie2G.set(addItem(30307, "RAMDie2G", "A RAM Die, can storage 2G data"));
         
-        ItemList.RAMBar2K4.set(addItem(30350, "RAMBar8K", "Composed by 4* 2K RAM Die")).registerOre("ktfruRAM8K");
-        ItemList.RAMBar32K4.set(addItem(30351, "RAMBar96K", "Composed by 4* 32K RAM Die")).registerOre("ktfruRAM128K");
-        ItemList.RAMBar256K4.set(addItem(30352, "RAMBar1M", "Composed by 4* 256K RAM Die")).registerOre("ktfruRAM1M");
-        ItemList.RAMBar2M4.set(addItem(30353, "RAMBar8M", "Composed by 4* 2M RAM Die")).registerOre("ktfruRAM8M");
-        ItemList.RAMBar16M4.set(addItem(30354, "RAMBar64M", "Composed by 4* 16M RAM Die")).registerOre("ktfruRAM64M");
-        ItemList.RAMBar128M4.set(addItem(30355, "RAMBar512M", "Composed by 4* 128M RAM Die")).registerOre("ktfruRAM512M");
-        ItemList.RAMBar768M4.set(addItem(30356, "RAMBar3G", "Composed by 4* 768M RAM Die")).registerOre("ktfruRAM3G");
-        ItemList.RAMBar2G4.set(addItem(30357, "RAMBar8G", "Composed by 4* 2G RAM Die")).registerOre("ktfruRAM8G");
+        ItemList.RAMBar2K4.set(addItem(30350, "RAMBar8K", "Composed by 4* 2K RAM Die")).registerOre("ktfruRAM8K", "ktfruRAMT1");
+        ItemList.RAMBar32K4.set(addItem(30351, "RAMBar128K", "Composed by 4* 32K RAM Die")).registerOre("ktfruRAM128K", "ktfruRAMT2");
+        ItemList.RAMBar256K4.set(addItem(30352, "RAMBar1M", "Composed by 4* 256K RAM Die")).registerOre("ktfruRAM1M", "ktfruRAMT3");
+        ItemList.RAMBar2M4.set(addItem(30353, "RAMBar8M", "Composed by 4* 2M RAM Die")).registerOre("ktfruRAM8M", "ktfruRAMT4");
+        ItemList.RAMBar16M4.set(addItem(30354, "RAMBar64M", "Composed by 4* 16M RAM Die")).registerOre("ktfruRAM64M", "ktfruRAMT5");
+        ItemList.RAMBar128M4.set(addItem(30355, "RAMBar512M", "Composed by 4* 128M RAM Die")).registerOre("ktfruRAM512M", "ktfruRAMT6");
+        ItemList.RAMBar768M4.set(addItem(30356, "RAMBar3G", "Composed by 4* 768M RAM Die")).registerOre("ktfruRAM3G", "ktfruRAMT7");
+        ItemList.RAMBar2G4.set(addItem(30357, "RAMBar8G", "Composed by 4* 2G RAM Die")).registerOre("ktfruRAM8G", "ktfruRAMT8");
 
-        ItemList.RAMBar2K8.set(addItem(30400, "RAMBar16K", "Composed by 8* 2K RAM Die")).registerOre("ktfruRAM16K");
-        ItemList.RAMBar32K8.set(addItem(30401, "RAMBar192K", "Composed by 8* 32K RAM Die")).registerOre("ktfruRAM256K");
-        ItemList.RAMBar256K8.set(addItem(30402, "RAMBar2M", "Composed by 8* 256K RAM Die")).registerOre("ktfruRAM2M");
-        ItemList.RAMBar2M8.set(addItem(30403, "RAMBar16M", "Composed by 8* 2M RAM Die")).registerOre("ktfruRAM16M");
-        ItemList.RAMBar16M8.set(addItem(30404, "RAMBar128M", "Composed by 8* 16M RAM Die")).registerOre("ktfruRAM128M");
-        ItemList.RAMBar128M8.set(addItem(30405, "RAMBar1G", "Composed by 8* 128M RAM Die")).registerOre("ktfruRAM1G");
-        ItemList.RAMBar768M8.set(addItem(30406, "RAMBar6G", "Composed by 8* 768M RAM Die")).registerOre("ktfruRAM6G");
-        ItemList.RAMBar2G8.set(addItem(30407, "RAMBar16G", "Composed by 8* 2G RAM Die")).registerOre("ktfruRAM16G");
+        ItemList.RAMBar2K8.set(addItem(30400, "RAMBar16K", "Composed by 8* 2K RAM Die")).registerOre("ktfruRAM16K", "ktfruRAMT1");
+        ItemList.RAMBar32K8.set(addItem(30401, "RAMBar256K", "Composed by 8* 32K RAM Die")).registerOre("ktfruRAM256K", "ktfruRAMT2");
+        ItemList.RAMBar256K8.set(addItem(30402, "RAMBar2M", "Composed by 8* 256K RAM Die")).registerOre("ktfruRAM2M", "ktfruRAMT3");
+        ItemList.RAMBar2M8.set(addItem(30403, "RAMBar16M", "Composed by 8* 2M RAM Die")).registerOre("ktfruRAM16M", "ktfruRAMT4");
+        ItemList.RAMBar16M8.set(addItem(30404, "RAMBar128M", "Composed by 8* 16M RAM Die")).registerOre("ktfruRAM128M", "ktfruRAMT5");
+        ItemList.RAMBar128M8.set(addItem(30405, "RAMBar1G", "Composed by 8* 128M RAM Die")).registerOre("ktfruRAM1G", "ktfruRAMT6");
+        ItemList.RAMBar768M8.set(addItem(30406, "RAMBar6G", "Composed by 8* 768M RAM Die")).registerOre("ktfruRAM6G", "ktfruRAMT7");
+        ItemList.RAMBar2G8.set(addItem(30407, "RAMBar16G", "Composed by 8* 2G RAM Die")).registerOre("ktfruRAM16G", "ktfruRAMT8");
         
-        ItemList.RAMBar256K16.set(addItem(30452, "RAMBar4M", "Composed by 16* 256K RAM Die")).registerOre("ktfruRAM4M");
-        ItemList.RAMBar2M16.set(addItem(30453, "RAMBar32M", "Composed by 16* 2M RAM Die")).registerOre("ktfruRAM32M");
-        ItemList.RAMBar16M16.set(addItem(30454, "RAMBar256M", "Composed by 16* 16M RAM Die")).registerOre("ktfruRAM256M");
-        ItemList.RAMBar128M16.set(addItem(30455, "RAMBar2G", "Composed by 16* 128M RAM Die")).registerOre("ktfruRAM2G");
-        ItemList.RAMBar768M16.set(addItem(30456, "RAMBar12G", "Composed by 16* 768M RAM Die")).registerOre("ktfruRAM12G");
-        ItemList.RAMBar2G16.set(addItem(30457, "RAMBar32G", "Composed by 16* 2G RAM Die")).registerOre("ktfruRAM32G");
+        ItemList.RAMBar256K16.set(addItem(30452, "RAMBar4M", "Composed by 16* 256K RAM Die")).registerOre("ktfruRAM4M", "ktfruRAMT3");
+        ItemList.RAMBar2M16.set(addItem(30453, "RAMBar32M", "Composed by 16* 2M RAM Die")).registerOre("ktfruRAM32M", "ktfruRAMT4");
+        ItemList.RAMBar16M16.set(addItem(30454, "RAMBar256M", "Composed by 16* 16M RAM Die")).registerOre("ktfruRAM256M", "ktfruRAMT5");
+        ItemList.RAMBar128M16.set(addItem(30455, "RAMBar2G", "Composed by 16* 128M RAM Die")).registerOre("ktfruRAM2G", "ktfruRAMT6");
+        ItemList.RAMBar768M16.set(addItem(30456, "RAMBar12G", "Composed by 16* 768M RAM Die")).registerOre("ktfruRAM12G", "ktfruRAMT7");
+        ItemList.RAMBar2G16.set(addItem(30457, "RAMBar32G", "Composed by 16* 2G RAM Die")).registerOre("ktfruRAM32G", "ktfruRAMT8");
         
-        ItemList.RAMBar16M32.set(addItem(30504, "RAMBar512M", "Composed by 32* 16M RAM Die")).registerOre("ktfruRAM512M");
-        ItemList.RAMBar128M32.set(addItem(30505, "RAMBar4G", "Composed by 32* 128M RAM Die")).registerOre("ktfruRAM4G");
-        ItemList.RAMBar768M32.set(addItem(30506, "RAMBar24G", "Composed by 32* 768M RAM Die")).registerOre("ktfruRAM24G");
-        ItemList.RAMBar2G32.set(addItem(30507, "RAMBar64G", "Composed by 32* 2G RAM Die")).registerOre("ktfruRAM64G");
+        ItemList.RAMBar16M32.set(addItem(30504, "RAMBar512M", "Composed by 32* 16M RAM Die")).registerOre("ktfruRAM512M", "ktfruRAMT5");
+        ItemList.RAMBar128M32.set(addItem(30505, "RAMBar4G", "Composed by 32* 128M RAM Die")).registerOre("ktfruRAM4G", "ktfruRAMT6");
+        ItemList.RAMBar768M32.set(addItem(30506, "RAMBar24G", "Composed by 32* 768M RAM Die")).registerOre("ktfruRAM24G", "ktfruRAMT7");
+        ItemList.RAMBar2G32.set(addItem(30507, "RAMBar64G", "Composed by 32* 2G RAM Die")).registerOre("ktfruRAM64G", "ktfruRAMT8");
+        putMemoryMeta();
 
+    }
+    public static final Map<ItemList, Long> kTFRURAMMeta = new LinkedHashMap<>();
 
+    private static void putMemoryMeta() {
+        // Capacity is measured in K, matching the values used by computer assembly.
+        kTFRURAMMeta.put(ItemList.RAMBar2K4, 8L);
+        kTFRURAMMeta.put(ItemList.RAMBar32K4, 128L);
+        kTFRURAMMeta.put(ItemList.RAMBar256K4, 1024L);
+        kTFRURAMMeta.put(ItemList.RAMBar2M4, 8192L);
+        kTFRURAMMeta.put(ItemList.RAMBar16M4, 65536L);
+        kTFRURAMMeta.put(ItemList.RAMBar128M4, 524288L);
+        kTFRURAMMeta.put(ItemList.RAMBar768M4, 3145728L);
+        kTFRURAMMeta.put(ItemList.RAMBar2G4, 8388608L);
+
+        kTFRURAMMeta.put(ItemList.RAMBar2K8, 16L);
+        kTFRURAMMeta.put(ItemList.RAMBar32K8, 256L);
+        kTFRURAMMeta.put(ItemList.RAMBar256K8, 2048L);
+        kTFRURAMMeta.put(ItemList.RAMBar2M8, 16384L);
+        kTFRURAMMeta.put(ItemList.RAMBar16M8, 131072L);
+        kTFRURAMMeta.put(ItemList.RAMBar128M8, 1048576L);
+        kTFRURAMMeta.put(ItemList.RAMBar768M8, 6291456L);
+        kTFRURAMMeta.put(ItemList.RAMBar2G8, 16777216L);
+
+        kTFRURAMMeta.put(ItemList.RAMBar256K16, 4096L);
+        kTFRURAMMeta.put(ItemList.RAMBar2M16, 32768L);
+        kTFRURAMMeta.put(ItemList.RAMBar16M16, 262144L);
+        kTFRURAMMeta.put(ItemList.RAMBar128M16, 2097152L);
+        kTFRURAMMeta.put(ItemList.RAMBar768M16, 12582912L);
+        kTFRURAMMeta.put(ItemList.RAMBar2G16, 33554432L);
+
+        kTFRURAMMeta.put(ItemList.RAMBar16M32, 524288L);
+        kTFRURAMMeta.put(ItemList.RAMBar128M32, 4194304L);
+        kTFRURAMMeta.put(ItemList.RAMBar768M32, 25165824L);
+        kTFRURAMMeta.put(ItemList.RAMBar2G32, 67108864L);
     }
 }

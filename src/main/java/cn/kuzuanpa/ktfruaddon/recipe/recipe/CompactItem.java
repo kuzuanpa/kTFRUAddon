@@ -38,8 +38,8 @@ public class CompactItem {
         CR.shaped(ItemList.CrucibleModelInnerLayer.get(1), CR.DEF, " I ", " I ", " f ", 'I', OP.ingot.mat(MT.RedSteel, 1));
         CR.shaped(ItemList.CrucibleModelInnerLayer.get(1), CR.DEF, " I ", " I ", " f ", 'I', OP.ingot.mat(MT.BlueSteel, 1));
 
-        recipeMaps.Assembler.addRecipe2(false, 372, 80, OP.plateTiny.mat(matList.Ij.mat, 1), OP.wireFine.mat(MT.Ti, 4), FL.array(MT.SolderingAlloy.liquid(U2, F)), ZL_FS, ItemList.IntelligentCore.get(2));
-        recipeMaps.Assembler.addRecipe1(false, 1574, 80, ItemList.CPUGT3660.get(1), FL.array(MT.SolderingAlloy.liquid(U2, F)), ZL_FS, ItemList.IntelligentCore.get(2));
+        recipeMaps.ResearchAssembler.addRecipe2(false, 372, 80, OP.plateTiny.mat(matList.Ij.mat, 1), OP.wireFine.mat(MT.Ti, 4), FL.array(MT.SolderingAlloy.liquid(U2, F)), ZL_FS, ItemList.IntelligentCore.get(2));
+        recipeMaps.ResearchAssembler.addRecipe1(false, 1574, 80, ItemList.CPUGT3660.get(1), FL.array(MT.SolderingAlloy.liquid(U2, F)), ZL_FS, ItemList.IntelligentCore.get(2));
 
         recipeMaps.Assembler.addRecipeX(false, 16384, 16384, ST.array(OP.nugget.mat(MT.DraconiumAwakened, 2), OP.plateTiny.mat(MT.Ad, 2), OP.wireFine.mat(MT.Terrasteel, 64), OP.plate.mat(MT.VibraniumSteel, 1), OP.plateGem.mat(MT.NetherStar, 1)), ZL_FS, ZL_FS, ST.make(Items.skull, 1, 3, UT.NBT.make("SkullOwner", "kuzuanpa")));
 
@@ -51,7 +51,8 @@ public class CompactItem {
 
         CR.shaped(ItemList.CrucibleModelInnerLayer.get(1), CR.DEF, " I ", " I ", " f ", 'I', OP.ingot.mat(MT.RedSteel, 1));
 
-        RM.LaserEngraver.addRecipe2(F, 32, 80, ST.tag(0), OP.plateGemTiny.mat(MT.Si, 1), ItemList.GoodCircuitPartCore.get(1));
+        recipeMaps.ResearchAssembler.addRecipe2(F, 16, 80, ST.tag(0), ItemList.BasicCircuitPartCore.get(1), IL.Circuit_Part_Basic.get(1));
+        recipeMaps.ResearchAssembler.addRecipeX(F, 32, 80, ST.array(ST.tag(1), OP.plateGemTiny.mat(MT.Si, 2), OP.foil.mat(MT.Cu, 1)), ZL_FS, ZL_FS, ItemList.GoodCircuitPartCore.get(2));
 
         CR.shaped(ItemList.WirelessCLIWristband.get(1), CR.DEF, "WCW", "PGP", "WLW", 'C', IL.Circuit_Good.get(1), 'G', ItemList.IntelligentCore.get(1), 'P', OP.plate.mat(MT.Al, 1), 'W', OP.wireFine.mat(MT.Au, 1), 'L', OP.foil.mat(MT.Rubber, 1));
         //Engine Parts
@@ -151,7 +152,7 @@ public class CompactItem {
             recipeMaps.CNC.addRecipeX(F, 256, 200, ST.array(OP.rotor      .mat(aMat, 1), OP.plateCurved.mat(aMat, 2), OP.plate.mat(aMat, 1)), FL.array(FL.DistW.make(1000)), ZL_FS, ItemList.EngineTurbo9.get(1), OP.dustSmall.mat(aMat, 4));
         }
         CR.shaped(ItemList.VibrateDetector.get(1),CR.DEF,"hR ","RBR"," Rw",'R', OP.ring.mat(MT.StainlessSteel,1),'B',OP.nugget.mat(MT.StainlessSteel   ,1));
-        recipeMaps.Assembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
+        recipeMaps.ResearchAssembler.addRecipeX(F,320,200,ST.array(OP.bolt.mat(MT.Co_60,1), OP.plateDense.mat(MT.Pb           ,2)),FL.array(MT.SolderingAlloy.liquid(U,true)),ZL_FS, ItemList.Co60FlawDetectionCore.get(1));
 
         recipeMaps.HeatMixer.addRecipe2(F, 240, 64, OP.dust.mat(MT.Ba, 1), OP.dust.mat(MT.TiO2, 1), FL.array(FL.CarbonDioxide.make(1000)), ZL_FS, OP.dust.mat(matList.BariumTitanate.get(), 1));
         RM.Lightning.addRecipe2(F, 240, 64, ST.tag(3), OP.plateTiny.mat(matList.BariumTitanate.get(), 1), FL.array(FL.DistW.make(100)), ZL_FS, ItemList.PiezoelectricCeramicPlate.get(1));

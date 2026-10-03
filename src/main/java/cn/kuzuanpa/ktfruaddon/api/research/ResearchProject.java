@@ -15,7 +15,6 @@
 package cn.kuzuanpa.ktfruaddon.api.research;
 
 import cn.kuzuanpa.ktfruaddon.api.code.ItemType;
-import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import gregapi.util.ST;
 import net.minecraft.item.Item;
@@ -88,21 +87,13 @@ public class ResearchProject {
         return this;
     }
     public ResearchProject addUnlockItem(ItemType stack){
-        if (stack == null || stack.item == null) throw new IllegalArgumentException("Research unlock item must be valid: " + id);
+        if (stack == null) throw new IllegalArgumentException("Research unlock item must be valid: " + id);
         if (unlockItems.contains(stack)) return this;
         unlockItems.add(stack);
         ResearchItemManager.addItemData(tree.id, printItemMeta, stack);
         return this;
     }
 
-    public boolean hasActualUnlock() {
-        return !unlockItems.isEmpty();
-    }
-
-    /**Legacy research entries without a dedicated output still unlock the working research viewer.*/
-    public void addFallbackUnlockIfMissing() {
-        if (!hasActualUnlock()) addUnlockItem(new ItemType(ItemList.ResearchViewer.get(1)));
-    }
     public boolean removePrerequisite(ResearchProject prerequisite) {
         return prerequisites.remove(prerequisite);
     }

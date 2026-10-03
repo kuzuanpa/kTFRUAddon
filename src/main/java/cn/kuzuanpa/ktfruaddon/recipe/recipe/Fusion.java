@@ -99,7 +99,7 @@ public class Fusion {
         // without making the laser chamber a general-purpose matter source.
         recipeMaps.HeatMixer.addRecipeX(F, 32768, 2400,
                 ST.array(ItemList.NaquadriaPrecursor.get(1), ItemList.QuantumControlElement.get(1)),
-                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dustTiny.mat(MT.Naquadria, 1));
+                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dustTiny.mat(MT.Nq_522, 1));
 
         // Target pellets and both chamber controllers are regular manufacturing
         // products; the reactor never creates its own fuel or structure parts.
@@ -138,9 +138,9 @@ public class Fusion {
                 FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31062));
         recipeMaps.Assembler.addRecipeX(F, 8192, 600, ST.array(OP.plateDense.mat(MT.Pb, 4), OP.plate.mat(MT.TungstenSteel, 2), OP.foil.mat(MT.Li, 8)),
                 FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31063));
-        recipeMaps.Assembler.addRecipeX(F, 32768, 2400, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 8), GTTileEntityRegistry.ktfruaddon.getItem(31061), GTTileEntityRegistry.ktfruaddon.getItem(31062, 2)),
+        recipeMaps.ResearchAssembler.addRecipeX(F, 32768, 2400, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 8), GTTileEntityRegistry.ktfruaddon.getItem(31061), GTTileEntityRegistry.ktfruaddon.getItem(31062, 2)),
                 FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30071));
-        recipeMaps.Assembler.addRecipeX(F, 131072, 4800, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 24), GTTileEntityRegistry.ktfruaddon.getItem(31062, 8), GTTileEntityRegistry.ktfruaddon.getItem(31063, 4)),
+        recipeMaps.ResearchAssembler.addRecipeX(F, 131072, 4800, ST.array(GTTileEntityRegistry.ktfruaddon.getItem(31060, 24), GTTileEntityRegistry.ktfruaddon.getItem(31062, 8), GTTileEntityRegistry.ktfruaddon.getItem(31063, 4)),
                 FL.array(MT.SolderingAlloy.liquid(U64, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30072));
 
         // Tokamak controllers and their dedicated structural parts follow the
@@ -151,7 +151,7 @@ public class Fusion {
                 FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31017));
         recipeMaps.Assembler.addRecipeX(F, 32768, 1600, ST.array(OP.plateDense.mat(MT.StainlessSteel, 4), OP.plate.mat(MT.Ti, 4), OP.plate.mat(matList.PEEK.mat, 2), IL.Circuit_Elite.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31018, 2));
-        recipeMaps.Assembler.addRecipeX(F, 65536, 3200, ST.array(OP.casingMachineDouble.mat(MT.StainlessSteel, 1), GTTileEntityRegistry.ktfruaddon.getItem(31016, 8), GTTileEntityRegistry.ktfruaddon.getItem(31017, 4), GTTileEntityRegistry.ktfruaddon.getItem(31018, 4), IL.Circuit_Elite.get(2), IL.SENSORS[4].get(2), ItemList.ComputerGT3660.get(1)),
+        recipeMaps.ResearchAssembler.addRecipeX(F, 65536, 3200, ST.array(OP.casingMachineDouble.mat(MT.StainlessSteel, 1), GTTileEntityRegistry.ktfruaddon.getItem(31016, 8), GTTileEntityRegistry.ktfruaddon.getItem(31017, 4), GTTileEntityRegistry.ktfruaddon.getItem(31018, 4), IL.Circuit_Elite.get(2), IL.SENSORS[4].get(2), ItemList.ComputerGT3660.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30014));
 
         recipeMaps.Assembler.addRecipeX(F, 65536, 1800, ST.array(OP.plateDense.mat(MT.TungstenSteel, 4), OP.wireGt04.mat(MT.Graphene, 8), OP.plate.mat(matList.PEEK.mat, 2), IL.Circuit_Master.get(1)),
@@ -160,7 +160,7 @@ public class Fusion {
                 FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31026));
         recipeMaps.Assembler.addRecipeX(F, 131072, 2400, ST.array(OP.plateDense.mat(MT.TungstenSteel, 4), OP.plate.mat(MT.Trinaquadalloy, 4), OP.plate.mat(matList.PEEK.mat, 4), IL.Circuit_Master.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(U16, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(31027, 2));
-        recipeMaps.Assembler.addRecipeX(F, 262144, 4800, ST.array(OP.casingMachineDouble.mat(MT.TungstenSteel, 1), GTTileEntityRegistry.ktfruaddon.getItem(31025, 16), GTTileEntityRegistry.ktfruaddon.getItem(31026, 8), GTTileEntityRegistry.ktfruaddon.getItem(31027, 8), IL.Circuit_Master.get(4), IL.SENSORS[5].get(2), ItemList.ComputerGT3699.get(2)),
+        recipeMaps.ResearchAssembler.addRecipeX(F, 262144, 4800, ST.array(OP.casingMachineDouble.mat(MT.TungstenSteel, 1), GTTileEntityRegistry.ktfruaddon.getItem(31025, 16), GTTileEntityRegistry.ktfruaddon.getItem(31026, 8), GTTileEntityRegistry.ktfruaddon.getItem(31027, 8), IL.Circuit_Master.get(4), IL.SENSORS[5].get(2), ItemList.ComputerGT3699.get(2)),
                 FL.array(MT.SolderingAlloy.liquid(U32, F)), ZL_FS, GTTileEntityRegistry.ktfruaddon.getItem(30015));
 
         recipeMaps.NeutronAbsorption.addRecipe0(false, 160,1, MT.Li_6.liquid(U144, true), FL.array(MT.He.gas(U20, false), MT.D.gas(U200,false)));

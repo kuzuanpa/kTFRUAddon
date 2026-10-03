@@ -14,6 +14,7 @@
 
 package cn.kuzuanpa.ktfruaddon.api.code;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
+import static gregapi.data.CS.ERR;
 
 public class ItemType {
     public @NotNull final Item item;
@@ -44,7 +47,14 @@ public class ItemType {
         this.nbt = null;
     }
 
-    public ItemType(@NotNull ItemStack stack){
+    public ItemType(@Nullable ItemStack stack){
+        if(stack == null) {
+            new IllegalAccessException("Null ItemStack found when creating ItemType!").printStackTrace(ERR);
+            this.item  = Items.paper;
+            this.meta = 0;
+            this.nbt = null;
+            return;
+        }
         this.item = stack.getItem();
         this.meta = (short) stack.getItemDamage();
         this.nbt = stack.getTagCompound();

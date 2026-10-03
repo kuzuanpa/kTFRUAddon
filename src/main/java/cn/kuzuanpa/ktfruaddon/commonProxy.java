@@ -72,8 +72,8 @@ public class commonProxy extends Abstract_Proxy {
 
 
     public void init(FMLInitializationEvent aEvent) {
-        ResearchTrees.init();
         tileEntityInit0.init(aEvent);
+        ResearchTrees.init();
         PROXY.registerRenderers();
     }
 

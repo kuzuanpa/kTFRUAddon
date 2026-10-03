@@ -96,7 +96,7 @@ public final class QuantumEntry {
         recipeMaps.MirrorGoldQuantumization.addRecipeX(CS.F, 16384, 2400,
                 ST.array(OP.foil.mat(matList.MirrorGold.mat, 4),
                         prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4),
-                        registry.getItem(31112), OP.wireFine.mat(MT.Naquadria, 16),
+                        registry.getItem(31112), OP.wireFine.mat(MT.Nq_522, 16),
                         IL.Circuit_Ultimate.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(CS.U4, CS.F)), CS.ZL_FS,
                 registry.getItem(31116));
@@ -106,7 +106,7 @@ public final class QuantumEntry {
         // item exists or can bypass the chamber.
         recipeMaps.QuantumGoldSynthesis.addRecipeX(CS.F, 65536, 4800,
                 ST.array(OP.plate.mat(matList.MirrorGold.mat, 1),
-                        OP.dustTiny.mat(MT.Naquadria, 8),
+                        OP.dustTiny.mat(MT.Nq_522, 8),
                         OP.nugget.mat(matList.Ij.mat, 16),
                         prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 8)),
                 CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.QuantumGold.mat, 1));

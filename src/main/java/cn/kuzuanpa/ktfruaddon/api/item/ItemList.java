@@ -108,7 +108,7 @@ public enum ItemList implements IItemContainer{
     //AppliedEnergistics2
     IntelligentCore,RefinedStoragePart,RefinedFluidStoragePart,
     //Gregtech6
-    CrucibleModelInnerLayer,Co60FlawDetectionCore,Tm170FlawDetectionCore, GoodCircuitPartCore, NetherStarPlus,
+    CrucibleModelInnerLayer,Co60FlawDetectionCore,Tm170FlawDetectionCore, BasicCircuitPartCore, GoodCircuitPartCore, NetherStarPlus,
     //TFC
     TFRUCoin1, TFRUCoin5, TFRUCoin10, PreparedIronOre, ClayGlassBlockMold, CeramicGlassBlockMold, CeramicGlassBlockMoldFull, CeramicGlassBlockMoldComplete, ClayGlassBottleMold, CeramicGlassBottleMold, CeramicGlassBottleMoldFull, CeramicGlassBottleMoldComplete,
     //engine parts made by hand

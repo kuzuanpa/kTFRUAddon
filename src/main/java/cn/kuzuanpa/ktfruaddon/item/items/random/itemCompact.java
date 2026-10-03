@@ -52,11 +52,12 @@ public class itemCompact extends MultiItemRandom {
         ItemList.CeramicGlassBottleMold              .set(addItem(13, "Ceramic Glass Bottle Mold", ""));
         ItemList.CeramicGlassBottleMoldFull          .set(addItem(14, "Ceramic Glass Bottle Mold Full", ""));
         ItemList.CeramicGlassBottleMoldComplete      .set(addItem(15, "Ceramic Glass Bottle Mold Complete", ""));
-        ItemList.NetherStarPlus                      .set(addItem(16, "Nether Star Plus", "PlaceHolder now"));
+        ItemList.NetherStarPlus                      .set(addItem(16, "Nether Star Plus", "PlaceHolder"));
 
         ItemList.NaturalCore                         .set(addItem(18, "Natural Core", ""));
         ItemList.FlowerCluster                       .set(addItem(19, "Flower Cluster", ""));
         ItemList.GTQTIcon                            .set(addItem(20, "GTQT Icon", ""));
+        ItemList.BasicCircuitPartCore                .set(addItem(21, "Basic Circuit Part Core", ""));
 
 
         ItemList.IntelligentCore         .set(addItem(100, "Intelligent Core", ""));

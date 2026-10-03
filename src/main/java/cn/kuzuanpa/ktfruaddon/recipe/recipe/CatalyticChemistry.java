@@ -88,7 +88,7 @@ public class CatalyticChemistry {
                 ST.array(matList.TriethylAluminium.getDust(1), dust.mat(MT.MgCl2, 4)),
                 FL.array(MT.TiCl4.liquid(U, false)), ZL_FS, ItemList.ZieglerNattaCatalystCluster.get(1));
 
-        recipeMaps.CatalyticReactor.addRecipeX(F, 2048, 600,
+        recipeMaps.ResearchReactor.addRecipeX(F, 2048, 600,
                 ST.array(dust.mat(MT.K2CO3, 4), dust.mat(MT.TiO2, 2), dust.mat(MT.SiO2, 2)),
                 ZL_FS, ZL_FS, ItemList.PolycondensationCatalystCluster.get(1));
     }
