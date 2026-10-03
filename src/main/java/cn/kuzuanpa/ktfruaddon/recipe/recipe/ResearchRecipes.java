@@ -23,16 +23,12 @@ import cn.kuzuanpa.ktfruaddon.item.items.random.itemIT;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.*;
 import gregapi.oredict.OreDictManager;
-import gregapi.recipes.Recipe;
-import gregapi.util.CR;
 import gregapi.util.ST;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -50,11 +46,11 @@ public class ResearchRecipes {
         add(gt.getItem(20503), 256, 200, OP.casingMachine.mat(MT.DATA.Electric_T[3], 1), OP.wireGt04.mat(MT.Au, 2), OP.wireGt04.mat(ANY.Iron, 4));
         add(gt.getItem(20504), 512, 200, OP.casingMachine.mat(MT.DATA.Electric_T[4], 1), OP.wireGt04.mat(MT.Al, 2), OP.wireGt08.mat(ANY.Iron, 4));
         add(gt.getItem(22004), 128, 300, OP.casingMachineQuadruple.mat(MT.StainlessSteel, 1), OP.casingSmall.mat(MT.StainlessSteel, 2), OP.gearGtSmall.mat(MT.StainlessSteel, 2), OP.pipeSmall.mat(MT.StainlessSteel, 3));
-        add(gt.getItem(10031), 32, 200, OP.casingMachine.mat(MT.DATA.Electric_T[1], 1), OP.wireGt01.mat(ANY.Cu, 6));
-        add(gt.getItem(10032), 64, 200, OP.casingMachine.mat(MT.DATA.Electric_T[2], 1), OP.wireGt02.mat(ANY.Cu, 6));
-        add(gt.getItem(10033), 128, 200, OP.casingMachine.mat(MT.DATA.Electric_T[3], 1), OP.wireGt04.mat(MT.AnnealedCopper, 6));
-        add(gt.getItem(10034), 256, 200, OP.casingMachine.mat(MT.DATA.Electric_T[4], 1), OP.wireGt08.mat(MT.AnnealedCopper, 6));
-        add(gt.getItem(10035), 512, 200, OP.casingMachine.mat(MT.DATA.Electric_T[5], 1), OP.wireGt16.mat(MT.AnnealedCopper, 6));
+        add(gt.getItem(10031), 32, 200, ST.tag(0),OP.casingMachine.mat(MT.DATA.Electric_T[1], 1), OP.wireGt01.mat(ANY.Cu, 6));
+        add(gt.getItem(10032), 64, 200, ST.tag(0),OP.casingMachine.mat(MT.DATA.Electric_T[2], 1), OP.wireGt02.mat(ANY.Cu, 6));
+        add(gt.getItem(10033), 128, 200, ST.tag(0),OP.casingMachine.mat(MT.DATA.Electric_T[3], 1), OP.wireGt04.mat(MT.AnnealedCopper, 6));
+        add(gt.getItem(10034), 256, 200, ST.tag(0),OP.casingMachine.mat(MT.DATA.Electric_T[4], 1), OP.wireGt08.mat(MT.AnnealedCopper, 6));
+        add(gt.getItem(10035), 512, 200, ST.tag(0),OP.casingMachine.mat(MT.DATA.Electric_T[5], 1), OP.wireGt16.mat(MT.AnnealedCopper, 6));
         add(gt.getItem(14000), 32, 200, OP.cableGt01.mat(MT.Pb, 1), OP.plate.mat(MT.BatteryAlloy, 1), IL.Battery_Lead_Acid_Cell_Filled.get(1));
         add(gt.getItem(14001), 64, 200, OP.cableGt01.mat(MT.Sn, 1), OP.plate.mat(MT.BatteryAlloy, 2), IL.Battery_Lead_Acid_Cell_Filled.get(2));
         add(gt.getItem(14002), 128, 200, OP.cableGt01.mat(ANY.Cu, 2), OP.plate.mat(MT.BatteryAlloy, 2), IL.Battery_Lead_Acid_Cell_Filled.get(3), IL.Circuit_Part_Good.get(1));
@@ -78,22 +74,17 @@ public class ResearchRecipes {
         add(gt.getItem(20254), 256, 300, OP.casingMachineDouble.mat(MT.DATA.Heat_T[4], 1), OP.plateDouble.mat(ANY.Cu, 2), ST.make(Blocks.brick_block, 2, 0), OP.pipeMedium.mat(MT.DATA.Heat_T[4], 2), gt.getItem(1039));
         add(gt.getItem(9200), 2048, 600, OP.casingMachineDense.mat(MT.Pb, 1), IL.Circuit_Master.get(4), IL.PISTONS[4].get(4));
         add(gt.getItem(17199), 32768, 2400, gt.getItem(18031), IL.FIELD_GENERATORS[5].get(8));
-        add(gt.getItem(20411), 32, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[1].get(4));
-        add(gt.getItem(20412), 64, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[2].get(4));
-        add(gt.getItem(20413), 128, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[3].get(4));
-        add(gt.getItem(20414), 256, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[4].get(4));
-        add(gt.getItem(20415), 512, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[5].get(4));
+        add(gt.getItem(20411), 32, 300, ST.tag(1),OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[1].get(4));
+        add(gt.getItem(20412), 64, 300, ST.tag(1),OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[2].get(4));
+        add(gt.getItem(20413), 128, 300, ST.tag(1),OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[3].get(4));
+        add(gt.getItem(20414), 256, 300, ST.tag(1),OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[4].get(4));
+        add(gt.getItem(20415), 512, 300, ST.tag(1),OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Ruby.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.FIELD_GENERATORS[5].get(4));
         add(gt.getItem(20423), 512, 400, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Diamond.get(1), IL.Processor_Crystal_Emerald.get(1), IL.Processor_Crystal_Ruby.get(1), IL.Processor_Crystal_Sapphire.get(1), IL.FIELD_GENERATORS[3].get(2), IL.EMITTERS[3].get(1), IL.SENSORS[3].get(1));
         add(gt.getItem(20431), 32, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Emerald.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.EMITTERS[1].get(2), IL.FIELD_GENERATORS[1].get(2));
         add(gt.getItem(20432), 64, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Emerald.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.EMITTERS[2].get(2), IL.FIELD_GENERATORS[2].get(2));
         add(gt.getItem(20433), 128, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Emerald.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.EMITTERS[3].get(2), IL.FIELD_GENERATORS[3].get(2));
         add(gt.getItem(20434), 256, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Emerald.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.EMITTERS[4].get(2), IL.FIELD_GENERATORS[4].get(2));
         add(gt.getItem(20435), 512, 300, OP.casingMachine.mat(MT.Osmiridium, 1), IL.Processor_Crystal_Emerald.get(2), IL.Processor_Crystal_Sapphire.get(2), IL.EMITTERS[5].get(2), IL.FIELD_GENERATORS[5].get(2));
-        removeCrafting(gt.getItem(20501), gt.getItem(20502), gt.getItem(20503), gt.getItem(20504), gt.getItem(22004));
-        removeCrafting(gt.getItem(10031), gt.getItem(10032), gt.getItem(10033), gt.getItem(10034), gt.getItem(10035), gt.getItem(14000), gt.getItem(14001), gt.getItem(14002), gt.getItem(14003), gt.getItem(14004));
-        removeCrafting(gt.getItem(10161), gt.getItem(10162), gt.getItem(10163), gt.getItem(10164), gt.getItem(10165), gt.getItem(20321), gt.getItem(20322), gt.getItem(20323), gt.getItem(20324), gt.getItem(20325), IL.Comp_Laser_Gas_Empty.get(1));
-        removeCrafting(gt.getItem(20251), gt.getItem(20252), gt.getItem(20253), gt.getItem(20254), gt.getItem(9200), gt.getItem(17199));
-        removeCrafting(gt.getItem(20411), gt.getItem(20412), gt.getItem(20413), gt.getItem(20414), gt.getItem(20415), gt.getItem(20423), gt.getItem(20431), gt.getItem(20432), gt.getItem(20433), gt.getItem(20434), gt.getItem(20435));
 
         // kTFRU machine assemblies.
         add(ktfru.getItem(23000),   32,  300, OP.screw.mat(MT.DATA.Electric_T[1], 2), ore("craftingLensYellow", 1), OP.gearGt.mat(MT.DATA.Electric_T[1], 2), ST.make(Blocks.hardened_clay, 1, 0), IL.Circuit_Basic.get(2), OP.casingMachine.mat(MT.DATA.Electric_T[1], 1));
@@ -127,9 +118,6 @@ public class ResearchRecipes {
         add(ktfru.getItem(30079),131072,2400, IL.Sensor_LuV.get(2), OP.plateDouble.mat(MT.Trinaquadalloy, 2), IL.Circuit_Ultimate.get(6), ktfru.getItem(32005), OP.wireFine.mat(MT.Nq_522, 2));
         add(ktfru.getItem(30073),32768, 1600, IL.Emitter_LuV.get(4), OP.plate.mat(matList.Ij.mat, 1), IL.Circuit_Ultimate.get(2), OP.casingMachine.mat(MT.Ir, 1));
         add(ktfru.getItem(30074),32768, 1600, IL.Emitter_LuV.get(4), prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 1), IL.Circuit_Ultimate.get(2), OP.casingMachine.mat(MT.Ir, 1));
-        removeCrafting(ktfru.getItem(23000), ktfru.getItem(23001), ktfru.getItem(23002), ktfru.getItem(23003), ktfru.getItem(23004), ktfru.getItem(30077), ktfru.getItem(30009), ktfru.getItem(30010), ktfru.getItem(30011), ktfru.getItem(30078), ktfru.getItem(30012));
-        removeCrafting(ktfru.getItem(30020), ktfru.getItem(30021), ktfru.getItem(30022), ktfru.getItem(30023), ktfru.getItem(30058), ktfru.getItem(30059), ktfru.getItem(30060), ktfru.getItem(30120), ktfru.getItem(30121));
-        removeCrafting(ktfru.getItem(30065), ktfru.getItem(30066), ktfru.getItem(30067), ktfru.getItem(30068), ktfru.getItem(30069), ktfru.getItem(30070), ktfru.getItem(30104), ktfru.getItem(30079), ktfru.getItem(30073), ktfru.getItem(30074));
 
         // Research-only items without an existing production recipe.
         add(ItemList.ArmorAirSealant.get(1), 128, 200, OP.foil.mat(MT.Rubber, 4), OP.plate.mat(MT.Teflon, 1), IL.Circuit_Good.get(1));
@@ -150,7 +138,6 @@ public class ResearchRecipes {
         recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.HeNe.gas(U, T), NF, IL.Comp_Laser_Gas_HeNe.get(1));
         recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.CO.gas(U, T), NF, IL.Comp_Laser_Gas_CO.get(1));
         recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.CO2.gas(U, T), NF, IL.Comp_Laser_Gas_CO2.get(1));
-        removeRecipes(RM.Canner, IL.Comp_Laser_Gas_He.get(1), IL.Comp_Laser_Gas_Ne.get(1), IL.Comp_Laser_Gas_Ar.get(1), IL.Comp_Laser_Gas_Kr.get(1), IL.Comp_Laser_Gas_Xe.get(1), IL.Comp_Laser_Gas_HeNe.get(1), IL.Comp_Laser_Gas_CO.get(1), IL.Comp_Laser_Gas_CO2.get(1));
     }
 
     private static void add(ItemStack aOutput, long aEUt, long aDuration, ItemStack... aInputs) {
@@ -161,36 +148,6 @@ public class ResearchRecipes {
         ItemStack stack = OreDictManager.INSTANCE.getFirstOre(aOre, aAmount);
         if (stack == null) throw new IllegalStateException("Missing ore dictionary entry: " + aOre);
         return stack;
-    }
-
-    private static void removeCrafting(ItemStack... aOutputs) {
-        for (ItemStack output : aOutputs) CR.delate(output);
-    }
-
-    private static void removeRecipes(Recipe.RecipeMap aMap, ItemStack... aOutputs) {
-        aMap.mRecipeList.removeIf(recipe -> {
-            for (ItemStack output : aOutputs) if (ST.equal(recipe.getOutput(0), output)) return true;
-            return false;
-        });
-        rebuildIndexes(aMap);
-    }
-
-    private static void rebuildIndexes(Recipe.RecipeMap aMap) {
-        aMap.mRecipeItemMap.clear();
-        aMap.mRecipeFluidMap.clear();
-        aMap.mMinInputTankSizes.clear();
-        aMap.mMaxFluidInputSize = aMap.mMaxFluidOutputSize = 1000;
-        for (Recipe recipe : aMap.mRecipeList) {
-            for (FluidStack fluid : recipe.mFluidInputs) if (fluid != null) {
-                Collection<Recipe> recipes = aMap.mRecipeFluidMap.get(fluid.getFluid().getName());
-                if (recipes == null) aMap.mRecipeFluidMap.put(fluid.getFluid().getName(), recipes = new ArrayList<>());
-                recipes.add(recipe);
-                aMap.mMaxFluidInputSize = Math.max(aMap.mMaxFluidInputSize, fluid.amount);
-                aMap.mMinInputTankSizes.merge(fluid.getFluid().getName(), (long) fluid.amount, Math::max);
-            }
-            for (FluidStack fluid : recipe.mFluidOutputs) if (fluid != null) aMap.mMaxFluidOutputSize = Math.max(aMap.mMaxFluidOutputSize, fluid.amount);
-        }
-        aMap.reInit();
     }
 
     public static void initAssembling() {
