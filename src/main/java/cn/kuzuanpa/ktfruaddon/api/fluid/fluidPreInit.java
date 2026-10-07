@@ -303,6 +303,11 @@ public class fluidPreInit {
         flList.RecycledFuel3.register("RecycledFuel3","#3 Recycled Fuel",null, LIQUID);
         flList.RecycledFuel4.register("RecycledFuel4","#4 Recycled Fuel",null, LIQUID);
 
+        flList.HighCarbonExhaust.register("highcarbonexhaust","High-Carbon Mixed Exhaust",null, GAS, 1000, 1200);
+        flList.HighWaterExhaust.register("highwaterexhaust","High-Water Mixed Exhaust",null, GAS, 1000, 1200);
+        flList.NitrogenHighCarbonExhaust.register("nitrogenhighcarbonexhaust","Nitrogen-Rich High-Carbon Mixed Exhaust",null, GAS, 1000, 1200);
+        flList.NitrogenHighWaterExhaust.register("nitrogenhighwaterexhaust","Nitrogen-Rich High-Water Mixed Exhaust",null, GAS, 1000, 1200);
+
         flList.CrackedNaphthaLow.register("CrackedNaphthaLow","Cracked Naphtha (Low Temperature)",null, LIQUID);
         flList.CrackedNaphthaMedium.register("CrackedNaphthaMedium","Cracked Naphtha (Medium Temperature)",null, LIQUID);
         flList.CrackedNaphthaHigh.register("CrackedNaphthaHigh","Cracked Naphtha (High Temperature)",null, LIQUID);

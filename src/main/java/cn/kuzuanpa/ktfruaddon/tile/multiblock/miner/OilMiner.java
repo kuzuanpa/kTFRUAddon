@@ -178,7 +178,7 @@ public class OilMiner extends TileEntityBase10MultiBlockBase implements IMultiBl
                     "WAA"
             ).fixedLayer('B',
                     "WOO",
-                    "WOO",
+                    "OOO",
                     "WOO"
             )
             .where('A', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31014)))

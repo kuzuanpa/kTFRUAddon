@@ -130,14 +130,14 @@ public class ResearchRecipes {
     /** GT6 cannot reference this addon's recipe maps directly, so mirror its locked Canner recipes explicitly. */
     private static void registerGtResearchRecipes() {
         ItemStack empty = IL.Comp_Laser_Gas_Empty.get(1);
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.He.gas(U, T), NF, IL.Comp_Laser_Gas_He.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.Ne.gas(U, T), NF, IL.Comp_Laser_Gas_Ne.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.Ar.gas(U, T), NF, IL.Comp_Laser_Gas_Ar.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.Kr.gas(U, T), NF, IL.Comp_Laser_Gas_Kr.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.Xe.gas(U, T), NF, IL.Comp_Laser_Gas_Xe.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.HeNe.gas(U, T), NF, IL.Comp_Laser_Gas_HeNe.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.CO.gas(U, T), NF, IL.Comp_Laser_Gas_CO.get(1));
-        recipeMaps.ResearchReactor.addRecipe1(T, 16, 128, empty, MT.CO2.gas(U, T), NF, IL.Comp_Laser_Gas_CO2.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.He.gas(U, T), NF, IL.Comp_Laser_Gas_He.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.Ne.gas(U, T), NF, IL.Comp_Laser_Gas_Ne.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.Ar.gas(U, T), NF, IL.Comp_Laser_Gas_Ar.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.Kr.gas(U, T), NF, IL.Comp_Laser_Gas_Kr.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.Xe.gas(U, T), NF, IL.Comp_Laser_Gas_Xe.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.HeNe.gas(U, T), NF, IL.Comp_Laser_Gas_HeNe.get(1));
+        recipeMaps.ResearchAssembler.addRecipe1(T, 16, 128, empty, MT.CO.gas(U, T), NF, IL.Comp_Laser_Gas_CO.get(1));
+        recipeMaps.Assembler.addRecipe1(T, 16, 128, empty, MT.CO2.gas(U, T), NF, IL.Comp_Laser_Gas_CO2.get(1));
     }
 
     private static void add(ItemStack aOutput, long aEUt, long aDuration, ItemStack... aInputs) {

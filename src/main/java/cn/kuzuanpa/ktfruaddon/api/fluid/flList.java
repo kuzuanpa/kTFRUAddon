@@ -59,6 +59,7 @@ public enum flList {
     ,/**乙烯酮**/Ketene,/**双乙烯酮**/Diketene
     ,/**含杂酰化钛**/ImpureTitaniumAcylate,/**粗制酰化钛**/CrudeTitaniumAcylate,/**净化酰化钛**/PurifyTitaniumAcylate,/**酰化钛**/TitaniumAcylate
     ,RecycledFuel0 ,RecycledFuel1 ,RecycledFuel2 ,RecycledFuel3 ,RecycledFuel4
+    ,/**高温高碳混合废气**/HighCarbonExhaust,/**高温高水混合废气**/HighWaterExhaust,/**含氮高温高碳混合废气**/NitrogenHighCarbonExhaust,/**含氮高温高水混合废气**/NitrogenHighWaterExhaust
     ,CrackedNaphthaLow,CrackedNaphthaMedium,CrackedNaphthaHigh, CrackedPetrolLow, CrackedPetrolMedium, CrackedPetrolHigh
     ,MoltenTeflon,MoltenBakelite,MoltenNaK,HotMoltenNaK,MoltenPolycarbonate,MoltenFluorine,MoltenChlorine,MoltenIodine
     ,/**苦卤**/Bittern,/**卤水**/Brine,/**除镁卤水**/BrineMgFree,/**富溴卤水**/BrineBrRich,/**废卤**/BrineWaste, /**丁炔二醇**/Butynediol, /**丁二醇**/Butanediol, /**γ-丁内酯**/Butyrolactone,/**一甲胺**/Methylamine, /**甲基吡咯烷酮**/Methylpyrrolidone, /**石墨-甲基吡咯烷酮**/Graphite_Methylpyrrolidone

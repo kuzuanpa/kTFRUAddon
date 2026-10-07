@@ -85,17 +85,23 @@ public class Chemistry {
         recipeMaps.FuelDeburner.addRecipe1(F,  800, 12800, ST.tag(3), FL.array(FL.Water.make(6000), FL.CarbonDioxide.make(20000), FL.Nitrogen.make(4000)), FL.array(flList.RecycledFuel3.make(100))).setSpecialNumber(1464);//Base: 456468 Bonus: * 1.8
         recipeMaps.FuelDeburner.addRecipe1(F, 1800, 51200, ST.tag(4), FL.array(FL.Water.make(16000), FL.CarbonDioxide.make(30000), FL.Nitrogen.make(8000)), FL.array(flList.RecycledFuel4.make(100))).setSpecialNumber(2192);//Base: 1130625 Bonus: * 2.5
 
-        FM.Engine.addRecipe0(F,-152  ,10,FL.array(flList.RecycledFuel0.make(10)),FL.array(FL.Steam.make(16000), FL.CarbonDioxide.make( 200)));
-        FM.Engine.addRecipe0(F,-817  ,10,FL.array(flList.RecycledFuel1.make(10)),FL.array(FL.Steam.make(32000), FL.CarbonDioxide.make( 400)));
-        FM.Engine.addRecipe0(F,-3708 ,10,FL.array(flList.RecycledFuel2.make(10)),FL.array(FL.Steam.make(64000), FL.CarbonDioxide.make( 800)));
-        FM.Engine.addRecipe0(F,-8378 ,10,FL.array(flList.RecycledFuel3.make(10)),FL.array(FL.Steam.make(96000), FL.CarbonDioxide.make(2000), FL.Nitrogen.make(400)));
-        FM.Engine.addRecipe0(F,-28265,10,FL.array(flList.RecycledFuel4.make(10)),FL.array(FL.Steam.make(256000), FL.CarbonDioxide.make(3000), FL.Nitrogen.make(800)));
+        //高温混合废气离心回收。输入输出均为整批配方量，并直接按原配方比例还原。
+        RM.Centrifuge.addRecipe0(F, 16, 40, FL.array(flList.HighCarbonExhaust.make(80)),     FL.array(FL.Hot_Carbon_Dioxide.make(5), FL.Steam.make(80)));
+        RM.Centrifuge.addRecipe0(F, 16, 40, FL.array(flList.HighWaterExhaust.make(80)),      FL.array(FL.Hot_Carbon_Dioxide.make(1), FL.Steam.make(80)));
+        RM.Centrifuge.addRecipe0(F, 16, 40, FL.array(flList.NitrogenHighCarbonExhaust.make(250)),  FL.array(FL.Hot_Carbon_Dioxide.make(5), FL.Steam.make(240), FL.Nitrogen.make(1)));
+        RM.Centrifuge.addRecipe0(F, 16, 40, FL.array(flList.NitrogenHighWaterExhaust.make(400)), FL.array(FL.Hot_Carbon_Dioxide.make(5), FL.Steam.make(380), FL.Nitrogen.make(1)));
 
-        FM.Burn.addRecipe0(F,-152  ,8,FL.array(flList.RecycledFuel0.make(10)),FL.array(FL.Steam.make(16000), FL.CarbonDioxide.make( 200)));
-        FM.Burn.addRecipe0(F,-817  ,8,FL.array(flList.RecycledFuel1.make(10)),FL.array(FL.Steam.make(32000), FL.CarbonDioxide.make( 400)));
-        FM.Burn.addRecipe0(F,-3708 ,8,FL.array(flList.RecycledFuel2.make(10)),FL.array(FL.Steam.make(64000), FL.CarbonDioxide.make( 600)));
-        FM.Burn.addRecipe0(F,-8378 ,8,FL.array(flList.RecycledFuel3.make(10)),FL.array(FL.Steam.make(96000), FL.CarbonDioxide.make(2000), FL.Nitrogen.make(400)));
-        FM.Burn.addRecipe0(F,-28265,8,FL.array(flList.RecycledFuel4.make(10)),FL.array(FL.Steam.make(256000), FL.CarbonDioxide.make(3000), FL.Nitrogen.make(800)));
+        FM.Engine.addRecipe0(F,-152  ,10,FL.array(flList.RecycledFuel0.make(10)),FL.array(flList.HighWaterExhaust.make(81)));
+        FM.Engine.addRecipe0(F,-817  ,10,FL.array(flList.RecycledFuel1.make(10)),FL.array(flList.HighWaterExhaust.make(162)));
+        FM.Engine.addRecipe0(F,-3708 ,10,FL.array(flList.RecycledFuel2.make(10)),FL.array(flList.HighWaterExhaust.make(324)));
+        FM.Engine.addRecipe0(F,-8378 ,10,FL.array(flList.RecycledFuel3.make(10)),FL.array(flList.NitrogenHighCarbonExhaust.make(492)));
+        FM.Engine.addRecipe0(F,-28265,10,FL.array(flList.RecycledFuel4.make(10)),FL.array(flList.NitrogenHighWaterExhaust.make(1299)));
+
+        FM.Burn.addRecipe0(F,-152  ,8,FL.array(flList.RecycledFuel0.make(10)),FL.array(flList.HighWaterExhaust.make(81)));
+        FM.Burn.addRecipe0(F,-817  ,8,FL.array(flList.RecycledFuel1.make(10)),FL.array(flList.HighWaterExhaust.make(162)));
+        FM.Burn.addRecipe0(F,-3708 ,8,FL.array(flList.RecycledFuel2.make(10)),FL.array(flList.HighWaterExhaust.make(324)));
+        FM.Burn.addRecipe0(F,-8378 ,8,FL.array(flList.RecycledFuel3.make(10)),FL.array(flList.NitrogenHighCarbonExhaust.make(492)));
+        FM.Burn.addRecipe0(F,-28265,8,FL.array(flList.RecycledFuel4.make(10)),FL.array(flList.NitrogenHighWaterExhaust.make(1299)));
 
         //seawater main process
         recipeMaps. DistillTower.       addRecipe0(F, 64,  20, FL.array(FL.Ocean.make(1000)), FL.array(flList.Bittern.make(100), FL.DistW.make(500)), OP.dustSmall.mat(MT.NaCl, 1));
