@@ -48,6 +48,7 @@ public class commonProxy extends Abstract_Proxy {
     }
     public void preInit(FMLPreInitializationEvent aEvent) {
         MinecraftForge.EVENT_BUS.register(this);
+        cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureScheduler.init();
         FMLCommonHandler.instance().bus().register(this);
         FMLCommonHandler.instance().registerCrashCallable(new EnvironmentHelper.TFRUValidator.TFRUValidatorCallable());
         updateTFRUEnvironment(aEvent);

@@ -24,6 +24,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
+/**
+ * @deprecated 旧的异步结构检查接口（由 {@link AsyncStructureManager} 在 worker 线程上调用，
+ *             会直接读写世界与方块实体）。请改用
+ *             {@link cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.IStructureMachine}：
+ *             worker 侧只拿到快照视图，读世界/改部件都在主线程分帧完成。
+ */
+@Deprecated
 public interface IAsyncStructure {
 
     default void onAsyncCheckStructureCompleted() {};

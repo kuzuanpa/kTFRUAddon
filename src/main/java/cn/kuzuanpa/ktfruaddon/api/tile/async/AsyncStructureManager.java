@@ -27,6 +27,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @deprecated 旧的结构检查调度器：把世界读取和部件改写丢进了自建线程池，本身不安全
+ *             （区块/方块实体的并发访问、从 worker 发包、任务丢失与状态竞态，且缺少主线程预算）。
+ *             请改用
+ *             {@link cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureScheduler} +
+ *             {@link cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.IStructureMachine}；
+ *             迁移示例见 {@code LiquidBattery} 与 {@code exampleAsyncStructureMachine}。
+ */
+@Deprecated
 public class AsyncStructureManager {
     protected final static ConcurrentHashMap<UUID,StructureComputeData> taskList =new ConcurrentHashMap<>();
     protected final static HashMap<UUID,StructureComputeData> CompletedTaskList =new HashMap<>();

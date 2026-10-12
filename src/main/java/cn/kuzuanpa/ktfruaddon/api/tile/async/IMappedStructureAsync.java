@@ -29,6 +29,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @deprecated 旧的异步地图式检查（给 {@link AsyncStructureManager} 用）。请改用
+ *             {@link cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.IStructureMachine#check}
+ *             读 {@link cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureView#partKeyAt}
+ *             做对比，示例见 {@code exampleAsyncStructureMachine}。
+ *             注意同步地图式检查 {@link IMappedStructure} 不受影响，仍在用。
+ */
+@Deprecated
 public interface IMappedStructureAsync extends IMappedStructure {
     /**@return null = structure complete**/
     default @Nullable ChunkCoordinates checkMappedStructure(AsyncStructureManager.WorldContainer worldContainer, ChunkCoordinates lastFailedPos, int machineX, int machineY, int machineZ, int xMapOffset, int yMapOffset, int zMapOffset, boolean loadChunk, ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory){

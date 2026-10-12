@@ -16,6 +16,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
@@ -42,15 +44,13 @@ import java.util.List;
 import static cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT.WORKING_MODE;
 import static gregapi.data.CS.*;
 
-public abstract class HeaterBase extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, ITileEntityEnergy, IMultiBlockEnergy {
+public abstract class HeaterBase extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler, ITileEntityEnergy, IMultiBlockEnergy, IKortexHandler {
 
     public short workingMode=0;
     public long mEnergyStored = 0;
-    public double timeRemains=-1;
     public TE_Behavior_Active_Trinary mActivity = null;
-    public Recipe.RecipeMap mRecipes = recipeMaps.FluidHeating;
-    public Recipe mLastRecipe = null;
-    public FluidStack recipeOutput = null;
+    /** Recipe core; the heat buffer doubles as its energy buffer, one progress tick per tick at the machine's rate. */
+    public KortexWorker kortex;
     private TagData mEnergyTypeEmitted=TD.Energy.HU;
 
     public FluidTankGT[] mTanks = {new FluidTankGT(80000),new FluidTankGT(80000)};
@@ -63,6 +63,10 @@ public abstract class HeaterBase extends TileEntityBase10MultiBlockBase implemen
         if (aNBT.hasKey(WORKING_MODE)) workingMode = aNBT.getShort(WORKING_MODE);
         mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(80000);
         mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(80000);
+        kortex = new KortexWorker(this, 0, recipeMaps.FluidHeating, F).setMaxProgressPerTick(1);
+        kortex.fluidInputs = new FluidTankGT[] {mTanks[0]};
+        kortex.fluidOutputs = new FluidTankGT[] {mTanks[1]};
+        kortex.readFromNBT(aNBT);
     }
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
@@ -71,10 +75,7 @@ public abstract class HeaterBase extends TileEntityBase10MultiBlockBase implemen
         UT.NBT.setNumber(aNBT, WORKING_MODE, workingMode);
         mTanks[0].writeToNBT(aNBT, NBT_TANK+".0");
         mTanks[1].writeToNBT(aNBT, NBT_TANK+".1");
-        NBTTagCompound tag = new NBTTagCompound();
-        recipeOutput.writeToNBT(tag);
-        aNBT.setTag("recipe.Output",tag);
-        aNBT.setDouble("recipe.timeRemain",timeRemains);
+        kortex.writeToNBT(aNBT);
     }
     public abstract void doOutputEnergy();
     public abstract void doOutputFluid();
@@ -95,54 +96,37 @@ public abstract class HeaterBase extends TileEntityBase10MultiBlockBase implemen
 
         //Do Work
         if(workingMode==0) doOutputEnergy();
-        if (workingMode==1) {
-            //doRecipe
-            long mRateCurrent= getHotLiquidRecipeRate();
-            if (mEnergyStored < mRateCurrent) return;
-            if (timeRemains>0){
-                if(mRateCurrent<(float)mLastRecipe.mEUt){
-                    //Not Enough Energy
-                    mActivity.mActive = F;
-                    UT.Sounds.send(SFX.MC_FIZZ, (TileEntity) this);
-                    timeRemains=mLastRecipe.mDuration;
-                    return;
-                }
-                double speed=(mRateCurrent/(float)mLastRecipe.mEUt);
-                if(timeRemains>=speed){
-                    mEnergyStored -= Math.abs(mRateCurrent);
-                    timeRemains-=speed;
-                    return;
-                } else {
-                    //Done One Recipe
-                    mEnergyStored -= (long) Math.abs(mRateCurrent*(timeRemains/speed));
-                    timeRemains=0.0F;
-                    mTanks[1].fill(recipeOutput);
-                    mActivity.mActive = F;
-                    return;
-                }
-            }
-            Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, T, Long.MAX_VALUE, NI, mTanks, ZL_IS);
-            if (tRecipe == null||tRecipe.mFluidInputs.length != 1||tRecipe.mFluidOutputs.length != 1||tRecipe.mEUt>mRateCurrent){
-                mLastRecipe=null;
-                mActivity.mActive = F;
-                return;
-            }
-            if(!mTanks[1].canFillAll(tRecipe.mFluidOutputs[0]))return;
-            recipeOutput = tRecipe.mFluidOutputs[0].copy();
-            if (tRecipe.isRecipeInputEqual(T, F, mTanks, ZL_IS)) {
-                mActivity.mActive = T;
-                timeRemains=tRecipe.mDuration;
-                mLastRecipe = tRecipe;
-                double speed=(mRateCurrent/(float)mLastRecipe.mEUt);
-                while(speed > timeRemains){
-                    if(!mTanks[1].canFillAll(tRecipe.mFluidOutputs[0]) || !tRecipe.isRecipeInputEqual(T, F, mTanks, ZL_IS))break;
-                    timeRemains+=tRecipe.mDuration;
-                    recipeOutput.amount += tRecipe.mFluidOutputs[0].amount;
-                }
-
-            }
-        }
+        if (workingMode==1) doRecipe();
     }
+
+    /** Hot-liquid step; the worker spends the stored heat at this machine's fixed rate. */
+    private void doRecipe() {
+        kortex.mEnergyStored = mEnergyStored;
+        kortex.mEnergyCapacity = getCapacity();
+        kortex.run();
+        mEnergyStored = kortex.mEnergyStored;
+    }
+
+    // Recipe bridge
+    /** Only one-liquid recipes run, and only as many batches as the machine's heat rate can pay for per tick. */
+    @Override
+    public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
+        long tRate = getHotLiquidRecipeRate();
+        if (aEUT <= 0 || aEUT > tRate) return 0;
+        Recipe tRecipe = kortex.findRecipe();
+        if (tRecipe == null || tRecipe.mFluidInputs.length != 1 || tRecipe.mFluidOutputs.length != 1) return 0;
+        long tMax = tRate / aEUT;
+        FluidStack tOutput = tRecipe.mFluidOutputs[0];
+        if (tOutput != null && tOutput.amount > 0) tMax = Math.min(tMax, (kortex.fluidOutputs[0].capacity() - kortex.fluidOutputs[0].amount()) / tOutput.amount);
+        return (int) Math.min(tMax, Integer.MAX_VALUE);
+    }
+
+    @Override public void onRecipeStart(int aKortexID, long aEUT, long aDuration, long aParallel) {mActivity.mActive = T;}
+
+    @Override public void onRecipeFinish(int aKortexID, long aEUT, long aDuration, long aParallel) {mActivity.mActive = F;}
+
+    /** The worker writes into the output tank, so push it out right away to keep the next batch flowing. */
+    @Override public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {doOutputFluid();}
 
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {

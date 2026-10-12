@@ -15,6 +15,8 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureChangeList;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.PartKeys;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
@@ -28,6 +30,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PartPredicate implements IStructurePredicate {
+    @Override public boolean supportsAsync() {return true;}
+    /**异步: 只比部分 key(不碰方块实体); 需要动目标就写进 ctx.changes。**/
+    @Override public boolean checkAsync(StructureContext ctx, int x, int y, int z) {
+        int key = PartKeys.cellKey(ctx, x, y, z);
+        if (key == PartKeys.UNKNOWN) return false;
+        for (TileDesc desc : expected) {
+            int expectedKey = PartKeys.pack(desc.aRegistry.currentID(), desc.aRegistryMeta);
+            if ((key & PartKeys.MASK) == expectedKey) {
+                if (!PartKeys.isTargeted(key)) ctx.changes.add(x, y, z, StructureChangeList.KIND_SET_PART, expectedKey, desc.aDesign, desc.aUsage | (allowPartShare ? PartKeys.FLAG_ALLOW_SHARE : 0));
+                return true;
+            }
+        }
+        return false;
+    }
     private final TileDesc[] expected;
     private boolean allowPartShare = false;
 

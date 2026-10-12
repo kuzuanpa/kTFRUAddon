@@ -12,7 +12,7 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock.ai;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.research.ai;
 
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import cn.kuzuanpa.ktfruaddon.api.research.task.minigame.MiniGameIdentifyTask;

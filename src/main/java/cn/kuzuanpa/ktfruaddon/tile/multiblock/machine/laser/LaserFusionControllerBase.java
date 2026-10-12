@@ -5,6 +5,8 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine.laser;
 
 import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
@@ -53,7 +55,7 @@ import static gregapi.data.CS.*;
  */
 public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlockBase implements
         IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy,
-        IMultiBlockFluidHandler, IMultiBlockInventory {
+        IMultiBlockFluidHandler, IMultiBlockInventory, IKortexHandler {
     public static final byte STATE_IDLE = 0, STATE_CHARGING = 1, STATE_COOLING = 2, STATE_ERROR = 3;
     private static final String NBT_PULSE_ENERGY = "ktfru.laser.pulse_energy";
     private static final String NBT_COOLDOWN = "ktfru.laser.cooldown";
@@ -62,7 +64,8 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
     protected final StateMgr mState = new StateMgr(STATE_IDLE);
     protected long mPulseEnergy;
     protected int mCooldown;
-    protected Recipe.RecipeMap mRecipes = recipeMaps.LaserFusion;
+    /** Recipe core; the target pellet, the gases and the shot transaction all live in it. */
+    protected KortexWorker kortex;
     protected Recipe mLastRecipe;
     protected ChunkCoordinates mLastFailedPos;
     protected final FluidTankGT[] mTanks = {new FluidTankGT(8000), new FluidTankGT(8000), new FluidTankGT(8000), new FluidTankGT(8000)};
@@ -84,8 +87,12 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
         if (nbt.hasKey(NBT_PULSE_ENERGY)) mPulseEnergy = nbt.getLong(NBT_PULSE_ENERGY);
         if (nbt.hasKey(NBT_COOLDOWN)) mCooldown = nbt.getInteger(NBT_COOLDOWN);
         if (nbt.hasKey(NBT_STATE)) mState.set(nbt.getByte(NBT_STATE));
+        Recipe.RecipeMap mRecipes = recipeMaps.LaserFusion;
         if (nbt.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(nbt.getString(NBT_FUELMAP));
         for (int i = 0; i < mTanks.length; i++) mTanks[i].readFromNBT(nbt, NBT_TANK + "." + i).setCapacity(8000);
+        kortex = new KortexWorker(this, 0, mRecipes, T);
+        kortex.fluidInputs = mInputTanks;
+        kortex.readFromNBT(nbt);
     }
 
     @Override public void writeToNBT2(NBTTagCompound nbt) {
@@ -94,6 +101,7 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
         nbt.setInteger(NBT_COOLDOWN, mCooldown);
         nbt.setByte(NBT_STATE, mState.get());
         for (int i = 0; i < mTanks.length; i++) mTanks[i].writeToNBT(nbt, NBT_TANK + "." + i);
+        kortex.writeToNBT(nbt);
     }
 
     protected final long getPulseCapacity() { return (long) pulseStorageCount() * pulseCapacityPerStorage(); }
@@ -115,22 +123,50 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
         mState.set(mPulseEnergy > 0 ? STATE_CHARGING : STATE_IDLE);
     }
 
-    /** Finds, fully validates, consumes and resolves one pulse in a single server tick. */
+    /** Fires at most one shot per call; the worker consumes the pellet and gases once the machine cleared the pulse. */
     private void tryFirePulse() {
-        Recipe recipe = mRecipes.findRecipe(this, mLastRecipe, T, Integer.MAX_VALUE, NI, mInputTanks, slot(0));
-        if (recipe == null || !recipe.isRecipeInputEqual(F, F, mInputTanks, slot(0))) return;
-        long requiredPulse = recipe.mSpecialValue;
-        if (mPulseEnergy < requiredPulse || getPeakEnergy() < requiredPulse) return;
-        if (!canStoreOutputs(recipe)) return;
+        if (kortex.itemInputs.length > 0) kortex.itemInputs[0] = slot(0) == null ? null : ST.copy(slot(0));
+        kortex.mEnergyStored = 0;
+        kortex.mEnergyCapacity = Long.MAX_VALUE;
+        kortex.run();
+        kortex.mEnergyStored = 0;
+    }
 
-        // T consumes the exact target pellet and all fluid inputs only after every
-        // structural, pulse, and output condition was checked above.
-        if (!recipe.isRecipeInputEqual(T, F, mInputTanks, slot(0))) return;
-        mPulseEnergy -= requiredPulse;
+    // Recipe bridge
+    /** The pulse is a machine resource: a shot needs its full SpecialNumber, and every output must fit first. */
+    @Override
+    public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
+        Recipe recipe = kortex.findRecipe();
+        if (recipe == null) return 0;
+        long requiredPulse = recipe.mSpecialValue;
+        if (mPulseEnergy < requiredPulse || getPeakEnergy() < requiredPulse) return 0;
+        if (!canStoreOutputs(recipe)) return 0;
         mLastRecipe = recipe;
-        insertOutputs(recipe);
+        return 1;
+    }
+
+    @Override
+    public void onRecipeStart(int aKortexID, long aEUT, long aDuration, long aParallel) {
+        if (mLastRecipe != null) mPulseEnergy -= mLastRecipe.mSpecialValue;
         mCooldown = cooldownTicks();
         mState.set(STATE_COOLING);
+    }
+
+    @Override
+    public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {
+        if (kortex.itemInputs.length > 0) {
+            if (kortex.itemInputs[0] == null) slotKill(0); else slot(0, kortex.itemInputs[0]);
+        }
+        for (FluidTankGT tTank : fluidTanks) if (tTank.has()) {
+            for (FluidTankGT tTarget : mOutputTanks) if (tTarget.fillAll(tTank.get())) {tTank.setEmpty(); break;}
+        }
+        for (int i = 0; i < items.length; i++) {
+            ItemStack tOutput = items[i];
+            if (tOutput == null) continue;
+            items[i] = null;
+            if (mLastRecipe != null && getRandomNumber(10000) > mLastRecipe.getOutputChance(i)) continue;
+            if (slot(1) == null) slot(1, tOutput.copy()); else slot(1).stackSize += tOutput.stackSize;
+        }
     }
 
     private boolean canStoreOutputs(Recipe recipe) {
@@ -146,15 +182,6 @@ public abstract class LaserFusionControllerBase extends TileEntityBase10MultiBlo
             if (slot(1) != null && slot(1).stackSize + output.stackSize > getInventoryStackLimit()) return false;
         }
         return true;
-    }
-
-    private void insertOutputs(Recipe recipe) {
-        for (FluidStack output : recipe.mFluidOutputs) if (output != null) for (FluidTankGT tank : mOutputTanks) if (tank.fill(output, true) == output.amount) break;
-        for (int i = 0; i < recipe.mOutputs.length; i++) {
-            ItemStack output = recipe.mOutputs[i];
-            if (output == null || getRandomNumber(10000) > recipe.getOutputChance(i)) continue;
-            if (slot(1) == null) slot(1, output.copy()); else slot(1).stackSize += output.stackSize;
-        }
     }
 
     @Override public ItemStack[] getDefaultInventory(NBTTagCompound nbt) { return new ItemStack[2]; }

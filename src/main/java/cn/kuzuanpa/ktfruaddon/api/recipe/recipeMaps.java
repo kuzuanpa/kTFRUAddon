@@ -78,6 +78,7 @@ public class recipeMaps {
             , RTG                     = new Recipe.RecipeMap(null, "ktfru.recipe.rtg"                    , "Radio Thermo Generator"    , null, 0, 1, RES_PATH_GUI + "machines/RTG",                      1, 2, 1, 0, 0, 0,  1,  1, "", 1, "", T, T, T, T, T, F, T, T)
             , OreProcessSystem        = new Recipe.RecipeMap(null, "ktfru.recipe.oreprocesssystem"       , "Ore Process System"        , null, 0, 1, RES_PATH_GUI + "machines/OreProcessSystem",         3, 9, 1, 3, 3, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
             , NeutronAbsorption       = new Recipe.RecipeMap(null, "ktfru.recipe.neutronabsorption"      , "Neutron Absorption"        , null, 0, 1, RES_PATH_GUI + "machines/NeutronAbsorption",        1, 2, 0, 1, 2, 0,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
+            , SteamTurbine            = new Recipe.RecipeMap(null, "ktfru.recipe.steamturbine"           , "Steam Turbine"             , null, 0, 1, RES_PATH_GUI + "machines/Default",                  0, 0, 0, 1, 1, 1,  1,  1, "", 1, "", F, T, T, T, T, F, T, T)
 
     ;
     @Deprecated

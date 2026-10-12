@@ -15,6 +15,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import gregapi.block.multitileentity.IMultiTileEntity;
@@ -63,15 +65,15 @@ import static gregapi.data.CS.*;
 /**
  * @author kuzuanpa
  */
-public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityTapAccessible, ITileEntityFunnelAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray {
+public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidHandler, ITileEntityTapAccessible, ITileEntityFunnelAccessible, ITileEntityEnergy, ITileEntityRunningActively, ITileEntityAdjacentOnOff, IMultiTileEntity.IMTE_SyncDataByteArray, IKortexHandler {
     public boolean mStopped = F;
     public short mEfficiency = 10000;
     public int mElectrolyteRequired = 1000;
     public long mEnergy = 0, mRate = 32;
     public TagData mEnergyTypeEmitted = TD.Energy.EU;
-    public RecipeMap mRecipes = recipeMaps.FuelBattery;
     public int mDesign = 0;
-    public Recipe mLastRecipe = null;
+    /** Recipe core; its tanks are this machine's own tanks, so burning one batch lands directly in them. */
+    public KortexWorker kortex;
     public FluidTankGT[] mTanks = {new FluidTankGT(8000),new FluidTankGT(8000), new FluidTankGT(8000), new FluidTankGT(8000), new FluidTankGT(mElectrolyteRequired)}
 
     , mTanksInput = {mTanks[0],mTanks[1]}, mTanksOutput ={ mTanks[2],mTanks[3]}, mTanksRecipe={mTanks[0],mTanks[1],mTanks[4]};
@@ -94,6 +96,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         if (aNBT.hasKey(kTileNBT.LIQUID_CATALYST_REQUIRED)) mElectrolyteRequired = aNBT.getInteger(kTileNBT.LIQUID_CATALYST_REQUIRED);
         if (aNBT.hasKey(NBT_EFFICIENCY)) mEfficiency = (short)UT.Code.bind_(0, 10000, aNBT.getShort(NBT_EFFICIENCY));
         if (aNBT.hasKey(NBT_ENERGY_EMITTED)) mEnergyTypeEmitted = TagData.createTagData(aNBT.getString(NBT_ENERGY_EMITTED));
+        RecipeMap mRecipes = recipeMaps.FuelBattery;
         if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
         if (aNBT.hasKey(NBT_FACING)) mFacing = aNBT.getByte(NBT_FACING);
         if (aNBT.hasKey(NBT_DESIGN)) mDesign = aNBT.getInteger(NBT_DESIGN);
@@ -102,6 +105,10 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(8000);
         mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(8000);
         mTanks[4].readFromNBT(aNBT, NBT_TANK+".4").setCapacity(mElectrolyteRequired);
+        kortex = new KortexWorker(this, 0, mRecipes, true);
+        kortex.fluidInputs = mTanksRecipe;
+        kortex.fluidOutputs = mTanksOutput;
+        kortex.readFromNBT(aNBT);
     }
 
     @Override
@@ -116,11 +123,12 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         mTanks[2].writeToNBT(aNBT, NBT_TANK+".2");
         mTanks[3].writeToNBT(aNBT, NBT_TANK+".3");
         mTanks[4].writeToNBT(aNBT, NBT_TANK+".4");
+        kortex.writeToNBT(aNBT);
     }
 
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(Chat.CYAN     + LH.get(LH.RECIPES) + ": " + Chat.WHITE + LH.get(mRecipes.mNameInternal));
+        aList.add(Chat.CYAN     + LH.get(LH.RECIPES) + ": " + Chat.WHITE + LH.get(kortex.recipeMap.mNameInternal));
         aList.add(Chat.GREEN    + LH.get(LH.FLUID_INPUT)+ ": " + Chat.WHITE + LH.get(I18nHandler.SIDE_RIGHT)+", "+LH.get(I18nHandler.SIDE_LEFT));
         aList.add(Chat.RED      + LH.get(LH.FLUID_OUTPUT)+ ": " + Chat.WHITE + LH.get(I18nHandler.SIDE_BOTTOM)+" "+LH.get(I18nHandler.AUTO));
         LH.addEnergyToolTips(this, aList, null, mEnergyTypeEmitted, null, LH.get(LH.FACE_TOP));
@@ -133,7 +141,7 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
 
     @Override
     public int funnelFill(byte aSide, FluidStack aFluid, boolean aDoFill) {
-        if (!mRecipes.containsInput(aFluid, this, NI)) return 0;
+        if (!kortex.recipeMap.containsInput(aFluid, this, NI)) return 0;
         updateInventory();
         return getAvailInputTank(aFluid.getFluid()).fill(aFluid, aDoFill);
     }
@@ -155,40 +163,53 @@ public class FuelBattery extends TileEntityBase09FacingSingle implements IFluidH
         if (mTanks[2]!=null) FL.move(mTanks[2], getAdjacentTank(SIDE_BOTTOM));
         if (mTanks[3]!=null) FL.move(mTanks[3], getAdjacentTank(SIDE_BOTTOM));
         //doRecipe
-        if (changingStaticTank || mEnergy >= mRate * 2 || mStopped || slot(0)==null || slot(1)==null || mTankStatic.amount() < mElectrolyteRequired)
+        if (changingStaticTank || mEnergy >= mRate * 2 || mStopped || slot(0)==null || slot(1)==null || mTankStatic.amount() < mElectrolyteRequired) {
+            mActivity.mActive = F;
             return;
+        }
+        doRecipe();
+    }
 
+    /** One generator batch; the worker only runs parallel if the whole scaled output still fits the energy buffer. */
+    private void doRecipe() {
         mActivity.mActive = F;
-        Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, T, Long.MAX_VALUE, NI, mTanksRecipe, slot(0), slot(1));
+        syncWorkerInput();
+        kortex.mEnergyStored = 0;
+        kortex.mEnergyCapacity = mEfficiency <= 0 ? 0 : UT.Code.units(Math.max(0, mRate * 2 - mEnergy), mEfficiency, 10000, F);
+        kortex.run();
+        kortex.mEnergyStored = 0;
+    }
 
-        if (tRecipe == null
-                || tRecipe.mFluidOutputs.length > 0 && !mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0])
-                || tRecipe.mFluidOutputs.length == 2 && !mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1]))
-            return;
+    private void syncWorkerInput() {
+        for (int i = 0; i < kortex.itemInputs.length; i++) kortex.itemInputs[i] = slot(i) == null ? null : ST.copy(slot(i));
+    }
 
-        if (tRecipe.mFluidInputs.length > 1 && mTanksInput[0].fluid() != tRecipe.mFluidInputs[0].getFluid()) {
-            //swap Tanks when Input Fluids in wrong order
-            FluidStack tmp = mTanksInput[0].get();
-            mTanksInput[0].setEmpty();
-            mTanksInput[0].fillAll(mTanksInput[1].get());
-            mTanksInput[1].setEmpty();
-            mTanksInput[1].fillAll(tmp);
+    // Recipe bridge
+    /** The electrolyte tank may hold more than the recipe asks for, so the machine demands its own minimum. */
+    @Override
+    public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
+        if (mTankStatic.amount() < mElectrolyteRequired) return 0;
+        Recipe tRecipe = kortex.findRecipe();
+        if (tRecipe == null) return 0;
+        long tMax = Integer.MAX_VALUE;
+        for (int i = 0; i < tRecipe.mFluidOutputs.length && i < kortex.fluidOutputs.length; i++) {
+            FluidStack tOutput = tRecipe.mFluidOutputs[i];
+            if (tOutput == null || tOutput.amount <= 0) continue;
+            tMax = Math.min(tMax, (kortex.fluidOutputs[i].capacity() - kortex.fluidOutputs[i].amount()) / tOutput.amount);
         }
+        return (int) Math.min(tMax, Integer.MAX_VALUE);
+    }
 
-        if (tRecipe.isRecipeInputEqual(T, F, mTanksRecipe, slot(0), slot(1))) {
-            mActivity.mActive = T;
-            mLastRecipe = tRecipe;
-            mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
-            if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
-            if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
-            while (mEnergy < mRate * 2 && (tRecipe.mFluidOutputs.length < 1 || tRecipe.mFluidOutputs.length == 1 && mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0]) || tRecipe.mFluidOutputs.length == 2 && mTanksOutput[0].canFillAll(tRecipe.mFluidOutputs[0]) && mTanksOutput[1].canFillAll(tRecipe.mFluidOutputs[1])) && tRecipe.isRecipeInputEqual(T, F, mTanksInput, ZL_IS)) {
-                mEnergy += UT.Code.units(Math.abs(tRecipe.mEUt * tRecipe.mDuration), 10000, mEfficiency, F);
-                if (tRecipe.mFluidOutputs.length > 1) mTanksOutput[1].fill(tRecipe.mFluidOutputs[1]);
-                if (tRecipe.mFluidOutputs.length > 0) mTanksOutput[0].fill(tRecipe.mFluidOutputs[0]);
-                if (mTanksInput[0].isEmpty() || (mTanksInput[1].isEmpty() && tRecipe.mFluidInputs[1] != null))
-                    break;
-            }
+    @Override
+    public void onRecipeStart(int aKortexID, long aEUT, long aDuration, long aParallel) {mActivity.mActive = T;}
+
+    @Override
+    public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {
+        for (int i = 0; i < kortex.itemInputs.length; i++) {
+            if (kortex.itemInputs[i] == null) slotKill(i); else slot(i, kortex.itemInputs[i]);
         }
+        mEnergy += UT.Code.units(Math.abs(kortex.mEnergyStored), 10000, mEfficiency, F);
+        kortex.mEnergyStored = 0;
     }
 
     @Override

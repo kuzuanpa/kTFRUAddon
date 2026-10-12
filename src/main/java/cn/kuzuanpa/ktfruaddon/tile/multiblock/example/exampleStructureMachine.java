@@ -20,6 +20,7 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringStructureMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
@@ -37,7 +38,7 @@ import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
 
-public class exampleStructureMachine extends TileEntityBase10MultiBlockBase {
+public class exampleStructureMachine extends TileEntityBase10MultiBlockBase implements IStringStructureMachine {
     //Structure
     ChunkCoordinates lastFailedPos=null;
     static final IStringBaseStructure structure  = new LayerStructure(StructureContext.Axis.Y).layerRule("A")
@@ -58,13 +59,11 @@ public class exampleStructureMachine extends TileEntityBase10MultiBlockBase {
             .where('X', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002)))
             .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18006)))
             .setOffset(-2,0,0);
-    @Override
-    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
-        return lastFailedPos==null;
-    }
+    //结构检测接入快照 API: 只补下面这几行, 结构声明一个字段都不用改
+    @Override public IStringBaseStructure stringStructure() {return structure;}
+    @Override public boolean isStructureOkay() {return mStructureOkay;}
+    @Override public void setStructureOkay(boolean aOkay) {mStructureOkay = aOkay;}
+    @Override public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {return IStringStructureMachine.trigger(this, aClickedAt, aPlayer, aInventory);}
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (!isServerSide())return true;
 

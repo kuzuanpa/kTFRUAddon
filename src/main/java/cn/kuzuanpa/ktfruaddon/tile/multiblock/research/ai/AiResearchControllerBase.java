@@ -12,7 +12,7 @@
  * AGPLv3 License: https://www.gnu.org/licenses/agpl-3.0.txt
  */
 
-package cn.kuzuanpa.ktfruaddon.tile.multiblock.ai;
+package cn.kuzuanpa.ktfruaddon.tile.multiblock.research.ai;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
@@ -26,7 +26,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.research.MultiResearchTableBase;
 import cn.kuzuanpa.ktfruaddon.tile.research.ResearchTreeMonitor;
 import gregapi.data.LH;
-import gregapi.util.UT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -38,8 +37,6 @@ import net.minecraft.util.ChunkCoordinates;
 import org.jetbrains.annotations.Nullable;
 import zmaster587.libVulpes.items.ItemProjector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

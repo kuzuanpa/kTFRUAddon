@@ -15,6 +15,7 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureStatus;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import net.minecraft.block.Block;
@@ -24,6 +25,12 @@ import zmaster587.libVulpes.block.BlockMeta;
 import static gregapi.data.CS.W;
 
 public class BlockPredicate implements IStructurePredicate {
+    @Override public boolean supportsAsync() {return true;}
+    @Override public boolean checkAsync(StructureContext ctx, int x, int y, int z) {
+        int status = ctx.view.statusAt(x, y, z);
+        if (status == StructureStatus.UNLOADED || status == StructureStatus.NO_DATA) {ctx.defer(); return false;}
+        return status == Block.getIdFromBlock(expected) && (expectedMeta == W || ctx.view.metaAt(x, y, z) == expectedMeta);
+    }
     private final Block expected;
     private final int expectedMeta;
     public BlockPredicate(Block expected) {

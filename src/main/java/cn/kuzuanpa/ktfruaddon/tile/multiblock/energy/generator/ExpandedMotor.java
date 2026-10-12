@@ -17,6 +17,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
@@ -65,7 +67,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler,IMultiBlockEnergy, IFluidHandler, ITileEntitySwitchableOnOff, IMultiBlockInventory, IMultiTileEntity.IMTE_SyncDataByte {
+public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMultiBlockFluidHandler,IMultiBlockEnergy, IFluidHandler, ITileEntitySwitchableOnOff, IMultiBlockInventory, IMultiTileEntity.IMTE_SyncDataByte, IKortexHandler {
 	public short mTurbineWalls = 18022;
 	public long mEnergyStored=0,mRate=0,mRateMax=0, mAmpere = 0;
 	public boolean mActive=false,mForcedStopped=false;
@@ -75,8 +77,8 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 
 	public FluidTankGT mInputTank = new FluidTankGT(), mTanksOutput[] = new FluidTankGT[] {new FluidTankGT(), new FluidTankGT(), new FluidTankGT()};
 	public FluidTankGT[] mTanks = new FluidTankGT[] {mInputTank, mTanksOutput[0], mTanksOutput[1], mTanksOutput[2]};
-	public Recipe.RecipeMap mRecipes = FM.Gas;
-	public Recipe mLastRecipe = null;
+	/** Recipe core; burning one batch of fuel converts straight into this machine's energy and output tanks. */
+	public KortexWorker kortex;
 
 	@Override
 	public void readFromNBT2(NBTTagCompound aNBT) {
@@ -88,11 +90,16 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 		else mRateMax=mRate;
 		if (aNBT.hasKey(kTileNBT.MAX_AMPERE)) mAmpere = aNBT.getLong(kTileNBT.MAX_AMPERE);
 		if (aNBT.hasKey(NBT_ENERGY)) mEnergyStored = aNBT.getLong(NBT_ENERGY);
+		Recipe.RecipeMap mRecipes = FM.Gas;
 		if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
 		boolean kRegistry = false;
 		if (aNBT.hasKey("ktfru.use.kRegistry")) kRegistry = true;
 		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(mRateMax*16);
 		mInputTank.readFromNBT(aNBT, NBT_TANK).setCapacity(mRateMax*4);
+		kortex = new KortexWorker(this, 0, mRecipes, true);
+		kortex.fluidInputs = new FluidTankGT[] {mInputTank};
+		kortex.fluidOutputs = mTanksOutput;
+		kortex.readFromNBT(aNBT);
 		structure = new LayerStructure(StructureContext.Axis.Y).layerRule("AB")
 				.fixedLayer('A',
 						"AAA",
@@ -110,6 +117,7 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 		UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergyStored);
 		for (int i = 0; i < mTanksOutput.length; i++) mTanksOutput[i].writeToNBT(aNBT, NBT_TANK+"."+i);
 		mInputTank.writeToNBT(aNBT, NBT_TANK);
+		kortex.writeToNBT(aNBT);
 	}
 	//Structure
 	ChunkCoordinates lastFailedPos=null;
@@ -173,34 +181,40 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 	}
 
 	public void doConversion(long aTimer) {
-		for (FluidTankGT tank : mTanksOutput) if (tank.has()) {
+		if (mForcedStopped) return;
+		// The buffered energy headroom is the worker's energy budget, so one run only burns what still fits.
+		kortex.mEnergyStored = 0;
+		kortex.mEnergyCapacity = Math.max(0, mRate * mAmpere - mEnergyStored);
+		kortex.run();
+		kortex.mEnergyStored = 0;
+		if (mEnergyStored < 0) mEnergyStored = 0;
+	}
+
+	// Recipe bridge
+	@Override
+	public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
+		if (aEUT >= 0 || aDuration <= 0) return 0;
+		Recipe tRecipe = kortex.findRecipe();
+		if (tRecipe == null) return 0;
+		long tMax = Integer.MAX_VALUE;
+		for (int i = 0; i < tRecipe.mFluidOutputs.length && i < kortex.fluidOutputs.length; i++) {
+			FluidStack tOutput = tRecipe.mFluidOutputs[i];
+			if (tOutput == null || tOutput.amount <= 0) continue;
+			tMax = Math.min(tMax, (kortex.fluidOutputs[i].capacity() - kortex.fluidOutputs[i].amount()) / tOutput.amount);
+		}
+		return (int) Math.min(tMax, Integer.MAX_VALUE);
+	}
+
+	@Override
+	public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {
+		for (FluidTankGT tank : fluidTanks) if (tank.has()) {
 			ChunkCoordinates pos = getOffset(OPOS[mFacing], 3);
 			pos.posY+=1;
 			FL.move(tank, WD.te(worldObj,pos,mFacing,false));
 			if (FL.gas(tank) && !WD.hasCollide(worldObj, pos)) tank.setEmpty();
 		}
-		if (!mForcedStopped && mInputTank.has() && mTanksOutput[0].underHalf() && mTanksOutput[1].underHalf() && mTanksOutput[2].underHalf()) {
-			Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, F, Integer.MAX_VALUE, NI, mInputTank.AS_ARRAY, ZL_IS);
-			if (tRecipe != null) {
-				mLastRecipe = tRecipe;
-				if (tRecipe.mEUt < 0 && tRecipe.mDuration > 0) {
-					int tMax = UT.Code.bindInt(UT.Code.divup(mRate*mAmpere - mEnergyStored, -tRecipe.mEUt * tRecipe.mDuration));
-					int tParallel = tRecipe.isRecipeInputEqual(tMax, mInputTank.AS_ARRAY, ZL_IS);
-					if (tParallel < tMax) mInputTank.setEmpty();
-					if (tParallel > 0) {
-						mEnergyStored -= tParallel * tRecipe.mEUt * tRecipe.mDuration;
-						for (int i = 0; i < tRecipe.mFluidOutputs.length && i < mTanksOutput.length; i++) {
-							if (!mTanksOutput[i].fillAll(tRecipe.mFluidOutputs[i], tParallel)) {
-								mEnergyStored = 0;
-							}
-						}
-						return;
-					}
-				}
-			}
-		}
-
-		if (mEnergyStored < 0) mEnergyStored = 0;
+		mEnergyStored += kortex.mEnergyStored;
+		kortex.mEnergyStored = 0;
 	}
 
 	public ITileEntityUnloadable mEmittingTo = null;
@@ -263,7 +277,7 @@ public class ExpandedMotor extends TileEntityBase10MultiBlockBase implements IMu
 		if(isStateChanged) updateClientData();
 	}
 
-	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && mRecipes.containsInput(aFluidToFill, this, NI) ? mInputTank : null;}
+	@Override protected IFluidTank getFluidTankFillable2(byte aSide, FluidStack aFluidToFill) {return !mForcedStopped && kortex.recipeMap.containsInput(aFluidToFill, this, NI) ? mInputTank : null;}
 	@Override protected IFluidTank[] getFluidTanks2(byte aSide) {return mTanks;}
 
 	@Override

@@ -37,6 +37,7 @@ public class recipeInit {
         CompactItem.init();
         RocketBuilding.init();
         Fusion.init();
+        SteamTurbine.init();
         PlatinumGroupProcess.init();
         FakeRecipe.init();
 

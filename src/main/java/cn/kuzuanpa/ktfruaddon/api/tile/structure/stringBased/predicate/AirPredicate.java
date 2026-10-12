@@ -15,6 +15,7 @@
 package cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureStatus;
 import cn.kuzuanpa.ktfruaddon.client.kTFRUAddonARProjectorCompact;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
@@ -22,6 +23,12 @@ import net.minecraft.init.Blocks;
 import zmaster587.libVulpes.block.BlockMeta;
 
 public class AirPredicate implements IStructurePredicate {
+    @Override public boolean supportsAsync() {return true;}
+    @Override public boolean checkAsync(StructureContext ctx, int x, int y, int z) {
+        int status = ctx.view.statusAt(x, y, z);
+        if (status == StructureStatus.UNLOADED || status == StructureStatus.NO_DATA) {ctx.defer(); return false;}
+        return status == 0;
+    }
     @Override
     public boolean check(StructureContext ctx, int x, int y, int z) {
         Block block = ctx.world.getBlock(x,y, z);

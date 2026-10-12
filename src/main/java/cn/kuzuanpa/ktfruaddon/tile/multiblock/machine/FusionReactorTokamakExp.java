@@ -18,6 +18,8 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
@@ -70,7 +72,7 @@ import java.util.*;
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory , SpecialPartPredicate.IReceiveSpecialPart {
+public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory , SpecialPartPredicate.IReceiveSpecialPart, IKortexHandler {
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
     public static final short MAX_FIELD_STRENGTH=400, KEEP_CHARGE_EUt=512;
     public static final long MAX_CHARGE =16*1024L*1024L;
@@ -81,9 +83,9 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public long mEnergy=0 , mEnergyCharged = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0,computePowerNeeded=1024L;
     public TagData mEnergyTypeAccepted = TD.Energy.EU, mEnergyTypeCharging = TD.Energy.LU;
     public Recipe.RecipeMap mRecipes = recipeMaps.FusionTokamak;
-    public Recipe mCurrentRecipe=null,lastRecipe=null;
-    public ItemStack[] mOutputItems = ZL_IS;
-    public FluidStack[] mOutputFluids = ZL_FS;
+    /** Recipe core owns the plasma transaction; the charge curve below stays this machine's own mechanic. */
+    public KortexWorker kortex;
+    public Recipe mCurrentRecipe=null;
     public FluidTankGT[] mTanks = {new FluidTankGT(2000),new FluidTankGT(2000), new FluidTankGT(2000), new FluidTankGT(2000)},
             mTanksInput = {mTanks[0],mTanks[1]}, mTanksOutput ={ mTanks[2],mTanks[3]};
     private final List<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
@@ -122,11 +124,9 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(2000);
         mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(2000);
 
-
-        mOutputFluids = new FluidStack[mRecipes.mOutputFluidCount];
-        for (int i = 0; i < mOutputFluids.length; i++) mOutputFluids[i] = FL.load(aNBT, NBT_TANK_OUT+"."+i);
-        mOutputItems = new ItemStack[mRecipes.mOutputItemsCount];
-        for (int i = 0; i < mOutputItems.length; i++) mOutputItems[i] = ST.load(aNBT, NBT_INV_OUT+"."+i);
+        kortex = new KortexWorker(this, 0, mRecipes, F).dontResetProgressWhenPowerLost();
+        kortex.fluidInputs = mTanksInput;
+        kortex.readFromNBT(aNBT);
     }
 
     @Override
@@ -146,9 +146,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         mTanks[1].writeToNBT(aNBT, NBT_TANK+".1");
         mTanks[2].writeToNBT(aNBT, NBT_TANK+".2");
         mTanks[3].writeToNBT(aNBT, NBT_TANK+".3");
-
-        for (int i = 0; i < mOutputFluids.length; i++) FL.save(aNBT, NBT_TANK_OUT+"."+i, mOutputFluids[i]);
-        for (int i = 0; i < mOutputItems .length; i++) ST.save(aNBT, NBT_INV_OUT +"."+i, mOutputItems [i]);
+        kortex.writeToNBT(aNBT);
     }
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
@@ -207,24 +205,63 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         }
 
         //do recipe
-        if(mState.is(STATE_RUNNING)) {
+        if(mState.is(STATE_RUNNING)&&kortex.hasActiveRecipe()) {
             progress += mEnergyCharged *1F / recipeChargeRequired;
-            if (progress < recipeTotalTime) return;
-            //Recipe completed
-            if(mOutputFluids!=null)Arrays.stream(mOutputFluids).forEach(fluid-> {for (FluidTankGT tank : mTanksOutput) if(tank.fill(fluid, true)>0)return;});
-            if(mOutputItems!=null)Arrays.stream(mOutputItems).filter(Objects::nonNull).forEach(item-> addStackToSlot(1, item));
-            nullifyCurrentRecipe();
-            mState.set(STATE_STOPPED);//don't trigger compute node restart if we can find recipe immediately
+            boolean tCompleted = progress >= recipeTotalTime;
+            // the worker keeps the exact float progress; it only tells us when the products are due
+            kortex.mProgress = tCompleted ? kortex.mMaxProgress : Math.min(kortex.mMaxProgress, (long) progress);
+            runWorker();
+            if (tCompleted) {
+                nullifyCurrentRecipe();
+                mState.set(STATE_STOPPED);//don't trigger compute node restart if we can find recipe immediately
+            }
         }
 
-
-        if(!isInputEmpty&& (mState.is(STATE_STOPPED) || mState.is(STATE_VOID_CHARGING) || (mState.is(STATE_CHARGING) && mCurrentRecipe==null) )){
-            Recipe tRecipe = mRecipes.findRecipe(this, lastRecipe, T, mRate, NI, mTanksInput, slot(0));
-            if (tRecipe !=null&&tRecipe.isRecipeInputEqual(F,F,mTanksInput,slot(0)))setRecipe(tRecipe);
-            else setState(STATE_VOID_CHARGING);
+        if(!isInputEmpty&& (mState.is(STATE_STOPPED) || mState.is(STATE_VOID_CHARGING) || mState.is(STATE_CHARGING))){
+            runWorker();
+            if (kortex.hasActiveRecipe()) {progress = 0; setState(STATE_RUNNING);}
+            else setState(mCurrentRecipe == null ? STATE_VOID_CHARGING : STATE_CHARGING);
         }
+    }
 
-        if (mEnergyCharged > recipeChargeRequired && mState.is(STATE_CHARGING) && mCurrentRecipe!=null && mCurrentRecipe.isRecipeInputEqual(T,F,mTanksInput,slot(0)))setState(STATE_RUNNING);
+    /** One worker step; the charge curve above drives the progress, the start charge is gated in getMaxParallel. */
+    private void runWorker(){
+        for (int i = 0; i < kortex.itemInputs.length && i < 2; i++) kortex.itemInputs[i] = slot(i) == null ? null : ST.copy(slot(i));
+        kortex.mEnergyStored = 0;
+        kortex.mEnergyCapacity = Long.MAX_VALUE;
+        kortex.run();
+        kortex.mEnergyStored = 0;
+    }
+
+    // Recipe bridge
+    /** Records the recipe the machine is charging for; plasma only ignites above that recipe's start charge. */
+    @Override
+    public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
+        Recipe tRecipe = kortex.findRecipe();
+        mCurrentRecipe = tRecipe;
+        recipeEUt = tRecipe == null ? 0 : aEUT;
+        recipeTotalTime = tRecipe == null ? 0 : aDuration;
+        recipeChargeRequired = tRecipe == null ? 0 : tRecipe.mSpecialValue;
+        if (tRecipe == null) return 0;
+        return mEnergyCharged > tRecipe.mSpecialValue ? 1 : 0;
+    }
+
+    @Override
+    public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {
+        for (int i = 0; i < kortex.itemInputs.length && i < 2; i++) {
+            if (kortex.itemInputs[i] == null) slotKill(i); else slot(i, kortex.itemInputs[i]);
+        }
+        for (FluidTankGT tTank : fluidTanks) if (tTank.has()) {
+            for (FluidTankGT tTarget : mTanksOutput) if (tTarget.fill(tTank.get(), true) > 0) break;
+            tTank.setEmpty();
+        }
+        for (int i = 0; i < items.length; i++) {
+            ItemStack tItem = items[i];
+            if (tItem == null) continue;
+            items[i] = null;
+            if (mCurrentRecipe != null && getRandomNumber(10000) > mCurrentRecipe.getOutputChance(i)) continue;
+            addStackToSlot(1, tItem.copy());
+        }
     }
 
     protected void setState(byte state){
@@ -242,27 +279,13 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         nodeStarted = false;
         getComputeNodes().forEach(IComputePart::stop);
     }
-    protected void setRecipe(Recipe recipe){
-        setState(STATE_CHARGING);
-        lastRecipe=recipe;
-        mCurrentRecipe=recipe;
-        recipeChargeRequired=recipe.mSpecialValue;
-        recipeEUt=recipe.mEUt;
-        recipeTotalTime=recipe.mDuration;
-        mOutputFluids=recipe.mFluidOutputs;
-        for (int i = 0; i < recipe.mOutputs.length; i++) {
-            if(getRandomNumber(10000)<=recipe.getOutputChance(i))mOutputItems[i]=recipe.mOutputs[i];
-        }
-    }
-
     protected void nullifyCurrentRecipe(){
         progress =0;
         recipeChargeRequired=0;
         recipeEUt=0;
         recipeTotalTime=0;
         mCurrentRecipe=null;
-        mOutputFluids = new FluidStack[mRecipes.mOutputFluidCount];
-        mOutputItems = new ItemStack[mRecipes.mOutputItemsCount];
+        if (kortex != null) kortex.resetStatus();
     }
 
     protected void onError(){

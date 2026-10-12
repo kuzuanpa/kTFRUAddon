@@ -18,6 +18,9 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.item.items.itemTurbine;
 import cn.kuzuanpa.ktfruaddon.api.material.prefix.prefixList;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
+import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -37,30 +40,30 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbine {
+public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbine implements IKortexHandler {
+	public static final int STEAM_PER_WATER = 170;
 	public FluidTankGT[] mTanks = new FluidTankGT[] {new FluidTankGT(), new FluidTankGT()};
-	public long mSteamCounter = 0, mEnergyProducedNextTick = 0;
+	/** Recipe core; one run turns 170 mB steam into 1 mB distilled water and 85 RU. */
+	public KortexWorker kortex;
 	public IWailaInfoProvider tankInfoInput = new InfoTank(LH.get(I18nHandler.INPUT), "", mTanks[0]);
 	public IWailaInfoProvider tankInfoOutput = new InfoTank(LH.get(I18nHandler.OUTPUT), "", mTanks[1]);
-	public static final int STEAM_PER_WATER = 170;
 	
 	@Override
 	public void readFromNBT2(NBTTagCompound aNBT) {
 		super.readFromNBT2(aNBT);
-		if (aNBT.hasKey(NBT_ENERGY_SU)) mSteamCounter = aNBT.getLong(NBT_ENERGY_SU);
-		if (aNBT.hasKey(NBT_OUTPUT_SU)) mEnergyProducedNextTick = aNBT.getLong(NBT_OUTPUT_SU);
-
 		for (int i = 0; i < mTanks.length; i++) mTanks[i].readFromNBT(aNBT, NBT_TANK+"."+i);
 		mTanks[0].setCapacity(mRateMax*200);
 		mTanks[1].setCapacity(mRateMax*4).setVoidExcess();
+		kortex = new KortexWorker(this, 0, recipeMaps.SteamTurbine, true);
+		kortex.fluidInputs = new FluidTankGT[] {mTanks[0]};
+		kortex.readFromNBT(aNBT);
 	}
 	
 	@Override
 	public void writeToNBT2(NBTTagCompound aNBT) {
 		super.writeToNBT2(aNBT);
-		UT.NBT.setNumber(aNBT, NBT_ENERGY_SU, mSteamCounter);
-		UT.NBT.setNumber(aNBT, NBT_OUTPUT_SU, mEnergyProducedNextTick);
 		for (int i = 0; i < mTanks.length; i++) mTanks[i].writeToNBT(aNBT, NBT_TANK+"."+i);
+		kortex.writeToNBT(aNBT);
 	}
 	
 	static {
@@ -98,22 +101,29 @@ public class MultiTileEntityLargeTurbineSteam extends MultiTileEntityLargeTurbin
 	
 	@Override
 	public void doConversion(long aTimer) {
-		if (mEnergyProducedNextTick > 0) {
-			mEnergyStored += mEnergyProducedNextTick;
-			mEnergyProducedNextTick = 0;
-		} else if (!mForcedStopped && slotHas(0) &&  mTanks[0].has(getEnergySizeInputMin(mEnergyTypeEmitted, SIDE_ANY) * 2)) {
-			long tSteam = (long) Math.min(mRate*2*(mOverclock?mTurbineEfficiency:Math.min(mTurbineEfficiency,2)), mTanks[0].amount());
-			mSteamCounter += tSteam;
-			mEnergyStored += tSteam / 2;
-			damageTurbine((long) -(tSteam / (mOverclock?0.25F:2)),TURBINE_STEAM);
-			if(isTurbineAboutToBreak&&getRandomNumber(20)==1)UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
-			mEnergyProducedNextTick += tSteam / 2;
-			mTanks[0].remove(tSteam);
-			if (mSteamCounter >= STEAM_PER_WATER) {
-				mTanks[1].fillAll(FL.DistW.make(mSteamCounter / STEAM_PER_WATER));
-				mSteamCounter %= STEAM_PER_WATER;
-			}
+		if (!mForcedStopped) {
+			// The turbine only pays for as much steam as its rate can turn into energy this tick.
+			kortex.mEnergyCapacity = (long) (mOverclock? mRate*mTurbineEfficiency : mRate*Math.min(mTurbineEfficiency,2));
+			kortex.run();
 		}
+	}
+
+	// Recipe bridge
+	@Override
+	public void onRecipeFinish(int aKortexID, long aEUT, long aDuration, long aParallel) {
+		long tSteam = aParallel * STEAM_PER_WATER;
+		damageTurbine((long) -(tSteam / (mOverclock?0.25F:2)), TURBINE_STEAM);
+		if (isTurbineAboutToBreak && getRandomNumber(20) == 1) UT.Sounds.send(worldObj, SFX.IC_MACHINE_INTERRUPT, 1, 1, getCoords());
+	}
+
+	@Override
+	public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {
+		for (FluidTankGT tank : fluidTanks) if (tank.has()) {
+			mTanks[1].fillAll(tank.get());
+			tank.setEmpty();
+		}
+		mEnergyStored += kortex.mEnergyStored;
+		kortex.mEnergyStored = 0;
 	}
 	@Override
 	public void transformTurbineItem() {

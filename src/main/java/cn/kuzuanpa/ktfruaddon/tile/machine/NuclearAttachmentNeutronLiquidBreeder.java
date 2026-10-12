@@ -15,6 +15,8 @@
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
+import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -28,6 +30,7 @@ import gregapi.util.UT;
 import gregapi.util.WD;
 import gregtech.tileentity.energy.reactors.MultiTileEntityReactorCore;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -36,25 +39,31 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class NuclearAttachmentNeutronLiquidBreeder extends MultiTileEntityReactorCore {
+public class NuclearAttachmentNeutronLiquidBreeder extends MultiTileEntityReactorCore implements IKortexHandler {
     public long mNeutrons = 0;
     public boolean mForcedStopped = false;
     public FluidTankGT mTankOutput = new FluidTankGT(64000);
-    public Recipe.RecipeMap mRecipes = recipeMaps.NeutronAbsorption;
-    public Recipe mLastRecipe;
+    /** Recipe core; its tanks are this machine's own tanks, its "energy" is the neutrons gathered this tick. */
+    public KortexWorker kortex;
     public IWailaInfoProvider tankInfoI = new InfoTank(LH.get(I18nHandler.INPUT), "", mTanks[0]);
     public IWailaInfoProvider tankInfoO = new InfoTank(LH.get(I18nHandler.OUTPUT), "", mTanks[1], mTankOutput);
 
+    // NBT
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         aNBT.setLong("neutrons", mNeutrons);
+        kortex.writeToNBT(aNBT);
     }
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         mNeutrons = aNBT.getLong("neutrons");
+        kortex = new KortexWorker(this, 0, recipeMaps.NeutronAbsorption, true);
+        kortex.fluidInputs = new FluidTankGT[] {mTanks[0]};
+        kortex.fluidOutputs = new FluidTankGT[] {mTanks[1], mTankOutput};
+        kortex.readFromNBT(aNBT);
     }
 
     @Override
@@ -69,28 +78,33 @@ public class NuclearAttachmentNeutronLiquidBreeder extends MultiTileEntityReacto
     public void onServerTickPost(boolean b) {
         if (mTankOutput.has()) FL.move(mTankOutput, WD.te(worldObj,xCoord,yCoord-1,zCoord,mFacing,false));
 
-        checkAndDoRecipe();
+        // The neutrons reflected by the reactor rods this tick are the worker's entire energy budget for one tick.
+        kortex.mEnergyStored = 0;
+        kortex.mEnergyCapacity = mNeutrons;
+        if (!mForcedStopped) kortex.run();
+        kortex.mEnergyStored = 0;
+        kortex.mEnergyCapacity = 0;
 
         mNeutrons = 0;
     }
-    public void checkAndDoRecipe(){
-        if(mForcedStopped || mTanks[0].isEmpty() || mTanks[1].isFull() || mTankOutput.isFull() || mNeutrons == 0)return;
-        Recipe tRecipe = mRecipes.findRecipe(this, mLastRecipe, F, Integer.MAX_VALUE, NI, mTanks[0].AS_ARRAY, ZL_IS);
-        if (tRecipe == null) return;
-        mLastRecipe = tRecipe;
 
-        if (tRecipe.mEUt < 0 || tRecipe.mDuration < 0) return;
-
-        if (!tRecipe.isRecipeInputEqual(F, F, mTanks[0].AS_ARRAY)) return;
-
-        mLastRecipe = tRecipe;
-        long parallel = Math.min(Math.min(Math.min(mNeutrons / (tRecipe.mEUt * tRecipe.mDuration), mTanks[0].amount() / tRecipe.mFluidInputs[0].amount ), (mTanks[1].capacity() - mTanks[1].amount()) / tRecipe.mFluidOutputs[0].amount), (mTankOutput.capacity() - mTankOutput.amount()) / tRecipe.mFluidOutputs[1].amount);
-        if(parallel <= 0)return;
-
-        mTanks[0].remove(tRecipe.mFluidInputs[0].amount * parallel);
-        mTanks[1].add(tRecipe.mFluidOutputs[0].amount * parallel, tRecipe.mFluidOutputs[0]);
-        mTankOutput.add(tRecipe.mFluidOutputs[1].amount * parallel, tRecipe.mFluidOutputs[1]);
+    // Recipe bridge
+    /** A run costs mEUt neutrons for each tick of mDuration, so the neutron budget limits the parallel runs. */
+    @Override
+    public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
+        if (aEUT < 0 || aDuration < 0) return 0;
+        Recipe tRecipe = kortex.findRecipe();
+        if (tRecipe == null) return 0;
+        long tMax = Integer.MAX_VALUE;
+        for (int i = 0; i < tRecipe.mFluidOutputs.length && i < kortex.fluidOutputs.length; i++) {
+            FluidStack tOutput = tRecipe.mFluidOutputs[i];
+            if (tOutput == null || tOutput.amount <= 0) continue;
+            tMax = Math.min(tMax, (kortex.fluidOutputs[i].capacity() - kortex.fluidOutputs[i].amount()) / tOutput.amount);
+        }
+        return (int) Math.min(tMax, Integer.MAX_VALUE);
     }
+    /** The worker writes straight into this machine's tanks, so there is nothing left to hand over. */
+    @Override public void receiveOutputs(FluidTankGT[] fluidTanks, ItemStack[] items) {}
 
     @Override
     public int getReactorRodNeutronReflection(int aSlot, int aNeutrons, boolean aModerated) {
