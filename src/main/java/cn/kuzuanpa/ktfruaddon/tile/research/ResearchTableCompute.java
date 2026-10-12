@@ -19,6 +19,7 @@ import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.task.ComputeTask;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputeUserComponent;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
@@ -50,12 +51,9 @@ import static cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants.STATE_OF
 
 /**Consumes the matching type of cluster compute power to advance ComputeTask research.*/
 public class ResearchTableCompute extends ResearchTableBase implements IComputerClusterUser {
-    private @Nullable IComputerClusterController computeController;
-    private List<IComputerClusterController> backupComputeControllers = new ArrayList<>();
-    private @Nullable UUID computeUserUUID;
+    public final ComputeUserComponent computeUser = new ComputeUserComponent(this);
     private @Nullable ComputeTask activeComputeTask;
     private long requestedComputePower;
-    private boolean computePowerAllocated;
     private String computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_IDLE;
 
     @Override public String getTileEntityName() {return "ktfru.multitileentity.research.table.compute";}
@@ -71,13 +69,13 @@ public class ResearchTableCompute extends ResearchTableBase implements IComputer
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        IComputerClusterUser.readFromNBT(aNBT, this);
+        computeUser.readFromNBT(aNBT);
     }
 
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        IComputerClusterUser.writeToNBT(aNBT, this);
+        computeUser.writeToNBT(aNBT);
     }
 
     @Override
@@ -103,17 +101,17 @@ public class ResearchTableCompute extends ResearchTableBase implements IComputer
             stopComputeResearch();
             activeComputeTask = task;
         }
-        if (computePowerAllocated) {
+        if (computeUser.isAllocated()) {
             long consumed = tryPromoteCurrentProjectProgress(ComputeTask.class, task.type.asEntry(requestedComputePower), false);
             if (consumed <= 0 || task.isCompleted()) stopComputeResearch();
             else computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_RUNNING;
             return;
         }
-        if (computeController == null) {
+        if (getController() == null) {
             computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_UNBOUND;
             return;
         }
-        ComputerCluster cluster = computeController.getCluster();
+        ComputerCluster cluster = getController().getCluster();
         if (cluster == null) {
             computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_OFFLINE;
             return;
@@ -124,8 +122,7 @@ public class ResearchTableCompute extends ResearchTableBase implements IComputer
             computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_INSUFFICIENT;
             return;
         }
-        if (IComputerClusterUser.super.tryStart()) {
-            computePowerAllocated = true;
+        if (computeUser.requestCompute(getComputePowerNeeded())) {
             computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_RUNNING;
         } else {
             requestedComputePower = 0;
@@ -143,8 +140,7 @@ public class ResearchTableCompute extends ResearchTableBase implements IComputer
     }
 
     private void stopComputeResearch() {
-        if (computePowerAllocated) IComputerClusterUser.super.tryStop();
-        computePowerAllocated = false;
+        computeUser.release();
         requestedComputePower = 0;
         activeComputeTask = null;
     }
@@ -168,18 +164,18 @@ public class ResearchTableCompute extends ResearchTableBase implements IComputer
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
 
-    @Override public @Nullable IComputerClusterController getController() {return computeController;}
-    @Override public void setController(IComputerClusterController controller) {computeController = controller;}
-    @Override public List<IComputerClusterController> getBackupControllers() {return backupComputeControllers;}
-    @Override public void setBackupControllers(List<IComputerClusterController> list) {backupComputeControllers = list == null ? new ArrayList<IComputerClusterController>() : list;}
+    @Override public @Nullable IComputerClusterController getController() {return computeUser.getController();}
+    @Override public void setController(IComputerClusterController controller) {computeUser.setController(controller);}
+    @Override public List<IComputerClusterController> getBackupControllers() {return computeUser.getBackupControllers();}
+    @Override public void setBackupControllers(List<IComputerClusterController> list) {computeUser.setBackupControllers(list);}
     @Override public byte getState() {return requestedComputePower > 0 ? STATE_NORMAL : STATE_OFFLINE;}
     @Override public Map<ComputePower, Long> getComputePowerNeeded() {return activeComputeTask == null || requestedComputePower <= 0 ? new HashMap<ComputePower, Long>() : activeComputeTask.type.asMap(requestedComputePower);}
-    @Override public @Nullable UUID getUUID() {return computeUserUUID;}
-    @Override public void setUUID(UUID uuid) {computeUserUUID = uuid;}
+    @Override public @Nullable UUID getUUID() {return computeUser.getUUID();}
+    @Override public void setUUID(UUID uuid) {computeUser.setUUID(uuid);}
 
     @Override
     public void onComputerPowerReleased() {
-        computePowerAllocated = false;
+        computeUser.onReleased();
         requestedComputePower = 0;
         computeStatus = I18nHandler.RESEARCH_COMPUTE_STATUS_INSUFFICIENT;
     }

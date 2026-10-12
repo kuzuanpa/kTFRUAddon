@@ -45,7 +45,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -59,7 +59,7 @@ import static gregapi.data.CS.*;
  * presents it to the host multiblock as if it was local. Type and amounts come from the registry NBT
  * only, so a placed part is fixed to the model it was built as.
  */
-public class WirelessComputePart extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputerClusterUser, IComputePart {
+public class WirelessComputePart extends TileEntityBase09FacingSingle implements IMultiTileEntity.IMTE_SyncDataByteArray, IMultiTileEntity.IMTE_AddToolTips, IMultiBlockPart, IComputerClusterUser, IComputeItemUser, IComputePart {
     public ComputePower mType = ComputePower.Normal;
     /**Maximum amount this part can provide to the host multiblock.**/
     public long mMaxProvided = 0;
@@ -68,12 +68,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     /**Amount currently held in the bound cluster. This tracks the active request, not the configured maximum.**/
     public long mRequested = 0;
     public boolean mRunning = false;
-    /**Whether the cluster currently holds power for this part. Keeps stop() and the release callback idempotent.**/
-    protected boolean mAllocated = false;
-
-    public UUID myUUID = null;
-    public IComputerClusterController mController = null;
-    public List<IComputerClusterController> mBackupControllers = new ArrayList<>();
+    public final ComputeUserComponent computeUser = new ComputeUserComponent(this, this, () -> Arrays.asList(getInventory()));
 
     public IIconContainer sTextureCommon, sOverlayFront, sOverlayFrontActive;
 
@@ -95,7 +90,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
             long legacyRequested = Math.max(0L, aNBT.getLong("ktfru.nbt.computePower.requested"));
             mLossRate = normalizeLossRate((float) ((double) legacyRequested / mMaxProvided - 1D));
         }
-        IComputerClusterUser.readFromNBT(aNBT, this);
+        computeUser.readFromNBT(aNBT);
 
         if (CODE_CLIENT) {
             if (GT_API.sBlockIcons == null && aNBT.hasKey(NBT_TEXTURE)) {
@@ -123,7 +118,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
         aNBT.setInteger(kTileNBT.COMPUTE_POWER_TYPE, mType.ordinal());
         aNBT.setLong(kTileNBT.COMPUTE_POWER_MAX_PROVIDED, mMaxProvided);
         aNBT.setFloat(kTileNBT.COMPUTE_POWER_LOSS_RATE, mLossRate);
-        IComputerClusterUser.writeToNBT(aNBT, this);
+        computeUser.writeToNBT(aNBT);
     }
 
     @Override
@@ -144,18 +139,17 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
         long requested = calculateRequested(needed);
         boolean wasRunning = mRunning;
         long previousRequested = mRequested;
-        if (wasRunning && mAllocated && requested == previousRequested) return true;
+        if (wasRunning && computeUser.isAllocated() && requested == previousRequested) return true;
 
-        // Set the requested amount before allocation because the cluster reads getComputePowerNeeded().
+        // Set the requested amount before asking because the cluster reads getComputePowerNeeded().
         // ComputerCluster only applies the delta, so changing the load neither leaks nor double-charges power.
         mRequested = requested;
         mRunning = true;
-        if (!IComputerClusterUser.super.tryStart()) {
+        if (!computeUser.requestCompute(getComputePowerNeeded())) {
             mRunning = wasRunning;
             mRequested = previousRequested;
             return false;
         }
-        mAllocated = true;
         if (!wasRunning || previousRequested != requested) updateClientData();
         return true;
     }
@@ -163,29 +157,27 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     @Override
     public void stop() {
         boolean wasRunning = mRunning;
-        boolean wasAllocated = mAllocated;
+        computeUser.release();
         mRunning = false;
-        mAllocated = false;
         mRequested = 0L;
-        if (wasAllocated) IComputerClusterUser.super.tryStop();
-        if (wasRunning || wasAllocated) updateClientData();
+        if (wasRunning) updateClientData();
     }
 
     // IComputerClusterUser
-    @Override public IComputerClusterController getController() {return mController;}
-    @Override public void setController(IComputerClusterController controller) {mController = controller;}
-    @Override public List<IComputerClusterController> getBackupControllers() {return mBackupControllers;}
-    @Override public void setBackupControllers(List<IComputerClusterController> list) {mBackupControllers = list;}
+    @Override public IComputerClusterController getController() {return computeUser.getController();}
+    @Override public void setController(IComputerClusterController controller) {computeUser.setController(controller);}
+    @Override public List<IComputerClusterController> getBackupControllers() {return computeUser.getBackupControllers();}
+    @Override public void setBackupControllers(List<IComputerClusterController> list) {computeUser.setBackupControllers(list);}
     @Override public byte getState() {return mRunning ? STATE_NORMAL : STATE_OFFLINE;}
     @Override public Map<ComputePower, Long> getComputePowerNeeded() {return mType.asMap(mRequested);}
-    @Override public UUID getUUID() {return myUUID;}
-    @Override public void setUUID(UUID uuid) {myUUID = uuid;}
+    @Override public UUID getUUID() {return computeUser.getUUID();}
+    @Override public void setUUID(UUID uuid) {computeUser.setUUID(uuid);}
 
     /**Called by the cluster when it took the rented power away, the host has to notice through {@link #getComputePower()}.**/
     @Override
     public void onComputerPowerReleased() {
-        boolean changed = mRunning || mAllocated || mRequested != 0L;
-        mAllocated = false;
+        boolean changed = mRunning || mRequested != 0L;
+        computeUser.onReleased();
         mRunning = false;
         mRequested = 0L;
         if (changed) updateClientData();
@@ -208,7 +200,7 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
 
     @Override
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()) IComputerClusterUser.bindControllerFromUSB(aPlayer, this);
+        if (isServerSide()) computeUser.bindFromUSB(aPlayer);
         return T;
     }
 
@@ -228,16 +220,17 @@ public class WirelessComputePart extends TileEntityBase09FacingSingle implements
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + mType.prefixedDesc(mMaxProvided));
         aList.add(LH.Chat.DGRAY + String.format("Wireless loss: %.2f%%", mLossRate * 100F));
+        aList.add(LH.Chat.DGRAY + LH.get(I18nHandler.COMPUTE_TILE_STATUS) + " " + computeUser.getStatusText());
         aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
 
     @Override
     public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (aTool.equals(TOOL_magnifyingglass) && aChatReturn != null) {
-            aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_1) + (mRunning ? LH.get(I18nHandler.NORMAL) : LH.get(I18nHandler.COMPUTE_CLUSTER_3)));
+            aChatReturn.add(LH.get(I18nHandler.COMPUTE_TILE_STATUS) + " " + computeUser.getStatusText());
             aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_2) + mType.desc(mMaxProvided));
             if (mRunning) aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_2) + mType.desc(mRequested));
-            aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_SUCCESS) + ": " + (mController == null ? LH.get(I18nHandler.COMPUTE_CLUSTER_3) : mController.getPos().toString()));
+            aChatReturn.add(LH.get(I18nHandler.COMPUTE_CLUSTER_MSG_JOIN_SUCCESS) + ": " + (getController() == null ? LH.get(I18nHandler.COMPUTE_CLUSTER_3) : getController().getPos().toString()));
         }
         if (getFacingTool() != null && aTool.equals(getFacingTool())) {byte aTargetSide = UT.Code.getSideWrenching(aSide, aHitX, aHitY, aHitZ); if (getValidSides()[aTargetSide]) {byte oFacing = mFacing; mFacing = aTargetSide; updateClientData(); causeBlockUpdate(); onFacingChange(oFacing); return 10000;}}
         return 0;

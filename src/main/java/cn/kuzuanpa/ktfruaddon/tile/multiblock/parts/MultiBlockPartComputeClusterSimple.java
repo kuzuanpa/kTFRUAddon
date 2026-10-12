@@ -31,7 +31,7 @@ import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MultiBlockPartComputeClusterSimple extends ComputePartBase  {
+public class MultiBlockPartComputeClusterSimple extends ItemComputePartBase {
 
     public MultiBlockPartComputeClusterSimple() {
         super((byte) 2);

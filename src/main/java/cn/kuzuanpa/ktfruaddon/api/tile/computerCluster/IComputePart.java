@@ -53,7 +53,7 @@ public interface IComputePart {
      * activated; nodes which receive a zero share must stay active without holding power when possible.
      * @return true when every matching node started and the whole demand was covered.
      */
-    static boolean tryStartDemand(List<IComputePart> nodes, ComputePower type, long demand) {
+    static boolean tryStartForDemand(List<IComputePart> nodes, ComputePower type, long demand) {
         if (nodes == null || nodes.isEmpty()) return demand <= 0L;
         long remaining = Math.max(0L, demand);
         boolean allStarted = true;

@@ -16,10 +16,15 @@
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputeUserComponent;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.Constants;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.kTileNBT;
 import gregapi.old.Textures;
 import gregapi.render.IIconContainer;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
+import gregapi.util.UT;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,47 +32,110 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static gregapi.data.CS.PX_P;
 import static gregapi.data.CS.SIDES_VALID;
 
 public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICircuitChangeableTileEntity {
-    public boolean isActive = true;
+    public boolean mWantsCompute = false;
+    protected Map<ComputePower, Long> mRequired = new HashMap<>();
+    public final ComputeUserComponent computeUser = new ComputeUserComponent(this, this, this::getComputers);
+    protected List<ItemStack> computerList = new ArrayList<>();
+
+    // NBT
+    @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        aNBT.setBoolean("state", isActive);
+        mWantsCompute = aNBT.getBoolean(kTileNBT.COMPUTE_POWER_ACTIVE);
+        mRequired = ICircuitChangeableTileEntity.readRequiredCompute(aNBT);
         setComputers(ICircuitChangeableTileEntity.loadCircuitInfo(aNBT));
-       // oreVeinScanner = new OreScanner(0,xCoord,yCoord,zCoord, worldObj,true,true);
+        computeUser.readFromNBT(aNBT);
     }
 
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        isActive = aNBT.getBoolean("state");
-        ICircuitChangeableTileEntity.saveCircuitInfo(aNBT,getComputers());
-    }
-
-    @Override
-    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
-        if (isServerSide()) {
-            if(!isActive && tryStart())isActive = true;
-            else stop();
-            //openGUI(aPlayer, aSide);
-        }
-        return false;
+        UT.NBT.setBoolean(aNBT, kTileNBT.COMPUTE_POWER_ACTIVE, mWantsCompute);
+        aNBT.setTag(kTileNBT.COMPUTE_POWER_REQUIRED, ICircuitChangeableTileEntity.writeRequiredCompute(mRequired));
+        ICircuitChangeableTileEntity.saveCircuitInfo(aNBT, getComputers());
+        computeUser.writeToNBT(aNBT);
     }
 
     @Override
     public NBTTagCompound writeItemNBT2(NBTTagCompound aNBT) {
-        ICircuitChangeableTileEntity.saveCircuitInfo(aNBT,getComputers());
+        UT.NBT.setBoolean(aNBT, kTileNBT.COMPUTE_POWER_ACTIVE, mWantsCompute);
+        ICircuitChangeableTileEntity.saveCircuitInfo(aNBT, getComputers());
         return super.writeItemNBT2(aNBT);
     }
 
-    public void onTick2(long aTimer, boolean isServerside){
-
+    // Tick
+    @Override
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        if (!aIsServerSide) return;
+        if (!mWantsCompute) {
+            stop();
+            setComputeRunning(false);
+            return;
+        }
+        setComputeRunning(tryStart());
     }
+
+    protected void setComputeRunning(boolean running) {
+        if (getStateOnOff() == running) return;
+        setStateOnOff(running);
+        updateClientData();
+    }
+
+    // Interaction
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide()) return false;
+        if (aPlayer.isSneaking() && computeUser.bindFromUSB(aPlayer)) return true;
+        mWantsCompute = !mWantsCompute;
+        if (mWantsCompute) setComputeRunning(tryStart());
+        else {
+            stop();
+            setComputeRunning(false);
+        }
+        updateClientData();
+        return true;
+    }
+
+    // Compute
+    @Override public @NotNull Map<ComputePower, Long> getComputePowerRequired() {return mRequired;}
+    @Override public @NotNull List<ItemStack> getComputers() {return computerList;}
+    @Override public void setComputers(List<ItemStack> computers) {
+        computerList = computers == null ? new ArrayList<ItemStack>() : computers;
+        computeUser.invalidate();
+    }
+    @Override public ComputeUserComponent getComputeUserComponent() {return computeUser;}
+
+    @Override public IComputerClusterController getController() {return computeUser.getController();}
+    @Override public void setController(IComputerClusterController controller) {computeUser.setController(controller);}
+    @Override public List<IComputerClusterController> getBackupControllers() {return computeUser.getBackupControllers();}
+    @Override public void setBackupControllers(List<IComputerClusterController> list) {computeUser.setBackupControllers(list);}
+    @Override public UUID getUUID() {return computeUser.getUUID();}
+    @Override public void setUUID(UUID uuid) {computeUser.setUUID(uuid);}
+    @Override public byte getState() {return mWantsCompute ? Constants.STATE_NORMAL : Constants.STATE_OFFLINE;}
+    @Override public void onComputerPowerReleased() {computeUser.onReleased(); setComputeRunning(false);}
+
+    // GUI / Tooltip
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        super.addToolTips(aList, aStack, aF3_H);
+        addCircuitTooltip(aList, aStack, aF3_H);
+    }
+
+    // Icons / Meta
+    @Override public String getTileEntityName() {return "ktfru.multitileentity.machine.code";}
+    @Override public int getRenderPasses2(Block aBlock, boolean[] aShouldSideBeRendered) {return 2;}
+    @Override public boolean[] getValidSides() {return SIDES_VALID;}
+
+    @Override
     public boolean setBlockBounds2(Block aBlock, int aRenderPass, boolean[] aShouldSideBeRendered) {
         switch (aRenderPass) {
             case 0:
@@ -77,44 +145,8 @@ public class MachineCodeUtil extends MultiTileEntityBasicMachine implements ICir
         }
         return true;
     }
-    @Override
-    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        super.addToolTips(aList, aStack, aF3_H);
-        addCircuitTooltip(aList, aStack, aF3_H);
-    }
-
-    @Override
-    public String getTileEntityName() {
-        return "ktfru.multitileentity.machine.code";
-    }
-
-    @Override
-    public int getRenderPasses2(Block aBlock, boolean[] aShouldSideBeRendered) {
-        return 2;
-    }
 
     public static IIconContainer
             sTextureCommon= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/common"),
             sTextureCommosn= new Textures.BlockIcons.CustomIcon("machines/cruciblemodel/commsson");
-
-    List<ItemStack> computerList = new ArrayList<>();
-    @Override
-    public @NotNull List<ItemStack> getComputers() {
-        return computerList;
-    }
-
-    @Override
-    public @NotNull Map<ComputePower, Long> getComputePowerRequired() {
-        return ComputePower.Normal.asMap(4000);
-    }
-
-    @Override
-    public void setComputers(List<ItemStack> computers) {
-        computerList = computers;
-    }
-
-    @Override
-    public boolean[] getValidSides() {
-        return SIDES_VALID;
-    }
 }

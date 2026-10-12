@@ -20,11 +20,7 @@ package cn.kuzuanpa.ktfruaddon.item.items.random;
 import cn.kuzuanpa.ktfruaddon.api.item.IComputerItem;
 import cn.kuzuanpa.ktfruaddon.api.item.ItemList;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputerCluster;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputeItemUser;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
-import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.UserData;
 import gregapi.item.CreativeTab;
 import gregapi.item.multiitem.MultiItemRandom;
 import net.minecraft.item.ItemStack;
@@ -38,7 +34,7 @@ import static cn.kuzuanpa.ktfruaddon.ktfruaddon.MOD_ID;
 /**
  * A computer that owns no silicon of its own, it rents Compute Power from the cluster the host is
  * joined to and presents it to the host as if it was local. Both the type and the amount only depend
- * on the meta, so a node cannot be tuned by NBT.
+ * on the meta, the node declares what it provides and rents, the host books the rent.
  */
 public class itemWirelessComputeNode extends MultiItemRandom implements IComputerItem {
     public itemWirelessComputeNode() {
@@ -69,58 +65,30 @@ public class itemWirelessComputeNode extends MultiItemRandom implements ICompute
         return getTypeFromID(meta).asEntry(amountFromID(PROVIDED, meta) * Math.max(0, amount));
     }
 
-    /**@return what this stack has to rent from the cluster in order to run.**/
-    protected Map.Entry<ComputePower, Long> getRequestedComputePower(ItemStack stack) {
+    /**@return what the host sees as local Compute Power, the overhead does not reach it.**/
+    @Override
+    public @NotNull Map.Entry<ComputePower, Long> getProvidedComputePower(ItemStack stack, int count) {
         int meta = stack.getItemDamage();
-        return getTypeFromID(meta).asEntry(amountFromID(REQUESTED, meta) * Math.max(0, stack.stackSize));
+        return getTypeFromID(meta).asEntry(amountFromID(PROVIDED, meta) * Math.max(0, count));
     }
 
-    /**@return the cluster this host rents from, null when the host is not a cluster user or not connected.**/
-    protected static @Nullable ComputerCluster getCluster(@Nullable IComputeItemUser host) {
-        if (!(host instanceof IComputerClusterUser)) return null;
-        IComputerClusterController controller = ((IComputerClusterUser) host).getController();
-        return controller == null ? null : controller.getCluster();
+    /**@return what this stack has to rent from the cluster in order to run.**/
+    @Override
+    public @NotNull Map.Entry<ComputePower, Long> getRequestedComputePower(ItemStack stack, int count) {
+        int meta = stack.getItemDamage();
+        return getTypeFromID(meta).asEntry(amountFromID(REQUESTED, meta) * Math.max(0, count));
     }
+
+    /**Nodes own no hardware, everything they hand out has to be rented.**/
+    @Override
+    public boolean isClusterBacked(ItemStack stack) {return true;}
+
+    // Declaration only: the host user books the rent, so starting a node never touches the ledger (R14).
+    @Override
+    public boolean onStart(ItemStack stack, IComputeItemUser host) {return true;}
 
     @Override
-    public boolean onStart(ItemStack stack, IComputeItemUser host) {
-        ComputerCluster cluster = getCluster(host);
-        if (cluster == null) return false;
-        IComputerClusterUser user = (IComputerClusterUser) host;
-
-        UserData data = cluster.getUserData(user.getUUID());
-        if (data == null) {
-            cluster.joinUser(user);
-            data = cluster.getUserData(user.getUUID());
-            if (data == null) return false;
-        }
-
-        Map.Entry<ComputePower, Long> requested = getRequestedComputePower(stack);
-        if (requested.getValue() <= 0) return true;
-        if (!cluster.isComputePowerSufficient(requested)) return false;
-
-        cluster.usedComputePower.merge(requested.getKey(), requested.getValue(), Long::sum);
-        //Booked on the UserData as well, that way the cluster hands it back on its own when the host disappears.
-        data.consumingPower.merge(requested.getKey(), requested.getValue(), Long::sum);
-        cluster.clientDataDirty = true;
-        return true;
-    }
-
-    @Override
-    public void onStop(ItemStack stack, @Nullable IComputeItemUser host) {
-        ComputerCluster cluster = getCluster(host);
-        if (cluster == null) return;
-        UserData data = cluster.getUserData(((IComputerClusterUser) host).getUUID());
-        if (data == null) return;
-
-        Map.Entry<ComputePower, Long> requested = getRequestedComputePower(stack);
-        if (requested.getValue() <= 0) return;
-
-        cluster.usedComputePower.merge(requested.getKey(), requested.getValue(), (used, released) -> Math.max(0L, used - released));
-        data.consumingPower.merge(requested.getKey(), requested.getValue(), (held, released) -> Math.max(0L, held - released));
-        data.consumingPower.values().removeIf(amount -> amount == null || amount <= 0);
-        cluster.clientDataDirty = true;
-    }
+    public void onStop(ItemStack stack, @Nullable IComputeItemUser host) {}
 
     @Override
     public void addItems() {

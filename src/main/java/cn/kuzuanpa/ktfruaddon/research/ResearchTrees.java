@@ -366,7 +366,12 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskScope(OP.plate.mat(MT.Polycarbonate,8)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(32005)))
                             .addUnlockItem(new ItemType(ItemList.ComputerGT1000.get(1)))
-                            .addUnlockItem(new ItemType(ItemList.ComputerGT1090.get(1)));
+                            .addUnlockItem(new ItemType(ItemList.ComputerGT1090.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.IndustryControlComputer.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.WirelessComputeNodeNormalT1.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.WirelessComputeNodeNormalT2.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.WirelessComputeNodeNormalT3.get(1)))
+                            .addUnlockItem(new ItemType(ItemList.WirelessComputeNodeNormalT4.get(1)));
 
                     //CurrentControl:链式反应控制; Cd控制棒+Pb屏蔽+U235燃料
                     ResearchProject fissionControl = new ResearchProject(tree, "裂变控制理论", "研究如何在宏观层面来监视和控制裂变反应", Items.paper, 0, 30)

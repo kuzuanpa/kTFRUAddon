@@ -163,6 +163,7 @@ public class itemIT extends MultiItemRandom {
         ItemList.CPUBoardT1.set(addItem(10400,"Basic CPU Board",""));
         ItemList.CPUBoardT2.set(addItem(10401,"Advanced CPU Board",""));
         ItemList.CPUBoardT3.set(addItem(10402,"Ultimate CPU Board",""));
+        ItemList.IndustryControlComputer.set(addItem(10403,"Industrial Control Computer","Control board of a locally hosted compute core"));
         ItemList.RAMBoardT1.set(addItem(10410,"Basic RAM Board",""));
         ItemList.RAMBoardT2.set(addItem(10411,"Advanced RAM Board",""));
         ItemList.RAMBoardT3.set(addItem(10412,"Ultimate RAM Board",""));

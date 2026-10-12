@@ -33,6 +33,7 @@ public class Constants {
     public static final byte EVENT_REACHABILITY_OK =12;
     public static final byte EVENT_REACHABILITY_WARNING =13;
     public static final byte EVENT_REACHABILITY_FAILED =14;
+    public static final byte EVENT_SELF_LOOP =15;
     public static final byte STATE_OFFLINE=0;
     public static final byte STATE_NORMAL=1;
     public static final byte STATE_WARNING=2;
@@ -49,6 +50,7 @@ public class Constants {
             case EVENT_REACHABILITY_OK: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_REACHABILITY_OK);
             case EVENT_REACHABILITY_WARNING: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_REACHABILITY_WARNING);
             case EVENT_REACHABILITY_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_REACHABILITY_FAILED);
+            case EVENT_SELF_LOOP: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_SELF_LOOP);
             case EVENT_CLUSTER_DESTROY: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SHORT_DESTROYED);
             default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event;
         }
@@ -64,6 +66,7 @@ public class Constants {
             case EVENT_REACHABILITY_OK: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_REACHABILITY_OK) + appendExtra(extra);
             case EVENT_REACHABILITY_WARNING: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_REACHABILITY_WARNING) + appendExtra(extra);
             case EVENT_REACHABILITY_FAILED: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_REACHABILITY_FAILED) + appendExtra(extra);
+            case EVENT_SELF_LOOP: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_SELF_LOOP) + appendExtra(extra);
             case EVENT_CLUSTER_DESTROY: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_CONTROLLER_DESTROYED) + appendExtra(extra);
             default: return LH.get(I18nHandler.COMPUTE_CLUSTER_EVENT_UNKNOWN) + " " + event + appendExtra(extra);
         }

@@ -37,4 +37,8 @@ public final class kTileNBT {
     public static final String COMPUTE_POWER_MAX_PROVIDED ="ktfru.nbt.computePower.maxProvided";
     /**Extra fraction of the actually requested Compute Power that a wireless compute part also consumes. 0.5 means +50%.**/
     public static final String COMPUTE_POWER_LOSS_RATE ="ktfru.nbt.computePower.lossRate";
+    /**Fixed Compute Power demand of a machine, part of its registry NBT. Empty list means no requirement.**/
+    public static final String COMPUTE_POWER_REQUIRED ="ktfru.nbt.computePower.required";
+    /**Whether the player switched a machine on, that is whether it wants compute power (R15).**/
+    public static final String COMPUTE_POWER_ACTIVE ="ktfru.nbt.computePower.active";
 }

@@ -406,13 +406,31 @@ public class ControllerBase extends TileEntityBase10MultiBlockBase implements IR
      * A part refusing means this controller cannot honour what it reports and it goes to ERROR.
      */
     protected void startComputeParts() {
-        List<IComputePart> nodes = getComputeNodes();
+        List<IComputePart> nodes = filterSelfLoopNodes(getComputeNodes());
         long capacity = 0L;
         for (IComputePart node : nodes) if (node.getType() == mProvidedType) capacity += node.getComputePower();
-        boolean allStarted = IComputePart.tryStartDemand(nodes, mProvidedType, getClusterComputeDemand(capacity));
+        boolean allStarted = IComputePart.tryStartForDemand(nodes, mProvidedType, getClusterComputeDemand(capacity));
         //Set even when a part failed, otherwise stopComputeParts would not release the ones that did start.
         mPartsStarted = true;
         setControllerState(allStarted ? STATE_NORMAL : STATE_ERROR);
+    }
+
+    /**A node that rents from the cluster this controller feeds would feed itself, so it is stopped and excluded.**/
+    protected List<IComputePart> filterSelfLoopNodes(List<IComputePart> nodes) {
+        if (nodes.isEmpty() || getCluster() == null) return nodes;
+        List<IComputePart> filtered = null;
+        for (IComputePart node : nodes) {
+            if (!(node instanceof IComputerClusterUser)) continue;
+            IComputerClusterUser user = (IComputerClusterUser) node;
+            IComputerClusterController boundController = user.getController();
+            if (boundController == null || boundController.getCluster() != getCluster()) continue;
+            boolean wasActive = node.isActive();
+            node.stop();
+            if (filtered == null) filtered = new ArrayList<>(nodes);
+            filtered.remove(node);
+            if (wasActive) getCluster().pushControllerEvent(getUUID(), Constants.EVENT_SELF_LOOP, user.getUserPos() == null ? "" : user.getUserPos().toString());
+        }
+        return filtered == null ? nodes : filtered;
     }
 
     /**

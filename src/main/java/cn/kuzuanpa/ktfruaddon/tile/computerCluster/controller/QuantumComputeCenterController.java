@@ -78,7 +78,7 @@ public class QuantumComputeCenterController extends ControllerBase {
             return;
         }
 
-        boolean allStarted = IComputePart.tryStartDemand(nodes, ComputePower.Quantum, getClusterComputeDemand(total));
+        boolean allStarted = IComputePart.tryStartForDemand(nodes, ComputePower.Quantum, getClusterComputeDemand(total));
         mPartsStarted = true;
         mProvidedAmount = allStarted ? total : 0L;
         setControllerState(allStarted && total > 0L ? STATE_NORMAL : STATE_ERROR);

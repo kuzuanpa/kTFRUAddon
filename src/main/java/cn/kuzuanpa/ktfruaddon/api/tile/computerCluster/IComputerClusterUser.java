@@ -80,7 +80,8 @@ public interface IComputerClusterUser {
         return null;
     }
 
-    default boolean tryStart(){
+    /**Raw allocation entry, called by the user side skeleton after it pre-checked the cluster.**/
+    default boolean requestClusterCompute(){
         if (getController() == null)return false;
         return getController().allocateUserComputePower(this);
     }

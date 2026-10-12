@@ -36,7 +36,20 @@ import java.util.Map;
 public interface IComputerItem {
     @NotNull Map<String, Map.Entry<ComputePower, Long>> plainItemRegistry = new HashMap<>();
     @NotNull Map<Integer, ItemStack> typeRegistry = new HashMap<>();
+    /**Net Compute Power this stack hands to its host, the amount that counts towards the installation check.**/
     @NotNull Map.Entry<ComputePower, Long> getComputePower(int amount, int meta);
+
+    default @NotNull Map.Entry<ComputePower, Long> getRequestedComputePower(ItemStack stack, int count) {
+        return getProvidedComputePower(stack, count);
+    }
+
+    default @NotNull Map.Entry<ComputePower, Long> getProvidedComputePower(ItemStack stack, int count) {
+        return getComputePower(count, stack.getItemDamage());
+    }
+
+    default boolean isClusterBacked(ItemStack stack) {
+        return false;
+    }
 
     boolean onStart(ItemStack stack, IComputeItemUser host);
     void onStop(ItemStack stack, @Nullable IComputeItemUser host);
@@ -74,6 +87,19 @@ public interface IComputerItem {
         if (!ST.valid(stack)) return new SingleEntry<>(ComputePower.Normal,0L);
         if(stack.getItem() instanceof IComputerItem) return ((IComputerItem) stack.getItem()).getComputePower(stack.stackSize, stack.getItemDamage());
         else return getComputePowerForPlainItem(stack);
+    }
+    static @NotNull Map.Entry<ComputePower, Long> getProvidedComputePower(ItemStack stack, int count, @Nullable IComputeItemUser host) {
+        if (!ST.valid(stack)) return new SingleEntry<>(ComputePower.Normal,0L);
+        if(stack.getItem() instanceof IComputerItem) return ((IComputerItem) stack.getItem()).getProvidedComputePower(stack, count);
+        else return getComputePowerForPlainItem(stack);
+    }
+    static @NotNull Map.Entry<ComputePower, Long> getRequestedComputePower(ItemStack stack, int count, @Nullable IComputeItemUser host) {
+        if (!ST.valid(stack)) return new SingleEntry<>(ComputePower.Normal,0L);
+        if(stack.getItem() instanceof IComputerItem) return ((IComputerItem) stack.getItem()).getRequestedComputePower(stack, count);
+        else return getComputePowerForPlainItem(stack);
+    }
+    static boolean isClusterBackedStack(ItemStack stack) {
+        return ST.valid(stack) && stack.getItem() instanceof IComputerItem && ((IComputerItem) stack.getItem()).isClusterBacked(stack);
     }
     //plain item usually is simple circuit and so on. starting them should have no cost and always success
     static @NotNull Map.Entry<ComputePower, Long> getComputePowerForPlainItem(ItemStack stack){

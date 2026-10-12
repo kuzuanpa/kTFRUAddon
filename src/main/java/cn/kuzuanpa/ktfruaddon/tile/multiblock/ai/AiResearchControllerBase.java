@@ -18,6 +18,7 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.research.ResearchProject;
 import cn.kuzuanpa.ktfruaddon.api.research.task.IResearchTask;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputeUserComponent;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterController;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputerClusterUser;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
@@ -77,11 +78,8 @@ public abstract class AiResearchControllerBase extends MultiResearchTableBase im
         LH.add("ktfru.ai.compute", "Normal compute needed: %,d/tick");
     }
 
-    protected @Nullable IComputerClusterController computeController;
-    protected List<IComputerClusterController> backupComputeControllers = new ArrayList<>();
-    protected @Nullable UUID computeUserUUID;
+    public final ComputeUserComponent computeUser = new ComputeUserComponent(this);
     protected long requestedComputePower;
-    protected boolean computePowerAllocated;
     protected String computeStatus = STATUS_IDLE;
     protected ChunkCoordinates lastFailedPos;
     private static final byte[] MONITOR_SIDES = {SIDE_NORTH, SIDE_SOUTH, SIDE_WEST, SIDE_EAST};
@@ -95,13 +93,13 @@ public abstract class AiResearchControllerBase extends MultiResearchTableBase im
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
-        IComputerClusterUser.readFromNBT(aNBT, this);
+        computeUser.readFromNBT(aNBT);
     }
 
     @Override
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
-        IComputerClusterUser.writeToNBT(aNBT, this);
+        computeUser.writeToNBT(aNBT);
     }
 
     // Structure
@@ -169,11 +167,11 @@ public abstract class AiResearchControllerBase extends MultiResearchTableBase im
         requestedComputePower = safeMultiply(points, getComputePerPoint());
         computeStatus = STATUS_RUNNING;
 
-        if (computeController == null) {
+        if (getController() == null) {
             stopWithStatus(STATUS_UNBOUND);
             return;
         }
-        if (computeController.getCluster() == null) {
+        if (getController().getCluster() == null) {
             stopWithStatus(STATUS_OFFLINE);
             return;
         }
@@ -194,12 +192,7 @@ public abstract class AiResearchControllerBase extends MultiResearchTableBase im
     }
 
     protected boolean tryAllocateCompute() {
-        if (!computePowerAllocated) {
-            if (!IComputerClusterUser.super.tryStart()) return false;
-            computePowerAllocated = true;
-            return true;
-        }
-        return IComputerClusterUser.super.tryStart();
+        return computeUser.requestCompute(getComputePowerNeeded());
     }
 
     protected static long safeMultiply(long amount, long multiplier) {
@@ -214,8 +207,7 @@ public abstract class AiResearchControllerBase extends MultiResearchTableBase im
     }
 
     protected void stopCompute() {
-        if (computePowerAllocated) IComputerClusterUser.super.tryStop();
-        computePowerAllocated = false;
+        computeUser.release();
         requestedComputePower = 0L;
     }
 
@@ -260,13 +252,13 @@ public abstract class AiResearchControllerBase extends MultiResearchTableBase im
     }
 
     // Compute user
-    @Override public @Nullable IComputerClusterController getController() {return computeController;}
-    @Override public void setController(IComputerClusterController controller) {computeController = controller;}
-    @Override public List<IComputerClusterController> getBackupControllers() {return backupComputeControllers;}
-    @Override public void setBackupControllers(List<IComputerClusterController> list) {backupComputeControllers = list == null ? new ArrayList<IComputerClusterController>() : list;}
+    @Override public @Nullable IComputerClusterController getController() {return computeUser.getController();}
+    @Override public void setController(IComputerClusterController controller) {computeUser.setController(controller);}
+    @Override public List<IComputerClusterController> getBackupControllers() {return computeUser.getBackupControllers();}
+    @Override public void setBackupControllers(List<IComputerClusterController> list) {computeUser.setBackupControllers(list);}
     @Override public byte getState() {return requestedComputePower > 0L ? STATE_NORMAL : STATE_OFFLINE;}
     @Override public Map<ComputePower, Long> getComputePowerNeeded() {return ComputePower.Normal.asMap(requestedComputePower);}
-    @Override public @Nullable UUID getUUID() {return computeUserUUID;}
-    @Override public void setUUID(UUID uuid) {computeUserUUID = uuid;}
-    @Override public void onComputerPowerReleased() {computePowerAllocated = false; requestedComputePower = 0L; computeStatus = STATUS_INSUFFICIENT;}
+    @Override public @Nullable UUID getUUID() {return computeUser.getUUID();}
+    @Override public void setUUID(UUID uuid) {computeUser.setUUID(uuid);}
+    @Override public void onComputerPowerReleased() {computeUser.onReleased(); requestedComputePower = 0L; computeStatus = STATUS_INSUFFICIENT;}
 }

@@ -124,7 +124,32 @@ public class ResearchRecipes {
         add(ItemList.SpaceSuitCloth.get(1), 64, 160, ST.make(Blocks.wool, 4, 0), ST.make(net.minecraft.init.Items.string, 4, 0), OP.foil.mat(MT.Rubber, 2));
         add(ItemList.Tm170FlawDetectionCore.get(1), 512, 300, OP.plateDense.mat(MT.Pb, 2), OP.plate.mat(MT.Tm, 1), IL.SENSORS[2].get(1));
 
+        // The industrial control computer is the bare board every locally hosted compute source is built around.
+        add(ItemList.IndustryControlComputer.get(1), 512, 200, OP.casingMachine.mat(MT.Al, 1), IL.Circuit_Good.get(1), IL.Circuit_Part_Basic.get(2), OP.wireFine.mat(MT.Cu, 4));
+        // Wireless compute nodes (16 metas): one control computer plus the field generator and circuits of their tier.
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeNormalT1   .get(1), 2, IL.Circuit_Good    .get(2),   32);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeNormalT2   .get(1), 3, IL.Circuit_Advanced.get(2),  128);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeNormalT3   .get(1), 4, IL.Circuit_Elite   .get(2),  512);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeNormalT4   .get(1), 5, IL.Circuit_Master  .get(2), 2048);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeBiologyT1  .get(1), 2, IL.Circuit_Good    .get(2),   32);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeBiologyT2  .get(1), 3, IL.Circuit_Advanced.get(2),  128);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeBiologyT3  .get(1), 4, IL.Circuit_Elite   .get(2),  512);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeBiologyT4  .get(1), 5, IL.Circuit_Master  .get(2), 2048);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeQuantumT1  .get(1), 2, IL.Circuit_Good    .get(2),   64);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeQuantumT2  .get(1), 3, IL.Circuit_Advanced.get(2),  256);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeQuantumT3  .get(1), 4, IL.Circuit_Elite   .get(2), 1024);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeQuantumT4  .get(1), 5, IL.Circuit_Master  .get(2), 4096);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeSpacetimeT1.get(1), 2, IL.Circuit_Good    .get(2),  256);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeSpacetimeT2.get(1), 3, IL.Circuit_Advanced.get(2), 1024);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeSpacetimeT3.get(1), 4, IL.Circuit_Elite   .get(2), 4096);
+        registerWirelessComputeNode(ItemList.WirelessComputeNodeSpacetimeT4.get(1), 5, IL.Circuit_Master  .get(2),16384);
+
         initAssembling();
+    }
+
+    /**A wireless compute node is one industrial control computer, one field generator and a pair of circuits.**/
+    private static void registerWirelessComputeNode(ItemStack aOutput, int aGeneratorTier, ItemStack aCircuit, long aEUt) {
+        recipeMaps.ResearchAssembler.addRecipeX(F, aEUt, 400, ST.array(ItemList.IndustryControlComputer.get(1), IL.FIELD_GENERATORS[aGeneratorTier].get(1), aCircuit), ZL_FS, ZL_FS, aOutput);
     }
 
     /** GT6 cannot reference this addon's recipe maps directly, so mirror its locked Canner recipes explicitly. */

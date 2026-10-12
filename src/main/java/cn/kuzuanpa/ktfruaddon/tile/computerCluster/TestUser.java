@@ -76,7 +76,7 @@ public class TestUser extends TileEntityBase07Paintable implements IComputerClus
             IComputerClusterUser.bindControllerFromUSB(aPlayer, this);
             mActive = true;
             if(aPlayer.isSneaking())tryStop();
-            else tryStart();
+            else requestClusterCompute();
             return true;
         }
         return false;

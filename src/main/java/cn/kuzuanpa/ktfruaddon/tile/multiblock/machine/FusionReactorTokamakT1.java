@@ -21,6 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
@@ -68,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
@@ -114,6 +116,9 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         if (aNBT.hasKey(NBT_ENERGY_ACCEPTED_2)) mEnergyTypeCharging = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED_2));
         if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
 
+        Map<ComputePower, Long> requiredCompute = ICircuitChangeableTileEntity.readRequiredCompute(aNBT);
+        if (requiredCompute.containsKey(ComputePower.Normal)) computePowerNeeded = requiredCompute.get(ComputePower.Normal);
+
         mTanks=new FluidTankGT[mRecipes.mInputFluidCount+mRecipes.mOutputFluidCount];
         for (int i = 0; i < mRecipes.mInputFluidCount+mRecipes.mOutputFluidCount; i++) mTanks[i]=new FluidTankGT().readFromNBT(aNBT, NBT_TANK+"."+i).setCapacity(8000);
 
@@ -154,9 +159,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             return;
         }
 
-        isComputePowerEnough = computePowerNeeded <= getComputeNodes().stream()
-                .filter(node->node.getType().equals(ComputePower.Normal))
-                .mapToLong(IComputePart::getComputePower).sum();
+        isComputePowerEnough = IComputePart.tryStartForDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded);
 
         if(!isComputePowerEnough){
             mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
@@ -228,7 +231,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
     protected void setState(byte state){
         mState.set(state);
-        if(state != STATE_STOPPED && state != STATE_ERROR && !IComputePart.tryStartDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded)) {
+        if(state != STATE_STOPPED && state != STATE_ERROR && !IComputePart.tryStartForDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded)) {
             mState.set(STATE_ERROR);
         }
 

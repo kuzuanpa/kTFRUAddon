@@ -21,6 +21,7 @@ import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
@@ -113,6 +114,9 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         if (aNBT.hasKey(NBT_ENERGY_ACCEPTED_2)) mEnergyTypeCharging = TagData.createTagData(aNBT.getString(NBT_ENERGY_ACCEPTED_2));
         if (aNBT.hasKey(NBT_FUELMAP)) mRecipes = Recipe.RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_FUELMAP));
 
+        Map<ComputePower, Long> requiredCompute = ICircuitChangeableTileEntity.readRequiredCompute(aNBT);
+        if (requiredCompute.containsKey(ComputePower.Normal)) computePowerNeeded = requiredCompute.get(ComputePower.Normal);
+
         mTanks[0].readFromNBT(aNBT, NBT_TANK+".0").setCapacity(2000);
         mTanks[1].readFromNBT(aNBT, NBT_TANK+".1").setCapacity(2000);
         mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(2000);
@@ -153,9 +157,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
             if(mEnergyCharged>1024)onError();
             return;
         }
-        isComputePowerEnough = computePowerNeeded <= getComputeNodes().stream()
-                .filter(node->node.getType().equals(ComputePower.Normal))
-                .mapToLong(IComputePart::getComputePower).sum();
+        isComputePowerEnough = startNodes();
 
         if(!isComputePowerEnough){
             mFieldStrength= (short) Math.max(-1,mFieldStrength-1);
@@ -234,7 +236,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     boolean nodeStarted = false;
     public boolean startNodes(){
         nodeStarted = true;
-        return IComputePart.tryStartDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded);
+        return IComputePart.tryStartForDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded);
     }
     public void stopNodes(){
         nodeStarted = false;
