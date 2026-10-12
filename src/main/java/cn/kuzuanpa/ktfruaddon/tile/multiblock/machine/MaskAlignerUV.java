@@ -94,8 +94,6 @@ public class MaskAlignerUV extends TileEntityBaseControlledMachine implements IM
     public void receiveSpecialPart(ChunkCoordinates partPos, TileEntity part) {
         ConditionPartsPos.add(new ChunkCoordinates(partPos));
     }
-    public final short sizeX = 3, sizeY = 2, sizeZ = 2;
-    public final short xMapOffset = -1;
     static {
         LH.add("ktfru.tooltip.multiblock.maskaligner.0.5", "Input LU from upside of Light Module, Input EU from anyside of Energy Module.");
         LH.add("ktfru.tooltip.multiblock.maskaligner.0.6", "Fluid inputs from anyblock in upside, Item input from upside of IO manager, output from backside.");

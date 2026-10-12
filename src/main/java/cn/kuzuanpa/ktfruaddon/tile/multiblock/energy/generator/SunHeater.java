@@ -17,8 +17,14 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -44,6 +50,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,68 +71,42 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
     public TagData mEnergyTypeEmitted=TD.Energy.HU;
     public boolean clickDoubleCheck=false;
     public short machineY=0;
-    //todo: move to new structure API
-    //决定结构检测的起始位置，默认情况下是从主方块起始
-    //This controls where is the start point to check structure,Default is the position of controller block
-    public final short xMapOffset = -2, zMapOffset = 0;
-    public static short[][][] blockIDMap = {{
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-    },{
-            {18002, 18002,   0  , 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-            {18002, 18002, 18002, 18002, 18002},
-    },{
-            {31002, 31002, 31002, 31002, 31002},
-            {31002, 31003, 31003, 31003, 31002},
-            {31002, 31003, 18002, 31003, 31002},
-            {31002, 31003, 31003, 31003, 31002},
-            {31002, 31002, 31002, 31002, 31002},
-    },{
-            {31004, 31004, 31004, 31004, 31004},
-            {31004, 31004, 31004, 31004, 31004},
-            {31004, 31004, 31004, 31004, 31004},
-            {31004, 31004, 31004, 31004, 31004},
-            {31004, 31004, 31004, 31004, 31004},
-    },};
-    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-    public MultiTileEntityRegistry[][][] registryIDMap = {{
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-    },{
-            {g, g, k, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-            {g, g, g, g, g},
-    },{
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, g, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-    },{
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-            {k, k, k, k, k},
-    }};
-
-    public int getUsage(int blockID ,MultiTileEntityRegistry registryID){
-        if(blockID==18002&&registryID==g)return MultiTileEntityMultiBlockPart.ONLY_FLUID_IN;
-        if(blockID==31004&&registryID==k)return MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
-        return MultiTileEntityMultiBlockPart.NOTHING;
-    }
+    public ChunkCoordinates lastFailedPos = null;
+    /**The Absorb Layers of the Tower repeat up to {@link #machineYmax} Layers, the Top Layer of Heat Pipe Tops caps them off.**/
+    private static final int MAX_ABSORB_LAYERS = machineYmax - 2;
+    private static final ExpandableLayer absorbLayers = new ExpandableLayer(MAX_ABSORB_LAYERS);
+    public static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABXD")
+            .fixedLayer('A',
+                    "WWWWW",
+                    "WWWWW",
+                    "WWWWW",
+                    "WWWWW",
+                    "WWWWW"
+            ).fixedLayer('B',
+                    "WWWWW",
+                    "WWWWW",
+                    "KWWWW",
+                    "WWWWW",
+                    "WWWWW"
+            ).layer('X', absorbLayers.variation(
+                    "SSSSS",
+                    "SPPPS",
+                    "SPWPS",
+                    "SPPPS",
+                    "SSSSS"
+            )).fixedLayer('D',
+                    "HHHHH",
+                    "HHHHH",
+                    "HHHHH",
+                    "HHHHH",
+                    "HHHHH"
+            )
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18002, MultiTileEntityMultiBlockPart.ONLY_FLUID_IN, 0)))
+            .where('S', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31002, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('P', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31003, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('H', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31004, MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT, 0)))
+            .where('K', new ControllerPredicate())
+            .setOffset(-2,-1,0);
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -138,24 +119,12 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
     }
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        int tX = xCoord, tY = yCoord, tZ = zCoord;
-        if (worldObj.blockExists(tX, tY, tZ)) {
-            boolean tSuccess = T;
-            tX = utils.getRealX(getFacing(), tX, xMapOffset, -zMapOffset);
-            tZ = utils.getRealZ(getFacing(), tZ, xMapOffset, -zMapOffset);
-            int checkX, checkY, checkZ;
-            for (checkY  = 0; checkY < 2 &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ&&tSuccess; checkZ++) for (checkX = 0; checkX < machineX&&tSuccess; checkX++) if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY -1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, registryIDMap[checkY][checkZ][checkX], blockIDMap[checkY][checkZ][checkX], 0, getUsage( blockIDMap[checkY][checkZ][checkX], registryIDMap[checkY][checkZ][checkX]))) tSuccess = F;
-            if(!tSuccess)return false;
-
-            for (checkY  = 2; checkY < machineYmax &&tSuccess; checkY++) for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++) if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, registryIDMap[2][checkZ][checkX], blockIDMap[2][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[2][checkZ][checkX]))) tSuccess = F;
-            machineY = (short) (checkY - (tSuccess ? 2 : 3));
-            if (!tSuccess) checkY--;
-            tSuccess=T;
-
-            for (checkZ = 0; checkZ < machineZ && tSuccess; checkZ++) for (checkX = 0; checkX < machineX && tSuccess; checkX++)if (!utils.checkAndSetTarget(this, utils.getRealX(mFacing, tX, checkX, checkZ), tY + checkY - 1, utils.getRealZ(mFacing, tZ, checkX, checkZ), aClickedAt, aPlayer, aInventory, registryIDMap[3][checkZ][checkX], blockIDMap[3][checkZ][checkX], 0, getUsage(blockIDMap[3][checkZ][checkX], registryIDMap[3][checkZ][checkX]))) tSuccess = F;
-            return tSuccess;
-        }
-        return mStructureOkay;
+        if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        if(lastFailedPos != null) return false;
+        //The Absorb Layers are the ones the Machine counts for its Rate and Capacity.
+        machineY = (short) absorbLayers.repeatCount;
+        return true;
     }
 
     static {
@@ -172,6 +141,7 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(LH.STRUCTURE) + ":");
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.1"));
         aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.sunheater.2"));
         aList.add(LH.Chat.WHITE + "1 - "+machineYmax+" "+LH.get("ktfru.tooltip.multiblock.sunheater.3"));
@@ -190,6 +160,10 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
 
         if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
         ItemStack equippedItem=aPlayer.getCurrentEquippedItem();
+        if (equippedItem!=null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
         if (!(OM.is(OD_USB_STICKS[0],equippedItem))) return false;
         NBTTagCompound aNBT = UT.NBT.make();
         UT.NBT.setNumber(aNBT, NBT_TARGET_X, this.xCoord);
@@ -253,7 +227,7 @@ public class SunHeater extends HeaterBase implements IMultiBlockFluidHandler, IT
 
     public float getTemperature(){return ((float)mEnergyStored/(float)getCapacity() *961)+DEFAULT_ENVIRONMENT_TEMPERATURE;}
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}
+    public boolean isInsideStructure(int aX, int aY, int aZ) {return structure.isInsideStructure(this, mFacing, aX, aY, aZ);}
 
     public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {return aEnergyType==TD.Energy.HU&&aSide==SIDE_BOTTOM&&mStructureOkay;}
 

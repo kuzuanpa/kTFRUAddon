@@ -103,8 +103,6 @@ public class MaskAlignerUVPlus extends TileEntityBaseControlledMachine implement
         ConditionPartsPos.add(new ChunkCoordinates(partPos));
     }
 
-    public final short sizeX = 3, sizeY = 3, sizeZ = 3;
-    public final short xMapOffset = -1;
     //这是设置主方块的物品提示
     //controls tooltip of controller block
     static {

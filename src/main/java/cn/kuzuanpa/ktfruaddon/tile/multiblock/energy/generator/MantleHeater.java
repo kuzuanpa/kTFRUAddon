@@ -18,10 +18,13 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.generator;
 import cn.kuzuanpa.ktfruaddon.api.client.fx.FxRenderBlockOutline;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.mapBased.IMappedStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
-import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -37,19 +40,22 @@ import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.WD;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.Collection;
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler, IMappedStructure {
+public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler {
     public ChunkCoordinates lastFailedPos;
     public static final short machineX = 5;
     public static final short machineY = 4;
@@ -59,42 +65,39 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
     public boolean clickDoubleCheck=false;
 
     public short progress = 0;
-    public final short xMapOffset = -2, zMapOffset = 0;
-    //todo: move to new structure API
-    public static int[][][] blockIDMap = {{
-            {18004, 18004, 18004, 18004, 18004},
-            {18004, 18004, 18004, 18004, 18004},
-            {18004, 18004, 31039, 18004, 18004},
-            {18004, 18004, 18004, 18004, 18004},
-            {18004, 18004, 18004, 18004, 18004},
-    },{
-            {18004, 18004,   0  , 18004, 18004},
-            {18004, 31003, 31003, 31003, 18004},
-            {18004, 31003, 31003, 31003, 18004},
-            {18004, 31003, 31003, 31003, 18004},
-            {18004, 18004, 18004, 18004, 18004},
-    },{
-            {  0  , 18004, 18004, 18004,   0  },
-            {18004, 31003, 31003, 31003, 18004},
-            {18004, 31003, 31003, 31003, 18004},
-            {18004, 31003, 31003, 31003, 18004},
-            {  0  , 18004, 18004, 18004,   0  },
-    },{
-            {  0  ,   0  , 18004,   0  ,   0  },
-            {  0  , 18004, 31004, 18004,   0  },
-            {18004, 31004, 31004, 31004, 18004},
-            {  0  , 18004, 31004, 18004,   0  },
-            {  0  ,   0  , 18004,   0  ,   0  },
-    }};
-    MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon;
-    MultiTileEntityRegistry g = GTTileEntityRegistry.gregtech;
-
-    public int getUsage(int mapX, int mapY, int mapZ) {
-        int blockID = getBlockID(mapX, mapY, mapZ);
-        if(blockID==18004)return MultiTileEntityMultiBlockPart.ONLY_IN;
-        if(blockID==31004)return MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT;
-        return MultiTileEntityMultiBlockPart.NOTHING;
-    }
+    /**The Drill Rod in the Center goes all the way down to the Bedrock, see {@link #checkStructure2}. The Controller sits in the Front Middle of the second Layer.**/
+    static IStringBaseStructure structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABCD")
+            .fixedLayer('A',
+                    "WWWWW",
+                    "WWWWW",
+                    "WWRWW",
+                    "WWWWW",
+                    "WWWWW"
+            ).fixedLayer('B',
+                    "WWWWW",
+                    "WPPPW",
+                    "KPPPW",
+                    "WPPPW",
+                    "WWWWW"
+            ).fixedLayer('C',
+                    " WWW ",
+                    "WPPPW",
+                    "WPPPW",
+                    "WPPPW",
+                    " WWW "
+            ).fixedLayer('D',
+                    "  W  ",
+                    " WTW ",
+                    "WTTTW",
+                    " WTW ",
+                    "  W  "
+            )
+            .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18004, MultiTileEntityMultiBlockPart.ONLY_IN, 0)))
+            .where('P', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31003, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('R', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31039, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('T', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31004, MultiTileEntityMultiBlockPart.ONLY_FLUID_OUT, 0)))
+            .where('K', new ControllerPredicate())
+            .setOffset(-2,-1,0);
 
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
@@ -110,30 +113,25 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
         aNBT.setShort(NBT_PROGRESS, progress);
     }
     @Override
-    public TileDesc[] getTileDescs(int mapX, int mapY, int mapZ) {
-        return new TileDesc[]{ new TileDesc(getRegistryID(mapX, mapY, mapZ), getBlockID(mapX, mapY, mapZ),getUsage(mapX, mapY, mapZ))};
-    }
-
-    public int getBlockID(int mapX, int mapY, int mapZ) {
-        return blockIDMap[mapY][mapZ][mapX];
-    }
-
-    @Override
-    public boolean isIgnored(int mapX, int mapY, int mapZ) {
-        return getBlockID(mapX,mapY,mapZ)==0;
-    }
-
-    public MultiTileEntityRegistry getRegistryID(int mapX, int mapY, int mapZ) {
-        return getBlockID(mapX,mapY,mapZ) == 18004 ? g:k;
-    }
-
-    @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
         aList.add(LH.Chat.DRED + LH.get(LH.HAZARD_MELTDOWN));
         aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_TOGGLE_SCREWDRIVER));
         aList.add(LH.Chat.DGRAY + LH.get(LH.TOOL_TO_MEASURE_THERMOMETER));
         super.addToolTips(aList, aStack, aF3_H);
+    }
+
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide()) return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+        ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
+        if (equippedItem != null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
     public void onTick2(long aTimer, boolean aIsServerSide) {
@@ -146,17 +144,14 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
         int tX = xCoord, tY = yCoord, tZ = zCoord;
         if (!worldObj.blockExists(tX, tY, tZ)) return mStructureOkay;
-        lastFailedPos = checkMappedStructure(lastFailedPos, machineX, machineY, machineZ, xMapOffset,-1,zMapOffset, aClickedAt, aPlayer, aInventory);
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET: StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
         if(lastFailedPos!=null)return false;
 
-        tX = utils.getRealX(getFacing(), tX, xMapOffset, -zMapOffset);
-        tY -= 1;
-        tZ = utils.getRealZ(getFacing(), tZ, xMapOffset, -zMapOffset);
-        int mapX=utils.getRealX(getFacing(), tX, 2, 2), mapZ=utils.getRealZ(getFacing(), tZ, 2, 2);
-        for (int i = 1; i < yCoord; i++) {
-            int mapY=tY - i;
-            if (!utils.checkAndSetTarget(this, mapX, mapY, mapZ, aClickedAt, aPlayer, aInventory,new TileDesc(k, 31039, 0, MultiTileEntityMultiBlockPart.NOTHING) ) && !(worldObj.getBlock(mapX, mapY, mapZ) == Blocks.bedrock)){
-                FxRenderBlockOutline.addBlockOutlineToRender(new ChunkCoordinates(mapX, mapY, mapZ),0xff0000,2,System.currentTimeMillis()+8000);
+        //The Drill Rod Column going down from the Center of the Structure until it reaches the Bedrock.
+        int tRodX = utils.getRealX(mFacing, xCoord, 0, 2), tRodZ = utils.getRealZ(mFacing, zCoord, 0, 2);
+        for (int tRodY = yCoord - 2; tRodY >= 0; tRodY--) {
+            if (!utils.checkAndSetTarget(this, tRodX, tRodY, tRodZ, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.ktfruaddon, (short)31039, 0, MultiTileEntityMultiBlockPart.NOTHING) && !(worldObj.getBlock(tRodX, tRodY, tRodZ) == Blocks.bedrock)){
+                FxRenderBlockOutline.addBlockOutlineToRender(new ChunkCoordinates(tRodX, tRodY, tRodZ),0xff0000,2,System.currentTimeMillis()+8000);
                 return false;
             }
         }
@@ -216,7 +211,7 @@ public class MantleHeater extends HeaterBase implements IMultiBlockFluidHandler,
     }
     public float getTemperature(){return ((float)mEnergyStored/(float)getCapacity() *961)+DEFAULT_ENVIRONMENT_TEMPERATURE;}
     @Override
-    public boolean isInsideStructure(int aX, int aY, int aZ) {return true;}
+    public boolean isInsideStructure(int aX, int aY, int aZ) {return structure.isInsideStructure(this, mFacing, aX, aY, aZ);}
 
     @Override
     public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {

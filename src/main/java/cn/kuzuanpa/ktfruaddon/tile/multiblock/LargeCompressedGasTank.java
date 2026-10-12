@@ -19,7 +19,13 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock;
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.ICompressGasTank;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.AirPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.data.FL;
 import gregapi.data.LH;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
@@ -29,6 +35,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -38,6 +45,33 @@ import java.util.List;
 import static gregapi.data.CS.*;
 
 public class LargeCompressedGasTank extends MultiTileEntityTank implements ICompressGasTank {
+    /**A 3x3x3 Shell of Tank Walls in the Back of the Valve, the Hollow Center inside of it is the actual Tank.**/
+    protected IStringBaseStructure structure;
+    protected ChunkCoordinates lastFailedPos;
+
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
+        super.readFromNBT2(aNBT);
+        structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+                .fixedLayer('A',
+                        "WWW",
+                        "WWW",
+                        "WWW"
+                ).fixedLayer('B',
+                        "WWW",
+                        "KEW",
+                        "WWW"
+                ).fixedLayer('C',
+                        "WWW",
+                        "WWW",
+                        "WWW"
+                )
+                .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mTankWalls, MultiTileEntityMultiBlockPart.ONLY_FLUID, 0)))
+                .where('E', new AirPredicate())
+                .where('K', new ControllerPredicate())
+                .setOffset(-1,-1,0);
+    }
+
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.WHITE    + LH.get(I18nHandler.TANK_GAS_COMPRESSED_1));
@@ -53,25 +87,14 @@ public class LargeCompressedGasTank extends MultiTileEntityTank implements IComp
     }
     @Override
     public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
-        int tX = getOffsetXN(mFacing), tY = getOffsetYN(mFacing), tZ = getOffsetZN(mFacing);
-        if (worldObj.blockExists(tX-1, tY, tZ-1) && worldObj.blockExists(tX+1, tY, tZ-1) && worldObj.blockExists(tX-1, tY, tZ+1) && worldObj.blockExists(tX+1, tY, tZ+1)) {
-            boolean tSuccess = T;
-            for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++) for (int k = -1; k <= 1; k++) {
-                if (i == 0 && j == 0 && k == 0) {
-                    if (getAir(tX+i, tY+j, tZ+k)) worldObj.setBlockToAir(tX+i, tY+j, tZ+k); else tSuccess = F;
-                } else {
-                    if (!utils.checkAndSetTarget(this, tX+i, tY+j, tZ+k, aClickedAt, aPlayer, aInventory, GTTileEntityRegistry.gregtech, mTankWalls, 0, MultiTileEntityMultiBlockPart.ONLY_FLUID)) tSuccess = F;
-                }
-            }
-            return tSuccess;
-        }
-        return mStructureOkay;
+        if (structure == null || !worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET : StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos == null;
     }
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        int tX = getOffsetXN(mFacing), tY = getOffsetYN(mFacing), tZ = getOffsetZN(mFacing);
-        return aX >= tX - 1 && aY >= tY - 1 && aZ >= tZ - 1 && aX <= tX + 1 && aY <= tY + 1 && aZ <= tZ + 1;
+        return structure != null && structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     @Override

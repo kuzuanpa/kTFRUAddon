@@ -14,17 +14,26 @@
 
 package cn.kuzuanpa.ktfruaddon.tile.multiblock.energy.transform;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
-import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.data.LH;
 import gregapi.tileentity.ITileEntityUnloadable;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
 
@@ -33,43 +42,48 @@ import static gregapi.data.CS.*;
 public class MultiDynamo extends MultiTransformerBase{
     public short mDynamoWalls = 18022;
 
+    /**The Housing Walls and the Coil Layers depend on the Material this Machine was crafted from, so the Layout is built per Instance.**/
+    protected IStringBaseStructure structure;
+    protected ChunkCoordinates lastFailedPos;
+    /**The Far End Cap of the Dynamo is the Energy Output, its Middle Part is the only One that is not a plain Housing Wall.**/
+    protected static final char SYMBOL_WALL = 'W', SYMBOL_COIL = 'C', SYMBOL_OUTPUT = 'O', SYMBOL_CONTROLLER = 'K';
+
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         if (aNBT.hasKey(NBT_DESIGN)) mDynamoWalls = aNBT.getShort(NBT_DESIGN);
+        structure = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+                .fixedLayer('A',
+                        "WCCW",
+                        "WCCW",
+                        "WCCW"
+                ).fixedLayer('B',
+                        "WCCW",
+                        "KCCO",
+                        "WCCW"
+                ).fixedLayer('C',
+                        "WCCW",
+                        "WCCW",
+                        "WCCW"
+                )
+                .where(SYMBOL_WALL, new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mDynamoWalls, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+                .where(SYMBOL_COIL, new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, 18040, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+                .where(SYMBOL_OUTPUT, new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mDynamoWalls, MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT, 2)))
+                .where(SYMBOL_CONTROLLER, new ControllerPredicate())
+                .setOffset(-1,-1,0);
     }
-    //todo: move to new structure API
+
     @Override
     public boolean checkStructure2(ChunkCoordinates aCoordinates, Entity aPlayer, IInventory aInventory) {
-        int
-                tMinX = xCoord-(SIDE_X_NEG==mFacing?0:SIDE_X_POS==mFacing?3:1),
-                tMinY = yCoord-(SIDE_Y_NEG==mFacing?0:SIDE_Y_POS==mFacing?3:1),
-                tMinZ = zCoord-(SIDE_Z_NEG==mFacing?0:SIDE_Z_POS==mFacing?3:1),
-                tMaxX = xCoord+(SIDE_X_POS==mFacing?0:SIDE_X_NEG==mFacing?3:1),
-                tMaxY = yCoord+(SIDE_Y_POS==mFacing?0:SIDE_Y_NEG==mFacing?3:1),
-                tMaxZ = zCoord+(SIDE_Z_POS==mFacing?0:SIDE_Z_NEG==mFacing?3:1),
-                tOutX = getOffsetXN(mFacing, 3),
-                tOutY = getOffsetYN(mFacing, 3),
-                tOutZ = getOffsetZN(mFacing, 3);
-
-        if (worldObj.blockExists(tMinX, tMinY, tMinZ) && worldObj.blockExists(tMaxX, tMaxY, tMaxZ)) {
-            mEmitter = null;
-            boolean tSuccess = T;
-            for (int tX = tMinX; tX <= tMaxX; tX++) for (int tY = tMinY; tY <= tMaxY; tY++) for (int tZ = tMinZ; tZ <= tMaxZ; tZ++) if (!utils.checkAndSetTarget(this, tX, tY, tZ, aCoordinates, aPlayer, aInventory, (SIDES_AXIS_X[mFacing]?tX!=tMinX&&tX!=tMaxX:SIDES_AXIS_Z[mFacing]?tZ!=tMinZ&&tZ!=tMaxZ:tY!=tMinY&&tY!=tMaxY) ? GTTileEntityRegistry.gregtech : GTTileEntityRegistry.ktfruaddon, (SIDES_AXIS_X[mFacing]?tX!=tMinX&&tX!=tMaxX:SIDES_AXIS_Z[mFacing]?tZ!=tMinZ&&tZ!=tMaxZ:tY!=tMinY&&tY!=tMaxY) ? 18040 : mDynamoWalls, tX == tOutX && tY == tOutY && tZ == tOutZ ? 2 : 0, tX == tOutX && tY == tOutY && tZ == tOutZ ? MultiTileEntityMultiBlockPart.ONLY_ENERGY_OUT : MultiTileEntityMultiBlockPart.NOTHING)) tSuccess = F;
-            return tSuccess;
-        }
-        return mStructureOkay;
+        if (structure == null || !worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        mEmitter = null;
+        lastFailedPos = structure.checkStructure(new StructureContext(this, (aPlayer != null || aInventory != null)? StructureContext.StringBaseMode.SET : StructureContext.StringBaseMode.CHECK, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos == null;
     }
 
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
-        return
-                aX >= xCoord-(SIDE_X_NEG==mFacing?0:SIDE_X_POS==mFacing?3:1) &&
-                        aY >= yCoord-(SIDE_Y_NEG==mFacing?0:SIDE_Y_POS==mFacing?3:1) &&
-                        aZ >= zCoord-(SIDE_Z_NEG==mFacing?0:SIDE_Z_POS==mFacing?3:1) &&
-                        aX <= xCoord+(SIDE_X_POS==mFacing?0:SIDE_X_NEG==mFacing?3:1) &&
-                        aY <= yCoord+(SIDE_Y_POS==mFacing?0:SIDE_Y_NEG==mFacing?3:1) &&
-                        aZ <= zCoord+(SIDE_Z_POS==mFacing?0:SIDE_Z_NEG==mFacing?3:1);
+        return structure != null && structure.isInsideStructure(this, mFacing, aX, aY, aZ);
     }
 
     static {
@@ -85,6 +99,19 @@ public class MultiDynamo extends MultiTransformerBase{
         aList.add(LH.Chat.WHITE    + LH.get("gt.tooltip.multiblock.dynamo.2"));
         aList.add(LH.Chat.WHITE    + LH.get("gt.tooltip.multiblock.dynamo.3"));
         super.addToolTips(aList, aStack, aF3_H);
+    }
+
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide()) return true;
+
+        if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
+        ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
+        if (equippedItem != null && equippedItem.getItem() instanceof ItemProjector) {
+            structure.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
     public ITileEntityUnloadable mEmitter = null;

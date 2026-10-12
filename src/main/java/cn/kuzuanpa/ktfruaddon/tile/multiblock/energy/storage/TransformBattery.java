@@ -219,8 +219,6 @@ public class TransformBattery extends MultiBatteryBase implements SpecialPartPre
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
     }
 
-    public static final short sizeX = 4, sizeY = 7, sizeZ = 4;
-    public static final short xMapOffset = 0, zMapOffset = 0;
     @Override
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return structure.isInsideStructure(this, mFacing, aX, aY, aZ);
