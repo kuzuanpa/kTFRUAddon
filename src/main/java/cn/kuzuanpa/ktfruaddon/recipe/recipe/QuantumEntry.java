@@ -32,6 +32,13 @@ public final class QuantumEntry {
                 ST.array(prefixList.AnalyticalPureDust.mat(matList.Ij.mat, 4)),
                 CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.MirrorGold.mat, 1));
 
+        // Q1-R01b: the consuming end runs the same map but produces no item, so
+        // the pair can tell the producing end from the one that only supplies
+        // its own analytical-pure material and LU.
+        recipeMaps.QuantumCommunication.addRecipeX(CS.F, 8192, 3600,
+                ST.array(prefixList.AnalyticalPureDust.mat(MT.Nq_522, 4)),
+                CS.ZL_FS, CS.ZL_FS);
+
         // Q1-R02: economical re-synthesis after the first live-relay sample has
         // been studied. The sample is a seed: one ingot becomes two, while each
         // additional ingot costs half the analytical-pure input of R01.

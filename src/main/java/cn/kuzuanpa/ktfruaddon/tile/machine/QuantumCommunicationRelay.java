@@ -5,41 +5,84 @@
  */
 package cn.kuzuanpa.ktfruaddon.tile.machine;
 
+import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
+import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseControlledMachine;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
+import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.SpecialPartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.special.ComputePartPredicate;
+import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.data.TD;
 import gregapi.fluid.FluidTankGT;
-import gregapi.old.Textures;
+import gregapi.gui.ContainerClientDefault;
+import gregapi.gui.ContainerCommonDefault;
 import gregapi.recipes.Recipe;
-import gregapi.render.BlockTextureDefault;
-import gregapi.render.BlockTextureMulti;
-import gregapi.render.IIconContainer;
-import gregapi.render.ITexture;
-import gregapi.tileentity.base.TileEntityBase09FacingSingle;
+import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.energy.ITileEntityEnergy;
+import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
 import gregapi.util.ST;
 import gregapi.util.UT;
-import net.minecraft.block.Block;
+import gregapi.util.WD;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.IFluidHandler;
+import zmaster587.libVulpes.items.ItemProjector;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static gregapi.data.CS.*;
 
-/** Paired quantum-communication relay.  The recipe core owns the R01 materials, timing, energy and output. */
-public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle implements IKortexHandler, ITileEntityEnergy {
+/**
+ * 30074. Paired relay: two 3x3x3 relays in the same dimension form one entanglement channel.
+ * The primary end (lowest dimension/x/y/z) runs the producing recipe and owns the QU output,
+ * the other end only supplies its own analytical-pure material and LU.
+ */
+public class QuantumCommunicationRelay extends TileEntityBaseControlledMachine implements IKortexHandler, ITileEntityEnergy, SpecialPartPredicate.IReceiveSpecialPart {
     public static final long QU_PER_TICK = 128;
     public static final long QU_PER_RECIPE = 65536;
     public static final long ENERGY_CAPACITY = 32768000L;
+    public static final long DEFAULT_COMPUTE = 65536L;
+
+    public static final String STATUS_UNFORMED = "ktfru.quantum_relay.status.unformed";
+    public static final String STATUS_UNPAIRED = "ktfru.quantum_relay.status.unpaired";
+    public static final String STATUS_IDLE = "ktfru.quantum_relay.status.idle";
+    public static final String STATUS_RUNNING = "ktfru.quantum_relay.status.running";
+    public static final String STATUS_NO_COMPUTE = "ktfru.quantum_relay.status.no_compute";
+
+    static {
+        LH.add(STATUS_UNFORMED, "Structure incomplete");
+        LH.add(STATUS_UNPAIRED, "No partner relay paired");
+        LH.add(STATUS_IDLE, "Paired, waiting for materials/energy");
+        LH.add(STATUS_RUNNING, "Channel running");
+        LH.add(STATUS_NO_COMPUTE, "Insufficient Normal compute");
+        LH.add("ktfru.quantum_relay.info.energy", "Energy per tick (primary EU / other end LU):");
+        LH.add("ktfru.quantum_relay.info.compute", "Normal compute per tick:");
+        LH.add("ktfru.quantum_relay.info.qu", "QU buffered / per completed run:");
+        LH.add("ktfru.tooltip.multiblock.quantumrelay.1", "3x3x3 relay: coherence walls with two entanglement channel modules, one compute slot, one energy port and one item/fluid port. Place the controller in the bottom centre.");
+        LH.add("ktfru.tooltip.multiblock.quantumrelay.2", "Pair two relays in the same dimension with a screwdriver: the lower one runs the producing recipe on EU, the other one supplies its own analytical-pure material on LU.");
+        LH.add("ktfru.tooltip.multiblock.quantumrelay.3", "A completed run consumes both materials and outputs 1 Mirror Gold ingot plus 65,536 QU at the controller.");
+    }
 
     private static final String NBT_QU = "ktfru.quantum_relay.qu";
     private static final String NBT_LINKED = "ktfru.quantum_relay.linked";
@@ -53,31 +96,88 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
     private static final String TOOL_Y = "ktfru.quantum_relay.tool.y";
     private static final String TOOL_Z = "ktfru.quantum_relay.tool.z";
 
-    private static final IIconContainer TEXTURE_MATERIAL = new Textures.BlockIcons.CustomIcon("machines/voidhopper/colored");
-    private static final IIconContainer TEXTURE_FRONT = new Textures.BlockIcons.CustomIcon("machines/voidhopper/front");
-    private static final IIconContainer TEXTURE_FRONT_ACTIVE = new Textures.BlockIcons.CustomIcon("machines/voidhopper/front_active");
+    private static final IStringBaseStructure STRUCTURE = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
+            .fixedLayer('A',
+                    "QEQ",
+                    "QKQ",
+                    "QCQ")
+            .fixedLayer('B',
+                    "QHQ",
+                    "QIQ",
+                    "QHQ")
+            .fixedLayer('C',
+                    "QQQ",
+                    "QQQ",
+                    "QQQ")
+            .where('Q', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31111, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('H', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31113, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN, 0)))
+            .where('I', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID, 0)))
+            .where('C', new ComputePartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31111, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('K', new ControllerPredicate())
+            .setOffset(-1, 0, -1);
 
     private KortexWorker kortex;
     private long mQUStored;
-    /** 0=unpaired/offline, 1=paired idle, 2=running. */
+    private long computePowerNeeded = DEFAULT_COMPUTE;
+    private boolean computePowerEnough;
+    private final List<ChunkCoordinates> computeNodesCoord = new ArrayList<>();
+    private ChunkCoordinates lastFailedPos;
+    /** 0=unformed/offline, 1=paired idle, 2=running. */
     private byte mState;
     private byte mStateOld;
     private boolean mLinked;
-    private boolean mRecipeCompleted;
     private int mPartnerDimension;
     private int mPartnerX;
     private int mPartnerY;
     private int mPartnerZ;
 
+    // Structure
+    @Override
+    public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {
+        if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return mStructureOkay;
+        computeNodesCoord.clear();
+        lastFailedPos = STRUCTURE.checkStructure(new StructureContext(this,
+                (aPlayer != null || aInventory != null) ? StructureContext.StringBaseMode.SET : StructureContext.StringBaseMode.CHECK,
+                worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, aInventory));
+        return lastFailedPos == null;
+    }
+
+    private void resetParts() {
+        if (!worldObj.blockExists(xCoord, yCoord, zCoord)) return;
+        STRUCTURE.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.RESET,
+                worldObj, xCoord, yCoord, zCoord, mFacing, null, null));
+    }
+
+    @Override public boolean isInsideStructure(int aX, int aY, int aZ) {return STRUCTURE.isInsideStructure(this, mFacing, aX, aY, aZ);}
+
+    @Override
+    public void receiveSpecialPart(ChunkCoordinates aPartPos, TileEntity aPart) {
+        if (aPart instanceof IComputePart) computeNodesCoord.add(aPartPos);
+    }
+
+    /**Resolves the compute node parts of this structure, skipping the ones that are gone or not loaded.**/
+    protected List<IComputePart> getComputeNodes() {
+        List<IComputePart> nodes = new ArrayList<>();
+        for (ChunkCoordinates coord : computeNodesCoord) {
+            TileEntity tile = WD.te(worldObj, coord, true);
+            if (tile instanceof IComputePart) nodes.add((IComputePart) tile);
+        }
+        return nodes;
+    }
+
     // NBT
-    @Override public void readFromNBT2(NBTTagCompound aNBT) {
+    @Override
+    public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
         Recipe.RecipeMap recipes = recipeMaps.QuantumCommunication;
         if (aNBT.hasKey(NBT_RECIPEMAP)) {
             Recipe.RecipeMap configured = Recipe.RecipeMap.RECIPE_MAPS.get(aNBT.getString(NBT_RECIPEMAP));
             if (configured != null) recipes = configured;
         }
-        kortex = new KortexWorker(this, recipes).setEnergyCapacity(ENERGY_CAPACITY).setMaxProgressPerTick(1).consumeInputsOnFinish().dontResetProgressWhenPowerLost();
+        // The worker refuses to start while its buffer is exactly full (parallel calc divides by the
+        // remaining capacity), so the working buffer stops at ENERGY_CAPACITY while the hard limit stays above it.
+        kortex = new KortexWorker(this, recipes).setEnergyCapacity(ENERGY_CAPACITY * 2).setMaxProgressPerTick(1).consumeInputsOnFinish().dontResetProgressWhenPowerLost();
         kortex.readFromNBT(aNBT);
         mQUStored = aNBT.getLong(NBT_QU);
         mLinked = aNBT.getBoolean(NBT_LINKED);
@@ -85,9 +185,13 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         mPartnerX = aNBT.getInteger(NBT_X);
         mPartnerY = aNBT.getInteger(NBT_Y);
         mPartnerZ = aNBT.getInteger(NBT_Z);
+
+        Map<ComputePower, Long> requiredCompute = ICircuitChangeableTileEntity.readRequiredCompute(aNBT);
+        if (requiredCompute.containsKey(ComputePower.Normal)) computePowerNeeded = requiredCompute.get(ComputePower.Normal);
     }
 
-    @Override public void writeToNBT2(NBTTagCompound aNBT) {
+    @Override
+    public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
         if (kortex != null) kortex.writeToNBT(aNBT);
         UT.NBT.setNumber(aNBT, NBT_QU, mQUStored);
@@ -98,11 +202,27 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         aNBT.setInteger(NBT_Z, mPartnerZ);
     }
 
+    /**The recipe core would otherwise run on its own; the relay drives both ends through the pair instead.**/
+    @Override public int checkRecipe(boolean aApplyRecipe, boolean aUseAutoIO) {return 0;}
+
     // Tick
-    @Override public void onTick2(long aTimer, boolean aIsServerSide) {
+    @Override
+    public void onTick2(long aTimer, boolean aIsServerSide) {
+        super.onTick2(aTimer, aIsServerSide);
         if (!aIsServerSide) return;
         emitQu();
         if (kortex == null) return;
+        if (!mStructureOkay) {
+            computePowerEnough = false;
+            setState((byte) 0);
+            return;
+        }
+        computePowerEnough = IComputePart.tryStartForDemand(getComputeNodes(), ComputePower.Normal, computePowerNeeded);
+        if (!computePowerEnough) {
+            getComputeNodes().forEach(IComputePart::stop);
+            setPairState((byte) 1);
+            return;
+        }
 
         QuantumCommunicationRelay partner = getPartner();
         if (partner == null) {
@@ -140,7 +260,6 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         kortex.run();
         aPartner.kortex.run();
         if (!kortex.hasActiveRecipe() || !aPartner.kortex.hasActiveRecipe()) {
-            mRecipeCompleted = false;
             setPairState((byte) 1);
             return;
         }
@@ -160,7 +279,8 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         if (!kortex.canStartRecipe() || !aPartner.kortex.canStartRecipe()) return false;
         Recipe primaryRecipe = kortex.findRecipe();
         Recipe partnerRecipe = aPartner.kortex.findRecipe();
-        return hasItemOutput(primaryRecipe) && !hasItemOutput(partnerRecipe);
+        // Either end may hold the producing material; exactly one end must own the output recipe.
+        return hasItemOutput(primaryRecipe) != hasItemOutput(partnerRecipe);
     }
 
     private boolean hasItemOutput(Recipe aRecipe) {
@@ -172,7 +292,6 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
     private void resetWorkers(QuantumCommunicationRelay aPartner) {
         kortex.resetStatus();
         aPartner.kortex.resetStatus();
-        mRecipeCompleted = false;
     }
 
     private void syncWorkerInput() {
@@ -209,7 +328,6 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         mPartnerX = aPartner.xCoord;
         mPartnerY = aPartner.yCoord;
         mPartnerZ = aPartner.zCoord;
-        mRecipeCompleted = false;
         if (kortex != null) kortex.resetStatus();
         setState((byte) 1);
     }
@@ -229,6 +347,10 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
 
     @Override public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn,
                              IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (TOOL_magnifyingglass.equals(aTool) && aChatReturn != null) {
+            addStatus(aChatReturn);
+            return 1;
+        }
         if (TOOL_screwdriver.equals(aTool) && aPlayer instanceof EntityPlayer && aStack != null && isServerSide()) {
             NBTTagCompound tag = aStack.getTagCompound();
             if (tag == null) {
@@ -267,18 +389,74 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
 
+    private void addStatus(List<String> aChatReturn) {
+        if (!mStructureOkay) {
+            aChatReturn.add(LH.Chat.RED + LH.get(STATUS_UNFORMED)
+                    + (lastFailedPos == null ? "" : " " + LH.get(I18nHandler.STRUCTURE_LAST_FAILED_POS) + " " + lastFailedPos));
+            return;
+        }
+        QuantumCommunicationRelay partner = getPartner();
+        if (partner == null) aChatReturn.add(LH.Chat.YELLOW + LH.get(STATUS_UNPAIRED));
+        else if (mState == 2) aChatReturn.add(LH.Chat.GREEN + LH.get(STATUS_RUNNING));
+        else aChatReturn.add(LH.Chat.YELLOW + LH.get(STATUS_IDLE) + (computePowerEnough ? "" : " - " + LH.get(STATUS_NO_COMPUTE)));
+
+        aChatReturn.add(LH.Chat.WHITE + "role: " + (partner == null ? "unpaired" : (isPrimary() ? "primary end" : "other end"))
+                + ", this end: " + recipeKind(kortex == null ? null : kortex.findRecipe()));
+        aChatReturn.add(LH.Chat.WHITE + "compute: " + (computePowerEnough ? "ok" : "LOW") + " " + computePowerNeeded + "/t");
+        aChatReturn.add(LH.Chat.WHITE + "energy buffered: " + (kortex == null ? 0 : kortex.mEnergyStored) + " / need " + getRecipeEnergyPerTick() + "/t");
+        aChatReturn.add(LH.Chat.WHITE + "input slot: " + describe(slot(0)) + " -> recipe: " + recipeKind(kortex == null ? null : kortex.findRecipe()));
+        if (partner != null) {
+            aChatReturn.add(LH.Chat.WHITE + "partner slot: " + describe(partner.slot(0)) + " -> recipe: " + recipeKind(partner.kortex == null ? null : partner.kortex.findRecipe()));
+            aChatReturn.add(LH.Chat.WHITE + "partner energy: " + (partner.kortex == null ? 0 : partner.kortex.mEnergyStored) + " / need " + partner.getRecipeEnergyPerTick() + "/t");
+        }
+        aChatReturn.add(LH.Chat.WHITE + LH.get("ktfru.quantum_relay.info.qu") + " " + mQUStored + " / " + QU_PER_RECIPE + " per run");
+        aChatReturn.add(LH.Chat.YELLOW + "blocker: " + blockerReason(partner));
+    }
+
+    private String describe(ItemStack aStack) {
+        return aStack == null ? "-" : aStack.stackSize + "x " + aStack.getDisplayName();
+    }
+
+    /**output-run = producing end's recipe, consume-only = the paired end's recipe.**/
+    private String recipeKind(Recipe aRecipe) {
+        if (aRecipe == null) return "none";
+        return hasItemOutput(aRecipe) ? "output-run" : "consume-only";
+    }
+
+    private String blockerReason(QuantumCommunicationRelay aPartner) {
+        if (kortex == null) return "kortex missing";
+        if (aPartner == null) return "not paired";
+        if (!computePowerEnough) return "compute (needs " + computePowerNeeded + "/t)";
+        if (!kortex.canStartRecipe()) return "this end: no matching recipe "
+                + (slot(0) == null ? "(input slot empty)" : "(" + slot(0).stackSize + "x, recipe needs 4 of it)");
+        if (!aPartner.kortex.canStartRecipe()) return "partner: no matching recipe "
+                + (aPartner.slot(0) == null ? "(partner input slot empty)" : "(" + aPartner.slot(0).stackSize + "x, recipe needs 4 of it)");
+        Recipe mine = kortex.findRecipe(), theirs = aPartner.kortex.findRecipe();
+        if (mine == null) return "this end recipe null";
+        if (theirs == null) return "partner recipe null";
+        if (hasItemOutput(mine) == hasItemOutput(theirs)) return "both ends hold the same kind of recipe - one end needs analytical-pure Intellite, the other analytical-pure Nq_522";
+        if (!canAcceptPotentialOutputs()) return "this end cannot accept the Mirror Gold output";
+        if (!kortex.hasEnergyForNextTick()) return "this end energy (" + kortex.mEnergyStored + " buffered)";
+        if (!aPartner.kortex.hasEnergyForNextTick()) return "partner energy (" + aPartner.kortex.mEnergyStored + " buffered)";
+        return "none";
+    }
+
+    @Override
+    public void onMagnifyingGlass2(List<String> aChatReturn) {
+        super.onMagnifyingGlass2(aChatReturn);
+        addStatus(aChatReturn);
+    }
+
     // Recipe bridge
     @Override public int getMaxParallel(int aKortexID, long aEUT, long aDuration) { return 1; }
 
     @Override public void onRecipeFinish(int aKortexID, long aEUT, long aDuration, long aParallel) {
-        if (!isPrimary()) return;
         boolean outputFound = false;
         for (ItemStack item : kortex.getRecipeOutputItems()) if (item != null) {
             outputFound = true;
             break;
         }
         if (!outputFound) return;
-        mRecipeCompleted = true;
         mQUStored = Math.min(ENERGY_CAPACITY, mQUStored + QU_PER_RECIPE);
     }
 
@@ -286,9 +464,14 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
         if (kortex != null && kortex.itemInputs.length > 0) {
             if (kortex.itemInputs[0] == null) slotKill(0); else slot(0, kortex.itemInputs[0]);
         }
-        for (ItemStack item : aItems) if (item != null) {
+        for (int i = 0; i < aItems.length; i++) {
+            ItemStack item = aItems[i];
+            if (item == null) continue;
+            // leave the stack in the worker when the output slot cannot take it, it is retried with outputBlocked
+            if (!canAcceptOutput(item)) continue;
             if (slot(1) == null) slot(1, ST.copy(item));
             else slot(1).stackSize += item.stackSize;
+            aItems[i] = null;
         }
     }
 
@@ -314,11 +497,14 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
     }
 
     // Energy
+    /**The basic-machine base only accepts energy on configured faces; the relay decides by role (primary EU / other end LU) instead.**/
+    @Override public boolean isEnergyAcceptingFrom(TagData aEnergyType, byte aSide, boolean aTheoretical) {return isEnergyType(aEnergyType, aSide, F);}
+    /**Both ends are equal: either one may be fed EU or LU, the material in the input slot decides who produces.**/
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
         if (aEmitting) return aEnergyType == TD.Energy.QU;
-        return getPartner() != null && (isPrimary() ? aEnergyType == TD.Energy.EU : aEnergyType == TD.Energy.LU);
+        return aEnergyType == TD.Energy.EU || aEnergyType == TD.Energy.LU;
     }
-    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) { return aEnergyType == TD.Energy.QU && aSide == SIDE_TOP; }
+    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) { return aEnergyType == TD.Energy.QU; }
     @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) { return aEnergyType == TD.Energy.QU ? mQUStored : 0; }
     @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) { return QU_PER_TICK; }
     @Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) { return QU_PER_TICK; }
@@ -335,32 +521,58 @@ public class QuantumCommunicationRelay extends TileEntityBase09FacingSingle impl
             if (aDoInject) overcharge(aSize, aEnergyType);
             return aAmount;
         }
-        long injectableEnergy = Math.max(0L, ENERGY_CAPACITY - getRecipeEnergyPerTick() - kortex.mEnergyStored);
+        long injectableEnergy = Math.max(0L, ENERGY_CAPACITY - kortex.mEnergyStored);
         long acceptedEnergy = Math.min(injectableEnergy, aSize * aAmount);
         long acceptedPackets = Math.min(aAmount, acceptedEnergy / aSize + (acceptedEnergy % aSize == 0 ? 0 : 1));
         if (aDoInject && acceptedPackets > 0) kortex.injectEnergy(acceptedPackets * aSize);
         return acceptedPackets;
     }
 
-    // Inventory / GUI / Meta
-    @Override public ItemStack[] getDefaultInventory(NBTTagCompound aNBT) { return new ItemStack[2]; }
+    // Inventory / IO / GUI
     @Override public boolean canDrop(int aSlot) { return true; }
-    @Override public int[] getAccessibleSlotsFromSide2(byte aSide) { return aSide == SIDE_TOP ? new int[]{0} : new int[]{1}; }
+    @Override public int[] getAccessibleSlotsFromSide2(byte aSide) { return new int[]{0, 1}; }
     @Override public boolean canInsertItem2(int aSlot, ItemStack aStack, byte aSide) { return aSlot == 0 && kortex != null && kortex.recipeMap.containsInput(aStack, this, slot(1)); }
     @Override public boolean canExtractItem2(int aSlot, ItemStack aStack, byte aSide) { return aSlot == 1; }
 
-    @Override public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
-        aList.add(LH.Chat.CYAN + LH.get("ktfru.text.quantum_relay.pair"));
-        aList.add(LH.Chat.DGRAY + LH.get("ktfru.text.quantum_relay.discovery"));
+    @Override public Object getGUIClient2(int aGUIID, EntityPlayer aPlayer) { return new ContainerClientDefault(aPlayer.inventory, this, aGUIID); }
+    @Override public Object getGUIServer2(int aGUIID, EntityPlayer aPlayer) { return new ContainerCommonDefault(aPlayer.inventory, this, aGUIID); }
+
+    @Override public DelegatorTileEntity<IFluidHandler> getFluidOutputTarget(byte aSide, Fluid aOutput) { return null; }
+    @Override public DelegatorTileEntity<IFluidHandler> getFluidInputTarget(byte aSide) { return null; }
+    @Override public DelegatorTileEntity<IInventory> getItemInputTarget(byte aSide) { return new DelegatorTileEntity<IInventory>(this, SIDE_FRONT); }
+    @Override public DelegatorTileEntity<TileEntity> getItemOutputTarget(byte aSide) { return delegator(SIDE_BOTTOM); }
+
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide()) return true;
+        ItemStack equippedItem = aPlayer.getCurrentEquippedItem();
+        if (equippedItem != null && equippedItem.getItem() instanceof ItemProjector) {
+            STRUCTURE.checkStructure(new StructureContext(this, StructureContext.StringBaseMode.PROJECT, worldObj, xCoord, yCoord, zCoord, mFacing, aPlayer, null));
+            return true;
+        }
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
     }
 
-    @Override public ITexture getTexture2(Block aBlock, int aRenderPass, byte aSide, boolean[] aShouldSideBeRendered) {
-        return aShouldSideBeRendered[aSide] ? BlockTextureMulti.get(BlockTextureDefault.get(TEXTURE_MATERIAL, mRGBa),
-                aSide == mFacing ? BlockTextureDefault.get(mState == 2 ? TEXTURE_FRONT_ACTIVE : TEXTURE_FRONT) : null) : null;
+    @Override
+    public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
+        aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumrelay.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumrelay.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumrelay.3"));
+        super.addToolTips(aList, aStack, aF3_H);
     }
-    @Override public byte getDefaultSide() { return SIDE_SOUTH; }
-    @Override public boolean[] getValidSides() { return SIDES_HORIZONTAL; }
-    @Override public boolean onTickCheck(long aTimer) { if (mStateOld != mState) { mStateOld = mState; return true; } return false; }
+
+    @Override
+    public boolean breakBlock() {
+        if (isServerSide()) {
+            setStateOnOff(T);
+            getComputeNodes().forEach(IComputePart::stop);
+            resetParts();
+        }
+        return super.breakBlock();
+    }
+
+    @Override public boolean onTickCheck(long aTimer) { if (mStateOld != mState) { mStateOld = mState; return true; } return super.onTickCheck(aTimer); }
     @Override public byte getVisualData() { return mState; }
     @Override public void setVisualData(byte aData) { mState = aData; }
     @Override public String getTileEntityName() { return "ktfru.multitileentity.30074"; }

@@ -62,13 +62,13 @@ public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine
                     "SSS",
                     "SRS",
                     "SSS")
-            .where('Q', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31111, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID, 1)))
-            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN, 1)))
-            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31115, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('L', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31116, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('S', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31112, MultiTileEntityMultiBlockPart.NOTHING, 1)))
-            .where('R', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31113, MultiTileEntityMultiBlockPart.NOTHING, 1)))
+            .where('Q', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31111, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('D', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ITEM_FLUID, 0)))
+            .where('E', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31000, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN, 0)))
+            .where('G', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31115, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('L', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31116, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('S', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31112, MultiTileEntityMultiBlockPart.NOTHING, 0)))
+            .where('R', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, 31113, MultiTileEntityMultiBlockPart.NOTHING, 0)))
             .setOffset(-1, 0, -1);
 
     @Override

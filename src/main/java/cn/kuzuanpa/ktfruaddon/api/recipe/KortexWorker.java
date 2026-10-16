@@ -167,7 +167,9 @@ public class KortexWorker {
             mState.set(STATE_MACHINE_LIMITED);
             return 0;
         }
-        int rPossibleParallel = (int) Math.min(aMaxParallel, Math.floorDiv(mEnergyCapacity - mEnergyStored, Math.abs(isInstant? aRecipe.mEUt * aRecipe.mDuration : aRecipe.mEUt)));// energy parallel limit
+        //If consuming, quota = stored; If generating, quota = space left;
+        long energyQuota = aRecipe.mEUt >0 ? mEnergyStored : mEnergyCapacity - mEnergyStored;
+        int rPossibleParallel = (int) Math.min(aMaxParallel, Math.floorDiv(energyQuota, Math.abs(isInstant? aRecipe.mEUt * aRecipe.mDuration : aRecipe.mEUt)));// energy parallel limit
         if(rPossibleParallel <= 0){
             mState.set(aRecipe.mEUt >0?STATE_ENERGY_SHORTAGE:STATE_OUTPUT_BLOCKED_ENERGY);
             return 0;
@@ -269,7 +271,11 @@ public class KortexWorker {
             if (mRecipeOutputFluids[i] != null && fluidOutputs[i] != null) fluidOutputs[i].fill(mRecipeOutputFluids[i]);
         }
         for (int i = 0; i < mRecipeOutputItems.length && i < itemOutputs.length; i++) {
-            if (mRecipeOutputItems[i] != null && itemOutputs[i] != null) itemOutputs[i] = mRecipeOutputItems[i];
+            ItemStack tOutput = mRecipeOutputItems[i];
+            if (tOutput == null) continue;
+            if (itemOutputs[i] == null) itemOutputs[i] = tOutput;
+            else if (ST.equal(itemOutputs[i], tOutput, T)) itemOutputs[i].stackSize += tOutput.stackSize;
+            else itemOutputs[i] = tOutput;
         }
         machine.onRecipeFinish(id, mRecipeEUt, mMaxProgress, mCurrentParallel);
         resetStatus();

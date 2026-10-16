@@ -39,27 +39,53 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EnvironmentHelper {
-    public static boolean isInTFRU = false, isGregtechTFRU = false, isAdvancedRocketryTFRU = false, isTFCTFRU = false, isBotaniaTFRU = false, isDraconicEvolutionTFRU = false, isForestryTFRU = false;
+    public static boolean idLimitExtended = false, isInTFRU = false, isGregtechTFRU = false, isAdvancedRocketryTFRU = false, isTFCTFRU = false, isBotaniaTFRU = false, isDraconicEvolutionTFRU = false, isForestryTFRU = false;
 
     public static String checkedTFRUVer = null, TFRUVer = "4.3.0.0";
     public static List<String> changelog = new ArrayList<>();
+    public static void update(FMLPreInitializationEvent event){
+        loadData(event);
+        checkIncompactMods(event);
+        checkTFRUMods(event);
+        if(isInTFRU)updateTFRUEnvironment(event);
+    }
+
+    public static void loadData(FMLPreInitializationEvent event) {
+        modsModifiedChunkBlockIdLoading.add("endlessids");
+        modsModifiedChunkBlockIdLoading.add("neid");
+
+        modsTFRU.add(new TFRUModInfo("gregtech", "gregtech.TFRUEnvHelper"));
+        modsTFRU.add(new TFRUModInfo("advancedRocketry", "zmaster587.advancedRocketry.TFRUEnvHelper"));
+        modsTFRU.add(new TFRUModInfo("terrafirmacraft", "com.bioxx.tfc.api.TFRUEnvHelper"));
+        modsTFRU.add(new TFRUModInfo("botania", "vazkii.botania.common.TFRUEnvHelper"));
+        modsTFRU.add(new TFRUModInfo("draconicevolution", "com.brandon3055.draconicevolution.TFRUEnvHelper"));
+        modsTFRU.add(new TFRUModInfo("forestry", "forestry.TFRUEnvHelper"));
+    }
+    public static List<String> modsModifiedChunkBlockIdLoading = new ArrayList<>();
+    public static void checkIncompactMods(FMLPreInitializationEvent event){
+        if(modsModifiedChunkBlockIdLoading.stream().anyMatch(Loader::isModLoaded))idLimitExtended= true;
+    }
+
+    public static List<TFRUModInfo> modsTFRU = new ArrayList<>();
+    public static void checkTFRUMods(FMLPreInitializationEvent event){
+        for (TFRUModInfo info : modsTFRU) {
+            if (!Loader.isModLoaded(info.modid)) {
+                info.isModLoaded = false;
+                continue;
+            }
+            try {
+                info.modEnvHelper = (TFRUModEnvHelper) Class.forName(info.modEnvHelperClasspath).newInstance();
+                if (!info.modEnvHelper.isModTFRU()) info.isModTFRU = false;
+            }catch (Throwable e){
+                info.isModTFRU = false;
+            }
+        }
+
+        isInTFRU = Loader.isModLoaded("tfc-mixin");
+    }
     public static void updateTFRUEnvironment(FMLPreInitializationEvent event){
-        try {if(                         gregtech.TFRUEnvHelper.isModTFRU)isGregtechTFRU          = true;}catch (Throwable e){isGregtechTFRU          = false;}
-        try {if(      zmaster587.advancedRocketry.TFRUEnvHelper.isModTFRU)isAdvancedRocketryTFRU  = true;}catch (Throwable e){isAdvancedRocketryTFRU  = false;}
-        try {if(                com.bioxx.tfc.api.TFRUEnvHelper.isModTFRU)isTFCTFRU               = true;}catch (Throwable e){isTFCTFRU               = false;}
-        try {if(            vazkii.botania.common.TFRUEnvHelper.isModTFRU)isBotaniaTFRU           = true;}catch (Throwable e){isBotaniaTFRU           = false;}
-        try {if(com.brandon3055.draconicevolution.TFRUEnvHelper.isModTFRU)isDraconicEvolutionTFRU = true;}catch (Throwable e){isDraconicEvolutionTFRU = false;}
-        try {if(                         forestry.TFRUEnvHelper.isModTFRU)isForestryTFRU          = true;}catch (Throwable e){isForestryTFRU          = false;}
-
-        isInTFRU = isGregtechTFRU&&isAdvancedRocketryTFRU&&isTFCTFRU&&isBotaniaTFRU&&isDraconicEvolutionTFRU&&isForestryTFRU&&Loader.isModLoaded("tfc-mixin");
-
-        if(!isInTFRU)return;
-        try {                        gregtech.TFRUEnvHelper.isInTFRU=true;
-                  zmaster587.advancedRocketry.TFRUEnvHelper.isInTFRU=true;
-                            com.bioxx.tfc.api.TFRUEnvHelper.isInTFRU=true;
-                        vazkii.botania.common.TFRUEnvHelper.isInTFRU=true;
-            com.brandon3055.draconicevolution.TFRUEnvHelper.isInTFRU=true;
-                                     forestry.TFRUEnvHelper.isInTFRU=true;
+        try {
+            for (TFRUModInfo info : modsTFRU) info.modEnvHelper.setModInTFRU();
         }catch (Throwable e){
             FMLLog.log(Level.FATAL,e,"Error Occured when setting up TFRU pack environment! are you using right version of TFRU mods?");
             isInTFRU = false;
@@ -294,6 +320,23 @@ public class EnvironmentHelper {
             public String getLabel() {
                 return "TFRUValidator";
             }
+        }
+    }
+    public interface TFRUModEnvHelper{
+        boolean isModTFRU();
+        void setModInTFRU();
+    }
+    /** record **/
+    public static class TFRUModInfo{
+        public final String modid;
+        public final String modEnvHelperClasspath;
+
+        public boolean isModLoaded = true;
+        public boolean isModTFRU = true;
+        public TFRUModEnvHelper modEnvHelper;
+        public TFRUModInfo(String modid, String modEnvHelperClasspath){
+            this.modid = modid;
+            this.modEnvHelperClasspath = modEnvHelperClasspath;
         }
     }
 }

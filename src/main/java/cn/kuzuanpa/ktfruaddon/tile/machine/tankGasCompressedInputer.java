@@ -75,7 +75,8 @@ public class tankGasCompressedInputer extends TileEntityBase09FacingSingle imple
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         LH.addEnergyToolTips(this, aList, mEnergyTypeAccepted, null, null, null);
-        aList.add(LH.Chat.CYAN    + LH.get(I18nHandler.TANK_GAS_COMPRESSED_INPUTER));
+        aList.add(LH.Chat.CYAN    + LH.get(I18nHandler.TANK_GAS_COMPRESSED_INPUTER_0));
+        aList.add(LH.Chat.CYAN    + LH.get(I18nHandler.TANK_GAS_COMPRESSED_INPUTER_1));
         aList.add(LH.Chat.DGRAY    + LH.get(LH.TOOL_TO_DETAIL_MAGNIFYINGGLASS));
     }
 

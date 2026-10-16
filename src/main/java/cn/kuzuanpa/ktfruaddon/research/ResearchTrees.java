@@ -721,7 +721,8 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(384))
                             .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.QuantumGold.mat,1)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30080)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30080)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30081)));
 
                     //Identify:测量本身就会破坏被测的量子态, 没有它量子设备连自己算错了都不知道
                     ResearchProject todo005 = new ResearchProject(tree, "量子观测", "知道一个系统，和对系统进行测量，并不是一回事。研究量子态、测量、退相干、纠缠、叠加与量子概率，造出量子观测仪、量子态分析器、纠缠检测器与相干性稳定器——没有它们，量子设备连自己算错了都不会知道", Items.paper, 0, 53)
@@ -729,7 +730,8 @@ public class ResearchTrees {
                             .addPrerequisite(todo004)
                             .addTask(new EnergyTask(TD.Energy.QU, 33554432, 4096))
                             .addTask(new EnergyTask(TD.Energy.CU, 33554432, 2048))
-                            .addTask(new MiniGameIdentifyTask(768));
+                            .addTask(new MiniGameIdentifyTask(768))
+                            .addTask(new DataAnalysisTask(64));
 
                     //新的计算范式而非更快的电脑: 初代机的开销几乎全在纠错与制冷
                     ResearchProject todo008 = new ResearchProject(tree, "量子计算T1", "真正意义上的量子计算终于实现，但初代机问题严重：退相干、高错误率、散热、昂贵的量子纠错，以及体积惊人的控制设备。它不是更快的电脑，而是一种新的计算范式——有些问题它一步得解，有些问题它比经典机还慢", Items.paper, 0, 55)

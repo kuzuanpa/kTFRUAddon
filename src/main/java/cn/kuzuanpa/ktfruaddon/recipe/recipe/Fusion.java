@@ -87,19 +87,19 @@ public class Fusion {
         recipeMaps.NeutronAbsorption.addRecipe1(F, 8192, 600, ItemList.NeutronRichBismuth.get(2),
                 FL.array(FL.MatterNeutral.make(U100)), ZL_FS, ItemList.NuclearTargetSubstrate.get(1));
         recipeMaps.Assembler.addRecipeX(F, 8192, 600,
-                ST.array(ItemList.MetastableTantalum.get(2), OP.wireFine.mat(MT.Pt, 16), ItemList.ComputerUltimateCircuits.get(1)),
+                ST.array(ItemList.MetastableTantalum.get(2), OP.wireFine.mat(MT.Pt, 16), OP.plate.mat(MT.Naquadah, 1)),
                 FL.array(MT.SolderingAlloy.liquid(U4, F)), ZL_FS, ItemList.QuantumControlElement.get(1));
         recipeMaps.CVD.addRecipeX(F, 8192, 1200, ST.array(ItemList.DenseGraphenePrecursor.get(1)),
                 FL.array(MT.H.gas(4 * U, T)), ZL_FS, OP.foil.mat(MT.Graphene, 1));
         recipeMaps.Assembler.addRecipeX(F, 32768, 1200,
                 ST.array(ItemList.SuperheavyNuclidePrecursor.get(1), ItemList.NuclearTargetSubstrate.get(1), ItemList.MetastableTantalum.get(1)),
                 FL.array(MT.SolderingAlloy.liquid(U8, F)), ZL_FS, ItemList.NaquadriaPrecursor.get(1));
-        // The final refinement is deliberately expensive and produces only a
-        // tiny unit. It closes the chain into existing Naquadria-based recipes
-        // without making the laser chamber a general-purpose matter source.
+        // The final refinement is deliberately expensive but yields a full dust,
+        // so this route stays competitive with the native Naquadria source while
+        // still being gated by the whole precursor chain.
         recipeMaps.HeatMixer.addRecipeX(F, 32768, 2400,
                 ST.array(ItemList.NaquadriaPrecursor.get(1), ItemList.QuantumControlElement.get(1)),
-                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dustTiny.mat(MT.Nq_522, 1));
+                FL.array(MT.He.gas(4 * U, T)), ZL_FS, OP.dust.mat(MT.Nq_522, 1));
 
         // Target pellets and both chamber controllers are regular manufacturing
         // products; the reactor never creates its own fuel or structure parts.

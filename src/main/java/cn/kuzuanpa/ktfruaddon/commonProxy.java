@@ -38,7 +38,6 @@ import gregapi.api.Abstract_Proxy;
 import gregapi.network.NetworkHandler;
 import net.minecraftforge.common.MinecraftForge;
 
-import static cn.kuzuanpa.ktfruaddon.EnvironmentHelper.updateTFRUEnvironment;
 import static cn.kuzuanpa.ktfruaddon.ktfruaddon.*;
 
 public class commonProxy extends Abstract_Proxy {
@@ -51,7 +50,7 @@ public class commonProxy extends Abstract_Proxy {
         cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureScheduler.init();
         FMLCommonHandler.instance().bus().register(this);
         FMLCommonHandler.instance().registerCrashCallable(new EnvironmentHelper.TFRUValidator.TFRUValidatorCallable());
-        updateTFRUEnvironment(aEvent);
+        EnvironmentHelper.update(aEvent);
         kNetworkHandler = new NetworkHandler(MOD_ID, "kAdd", new PacketFxBlockOutline(), new PacketContainerButtonPressed(), new PacketUUIDAssignedData()
                 , new PacketSyncDataByteArrayLong( 0), new PacketSyncDataByteArrayLong( 1), new PacketSyncDataByteArrayLong( 2), new PacketSyncDataByteArrayLong( 3), new PacketSyncDataByteArrayLong( 4), new PacketSyncDataByteArrayLong( 5), new PacketSyncDataByteArrayLong( 6), new PacketSyncDataByteArrayLong( 7)
                 , new PacketSyncDataByteArrayLongAndIDs( 0), new PacketSyncDataByteArrayLongAndIDs( 1), new PacketSyncDataByteArrayLongAndIDs( 2), new PacketSyncDataByteArrayLongAndIDs( 3), new PacketSyncDataByteArrayLongAndIDs( 4), new PacketSyncDataByteArrayLongAndIDs( 5), new PacketSyncDataByteArrayLongAndIDs( 6), new PacketSyncDataByteArrayLongAndIDs( 7)
