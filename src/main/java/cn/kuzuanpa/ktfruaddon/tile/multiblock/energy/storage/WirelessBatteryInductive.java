@@ -18,7 +18,6 @@ import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
-import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.WirelessEnergyReceiver;
@@ -37,10 +36,24 @@ public class WirelessBatteryInductive extends WirelessBatteryBase {
     @Override
     protected IStringBaseStructure createStructure() {
         return new LayerStructure(StructureContext.Axis.Y).layerRule("AABBBCC")
-                .fixedLayer('A', "XTTT", "TCCT", "TCCT", "TTTT")
-                .fixedLayer('B', "OOOO", "OCCO", "OCCO", "OOOO")
-                .fixedLayer('C', "WWWW", "WBBW", "WBBW", "WWWW")
-                .where('X', new ControllerPredicate())
+                .fixedLayer('A',
+                        "TTTT",
+                        "TCCT",
+                        "TCCT",
+                        "TTTT"
+                )
+                .fixedLayer('B',
+                        "OOOO",
+                        "OCCO",
+                        "OCCO",
+                        "OOOO"
+                )
+                .fixedLayer('C',
+                        "WWWW",
+                        "WBBW",
+                        "WBBW",
+                        "WWWW"
+                )
                 .where('T', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mCond)))
                 .where('W', new PartPredicate(new TileDesc(GTTileEntityRegistry.gregtech, mWall, MultiTileEntityMultiBlockPart.ONLY_ENERGY_IN)))
                 .where('C', new PartPredicate(new TileDesc(GTTileEntityRegistry.ktfruaddon, mCond)))

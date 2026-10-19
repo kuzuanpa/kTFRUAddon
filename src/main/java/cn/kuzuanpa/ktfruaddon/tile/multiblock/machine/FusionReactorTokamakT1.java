@@ -22,9 +22,16 @@ import cn.kuzuanpa.ktfruaddon.api.recipe.IKortexHandler;
 import cn.kuzuanpa.ktfruaddon.api.recipe.KortexWorker;
 import cn.kuzuanpa.ktfruaddon.api.recipe.recipeMaps;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.IMeterDetectable;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ComputePower;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.ICircuitChangeableTileEntity;
 import cn.kuzuanpa.ktfruaddon.api.tile.computerCluster.IComputePart;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.IMachineMeter;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControl;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControlComponent;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.IMachineStatus;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.MachineStatus;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.MachineStatusReport;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
@@ -35,6 +42,7 @@ import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerClientFusionTokamakT1;
 import cn.kuzuanpa.ktfruaddon.client.gui.ContainerCommonFusionTokamakT1;
 import gregapi.block.multitileentity.IMultiTileEntity;
+import gregapi.block.multitileentity.IWailaTile;
 import gregapi.code.TagData;
 import gregapi.data.FL;
 import gregapi.data.LH;
@@ -48,12 +56,16 @@ import gregapi.render.BlockTextureDefault;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.IIconContainer;
 import gregapi.render.ITexture;
-import gregapi.tileentity.base.TileEntityBase01Root;
+import gregapi.tileentity.data.ITileEntityProgress;
 import gregapi.tileentity.energy.ITileEntityEnergy;
+import gregapi.tileentity.energy.ITileEntityEnergyDataCapacitor;
+import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.*;
 import gregapi.util.ST;
 import gregapi.util.UT;
 import gregapi.util.WD;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,24 +79,24 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import zmaster587.libVulpes.items.ItemProjector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler.HAS_PROJECTOR_STRUCTURE;
 import static gregapi.data.CS.*;
 
-public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockFluidHandler, IMultiBlockInventory, SpecialPartPredicate.IReceiveSpecialPart, IKortexHandler {
+/** Reference implementation for the control/status API; the plasma and power mechanics stay machine-specific. **/
+public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase implements IMultiTileEntity.IMTE_SyncDataByteArray, ITileEntityEnergy, IMultiBlockEnergy, IMultiBlockEnergyDataCapacitor, IMultiBlockFluidHandler, IMultiBlockInventory, SpecialPartPredicate.IReceiveSpecialPart, IKortexHandler, IWailaTile, IMachineStatus, ITileEntitySwitchableOnOff, ITileEntityProgress, ITileEntityEnergyDataCapacitor, IMachineMeter {
     public static final byte STATE_STOPPED=0,STATE_CHARGING=1,STATE_RUNNING=2, STATE_ERROR=3,STATE_VOID_CHARGING=4;
     public static final short MAX_FIELD_STRENGTH=1000, KEEP_CHARGE_EUt=8192;
     public static final long MAX_CHARGE = 1073741824L;//1024^3
+    public static final String WAILA_OUTPUT_RATE = "ktfru.output.rate", WAILA_OUTPUT_VOLTAGE = "ktfru.output.voltage", WAILA_OUTPUT_BUFFER = "ktfru.output.buffer";
     public StateMgr mState=new StateMgr();
+    public final MachineControlComponent control = new MachineControlComponent(this, this::updateClientData);
     public boolean isComputePowerEnough=false;
+    public boolean mSuccessful=false;
     public short mFieldStrength=0;
     public float dischargeRate=0.2F, progress =0;
-    public long mEnergy=0 , mEnergyCharged = 0, mRate = 32768, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0, computePowerNeeded=8L*1024L;
+    public long mEnergy=0 , mEnergyCharged = 0, mEnergyOutput = 0, mOutputRate = 0, mOutputVoltage = 0, mRate = 32768, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0, computePowerNeeded=8L*1024L;
     public TagData mEnergyTypeAccepted = TD.Energy.EU, mEnergyTypeCharging = TD.Energy.LU;
     public Recipe.RecipeMap mRecipes = recipeMaps.FusionTokamak;
     /** Recipe core owns the plasma transaction; the charge curve below stays this machine's own mechanic. */
@@ -92,6 +104,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public Recipe mCurrentRecipe=null;
     public FluidTankGT[] mTanks, mTanksInput, mTanksOutput;
     private List<ChunkCoordinates> computeNodesCoord= new ArrayList<>();
+    private final List<IMeterDetectable.MeterData> mMeterReceived = new ArrayList<>(), mMeterReceivedLast = new ArrayList<>();
 
     /**Resolves the compute node parts of this structure, skipping the ones that are gone or not loaded.**/
     protected List<IComputePart> getComputeNodes(){
@@ -106,9 +119,12 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     @Override
     public void readFromNBT2(NBTTagCompound aNBT) {
         super.readFromNBT2(aNBT);
+        control.readFromNBT(aNBT);
         if (aNBT.hasKey(NBT_STATE)) mState.set( aNBT.getByte(NBT_STATE));
         if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
         if (aNBT.hasKey(NBT_ENERGY+".1")) mEnergyCharged = aNBT.getLong(NBT_ENERGY+".1");
+        if (!CODE_CLIENT && aNBT.hasKey(NBT_ENERGY+".out")) mEnergyOutput = aNBT.getLong(NBT_ENERGY+".out");
+        if (aNBT.hasKey(NBT_ENERGY+".out.v")) mOutputVoltage = aNBT.getLong(NBT_ENERGY+".out.v");
         if (aNBT.hasKey(NBT_EFFICIENCY)) mFieldStrength = aNBT.getShort(NBT_EFFICIENCY);
         if (aNBT.hasKey(NBT_ENERGY_EU)) recipeChargeRequired = aNBT.getLong(NBT_ENERGY_EU);
         if (aNBT.hasKey(NBT_PROGRESS)) progress = aNBT.getFloat(NBT_PROGRESS);
@@ -129,7 +145,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         mTanksOutput= new FluidTankGT[mRecipes.mOutputFluidCount];
         System.arraycopy(mTanks, mRecipes.mInputFluidCount, mTanksOutput, 0, mRecipes.mOutputFluidCount);
 
-        kortex = new KortexWorker(this, 0, mRecipes, F).dontResetProgressWhenPowerLost();
+        kortex = new KortexWorker(this, 0, mRecipes, F).setProgressDrivenExternally().dontResetProgressWhenPowerLost();
         kortex.fluidInputs = mTanksInput;
         kortex.readFromNBT(aNBT);
     }
@@ -138,9 +154,12 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     public void writeToNBT2(NBTTagCompound aNBT) {
         super.writeToNBT2(aNBT);
 
+        control.writeToNBT(aNBT);
         aNBT.setByte(NBT_STATE, mState.get());
         UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
         UT.NBT.setNumber(aNBT, NBT_ENERGY+".1", mEnergyCharged);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY+".out", mEnergyOutput);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY+".out.v", mOutputVoltage);
         aNBT.setShort(NBT_EFFICIENCY,mFieldStrength);
         UT.NBT.setNumber(aNBT, NBT_ENERGY_EU,recipeChargeRequired);
         aNBT.setFloat(NBT_PROGRESS, progress);
@@ -153,6 +172,15 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (!aIsServerSide) return;
+        mSuccessful = false;
+        mOutputRate = 0;
+        mMeterReceivedLast.clear();
+        mMeterReceivedLast.addAll(mMeterReceived);
+        mMeterReceived.clear();
+        if (!control.getStateOnOff()) {
+            if (mState.get() != STATE_STOPPED || mEnergyCharged > 0 || mCurrentRecipe != null) stopForSwitchOff();
+            return;
+        }
         if (!mStructureOkay){
             if(mEnergyCharged>0)onError();
             return;
@@ -211,6 +239,11 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
         //do recipe
         if(mState.is(STATE_RUNNING)&&kortex.hasActiveRecipe()) {
+            if (recipeEUt < 0) {
+                mOutputRate = -recipeEUt;
+                long tBufferMax = Math.max(1, Math.max(mRate, mOutputRate)) * 20;
+                mEnergyOutput = Math.min(tBufferMax, mEnergyOutput + mOutputRate);
+            }
             progress += mEnergyCharged *1F / recipeChargeRequired;
             boolean tCompleted = progress >= recipeTotalTime;
             // the worker keeps the exact float progress; it only tells us when the products are due
@@ -233,23 +266,24 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     /** One worker step; the charge curve above drives the progress, the start charge is gated in getMaxParallel. */
     private void runWorker(){
         for (int i = 0; i < kortex.itemInputs.length && i < 3; i++) kortex.itemInputs[i] = slot(i) == null ? null : ST.copy(slot(i));
+        // The reactor owns the charge gate and progress; the worker only matches inputs and caches outputs.
         kortex.mEnergyStored = 0;
-        kortex.mEnergyCapacity = Long.MAX_VALUE;
+        kortex.mEnergyCapacity = 0;
         kortex.run();
-        kortex.mEnergyStored = 0;
     }
 
     // Recipe bridge
-    /** Records the recipe the machine is charging for; plasma only ignites above that recipe's start charge. */
+    /** Records the recipe the machine is charging for; plasma ignites at or above that recipe's start charge. */
     @Override
     public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
         Recipe tRecipe = kortex.findRecipe();
         mCurrentRecipe = tRecipe;
         recipeEUt = tRecipe == null ? 0 : aEUT;
+        if (tRecipe != null && tRecipe.mEUt < 0) mOutputVoltage = -tRecipe.mEUt;
         recipeTotalTime = tRecipe == null ? 0 : aDuration;
         recipeChargeRequired = tRecipe == null ? 0 : tRecipe.mSpecialValue;
         if (tRecipe == null) return 0;
-        return mEnergyCharged > tRecipe.mSpecialValue ? 1 : 0;
+        return mEnergyCharged >= tRecipe.mSpecialValue ? 1 : 0;
     }
 
     @Override
@@ -262,10 +296,10 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             if (tItem == null) continue;
             items[i] = null;
             if (mCurrentRecipe != null && getRandomNumber(10000) > mCurrentRecipe.getOutputChance(i)) continue;
-            addStackToSlot(3 + i, tItem.copy());
+            if (addStackToSlot(3 + i, tItem.copy())) mSuccessful = true;
         }
         for (FluidTankGT tTank : fluidTanks) if (tTank.has()) {
-            for (FluidTankGT tTarget : mTanksOutput) if (tTarget.canFillAll(tTank.get()) && tTarget.fill(tTank.get(), true) > 0) break;
+            for (FluidTankGT tTarget : mTanksOutput) if (tTarget.canFillAll(tTank.get()) && tTarget.fill(tTank.get(), true) > 0) {mSuccessful = true; break;}
             tTank.setEmpty();
         }
     }
@@ -279,6 +313,17 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         if(state==STATE_STOPPED||state==STATE_ERROR) getComputeNodes().forEach(IComputePart::stop);
         updateClientData();
     }
+
+    /** GT switch covers turn the plasma off; stored charge and the ignited recipe are discarded. **/
+    protected void stopForSwitchOff() {
+        if (mState.get() != STATE_STOPPED) setState(STATE_STOPPED);
+        mEnergyCharged = 0;
+        mFieldStrength = 0;
+        mSuccessful = false;
+        nullifyCurrentRecipe();
+        getComputeNodes().forEach(IComputePart::stop);
+    }
+
     protected void nullifyCurrentRecipe(){
         progress =0;
         recipeChargeRequired=0;
@@ -289,12 +334,137 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     }
 
     protected void onError(){
-        ((TileEntityBase01Root) WD.te(worldObj, xCoord, yCoord + 4, zCoord, false)).explode(2);
+        explode(0);
         Arrays.stream(mTanks).forEach(FluidTankGT::setEmpty);
         mEnergyCharged=0;
+        mEnergyOutput=0;
+        mOutputRate=0;
         mFieldStrength=0;
         nullifyCurrentRecipe();
         setState(STATE_ERROR);
+    }
+
+    // GT control / status interfaces
+    @Override
+    public boolean getStateOnOff() {
+        return control.getStateOnOff();
+    }
+
+    @Override
+    public boolean setStateOnOff(boolean aOnOff) {
+        boolean rState = control.setStateOnOff(aOnOff);
+        if (!aOnOff && isServerSide()) stopForSwitchOff();
+        return rState;
+    }
+
+    @Override
+    public long getProgressValue(byte aSide) {
+        if (mState.is(STATE_RUNNING)) return (long) progress;
+        if (mState.is(STATE_CHARGING)) return mEnergyCharged;
+        return 0;
+    }
+
+    @Override
+    public long getProgressMax(byte aSide) {
+        if (mState.is(STATE_RUNNING)) return recipeTotalTime;
+        if (mState.is(STATE_CHARGING)) return recipeChargeRequired;
+        return 0;
+    }
+
+    @Override
+    public long getEnergyStored(TagData aEnergyType, byte aSide) {
+        return aEnergyType == mEnergyTypeCharging ? mEnergyCharged : 0;
+    }
+
+    @Override
+    public long getEnergyCapacity(TagData aEnergyType, byte aSide) {
+        return aEnergyType == mEnergyTypeCharging ? MAX_CHARGE : 0;
+    }
+
+    @Override
+    public boolean isEnergyCapacitorType(TagData aEnergyType, byte aSide) {
+        return aEnergyType == mEnergyTypeCharging;
+    }
+
+    @Override
+    public Collection<TagData> getEnergyCapacitorTypes(byte aSide) {
+        return mEnergyTypeCharging.AS_LIST;
+    }
+
+    @Override
+    public long getEnergyStored(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
+        return getEnergyStored(aEnergyType, aSide);
+    }
+
+    @Override
+    public long getEnergyCapacity(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
+        return getEnergyCapacity(aEnergyType, aSide);
+    }
+
+    @Override
+    public boolean isEnergyCapacitorType(MultiTileEntityMultiBlockPart aPart, TagData aEnergyType, byte aSide) {
+        return isEnergyCapacitorType(aEnergyType, aSide);
+    }
+
+    @Override
+    public Collection<TagData> getEnergyCapacitorTypes(MultiTileEntityMultiBlockPart aPart, byte aSide) {
+        return getEnergyCapacitorTypes(aSide);
+    }
+
+    @Override
+    public IMeterDetectable.MeterData[] getMeterReceived() {
+        return mMeterReceivedLast.toArray(new IMeterDetectable.MeterData[0]);
+    }
+
+    @Override
+    public IMeterDetectable.MeterData[] getMeterEmitted() {
+        return mOutputRate <= 0 ? NO_READINGS : new IMeterDetectable.MeterData[]{new IMeterDetectable.MeterData(mEnergyTypeAccepted, mOutputRate, 1)};
+    }
+
+    @Override
+    public boolean isRunningPossible() {
+        return mStructureOkay && control.getStateOnOff() && !mState.is(STATE_ERROR) && mCurrentRecipe != null;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return mState.is(STATE_RUNNING) && isComputePowerEnough;
+    }
+
+    @Override
+    public boolean isProcessing() {
+        return isRunning();
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return mSuccessful;
+    }
+
+    @Override
+    public KortexWorker[] getKortexWorkers() {
+        if (kortex == null || mState.is(STATE_STOPPED) || mState.is(STATE_ERROR)) return new KortexWorker[0];
+        return new KortexWorker[]{kortex};
+    }
+
+    /** The tokamak gates its own compute nodes, so the generic ComputeUserComponent source does not see them. **/
+    @Override
+    public MachineStatus getStatusOverride() {
+        if (!mStructureOkay || !control.getStateOnOff()) return null;
+        if (mState.is(STATE_ERROR)) return MachineStatus.CUSTOM;
+        if (!isComputePowerEnough) return MachineStatus.COMPUTE_INSUFFICIENT;
+        if (mState.is(STATE_CHARGING)) return MachineStatus.IGNITION_REQUIRED;
+        if (mState.is(STATE_VOID_CHARGING)) return MachineStatus.NO_RECIPE;
+        return null;
+    }
+
+    @Override
+    public String getStatusDetail() {
+        if (!mStructureOkay || !control.getStateOnOff()) return null;
+        if (mState.is(STATE_ERROR)) return LH.get(I18nHandler.TOKAMAK_STATUS_ERROR);
+        if (!isComputePowerEnough) return String.format(LH.get(I18nHandler.TOKAMAK_STATUS_COMPUTE), computePowerNeeded);
+        if (mState.is(STATE_CHARGING)) return String.format(LH.get(I18nHandler.TOKAMAK_STATUS_IGNITION), mEnergyCharged, recipeChargeRequired);
+        return null;
     }
 
     @Override
@@ -329,13 +499,16 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
             sOverlayVoidCharge= new Textures.BlockIcons.CustomIcon("machines/fusion/tokamak/exp/overlay_void_charging");
 
     public long doInject (TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoInject ) {
+        if (!control.getStateOnOff()) return 0;
         if(aEnergyType==mEnergyTypeCharging&&!mState.is(STATE_STOPPED)&&!mState.is(STATE_ERROR)){
+            if (aDoInject) mMeterReceived.add(new IMeterDetectable.MeterData(aEnergyType, aSize, aAmount));
             mRateCharging += aSize*aAmount;
             return aAmount;
         }
         if(aEnergyType==mEnergyTypeAccepted&&mEnergy<mRate){
             if(aSize > mRate)return 0;
             long amountNeeded = (long)Math.ceil((mRate-mEnergy*1F)/aSize);
+            if (aDoInject) mMeterReceived.add(new IMeterDetectable.MeterData(aEnergyType, aSize, amountNeeded));
             mEnergy+=amountNeeded*aSize;
             return amountNeeded;
         }
@@ -357,9 +530,24 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     }
 
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
-        return !aEmitting && (aEnergyType == mEnergyTypeAccepted||aEnergyType == mEnergyTypeCharging);}
+        if (aEmitting) return aEnergyType == mEnergyTypeAccepted;
+        return aEnergyType == mEnergyTypeAccepted || aEnergyType == mEnergyTypeCharging;
+    }
     public long getEnergySizeInputRecommended(TagData aEnergyType, byte aSide) {return mRate;}
     public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return 16;}
+    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {
+        return (mOutputRate > 0 || mEnergyOutput > 0) && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);
+    }
+    @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return Math.max(1, mOutputVoltage);}
+    @Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return Math.max(1, mOutputVoltage);}
+    @Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {return Math.max(1, mOutputVoltage);}
+    @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {return aEnergyType == mEnergyTypeAccepted ? mEnergyOutput : 0;}
+    @Override public long doExtract(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoExtract) {
+        if (aEnergyType != mEnergyTypeAccepted || aSize <= 0 || aAmount <= 0 || mEnergyOutput <= 0) return 0;
+        long tAmount = Math.min(aAmount, mEnergyOutput / aSize);
+        if (aDoExtract) mEnergyOutput -= tAmount * aSize;
+        return tAmount;
+    }
 
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
 
@@ -375,7 +563,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     //client
     @Override
     public IPacket getClientDataPacket(boolean aSendAll) {
-        return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mState.get());
+        return getClientDataPacketByteArray(aSendAll, (byte)UT.Code.getR(mRGBa), (byte)UT.Code.getG(mRGBa), (byte)UT.Code.getB(mRGBa),getDirectionData(),mState.get(),(byte)(control.getStateOnOff()?1:0));
     }
 
     @Override
@@ -383,6 +571,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
         mRGBa = UT.Code.getRGBInt(new short[] {UT.Code.unsignB(aData[0]), UT.Code.unsignB(aData[1]), UT.Code.unsignB(aData[2])});
         setDirectionData(aData[3]);
         mState.set(aData[4]);
+        if (aData.length > 5) control.applySyncedState(aData[5] == 1);
         return T;
     }
 
@@ -415,15 +604,50 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
 
     @Override
     public void onMagnifyingGlass(List<String> aChatReturn) {
-        super.onMagnifyingGlass(aChatReturn);
-        if(lastFailedPos != null)aChatReturn.add(LH.get(I18nHandler.STRUCTURE_LAST_FAILED_POS)+" "+ lastFailedPos.toString());
+        if (lastFailedPos != null) aChatReturn.add(LH.get(I18nHandler.STRUCTURE_LAST_FAILED_POS)+" "+ lastFailedPos.toString());
+        MachineControl.of(this).getStatusReport().renderLines(aChatReturn);
     }
 
     @Override
-    public void onMagnifyingGlass2(List<String> aChatReturn) {
-        aChatReturn.add(LH.get(I18nHandler.STRUCTURE_FORMED));
-        if(!isComputePowerEnough)aChatReturn.add(LH.get(I18nHandler.COMPUTE_POWER_INSUFFICIENT));
+    public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isClientSide() && MachineControl.of(this).handleMeterTool(aTool, aChatReturn)) return 10000;
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
     }
+
+    @Override
+    public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+        current.add(IWailaTile.instanceInfoState);
+        current.add(MachineStatusReport.WAILA_PROVIDER);
+        current.add(IWailaTile.instanceInfoEnergyIORange);
+        current.add(WAILA_OUTPUT_PROVIDER);
+        return current;
+    }
+
+    @Override
+    public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+        IWailaTile.super.getWailaNBT(te, aNBT);
+        MachineStatusReport.writeWaila(this, aNBT);
+        aNBT.setLong(WAILA_OUTPUT_RATE, mState.is(STATE_RUNNING) ? mOutputVoltage : mOutputRate);
+        aNBT.setLong(WAILA_OUTPUT_VOLTAGE, mOutputVoltage);
+        aNBT.setLong(WAILA_OUTPUT_BUFFER, mEnergyOutput);
+        return aNBT;
+    }
+
+    @Override
+    public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return IWailaTile.super.getWailaBody(currentTip, accessor, config);
+    }
+
+    private static final IWailaInfoProvider WAILA_OUTPUT_PROVIDER = new IWailaInfoProvider() {
+        @Override
+        public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+            NBTTagCompound tNBT = accessor.getNBTData();
+            long tVoltage = tNBT.getLong(WAILA_OUTPUT_VOLTAGE);
+            if (tVoltage <= 0 || tNBT.getLong(WAILA_OUTPUT_RATE) <= 0 && tNBT.getLong(WAILA_OUTPUT_BUFFER) <= 0) return currentTip;
+            IWailaTile.addEnergyFlowDesc(currentTip, LH.get(LH.ENERGY_OUTPUT) + " ", TD.Energy.EU, tVoltage, 1, "");
+            return currentTip;
+        }
+    };
 
     //Structure
     ChunkCoordinates lastFailedPos=null;
@@ -730,6 +954,7 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     }
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (!isServerSide())return true;
+        if (MachineControl.onFishRightClick(this, aPlayer)) return true;
 
         if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
 
@@ -745,6 +970,9 @@ public class FusionReactorTokamakT1 extends TileEntityBase10MultiBlockBase imple
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
+        aList.add(LH.Chat.RED+String.format(LH.get(I18nHandler.TOKAMAK_TOOLTIP_POWER), "2048 / 8192 / 16384"));
+        aList.add(LH.Chat.YELLOW+String.format(LH.get(I18nHandler.TOKAMAK_TOOLTIP_START), "1048576 / 4194304"));
+        aList.add(LH.Chat.DGRAY+String.format(LH.get(I18nHandler.TOKAMAK_TOOLTIP_COMPUTE), computePowerNeeded));
         super.addToolTips(aList, aStack, aF3_H);
     }
     @Override

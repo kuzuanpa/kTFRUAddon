@@ -21,8 +21,13 @@ import gregapi.block.multitileentity.IMultiTileEntity;
 import gregapi.tileentity.machines.MultiTileEntityBasicMachine;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.UT;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.List;
@@ -53,6 +58,24 @@ public class CommonMachinePart extends MultiTileEntityBasicMachine implements IM
     @Override public void setTargetPos(ChunkCoordinates aCoords){mTargetPos=aCoords;}
     @Override public void setDesign(int aDesign) {this.mDesign = aDesign;}
     @Override public int getDesign(){return mDesign;}
+
+    // MultiTileEntityBasicMachine owns concrete GT implementations, so the interface defaults need explicit delegation here.
+    @Override public boolean getStateRunningPossible() {return machineControl().isRunningPossible();}
+    @Override public boolean getStateRunningPassively() {return machineControl().isRunning();}
+    @Override public boolean getStateRunningActively() {return machineControl().isProcessing();}
+    @Override public boolean getStateRunningSuccessfully() {return machineControl().isSuccess();}
+    @Override public boolean getStateRunningPowerSaving() {return machineControl().isPowerSaving();}
+    @Override public boolean getStateOnOff() {return machineControl().getStateOnOff();}
+    @Override public boolean setStateOnOff(boolean aOnOff) {return machineControl().setStateOnOff(aOnOff);}
+    @Override public long getProgressValue(byte aSide) {return machineControl().getProgressValue(aSide);}
+    @Override public long getProgressMax(byte aSide) {return machineControl().getProgressMax(aSide);}
+    @Override public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {return IMultiBlockPart.super.getWailaNBT(te, aNBT);}
+    @Override public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {return IMultiBlockPart.super.getWailaBody(currentTip, accessor, config);}
+    @Override public long onToolClick2(String aTool, long aRemainingDurability, long aQuality, Entity aPlayer, List<String> aChatReturn, IInventory aPlayerInventory, boolean aSneaking, ItemStack aStack, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (machineControl().handleMeterTool(aTool, aChatReturn)) return 10000;
+        return super.onToolClick2(aTool, aRemainingDurability, aQuality, aPlayer, aChatReturn, aPlayerInventory, aSneaking, aStack, aSide, aHitX, aHitY, aHitZ);
+    }
+
     @Override
     public boolean breakBlock() {
         notifyTarget();

@@ -25,13 +25,11 @@ import cn.kuzuanpa.ktfruaddon.tile.multiblock.parts.WirelessEnergyReceiver;
 import gregapi.code.TagData;
 import gregapi.data.TD;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
-import gregapi.util.UT;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 
 import static gregapi.data.CS.NBT_DESIGN;
-import static gregapi.data.CS.SIDE_INSIDE;
 
 public class WirelessBatteryQuantum extends WirelessBatteryBase {
     public static final String NBT_STORED_ENERGY_TYPE = "ktfru.wireless.storedEnergyType";
@@ -68,7 +66,7 @@ public class WirelessBatteryQuantum extends WirelessBatteryBase {
 
     @Override
     protected IStringBaseStructure createStructure() {
-        return new LayerStructure(StructureContext.Axis.Y).layerRule("ABCCCDDDD")
+        return new LayerStructure(StructureContext.Axis.Y).layerRule("ABCCCD")
                 .fixedLayer('A', "XWWSS", "WSSSS", "SSSSS", "SSSSS", "SSSSS")
                 .fixedLayer('B', "SSSSS", "SSSSS", "SSSSS", "SSSSS", "SSSSS")
                 .fixedLayer('C', CORE_LAYER)

@@ -69,7 +69,7 @@ public class ItemResearchTech extends ItemResearchBase {
         ItemList.TechResearchData39.set(addItem(39, "研究数据-宇宙辐射研究",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData40.set(addItem(40, "研究数据-计算机T6",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData41.set(addItem(41, "研究数据-硅岩性质理论",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
-        ItemList.TechResearchData42.set(addItem(42, "研究数据-镜金应用",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
+        ItemList.TechResearchData42.set(addItem(42, "研究数据-镜银应用",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData43.set(addItem(43, "研究数据-计算机T7",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData44.set(addItem(44, "研究数据-计算集群",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData45.set(addItem(45, "研究数据-实验托卡马克",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
@@ -78,7 +78,7 @@ public class ItemResearchTech extends ItemResearchBase {
         ItemList.TechResearchData48.set(addItem(48, "研究数据-实验激光聚变",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData49.set(addItem(49, "研究数据-人工智能研究",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData50.set(addItem(50, "研究数据-量子元素制造",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
-        ItemList.TechResearchData51.set(addItem(51, "研究数据-镜金量子化",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
+        ItemList.TechResearchData51.set(addItem(51, "研究数据-镜银量子化",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData52.set(addItem(52, "研究数据-量金应用",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData53.set(addItem(53, "研究数据-量子观测",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));
         ItemList.TechResearchData54.set(addItem(54, "研究数据-量子通信",  "spduvypsdpf9ibund9figspduvypsdpf9ibund9figspduvypsdpf9ibund9fig."));

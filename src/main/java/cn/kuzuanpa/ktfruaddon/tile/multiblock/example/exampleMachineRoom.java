@@ -16,20 +16,30 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseRoom;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControl;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControlComponent;
 import cn.kuzuanpa.ktfruaddon.api.tile.room.BoxRoomRegion;
 import cn.kuzuanpa.ktfruaddon.api.tile.room.IRoomRegion;
 import cn.kuzuanpa.ktfruaddon.api.tile.room.RoomCapability;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.IMachineStatus;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.MachineStatusReport;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.ControllerPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
+import gregapi.block.multitileentity.IWailaTile;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
+import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -38,8 +48,39 @@ import java.util.List;
 
 import static gregapi.data.CS.SIDE_BOTTOM;
 
-public class exampleMachineRoom extends TileEntityBaseRoom {
+public class exampleMachineRoom extends TileEntityBaseRoom implements IMachineStatus, ITileEntitySwitchableOnOff, IWailaTile {
     MultiTileEntityRegistry k = GTTileEntityRegistry.ktfruaddon, g = GTTileEntityRegistry.gregtech;
+    public final MachineControlComponent control = new MachineControlComponent(this, this::updateClientData);
+
+    @Override public void readFromNBT2(NBTTagCompound aNBT) {super.readFromNBT2(aNBT); control.readFromNBT(aNBT);}
+    @Override public void writeToNBT2(NBTTagCompound aNBT) {super.writeToNBT2(aNBT); control.writeToNBT(aNBT);}
+    @Override public boolean getStateOnOff() {return control.getStateOnOff();}
+    @Override public boolean setStateOnOff(boolean aOnOff) {return control.setStateOnOff(aOnOff);}
+    @Override public boolean isRunningPossible() {return getRoomContext() != null && control.getStateOnOff();}
+    @Override public boolean isRunning() {return isRoomActive() && control.getStateOnOff();}
+    @Override public boolean isProcessing() {return false;}
+
+    @Override public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (!isServerSide()) return true;
+        if (MachineControl.onFishRightClick(this, aPlayer)) return true;
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+    }
+    @Override public void onMagnifyingGlass(List<String> aChatReturn) {
+        MachineControl.of(this).getStatusReport().renderLines(aChatReturn);
+    }
+    @Override public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+        current.add(IWailaTile.instanceInfoState);
+        current.add(MachineStatusReport.WAILA_PROVIDER);
+        return current;
+    }
+    @Override public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+        IWailaTile.super.getWailaNBT(te, aNBT);
+        MachineStatusReport.writeWaila(this, aNBT);
+        return aNBT;
+    }
+    @Override public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return IWailaTile.super.getWailaBody(currentTip, accessor, config);
+    }
 
     //change value there to set usage of every block.
     public int getUsage(int blockID ,MultiTileEntityRegistry registryID){

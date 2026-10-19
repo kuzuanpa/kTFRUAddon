@@ -27,7 +27,7 @@ public final class QuantumObservation {
 
         // Q3-R01: direct measurement of a prepared Quantum Gold field.
         recipeMaps.QuantumObservation.addRecipeX(F, 16384, 4800,
-                ST.array(OP.plate.mat(matList.QuantumGold.mat, 1),
+                ST.array(OP.plate.mat(matList.QuantumSilver.mat, 1),
                         OP.foil.mat(matList.MirrorGold.mat, 2),
                         prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 4),
                         prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4)),
@@ -35,7 +35,7 @@ public final class QuantumObservation {
 
         // Q3-R02: a lower-yield calibration pass using existing readout coils.
         recipeMaps.QuantumObservation.addRecipeX(F, 8192, 2400,
-                ST.array(OP.foil.mat(matList.QuantumGold.mat, 1),
+                ST.array(OP.foil.mat(matList.QuantumSilver.mat, 1),
                         registry.getItem(31114, 2),
                         prefixList.AnalyticalPureDust.mat(MT.Pt, 4)),
                 ZL_FS, ZL_FS, ItemList.QuantumObservationData.get(2));

@@ -1,6 +1,7 @@
 package cn.kuzuanpa.ktfruaddon.api.recipe;
 
 import cn.kuzuanpa.ktfruaddon.api.code.StateMgr;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControl;
 import gregapi.data.FL;
 import gregapi.data.LH;
 import gregapi.fluid.FluidTankGT;
@@ -33,7 +34,7 @@ public class KortexWorker {
     /**This is only used to display, inner logic doesn't use this**/
     public StateMgr mState = new StateMgr();
     public static final byte STATE_NO_RECIPE =0, STATE_ITEM_SHORTAGE=1, STATE_FLUID_SHORTAGE=2, STATE_ENERGY_SHORTAGE=3, STATE_OUTPUT_BLOCKED_FLUID=4, STATE_OUTPUT_BLOCKED_ITEM=5, STATE_OUTPUT_BLOCKED_ENERGY=6, STATE_RUNNING=7, STATE_MACHINE_LIMITED=8;
-    protected boolean outputBlocked = false, resetProgressWhenPowerLost = true, consumeInputsOnFinish = false;
+    protected boolean outputBlocked = false, resetProgressWhenPowerLost = true, consumeInputsOnFinish = false, progressDrivenExternally = false;
     protected long maxProgressPerTick = Long.MAX_VALUE;
     public long mEnergyStored = 0, mEnergyCapacity = 0, mProgress = 0, mMaxProgress = 0, mCurrentParallel = 0, mRecipeEUt = 0, mInputTankSize = 16000,mOutputTankSize = 16000;
     protected ItemStack[] mRecipeOutputItems = ZL_IS;
@@ -81,6 +82,11 @@ public class KortexWorker {
         consumeInputsOnFinish = true;
         return this;
     }
+    /** The machine advances {@link #mProgress} itself; the worker only matches inputs, starts and finishes the recipe. **/
+    public KortexWorker setProgressDrivenExternally(){
+        progressDrivenExternally = true;
+        return this;
+    }
     public KortexWorker setMaxProgressPerTick(long aMaxProgressPerTick){
         maxProgressPerTick = Math.max(1L, aMaxProgressPerTick);
         return this;
@@ -113,7 +119,9 @@ public class KortexWorker {
         }
         if (mMaxProgress <= 0) mState.set(tryStartNewRecipe());
 
-        if (mProgress < mMaxProgress) updateProgress();
+        if (progressDrivenExternally) {
+            if (mMaxProgress > 0 && mProgress >= mMaxProgress) finishRecipe();
+        } else if (mProgress < mMaxProgress) updateProgress();
         else finishRecipe();
     }
 
@@ -167,12 +175,15 @@ public class KortexWorker {
             mState.set(STATE_MACHINE_LIMITED);
             return 0;
         }
-        //If consuming, quota = stored; If generating, quota = space left;
-        long energyQuota = aRecipe.mEUt >0 ? mEnergyStored : mEnergyCapacity - mEnergyStored;
-        int rPossibleParallel = (int) Math.min(aMaxParallel, Math.floorDiv(energyQuota, Math.abs(isInstant? aRecipe.mEUt * aRecipe.mDuration : aRecipe.mEUt)));// energy parallel limit
-        if(rPossibleParallel <= 0){
-            mState.set(aRecipe.mEUt >0?STATE_ENERGY_SHORTAGE:STATE_OUTPUT_BLOCKED_ENERGY);
-            return 0;
+        int rPossibleParallel = aMaxParallel;
+        if (!progressDrivenExternally) {
+            //If consuming, quota = stored; If generating, quota = space left;
+            long energyQuota = aRecipe.mEUt >0 ? mEnergyStored : mEnergyCapacity - mEnergyStored;
+            rPossibleParallel = (int) Math.min(aMaxParallel, Math.floorDiv(energyQuota, Math.abs(isInstant? aRecipe.mEUt * aRecipe.mDuration : aRecipe.mEUt)));// energy parallel limit
+            if(rPossibleParallel <= 0){
+                mState.set(aRecipe.mEUt >0?STATE_ENERGY_SHORTAGE:STATE_OUTPUT_BLOCKED_ENERGY);
+                return 0;
+            }
         }
         //calculate fluid parallel limit
         if (aRecipe.mFluidInputs != null) for (FluidStack recipeFluid : aRecipe.mFluidInputs) {
@@ -302,8 +313,12 @@ public class KortexWorker {
     }
 
     public void onPlayerRightClick(EntityPlayer player){
+        if (player == null) return;
+        if (MachineControl.onFishRightClick(machine, player)) return;
         ItemStack item = player.getCurrentEquippedItem();
-        if (ST.regName(item).contains("shark")||ST.regName(item).contains("fish")) {
+        if (item == null) return;
+        String tName = ST.regName(item);
+        if (tName != null && (tName.contains("shark") || tName.contains("fish"))) {
             player.addChatMessage(new ChatComponentText("Kortex"+LH.get(LH.STATE)+": "+ getLocalizedState()));
         }
     }

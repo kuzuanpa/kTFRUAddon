@@ -16,9 +16,17 @@
 
 package cn.kuzuanpa.ktfruaddon.api.tile.part;
 
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControl;
 import gregapi.block.multitileentity.IWailaTile;
+import gregapi.code.TagData;
 import gregapi.data.LH;
 import gregapi.tileentity.base.TileEntityBase01Root;
+import gregapi.tileentity.data.ITileEntityProgress;
+import gregapi.tileentity.energy.ITileEntityEnergyDataCapacitor;
+import gregapi.tileentity.machines.ITileEntityRunningPowerSaving;
+import gregapi.tileentity.machines.ITileEntityRunningSuccessfully;
+import gregapi.tileentity.machines.ITileEntitySwitchableMode;
+import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.ITileEntityMultiBlockController;
 import gregapi.util.UT;
 import gregapi.util.WD;
@@ -29,11 +37,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
+import java.util.Collection;
 import java.util.List;
 
 import static gregapi.data.CS.*;
 
-public interface IMultiBlockPart extends IWailaTile {
+/**A part is also a GT control facade: covers query the part itself instead of the controller,
+ * so every capability has to be forwarded from the part to {@link #getTarget(boolean)}.**/
+public interface IMultiBlockPart extends IWailaTile, ITileEntityRunningSuccessfully, ITileEntityRunningPowerSaving,
+        ITileEntitySwitchableOnOff, ITileEntitySwitchableMode, ITileEntityProgress, ITileEntityEnergyDataCapacitor {
     ChunkCoordinates getTargetPos();
     default void notifyTarget(){
         ITileEntityMultiBlockController tTarget = getTarget(false);
@@ -75,6 +87,7 @@ public interface IMultiBlockPart extends IWailaTile {
 
     }
     void setTarget(ITileEntityMultiBlockController target);
+    default MachineControl machineControl() {return MachineControl.of(this);}
 
     default void setTarget(ITileEntityMultiBlockController target, int aDesign, int aMode){
         setTarget(target);
@@ -91,6 +104,25 @@ public interface IMultiBlockPart extends IWailaTile {
     World getWorld();
     short getMultiTileEntityID();
     short getMultiTileEntityRegistryID();
+
+    @Override default boolean getStateRunningPossible() {return machineControl().isRunningPossible();}
+    @Override default boolean getStateRunningPassively() {return machineControl().isRunning();}
+    @Override default boolean getStateRunningActively() {return machineControl().isProcessing();}
+    @Override default boolean getStateRunningSuccessfully() {return machineControl().isSuccess();}
+    @Override default boolean getStateRunningPowerSaving() {return machineControl().isPowerSaving();}
+
+    @Override default boolean getStateOnOff() {return machineControl().getStateOnOff();}
+    @Override default boolean setStateOnOff(boolean aOnOff) {return machineControl().setStateOnOff(aOnOff);}
+    @Override default byte getStateMode() {return machineControl().getStateMode();}
+    @Override default byte setStateMode(byte aMode) {return machineControl().setStateMode(aMode);}
+
+    @Override default long getProgressValue(byte aSide) {return machineControl().getProgressValue(aSide);}
+    @Override default long getProgressMax(byte aSide) {return machineControl().getProgressMax(aSide);}
+
+    @Override default long getEnergyStored(TagData aEnergyType, byte aSide) {return machineControl().getEnergyStored(aEnergyType, aSide);}
+    @Override default long getEnergyCapacity(TagData aEnergyType, byte aSide) {return machineControl().getEnergyCapacity(aEnergyType, aSide);}
+    @Override default boolean isEnergyCapacitorType(TagData aEnergyType, byte aSide) {return machineControl().isEnergyCapacitorType(aEnergyType, aSide);}
+    @Override default Collection<TagData> getEnergyCapacitorTypes(byte aSide) {return machineControl().getEnergyCapacitorTypes(aSide);}
 
     default NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
         if (getTargetPos() != null) {

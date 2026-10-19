@@ -46,7 +46,7 @@ import static gregapi.data.CS.*;
  * R=31113 entanglement channel module.  The controller occupies the blank
  * position in the bottom layer; E is the top-right Q position on that layer.
  */
-public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine {
+public class QuantumSilverSynthesisChamber extends TileEntityBaseControlledMachine {
     private ChunkCoordinates lastFailedPos;
 
     private static final IStringBaseStructure STRUCTURE = new LayerStructure(StructureContext.Axis.Y).layerRule("ABC")
@@ -104,10 +104,10 @@ public class QuantumGoldSynthesisChamber extends TileEntityBaseControlledMachine
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.1"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.2"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.3"));
-        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumgoldsynthesis.4"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumsilversynthesis.1"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumsilversynthesis.2"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumsilversynthesis.3"));
+        aList.add(LH.Chat.WHITE + LH.get("ktfru.tooltip.multiblock.quantumsilversynthesis.4"));
         super.addToolTips(aList, aStack, aF3_H);
     }
 

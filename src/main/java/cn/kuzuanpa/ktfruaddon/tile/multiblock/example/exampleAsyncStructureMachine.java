@@ -33,7 +33,10 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 
 import cn.kuzuanpa.ktfruaddon.api.code.BoundingBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControl;
 import cn.kuzuanpa.ktfruaddon.api.tile.part.IMultiBlockPart;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.IMachineStatus;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.MachineStatusReport;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.IStructureMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureBox;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureChangeList;
@@ -45,13 +48,18 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.snapshot.StructureView;
 import cn.kuzuanpa.ktfruaddon.api.tile.base.TileEntityBaseLimitedOutputMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.utils;
+import gregapi.block.multitileentity.IWailaTile;
 import gregapi.block.multitileentity.MultiTileEntityRegistry;
 import gregapi.data.LH;
 import gregapi.tileentity.delegate.DelegatorTileEntity;
 import gregapi.tileentity.multiblocks.MultiTileEntityMultiBlockPart;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -63,7 +71,7 @@ import java.util.UUID;
 
 import static gregapi.data.CS.*;
 
-public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMachine implements IStructureMachine {
+public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMachine implements IStructureMachine, IMachineStatus, IWailaTile {
 
     //决定机器大小
     //this controls the size of machine.
@@ -243,6 +251,32 @@ public class exampleAsyncStructureMachine extends TileEntityBaseLimitedOutputMac
         if (aPlayer != null || aInventory != null) {mBuilderPlayer = aPlayer; mBuilderInventory = aInventory;}
         if (!StructureScheduler.isBusy(this)) StructureScheduler.request(this, worldObj, getTileEntityName());
         return mStructureOkay;
+    }
+
+    @Override
+    public void onMagnifyingGlass(List<String> aChatReturn) {
+        super.onMagnifyingGlass(aChatReturn);
+        MachineControl.of(this).getStatusReport().renderLines(aChatReturn);
+    }
+
+    @Override
+    public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
+        if (isServerSide() && MachineControl.onFishRightClick(this, aPlayer)) return true;
+        return super.onBlockActivated3(aPlayer, aSide, aHitX, aHitY, aHitZ);
+    }
+
+    @Override
+    public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+        super.getWailaNBT(te, aNBT);
+        MachineStatusReport.writeWaila(this, aNBT);
+        return aNBT;
+    }
+
+    @Override
+    public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        super.getWailaBody(currentTip, accessor, config);
+        MachineStatusReport.addWailaLine(currentTip, accessor.getNBTData());
+        return currentTip;
     }
 
     //这是设置主方块的物品提示

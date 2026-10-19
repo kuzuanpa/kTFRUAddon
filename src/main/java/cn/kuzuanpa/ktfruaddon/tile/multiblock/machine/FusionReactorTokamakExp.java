@@ -80,7 +80,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     public boolean isComputePowerEnough=false;
     public short mFieldStrength=0;
     public float dischargeRate=0.2F, progress =0;
-    public long mEnergy=0 , mEnergyCharged = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0,computePowerNeeded=1024L;
+    public long mEnergy=0 , mEnergyCharged = 0, mEnergyOutput = 0, mOutputRate = 0, mOutputVoltage = 0, mRate = 32, mRateCharging =0,mRateChargingLast = 0,recipeChargeRequired=0, recipeEUt=0,recipeTotalTime=0,computePowerNeeded=1024L;
     public TagData mEnergyTypeAccepted = TD.Energy.EU, mEnergyTypeCharging = TD.Energy.LU;
     public Recipe.RecipeMap mRecipes = recipeMaps.FusionTokamak;
     /** Recipe core owns the plasma transaction; the charge curve below stays this machine's own mechanic. */
@@ -107,6 +107,8 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         if (aNBT.hasKey(NBT_STATE)) mState.set(aNBT.getByte(NBT_STATE));
         if (aNBT.hasKey(NBT_ENERGY)) mEnergy = aNBT.getLong(NBT_ENERGY);
         if (aNBT.hasKey(NBT_ENERGY+".1")) mEnergyCharged = aNBT.getLong(NBT_ENERGY+".1");
+        if (!CODE_CLIENT && aNBT.hasKey(NBT_ENERGY+".out")) mEnergyOutput = aNBT.getLong(NBT_ENERGY+".out");
+        if (aNBT.hasKey(NBT_ENERGY+".out.v")) mOutputVoltage = aNBT.getLong(NBT_ENERGY+".out.v");
         if (aNBT.hasKey(NBT_EFFICIENCY)) mFieldStrength = aNBT.getShort(NBT_EFFICIENCY);
         if (aNBT.hasKey(NBT_ENERGY_EU)) recipeChargeRequired = aNBT.getLong(NBT_ENERGY_EU);
         if (aNBT.hasKey(NBT_PROGRESS)) progress = aNBT.getFloat(NBT_PROGRESS);
@@ -124,7 +126,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         mTanks[2].readFromNBT(aNBT, NBT_TANK+".2").setCapacity(2000);
         mTanks[3].readFromNBT(aNBT, NBT_TANK+".3").setCapacity(2000);
 
-        kortex = new KortexWorker(this, 0, mRecipes, F).dontResetProgressWhenPowerLost();
+        kortex = new KortexWorker(this, 0, mRecipes, F).setProgressDrivenExternally().dontResetProgressWhenPowerLost();
         kortex.fluidInputs = mTanksInput;
         kortex.readFromNBT(aNBT);
     }
@@ -136,6 +138,8 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         aNBT.setByte(NBT_STATE, mState.get());
         UT.NBT.setNumber(aNBT, NBT_ENERGY, mEnergy);
         UT.NBT.setNumber(aNBT, NBT_ENERGY+".1", mEnergyCharged);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY+".out", mEnergyOutput);
+        UT.NBT.setNumber(aNBT, NBT_ENERGY+".out.v", mOutputVoltage);
         aNBT.setShort(NBT_EFFICIENCY,mFieldStrength);
         UT.NBT.setNumber(aNBT, NBT_ENERGY_EU,recipeChargeRequired);
         aNBT.setFloat(NBT_PROGRESS, progress);
@@ -151,6 +155,7 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override
     public void onTick2(long aTimer, boolean aIsServerSide) {
         if (!aIsServerSide) return;
+        mOutputRate = 0;
         if (!mStructureOkay){
             if(mEnergyCharged>1024)onError();
             return;
@@ -206,6 +211,11 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
 
         //do recipe
         if(mState.is(STATE_RUNNING)&&kortex.hasActiveRecipe()) {
+            if (recipeEUt < 0) {
+                mOutputRate = -recipeEUt;
+                long tBufferMax = Math.max(1, Math.max(mRate, mOutputRate)) * 20;
+                mEnergyOutput = Math.min(tBufferMax, mEnergyOutput + mOutputRate);
+            }
             progress += mEnergyCharged *1F / recipeChargeRequired;
             boolean tCompleted = progress >= recipeTotalTime;
             // the worker keeps the exact float progress; it only tells us when the products are due
@@ -227,23 +237,24 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     /** One worker step; the charge curve above drives the progress, the start charge is gated in getMaxParallel. */
     private void runWorker(){
         for (int i = 0; i < kortex.itemInputs.length && i < 2; i++) kortex.itemInputs[i] = slot(i) == null ? null : ST.copy(slot(i));
+        // The reactor owns the charge gate and progress; the worker only matches inputs and caches outputs.
         kortex.mEnergyStored = 0;
-        kortex.mEnergyCapacity = Long.MAX_VALUE;
+        kortex.mEnergyCapacity = 0;
         kortex.run();
-        kortex.mEnergyStored = 0;
     }
 
     // Recipe bridge
-    /** Records the recipe the machine is charging for; plasma only ignites above that recipe's start charge. */
+    /** Records the recipe the machine is charging for; plasma ignites at or above that recipe's start charge. */
     @Override
     public int getMaxParallel(int aKortexID, long aEUT, long aDuration) {
         Recipe tRecipe = kortex.findRecipe();
         mCurrentRecipe = tRecipe;
         recipeEUt = tRecipe == null ? 0 : aEUT;
+        if (tRecipe != null && tRecipe.mEUt < 0) mOutputVoltage = -tRecipe.mEUt;
         recipeTotalTime = tRecipe == null ? 0 : aDuration;
         recipeChargeRequired = tRecipe == null ? 0 : tRecipe.mSpecialValue;
         if (tRecipe == null) return 0;
-        return mEnergyCharged > tRecipe.mSpecialValue ? 1 : 0;
+        return mEnergyCharged >= tRecipe.mSpecialValue ? 1 : 0;
     }
 
     @Override
@@ -292,6 +303,8 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
         ((TileEntityBase01Root) WD.te(worldObj, xCoord, yCoord + 2, zCoord, false)).explode(2);
         Arrays.stream(mTanks).forEach(FluidTankGT::setEmpty);
         mEnergyCharged=0;
+        mEnergyOutput=0;
+        mOutputRate=0;
         mFieldStrength=0;
         nullifyCurrentRecipe();
         setState(STATE_ERROR);
@@ -357,9 +370,24 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     }
 
     @Override public boolean isEnergyType(TagData aEnergyType, byte aSide, boolean aEmitting) {
-        return !aEmitting && (aEnergyType == mEnergyTypeAccepted||aEnergyType == mEnergyTypeCharging);}
+        if (aEmitting) return aEnergyType == mEnergyTypeAccepted;
+        return aEnergyType == mEnergyTypeAccepted || aEnergyType == mEnergyTypeCharging;
+    }
     public long getEnergySizeInputRecommended(TagData aEnergyType, byte aSide) {return mRate;}
     public long getEnergySizeInputMin(TagData aEnergyType, byte aSide) {return 16;}
+    @Override public boolean isEnergyEmittingTo(TagData aEnergyType, byte aSide, boolean aTheoretical) {
+        return (mOutputRate > 0 || mEnergyOutput > 0) && super.isEnergyEmittingTo(aEnergyType, aSide, aTheoretical);
+    }
+    @Override public long getEnergySizeOutputRecommended(TagData aEnergyType, byte aSide) {return Math.max(1, mOutputVoltage);}
+    @Override public long getEnergySizeOutputMin(TagData aEnergyType, byte aSide) {return Math.max(1, mOutputVoltage);}
+    @Override public long getEnergySizeOutputMax(TagData aEnergyType, byte aSide) {return Math.max(1, mOutputVoltage);}
+    @Override public long getEnergyOffered(TagData aEnergyType, byte aSide, long aSize) {return aEnergyType == mEnergyTypeAccepted ? mEnergyOutput : 0;}
+    @Override public long doExtract(TagData aEnergyType, byte aSide, long aSize, long aAmount, boolean aDoExtract) {
+        if (aEnergyType != mEnergyTypeAccepted || aSize <= 0 || aAmount <= 0 || mEnergyOutput <= 0) return 0;
+        long tAmount = Math.min(aAmount, mEnergyOutput / aSize);
+        if (aDoExtract) mEnergyOutput -= tAmount * aSize;
+        return tAmount;
+    }
     @Override public Collection<TagData> getEnergyTypes(byte aSide) {return mEnergyTypeAccepted.AS_LIST;}
 
     public short clientDensity(){
@@ -420,6 +448,9 @@ public class FusionReactorTokamakExp extends TileEntityBase10MultiBlockBase impl
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN+LH.get(HAS_PROJECTOR_STRUCTURE));
+        aList.add(LH.Chat.RED+String.format(LH.get(I18nHandler.TOKAMAK_TOOLTIP_POWER), "2048 / 8192 / 16384"));
+        aList.add(LH.Chat.YELLOW+String.format(LH.get(I18nHandler.TOKAMAK_TOOLTIP_START), "1048576 / 4194304"));
+        aList.add(LH.Chat.DGRAY+String.format(LH.get(I18nHandler.TOKAMAK_TOOLTIP_COMPUTE), computePowerNeeded));
         super.addToolTips(aList, aStack, aF3_H);
     }
     @Override

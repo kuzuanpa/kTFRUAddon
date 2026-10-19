@@ -31,26 +31,26 @@ import static gregapi.data.CS.*;
 
 public class Fusion {
     public static void init(){
-        recipeMaps.FusionTokamak .addRecipe1(F, 2048,400, ST.tag(0), FL.array(MT.D .gas (U, T),MT.T.gas(U, T)), FL.array(MT.He.gas (23*U100, F), FL.MatterNeutral.make(10*U100) )  ).setSpecialNumber(1024L*1024L);
-        recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
+        recipeMaps.FusionTokamak .addRecipe1(F, -2048,400, ST.tag(0), FL.array(MT.D .gas (U, T),MT.T.gas(U, T)), FL.array(MT.He.gas (23*U100, F), FL.MatterNeutral.make(10*U100) )  ).setSpecialNumber(1024L*1024L);
+        recipeMaps.FusionTokamakExperimental.addRecipe1(F, -2048,400, new long[]{5000}, ST.tag(0),
                 FL.array(MT.D.gas(U, T), MT.T.gas(U, T)), FL.array(MT.He.gas(23*U100, F), FL.MatterNeutral.make(10*U100)),
                 ItemList.TokamakNeutronData.get(1)).setSpecialNumber(1024L*1024L);
-        recipeMaps.FusionTokamakExperimental.addRecipe1(F, 2048,400, new long[]{5000}, ST.tag(0),
+        recipeMaps.FusionTokamakExperimental.addRecipe1(F, -2048,400, new long[]{5000}, ST.tag(0),
                 FL.array(MT.D.gas(2*U, T)), FL.array(MT.He_3.gas(U100, F), FL.MatterNeutral.make(U100)),
                 ItemList.TokamakPlasmaData.get(1)).setSpecialNumber(1024L*1024L);
 
 
-        recipeMaps.FusionTokamak.addRecipe0(F, 8192, 400,
+        recipeMaps.FusionTokamak.addRecipe0(F, -8192, 400,
                 FL.array(MT.D.gas(4 * U, T), MT.T.gas(4 * U, T)),
                 FL.array(MT.He.gas(2 * U, F)), ItemList.Neutron.get(2)).setSpecialNumber(1024L * 1024L);
-        recipeMaps.FusionTokamak.addRecipe0(F, 16384, 600,
+        recipeMaps.FusionTokamak.addRecipe0(F, -16384, 600,
                 FL.array(MT.D.gas(2 * U, T), MT.He_3.gas(U, T)),
                 FL.array(MT.He.gas(2 * U, F)), ItemList.Neutron.get(1)).setSpecialNumber(4L * 1024L * 1024L);
 
-        recipeMaps.FusionTokamakExperimental.addRecipe0(F, 8192, 400, new long[]{5000},
+        recipeMaps.FusionTokamakExperimental.addRecipe0(F, -8192, 400, new long[]{5000},
                 FL.array(MT.D.gas(4 * U, T), MT.T.gas(4 * U, T)),
                 FL.array(MT.He.gas(2 * U, F)), ItemList.TokamakNeutronData.get(1)).setSpecialNumber(1024L * 1024L);
-        recipeMaps.FusionTokamakExperimental.addRecipe0(F, 16384, 600, new long[]{7500},
+        recipeMaps.FusionTokamakExperimental.addRecipe0(F, -16384, 600, new long[]{7500},
                 FL.array(MT.D.gas(2 * U, T), MT.He_3.gas(U, T)),
                 FL.array(MT.He.gas(2 * U, F)), ItemList.TokamakPlasmaData.get(1)).setSpecialNumber(4L * 1024L * 1024L);
 

@@ -19,6 +19,10 @@ package cn.kuzuanpa.ktfruaddon.tile.multiblock.example;
 
 import cn.kuzuanpa.ktfruaddon.api.i18n.texts.I18nHandler;
 import cn.kuzuanpa.ktfruaddon.api.tile.GTTileEntityRegistry;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControl;
+import cn.kuzuanpa.ktfruaddon.api.tile.control.MachineControlComponent;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.IMachineStatus;
+import cn.kuzuanpa.ktfruaddon.api.tile.status.MachineStatusReport;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringBaseStructure;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.IStringStructureMachine;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.StructureContext;
@@ -26,21 +30,36 @@ import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.LayerStr
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.mode.layer.layerType.ExpandableLayer;
 import cn.kuzuanpa.ktfruaddon.api.tile.structure.stringBased.predicate.PartPredicate;
 import cn.kuzuanpa.ktfruaddon.api.tile.util.TileDesc;
+import gregapi.block.multitileentity.IWailaTile;
 import gregapi.data.LH;
+import gregapi.tileentity.machines.ITileEntitySwitchableOnOff;
 import gregapi.tileentity.multiblocks.TileEntityBase10MultiBlockBase;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import zmaster587.libVulpes.items.ItemProjector;
 
 import java.util.List;
 
-public class exampleStructureMachine extends TileEntityBase10MultiBlockBase implements IStringStructureMachine {
+public class exampleStructureMachine extends TileEntityBase10MultiBlockBase implements IStringStructureMachine, IMachineStatus, ITileEntitySwitchableOnOff, IWailaTile {
+    public final MachineControlComponent control = new MachineControlComponent(this, this::updateClientData);
+
+    @Override public void readFromNBT2(NBTTagCompound aNBT) {super.readFromNBT2(aNBT); control.readFromNBT(aNBT);}
+    @Override public void writeToNBT2(NBTTagCompound aNBT) {super.writeToNBT2(aNBT); control.writeToNBT(aNBT);}
+    @Override public boolean getStateOnOff() {return control.getStateOnOff();}
+    @Override public boolean setStateOnOff(boolean aOnOff) {return control.setStateOnOff(aOnOff);}
+    @Override public boolean isRunningPossible() {return mStructureOkay && control.getStateOnOff();}
+    @Override public boolean isRunning() {return false;}
+    @Override public boolean isProcessing() {return false;}
+
     //Structure
-    ChunkCoordinates lastFailedPos=null;
     static final IStringBaseStructure structure  = new LayerStructure(StructureContext.Axis.Y).layerRule("A")
             .layer('A',
                     new ExpandableLayer(6)
@@ -66,6 +85,7 @@ public class exampleStructureMachine extends TileEntityBase10MultiBlockBase impl
     @Override public boolean checkStructure2(ChunkCoordinates aClickedAt, Entity aPlayer, IInventory aInventory) {return IStringStructureMachine.trigger(this, aClickedAt, aPlayer, aInventory);}
     public boolean onBlockActivated3(EntityPlayer aPlayer, byte aSide, float aHitX, float aHitY, float aHitZ) {
         if (!isServerSide())return true;
+        if (MachineControl.onFishRightClick(this, aPlayer)) return true;
 
         if(!mStructureOkay)aPlayer.addChatMessage(new ChatComponentText(LH.Chat.RED+LH.get(I18nHandler.STRUCTURE_ERR)));
 
@@ -80,6 +100,24 @@ public class exampleStructureMachine extends TileEntityBase10MultiBlockBase impl
     public boolean isInsideStructure(int aX, int aY, int aZ) {
         return structure.isInsideStructure(this, mFacing, aX,aY,aZ);
     }
+    @Override public void onMagnifyingGlass(List<String> aChatReturn) {
+        MachineControl.of(this).getStatusReport().renderLines(aChatReturn);
+    }
+
+    @Override public List<IWailaInfoProvider> getWailaInfos(List<IWailaInfoProvider> current) {
+        current.add(IWailaTile.instanceInfoState);
+        current.add(MachineStatusReport.WAILA_PROVIDER);
+        return current;
+    }
+    @Override public NBTTagCompound getWailaNBT(TileEntity te, NBTTagCompound aNBT) {
+        IWailaTile.super.getWailaNBT(te, aNBT);
+        MachineStatusReport.writeWaila(this, aNBT);
+        return aNBT;
+    }
+    @Override public List<String> getWailaBody(List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return IWailaTile.super.getWailaBody(currentTip, accessor, config);
+    }
+
     @Override
     public void addToolTips(List<String> aList, ItemStack aStack, boolean aF3_H) {
         aList.add(LH.Chat.CYAN + LH.get(I18nHandler.HAS_PROJECTOR_STRUCTURE));

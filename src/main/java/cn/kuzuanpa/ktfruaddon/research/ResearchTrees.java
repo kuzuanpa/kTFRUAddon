@@ -660,8 +660,8 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30108)));
                     // TODO(Biology tree): move the Biology compute gate into the independent Biology research tree.
 
-                    //QU:首次观测镜金; 中继器解锁后即可运行，研究完成时只保留正式信道组件
-                    ResearchProject todo001 = new ResearchProject(tree, "量子通信", "利用镜金保存下来的纠缠关系传递信息，通道既无法窃听也无法复制。同一套原理还能做出量子传感与超高精度测量设备", Items.paper, 0, 54)
+                    //QU:首次观测镜银; 中继器解锁后即可运行，研究完成时只保留正式信道组件
+                    ResearchProject todo001 = new ResearchProject(tree, "量子通信", "利用镜银保存下来的纠缠关系传递信息，通道既无法窃听也无法复制。同一套原理还能做出量子传感与超高精度测量设备", Items.paper, 0, 54)
                             .setPos(3080, 140)
                             .addPrerequisite(naqudahTheory)
                             .addTask(new EnergyTask(TD.Energy.QU, 1048576, 128))
@@ -672,8 +672,8 @@ public class ResearchTrees {
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30074)));
 
 
-                    //已有首发镜金样品，开始研究其宏观量子关联、复现方式与后续用途
-                    ResearchProject todo002 = new ResearchProject(tree, "镜金应用", "量子通信已经产出了第一批镜金样品。研究镜金如何在宏观尺度保存量子关联，并把样品复现与量子相干性推进到可工业利用的形态", Items.paper, 0, 42)
+                    //已有首发镜银样品，开始研究其宏观量子关联、复现方式与后续用途
+                    ResearchProject todo002 = new ResearchProject(tree, "镜银应用", "量子通信已经产出了第一批镜银样品。研究镜银如何在宏观尺度保存量子关联，并把样品复现与量子相干性推进到可工业利用的形态", Items.paper, 0, 42)
                             .setPos(3180, 70)
                             .addPrerequisite(todo001)
                             .addTask(new EnergyTask(TD.Energy.EU, 536870912, 8192))
@@ -686,7 +686,7 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30073)));
 
-                    //QU:跨维度量子输电; 镜金保存纠缠关系, 绝对纯Ij/Nq_522提供稳定量子通道, 不设距离或损耗
+                    //QU:跨维度量子输电; 镜银保存纠缠关系, 绝对纯Ij/Nq_522提供稳定量子通道, 不设距离或损耗
                     ResearchProject wirelessPowerQuantum = new ResearchProject(tree, "量子无线输电", "量子信道不再随距离衰减，也不再受维度边界限制。只要目标区块处于加载状态，能量就能以原始类型抵达接收端；传送EU、RU、LU、QU等能源都不需要转换。", Items.paper, 0, 71)
                             .setPos(3280, 0)
                             .addPrerequisite(todo002)
@@ -698,8 +698,8 @@ public class ResearchTrees {
                             .addTask(new ItemConsumeTaskEScope(prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 4)))
                             .addTask(new ItemConsumeTaskEScope(prefixList.AbsolutelyPureDust.mat(MT.Nq_522, 4)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30115)));
-                    //QU:把镜金量子化为量金; 30076 是量金唯一来源，必须在本节点先行产出样品
-                    ResearchProject todo003 = new ResearchProject(tree, "镜金量子化", "对镜金进行进一步的量子化处理，让材料内部的量子关系从被动保存变成可以被外部驱动的自由度。这是通往量金的最后一步加工", Items.paper, 0, 51)
+                    //QU:把镜银量子化为量金; 30076 是量金唯一来源，必须在本节点先行产出样品
+                    ResearchProject todo003 = new ResearchProject(tree, "镜银量子化", "对镜银进行进一步的量子化处理，让材料内部的量子关系从被动保存变成可以被外部驱动的自由度。这是通往量金的最后一步加工", Items.paper, 0, 51)
                             .setPos(3280, 70)
                             .addPrerequisite(todo002)
                             .addTask(new EnergyTask(TD.Energy.EU, 1073741824, 32768))
@@ -708,19 +708,19 @@ public class ResearchTrees {
                             .addTask(new ComputeTask(ComputePower.Normal, 34359738368L))
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new ItemConsumeTaskEScope(OP.nugget.mat(matList.Ij.mat,16)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30075)))
-                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30076)));
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30075)));
 
                     //已有量金样品，研究其作为量子装置核心、量子信号介质与QU级设备基础材料的用途
-                    ResearchProject todo004 = new ResearchProject(tree, "量金应用", "镜金保存量子关系，量金则把量子关系变成宏观可操作的工程对象。既然量金样品已经由量子化场产出，现在研究它作为量子装置核心、量子信号介质、量子放大器与QU级设备基础材料的实际用途", Items.paper, 0, 52)
+                    ResearchProject todo004 = new ResearchProject(tree, "量金应用", "镜银保存量子关系，量金则把量子关系变成宏观可操作的工程对象。既然量金样品已经由量子化场产出，现在研究它作为量子装置核心、量子信号介质、量子放大器与QU级设备基础材料的实际用途", Items.paper, 0, 52)
                             .setPos(3380, 70)
                             .addPrerequisite(todo003)
                             .addTask(new EnergyTask(TD.Energy.QU, 16777216, 2048))
                             .addTask(new ComputeTask(ComputePower.Normal, 68719476736L))
                             .addTask(new MiniGameCurrentControlTask(512))
                             .addTask(new MiniGameIdentifyTask(384))
-                            .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.QuantumGold.mat,1)))
+                            .addTask(new ItemConsumeTaskEScope(OP.ingot.mat(matList.QuantumSilver.mat,1)))
                             .addTask(new ItemConsumeTaskEScope(OP.dustTiny.mat(MT.Nq_522,4)))
+                            .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30076)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30080)))
                             .addUnlockItem(new ItemType(GTTileEntityRegistry.ktfruaddon.getItem(30081)));
 
@@ -799,7 +799,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(1024));
 
                     //多个亚量子自由度稳定耦合形成的奇异物质, 一切亚量子工程的基础材料
-                    ResearchProject todo011 = new ResearchProject(tree, "刻金性质", "刻金是由多个亚量子自由度稳定耦合形成的奇异物质。镜金操纵量子之间的关系，刻金操纵量子内部更深层的结构，它是一切亚量子工程的基础材料", Items.paper, 0, 59)
+                    ResearchProject todo011 = new ResearchProject(tree, "刻金性质", "刻金是由多个亚量子自由度稳定耦合形成的奇异物质。镜银操纵量子之间的关系，刻金操纵量子内部更深层的结构，它是一切亚量子工程的基础材料", Items.paper, 0, 59)
                             .setPos(3780, 70)
                             .addPrerequisite(todo010)
                             .addTask(new EnergyTask(TD.Energy.QU, 1073741824, 32768))
@@ -858,7 +858,7 @@ public class ResearchTrees {
                             .addTask(new MiniGameIdentifyTask(1536));
 
                     //能量来源近乎无限, 但真正的限制变成了控制能力
-                    ResearchProject todo016 = new ResearchProject(tree, "零点能量生成", "从真空中提取能量。但零点能不是免费电力：它需要极其复杂的场稳定与量子控制，需要镜金、量金、刻金与超级计算全力配合。能量来源近乎无限，不等于工业生产没有限制——真正的限制变成了控制能力", Items.paper, 0, 64)
+                    ResearchProject todo016 = new ResearchProject(tree, "零点能量生成", "从真空中提取能量。但零点能不是免费电力：它需要极其复杂的场稳定与量子控制，需要镜银、量金、刻金与超级计算全力配合。能量来源近乎无限，不等于工业生产没有限制——真正的限制变成了控制能力", Items.paper, 0, 64)
                             .setPos(4080, 70)
                             .addPrerequisite(todo015)
                             .addTask(new EnergyTask(TD.Energy.QU, 34359738368L, 1048576))

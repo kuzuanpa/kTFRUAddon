@@ -111,12 +111,12 @@ public final class QuantumEntry {
         // Q2-R02: all quantumization remains inside the multi-block field;
         // Mirror Gold is consumed directly and no "quantumized Mirror Gold"
         // item exists or can bypass the chamber.
-        recipeMaps.QuantumGoldSynthesis.addRecipeX(CS.F, 65536, 4800,
+        recipeMaps.QuantumSilverSynthesis.addRecipeX(CS.F, 65536, 4800,
                 ST.array(OP.plate.mat(matList.MirrorGold.mat, 1),
                         OP.dustTiny.mat(MT.Nq_522, 8),
                         OP.nugget.mat(matList.Ij.mat, 16),
                         prefixList.AbsolutelyPureDust.mat(matList.Ij.mat, 8)),
-                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.QuantumGold.mat, 1));
+                CS.ZL_FS, CS.ZL_FS, OP.ingot.mat(matList.QuantumSilver.mat, 1));
 
     }
 }
